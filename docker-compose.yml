@@ -1,0 +1,23 @@
+version: "3.8"
+services:
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    ports:
+     - 5173:5173
+  backend:
+    build: ./backend
+    ports:
+      - 3000:3000
+#    environment:
+##      DB_URL: mongodb://database/pong
+#    volumes:
+#      - db_volume: ./backend
+
+#volumes:
+#  db_volume:
+#    name: "db_volume"
+#    driver_opts:
+#      type: none
+#      o: bind
+#      device: /Users/pooneh/data/db_volume
