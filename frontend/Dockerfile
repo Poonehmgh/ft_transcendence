@@ -1,14 +1,14 @@
-FROM node:latest
+FROM node:18-alpine3.16
 WORKDIR  /frontend
 
-COPY frontend/package*.json ./
+COPY package*.json ./
 
-RUN npm install -g npm@latest
+RUN npm install --no-audit
 
 RUN npm install
 
 COPY . .
 
-EXPOSE 5173
+EXPOSE 3000
 
-CMD ["npm", "run", "dev"]
+CMD ["npm", "start"]
