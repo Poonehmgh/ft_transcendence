@@ -5,17 +5,32 @@ services:
     container_name: frontend
     ports:
      - 3000:3000
+    volumes:
+      - front_volume:/frontend
   backend:
     build: ./backend
     ports:
       - 5500:5500
-#    environment:
-##      DB_URL: mongodb://database/pong
-#    volumes:
-#      - db_volume: ./backend
+    environment:
+      - DB_URL=postgres://db/db_volume
+    volumes:
+      - back_volume:/backend
+  db:
+    image: postgres:15
+    ports:
+      - 5432:5432
+    volumes:
+      - db_volume:/var/lib/postgresql/data
+    environment:
+      - PGUSER=user
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=postgres_dbw
 
-#volumes:
-#  db_volume:
+volumes:
+  db_volume:
+  back_volume:
+  front_volume:
 #    name: "db_volume"
 #    driver_opts:
 #      type: none
