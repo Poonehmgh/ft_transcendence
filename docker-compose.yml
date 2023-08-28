@@ -31,8 +31,4 @@ volumes:
   db_volume:
   back_volume:
   front_volume:
-#    name: "db_volume"
-#    driver_opts:
-#      type: none
-#      o: bind
-#      device: /Users/pooneh/data/db_volume
+

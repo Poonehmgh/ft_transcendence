@@ -10,7 +10,15 @@ datasource db {
 }
 
 model User {
-  id    Int      @id @default(autoincrement())
-  email String   @unique
-  name  String
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  email      String
+  userName   String
+  intraID    String
+  passHash   String
+  avatar     String
+  badgeName  String
+  chatStatus String
+  friends    Int[]
 }
