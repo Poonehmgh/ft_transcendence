@@ -7,14 +7,21 @@ services:
      - 3000:3000
     volumes:
       - front_volume:/frontend
+    networks:
+      - webapp
   backend:
     build: ./backend
     ports:
       - 5500:5500
     environment:
-      - DB_URL=postgres://db/db_volume
+      - DB_URL=postgresql://swypf:secret@localhost:5432/postgres_db?schema=public
     volumes:
-      - back_volume:/backend
+      - ./backend/src:/backend/src
+    networks:
+      - database
+      - webapp
+#    command: ['./start.sh' ]
+
   db:
     image: postgres:15
     ports:
@@ -22,13 +29,20 @@ services:
     volumes:
       - db_volume:/var/lib/postgresql/data
     environment:
-      - PGUSER=user
-      - POSTGRES_USER=user
+      - POSTGRES_USER=swypf
       - POSTGRES_PASSWORD=secret
-      - POSTGRES_DB=postgres_dbw
+      - POSTGRES_DB=postgres_db
+    networks:
+      - database
 
 volumes:
   db_volume:
   back_volume:
   front_volume:
+networks:
+  database:
+    driver: bridge
+  webapp:
+    driver: bridge
+
 
