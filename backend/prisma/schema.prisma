@@ -15,9 +15,9 @@ model User {
   userName   String
   intraID    String
   passHash   String
-  avatar     String
+  avatar     String   @default("empty")
   badgeName  String
   chatStatus String
-  friends    Int[]
+  friends    Int[]    @default([0])
   test       String   @default("hi")
 }

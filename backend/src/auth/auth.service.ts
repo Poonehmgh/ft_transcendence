@@ -7,21 +7,27 @@ import * as bcrypt from "bcrypt";
 export class AuthService {
     constructor(private prisma: PrismaService ) {}
     async signup(dto: AuthDto){
-        const {email, password} = dto;
+        const {email, password, name, badge, intraID, status, avatar} = dto;
         const foundUser = await this.prisma.user.findUnique({
             where: {
-                email: email, //problem with the email. check why cannot have email checked??
+                email: email,
             },
         });
         if (foundUser)
             throw new BadRequestException("ID already exists")
         const hashedPassword = await this.hashPassword(password);
         await this.prisma.user.create({
-            data: {
+            data: {         //investigate later: why cannot skip the items that have a default value like avatar?
                 email: email,
                 passHash: hashedPassword,
+                intraID: intraID,
+                userName: name,
+                badgeName: badge,
+                chatStatus: status,
+                avatar: avatar
             }
         })
+
         return ({message: "sign_up was successful"})
     }
 
