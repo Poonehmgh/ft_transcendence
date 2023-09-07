@@ -1,11 +1,13 @@
-import {BadRequestException, Injectable} from '@nestjs/common';
+import {BadRequestException, ForbiddenException, Injectable} from '@nestjs/common';
 import {PrismaService} from "../prisma/prisma.service";
 import {AuthDto} from "./dto/auth.dto";
 import * as bcrypt from "bcrypt";
-
+import {JwtService} from "@nestjs/jwt";
+import {jwtSecret} from "../utils/constants"
+import {Request, Response} from "express"
 @Injectable()
 export class AuthService {
-    constructor(private prisma: PrismaService ) {}
+    constructor(private prisma: PrismaService, private jwt: JwtService) {}
     async signup(dto: AuthDto){
         const {email, password, name, badge, intraID, status, avatar} = dto;
         const foundUser = await this.prisma.user.findUnique({
@@ -31,14 +33,14 @@ export class AuthService {
         return ({message: "sign_up was successful"})
     }
 
-    async signin(dto: AuthDto){
+    async signin(dto: AuthDto, req: Request, res: Response){
         const {email, password, name, badge, intraID, status, avatar} = dto;
         const foundUser = await this.prisma.user.findUnique({
             where: {
                 email: email,
             },
         });
-        if (foundUser)
+        if (!foundUser)
             throw new BadRequestException("Wrong credentials.")
         const isMatched = await this.comparePasswords({password,
         hash: foundUser.passHash,
@@ -47,9 +49,16 @@ export class AuthService {
         if (!isMatched)
             throw new BadRequestException("Password is wrong.")
         // sign jwt tokens:
-
-
-        return ""
+        const token = await this.signToken({
+            id: foundUser.id,
+            email: foundUser.email,
+        });
+        if (!token){
+            throw new ForbiddenException();
+        }
+        res.cookie("tocken", token)
+        // return {token}
+        return res.send("the login was successful!")
     }
     async signout(){
         return ""
@@ -62,5 +71,10 @@ export class AuthService {
 
     async comparePasswords(input: {password: string, hash:string}){
         return await bcrypt.compare(input.password, input.hash)
+    }
+
+    async signToken(input:{id: number, email: string}){
+        const payload = input;
+        return this.jwt.signAsync(payload, {secret: jwtSecret});
     }
 }
