@@ -15,6 +15,7 @@ services:
     build: ./backend
     ports:
       - 5500:5500
+      - 5555:5555
     environment:
       - DB_URL=postgresql://swypf:secret@db:5432/postgres_db?schema=public
     volumes:
