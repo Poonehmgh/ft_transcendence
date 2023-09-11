@@ -18,4 +18,8 @@ export class AuthController {
   signout(){
     return this.authService.signout();
   }
+  @Get("/42")
+  ft_oauth(){
+    return this.authService.ft_oauth();
+  }
 }
