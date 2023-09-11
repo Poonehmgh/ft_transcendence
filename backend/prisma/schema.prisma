@@ -1,23 +1,82 @@
 generator client {
-  provider = "prisma-client-js"
+	provider	= "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DB_URL")
+	provider	= "postgresql"
+	url			= env("DB_URL")
 }
 
 model User {
-  id         Int      @id @default(autoincrement())
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  email      String   @unique
-  userName   String
-  intraID    String
-  passHash   String
-  avatar     String   @default("empty")
-  badgeName  String
-  chatStatus String
-  friends    Int[]    @default([0])
-  test       String   @default("hi")
+	id				Int			@id @unique @default(autoincrement())
+	createdAt		DateTime	@default(now())
+	updatedAt		DateTime	@updatedAt
+	
+	name			String		@unique
+	email			String		@unique
+	intraID			String		@unique
+	passHash		String
+	avatarPath		String?		
+	badgeName		String		@default("noob")
+	
+	games			Int[]		@default([0])
+	chats			Int[]		@default([0])
+	
+	online			Boolean		@default(false)		// i think online / offline is enough?
+	
+	friends			Int[]		@default([0])
+	friendReq_out	Int[]		@default([0])
+	friendReq_in	Int[]		@default([0])
+	blocked			Int[]		@default([0])
+	
+	test			String		@default("hi")
+}
+
+model Game{
+	id				Int			@id @unique @default(autoincrement())
+	createdAt		DateTime	@default(now())
+	updatedAt		DateTime	@updatedAt
+	
+	finished		Boolean		@default(false) // probably just check for finishedAt being not NULL
+	finishedAt		DateTime?	
+	
+	player_one		Int			@default(0)
+	score_one		Int			@default(0)
+	
+	player_two		Int			@default(0)
+	score_two		Int			@default(0)
+	
+	winner			Int			@default(0)
+	loser			Int			@default(0)
+}
+
+model Message {
+	id				Int			@id @unique @default(autoincrement()) 
+	created_at		DateTime	@default(now())
+	updatedAt		DateTime	@updatedAt
+
+	author			Int
+	chat			Int			
+	content			String
+}
+
+model Chat {
+	id				Int			@id @unique @default(autoincrement()) 
+	createdAt		DateTime	@default(now())
+	updatedAt		DateTime	@updatedAt
+	
+	name			String		@default("Unnamed Chat")					
+	
+	hidden			Boolean		@default(false)
+	pw_protected	Boolean		@default(false)
+	password		String?		// hash this?
+	
+	messages		Int[]		@default([0])
+	
+	users			Int[]		@default([0])
+	owners			Int[]		@default([0])
+	admins			Int[]		@default([0])
+	blocked			Int[]		@default([0])
+	muted			Int[]		@default([0])
+	
 }
