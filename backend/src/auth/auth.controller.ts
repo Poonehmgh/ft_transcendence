@@ -1,6 +1,7 @@
-import {Controller, Post, Get, Body, Req, Res} from '@nestjs/common';
+import {Controller, Post, Get, Body, Req, Res, UseGuards} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {AuthDto} from "./dto/auth.dto";
+import {ftAuthGuard} from "./guards/intra_42.guard";
 
 @Controller('auth')
 export class AuthController {
@@ -18,8 +19,16 @@ export class AuthController {
   signout(){
     return this.authService.signout();
   }
-  @Get("/42")
+  @Get("/42/login")
+  @UseGuards(ftAuthGuard)
   ft_oauth(){
     return this.authService.ft_oauth();
   }
+
+  @Get("/42/redirect")
+  @UseGuards(ftAuthGuard)
+  ft_redirect(){
+    return {msg:"pizza"}
+  }
+
 }

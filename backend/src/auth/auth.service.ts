@@ -65,6 +65,7 @@ export class AuthService {
     }
 
     async ft_oauth(){
+        console.log("hi from inside this")
         return "intra_auth"
     }
 
