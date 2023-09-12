@@ -5,6 +5,9 @@ import * as bcrypt from "bcrypt";
 import {JwtService} from "@nestjs/jwt";
 import {jwtSecret} from "../utils/constants"
 import {Request, Response} from "express"
+
+
+
 @Injectable()
 export class AuthService {
     constructor(private prisma: PrismaService, private jwt: JwtService) {}
@@ -23,10 +26,7 @@ export class AuthService {
                 email: email,
                 passHash: hashedPassword,
                 intraID: intraID,
-                userName: name,
-                badgeName: badge,
-                chatStatus: status,
-                avatar: avatar
+                name: name,
             }
         })
 
