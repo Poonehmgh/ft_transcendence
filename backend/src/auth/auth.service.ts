@@ -64,11 +64,6 @@ export class AuthService {
         return ""
     }
 
-    async ft_oauth(){
-        console.log("hi from inside this")
-        return "intra_auth"
-    }
-
     async hashPassword(password: string){
         const saltOrRounds = 10;
         return await bcrypt.hash(password, saltOrRounds);
@@ -81,5 +76,10 @@ export class AuthService {
     async signToken(input:{id: number, email: string}){
         const payload = input;
         return this.jwt.signAsync(payload, {secret: jwtSecret});
+    }
+
+    async ft_oauth(){
+        console.log("hi from inside this")
+        return "intra_auth"
     }
 }

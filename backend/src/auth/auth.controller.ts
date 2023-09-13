@@ -28,7 +28,7 @@ export class AuthController {
   @Get("/42/redirect")
   @UseGuards(ftAuthGuard)
   ft_redirect(){
-    return {msg:"pizza"}
+    return {msg:"it is redirected here"}
   }
 
 }
