@@ -23,7 +23,7 @@ export class AuthService {
                 email: email,
                 passHash: hashedPassword,
                 intraID: intraID,
-                userName: name,
+                name: name,
                 badgeName: badge,
                 chatStatus: status,
                 avatar: avatar

@@ -16,13 +16,13 @@ model User {
 	email			String		@unique
 	intraID			String		@unique
 	passHash		String
-	avatarPath		String?		
+	avatar			String?		
 	badgeName		String		@default("noob")
 	
 	games			Int[]		@default([0])
 	chats			Int[]		@default([0])
 	
-	online			Boolean		@default(false)		// i think online / offline is enough?
+	chatStatus		String		@default("")		// i think online / offline is enough?
 	
 	friends			Int[]		@default([0])
 	friendReq_out	Int[]		@default([0])
@@ -78,5 +78,4 @@ model Chat {
 	admins			Int[]		@default([0])
 	blocked			Int[]		@default([0])
 	muted			Int[]		@default([0])
-	
 }
