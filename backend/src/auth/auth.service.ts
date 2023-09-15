@@ -25,8 +25,6 @@ export class AuthService {
                 intraID: intraID,
                 name: name,
                 badgeName: badge,
-                chatStatus: status,
-                avatar: avatar
             }
         })
 

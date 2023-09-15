@@ -8,22 +8,26 @@ datasource db {
 }
 
 model User {
-	id				Int			@id @unique @default(autoincrement())
+	id				Int			@id @unique @default(autoincrement()) // should replace with just intraID
 	createdAt		DateTime	@default(now())
 	updatedAt		DateTime	@updatedAt
+	passHash		String
 	
 	name			String		@unique
 	email			String		@unique
 	intraID			String		@unique
-	passHash		String
-	avatar			String?		
+	avatar			String		@default("defaultPath")		
 	badgeName		String		@default("noob")
 	
 	games			Int[]		@default([0])
+	wins			Int			@default(0)
+	goals			Int			@default(0)
+	mmr				Int			@default(1000)
+	
 	chats			Int[]		@default([0])
-	
-	chatStatus		String		@default("")		// i think online / offline is enough?
-	
+	//chatStatus		String		@default("")		// i think online / offline is enough?
+	online			Boolean		@default(false)
+
 	friends			Int[]		@default([0])
 	friendReq_out	Int[]		@default([0])
 	friendReq_in	Int[]		@default([0])

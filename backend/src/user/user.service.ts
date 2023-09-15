@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-// import {User} from "@prisma/client";
+import { PlayerCardDTO } from '../../../shared/user-dto';
 
 @Injectable()
 export class UserService {
@@ -13,5 +13,34 @@ export class UserService {
     async getAllUsers()  {
         return this.prisma.user.fields
     }
-}
 
+	async playerCard(userId: number): Promise<PlayerCardDTO>
+	{
+		const user = await this.prisma.user.findUnique(
+		{
+			where:
+			{
+				id: userId
+			},
+			select:
+			{
+				name: true,
+				games: true,
+				wins: true,
+				goals: true,
+				mmr: true,
+				badgeName: true,
+				online: true
+			}
+		}
+		);
+
+		if (!user)
+			throw new Error('User not found');
+		
+		let returnCard: PlayerCardDTO = {name: "knudel"};
+
+		return returnCard;
+
+	}
+}

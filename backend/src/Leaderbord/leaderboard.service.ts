@@ -6,19 +6,24 @@ import { PrismaService } from '../prisma/prisma.service';
 export class LeaderBoardService {
     constructor(private readonly prisma: PrismaService) {}
 
-	async getLeaderBoard() {
+	async getLeaderBoard()
+	{
 		return this.prisma.user.findUnique({where: {id:0}});
 	}
 
-	async createUser(userNum: number) {
-		return this.prisma.user.createu({
-			data:{
-				id: userNum,
-				name: "defaultj",
-				email: "defaulteamijl",
-				intraID: "intraIiD",
-				passHash: "paskjsity"
-			}})
+	async createUser(userNum: number)
+	{
+		return this.prisma.user.create(
+			{
+				data:
+				{
+					id: userNum,
+					name: "defaultj",
+					email: "defaulteamijl",
+					intraID: "intraIiD",
+					passHash: "paskjsity"
+				}
+			})
 	}
 
 }
