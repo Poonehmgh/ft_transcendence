@@ -27,7 +27,8 @@ export class AuthController {
 
   @Get("/42/redirect")
   @UseGuards(ftAuthGuard)
-  ft_redirect(){
+  ft_redirect(@Req() req, @Res() res: Response){
+    return this.authService.ft_signin(req.user);
     return {msg:"it is redirected here"}
   }
 

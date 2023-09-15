@@ -32,6 +32,14 @@ export class AuthService {
 
         return ({message: "sign_up was successful"})
     }
+    async ft_signin(user)
+    {
+        if (!user)
+            throw new BadRequestException("Unauthenticated.");
+        const foundUser = await this.findUserByEmail(user.email);
+        if (!foundUser)
+            return this.registerUser(user);
+    }
 
     async signin(dto: AuthDto, req: Request, res: Response){
         const {email, password, name, badge, intraID, status, avatar} = dto;
@@ -81,5 +89,27 @@ export class AuthService {
     async ft_oauth(){
         console.log("hi from inside this")
         return "intra_auth"
+    }
+
+    async findUserByEmail(email:string){
+        return this.prisma.user.findUnique({
+            where: {
+                email: email,
+            },
+        });
+    }
+
+    async registerUser(user){
+        const {id, email, name} = user;
+        const newUser = await this.prisma.user.create({
+            data: {
+                email: email,
+                name: name,
+                passHash: "intra42", //change later
+                intraID: "test",
+            }
+        })
+        console.log("new user is ", newUser);
+        return newUser;
     }
 }

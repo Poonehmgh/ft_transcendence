@@ -1,6 +1,6 @@
 import {PassportStrategy } from "@nestjs/passport"
 import {Injectable} from "@nestjs/common";
-import {Strategy, Profile} from "passport-42"
+import {Strategy, Profile, User} from "passport-42"
 import {VerifiedCallback, VerifyCallback} from "passport-jwt";
 import {AuthService} from "../auth.service";
 
@@ -19,8 +19,16 @@ export class ftStrategy extends PassportStrategy(Strategy, "42")
         }
     async validate(accessToken: string, refreshToken: string, profile: Profile, done: VerifyCallback) {
 
-            console.log("Access token is" , accessToken);
-            return this.authService.ft_oauth()
+            const {id, username, displayName, emails, login} = profile;
+
+            const user: User = {
+                provider: "42",
+                providerId: id,
+                name: displayName,
+                email: emails[0].value,
+            };
+            console.log("profile info is " , user.providerId, user.name, user.email);
+            done(null, user);
     }
 }
 
