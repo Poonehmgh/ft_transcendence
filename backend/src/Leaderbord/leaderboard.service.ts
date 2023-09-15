@@ -11,13 +11,13 @@ export class LeaderBoardService {
 	}
 
 	async createUser(userNum: number) {
-		return this.prisma.user.createu({
+		return this.prisma.user.create({
 			data:{
 				id: userNum,
 				name: "defaultj",
 				email: "defaulteamijl",
 				intraID: "intraIiD",
-				passHash: "paskjsity"
+				passHash: "paskjsity" 
 			}})
 	}
 
