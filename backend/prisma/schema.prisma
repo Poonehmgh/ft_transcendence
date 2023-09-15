@@ -9,20 +9,23 @@ datasource db {
 
 model User {
 	id				Int			@id @unique @default(autoincrement())
+	intraID			String		@unique // could just use intraid, it is unique and a number
+	passHash		String
 	createdAt		DateTime	@default(now())
 	updatedAt		DateTime	@updatedAt
 	
 	name			String		@unique
 	email			String		@unique
-	intraID			String		@unique
-	passHash		String
 	avatar			String?		
 	badgeName		String		@default("noob")
 	
-	games			Int[]		@default([0])
-	chats			Int[]		@default([0])
+	matches			Int[]		@default([0])
+	wins			Int			@default(0)
+	mmr				Int			@default(1000)
 	
-	chatStatus		String		@default("")		// i think online / offline is enough?
+	chats			Int[]		@default([0])
+	chatStatus		String		@default("offline")
+	online			Boolean		@default(false)
 	
 	friends			Int[]		@default([0])
 	friendReq_out	Int[]		@default([0])
@@ -32,7 +35,7 @@ model User {
 	test			String		@default("hi")
 }
 
-model Game{
+model Match {
 	id				Int			@id @unique @default(autoincrement())
 	createdAt		DateTime	@default(now())
 	updatedAt		DateTime	@updatedAt
