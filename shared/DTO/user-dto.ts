@@ -1,4 +1,20 @@
-// DTOs related to User schema
+export class NewUserDTO
+{
+	constructor(
+		public intraID: number,
+		public passHash: string,
+		public name: string,
+		public email: string,
+	) {}
+}
+
+export class IdAndNameDTO
+{
+	constructor(
+		public id: number,
+		public name: string,
+	) {}
+}
 
 export class ScoreCardDTO
 {
@@ -22,3 +38,4 @@ export class FriendListDTO
 		public blocked: number[],
 	) {}
 }
+

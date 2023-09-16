@@ -2,13 +2,15 @@
 
 ##### 'shared/DTO/user-dto.ts'
 
-|what				|controller-path					|returntype
-|---				|---					|---
-|score card			|user/scorecard			|ScoreCardDTO
-|matches			|user/matches			|number[]
-|friends			|user/friends			|number[]
-|online friends		|user/friends_online	|number[]
-|friend management	|user/friends_data		|FriendListDTO
+|what				|method		|controller-path		|takes			|returns
+|---				|---		|---					|---			|---
+|create user		|Post		|user/new				|NewUserDTO		|-
+|all users			|Get		|user/all				|-				|IdAndNameDTO[]
+|score card			|Get		|user/scorecard			|number			|ScoreCardDTO
+|matches			|Get		|user/matches			|number			|number[]
+|friends			|Get		|user/friends			|number			|IdAndNameDTO[]
+|online friends		|Get		|user/friends_online	|number			|IdAndNameDTO[]
+|friend management	|Get		|user/friends_data		|number			|FriendListDTO
 
 <br>
 
