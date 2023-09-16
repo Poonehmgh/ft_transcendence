@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { FriendListDTO, ScoreCardDTO } from '../../../shared/DTO/user-dto'
+import { FriendListDTO, ScoreCardDTO, IdAndNameDTO } from '../../../shared/DTO/user-dto'
 
 @Injectable()
 export class UserService {
@@ -56,7 +56,7 @@ export class UserService {
 		return user.matches;
 	}
 
-	async getFriends(userID: number): Promise<number[]>
+	async getFriends(userID: number): Promise<IdAndNameDTO[]>
 	{
 		const user = await this.prisma.user.findUnique({
 			where: { id: userID },
@@ -65,10 +65,26 @@ export class UserService {
 		if (!user)
 			throw new Error('getFriends');
 		
-		return user.friends;
+		const friends = await this.prisma.user.findMany({
+			where: {
+				id: { in: user.friends },
+			},
+			select: {
+				id: true,
+				name: true,
+			}
+		});
+		if (friends.length === 0)
+			return [];
+		
+		const idAndNameDTOs = friends.map((elmnt) => {
+			return new IdAndNameDTO(elmnt.id, elmnt.name);
+		});
+		
+		return idAndNameDTOs;
 	}
 
-	async getOnlineFriends(userID: number): Promise<number[]>
+	async getOnlineFriends(userID: number): Promise<IdAndNameDTO[]>
 	{
 		const user = await this.prisma.user.findUnique({
 			where: { id: userID },
@@ -82,12 +98,19 @@ export class UserService {
 					id: { in: user.friends },
 					online: true
 				},
-				select: { id: true }
+				select: {
+					id: true,
+					name: true,
+				}
 		});
-		if (!onlineFriends)
-			throw new Error('getOnlineFriends');
+		if (onlineFriends.length === 0)
+			return [];
+		
+		const idAndNameDTOs = onlineFriends.map((elmnt) => {
+			return new IdAndNameDTO(elmnt.id, elmnt.name);
+		});
 
-		return onlineFriends.map((elmnt) => elmnt.id);
+		return idAndNameDTOs;
 	}
 	
 	async getFriendsData(userID: number): Promise<FriendListDTO>
