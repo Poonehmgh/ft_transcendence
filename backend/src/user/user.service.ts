@@ -1,18 +1,39 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { FriendListDTO, ScoreCardDTO, IdAndNameDTO } from '../../../shared/DTO/user-dto'
+import { FriendListDTO, ScoreCardDTO, IdAndNameDTO, NewUserDTO } from '../../../shared/DTO/user-dto'
 
 @Injectable()
 export class UserService {
-    constructor(private readonly prisma: PrismaService) {}
+	constructor(private readonly prisma: PrismaService) {}
 
-    async createUser(userData) {
-        return this.prisma.user.create({ data: userData });
-    }
+	async createUser(userData) {
+		return this.prisma.user.create({ data: userData });
+	}
 
-    async getAllUsers()  {
-        return this.prisma.user.fields
-    }
+	async newUser(userData: NewUserDTO) {
+		const createdUser = await this.prisma.user.create({
+			data: userData,
+		});
+	}
+
+
+	async getAllUsers(): Promise<IdAndNameDTO[]>
+	{
+		const users = await this.prisma.user.findMany({
+			select: {
+				id: true,
+				name: true,
+			}
+		});
+		if (users.length === 0)
+			return [];
+		
+		const idAndNameDTOs = users.map(elmnt => {
+			return new IdAndNameDTO(elmnt.id, elmnt.name);
+		});
+
+		return idAndNameDTOs;
+	}
 
 	async getScoreCard(userID: number): Promise<ScoreCardDTO>
 	{
@@ -106,7 +127,7 @@ export class UserService {
 		if (onlineFriends.length === 0)
 			return [];
 		
-		const idAndNameDTOs = onlineFriends.map((elmnt) => {
+		const idAndNameDTOs = onlineFriends.map(elmnt => {
 			return new IdAndNameDTO(elmnt.id, elmnt.name);
 		});
 

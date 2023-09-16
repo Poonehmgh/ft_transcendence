@@ -9,7 +9,7 @@ datasource db {
 
 model User {
 	id				Int			@id @unique @default(autoincrement())
-	intraID			String		@unique // could just use intraid, it is unique and a number
+	intraID			Int			@unique // could just use intraid, it is unique and a number
 	passHash		String
 	createdAt		DateTime	@default(now())
 	updatedAt		DateTime	@updatedAt
