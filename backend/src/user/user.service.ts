@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+<<<<<<< HEAD
+import { PlayerCardDTO } from '../../../shared/user-dto';
+=======
 import { FriendListDTO, ScoreCardDTO, IdAndNameDTO, NewUserDTO } from '../../../shared/DTO/user-dto'
+>>>>>>> b3c9a6799058f4395b9f8acd9e45d5225c44d9ea
 
 @Injectable()
 export class UserService {
