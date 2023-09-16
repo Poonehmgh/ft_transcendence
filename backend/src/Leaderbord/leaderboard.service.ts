@@ -11,6 +11,7 @@ export class LeaderBoardService {
 		return this.prisma.user.findUnique({where: {id:0}});
 	}
 
+<<<<<<< HEAD
 	async createUser(userNum: number)
 	{
 		return this.prisma.user.create(
@@ -24,6 +25,17 @@ export class LeaderBoardService {
 					passHash: "paskjsity"
 				}
 			})
+=======
+	async createUser(userNum: number) {
+		return this.prisma.user.create({
+			data:{
+				id: userNum,
+				name: "defaultj",
+				email: "defaulteamijl",
+				intraID: "intraIiD",
+				passHash: "paskjsity" 
+			}})
+>>>>>>> b3c9a6799058f4395b9f8acd9e45d5225c44d9ea
 	}
 
 }
