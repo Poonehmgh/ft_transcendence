@@ -15,7 +15,7 @@ export class AuthDto{
 
     @IsNotEmpty()
     @IsString()
-    public intraID: string;
+    public intraID: number;
 
     @IsNotEmpty()
     @IsString()

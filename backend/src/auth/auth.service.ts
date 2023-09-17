@@ -48,13 +48,13 @@ export class AuthService {
             throw new BadRequestException("Password is wrong.")
         // sign jwt tokens:
         const token = await this.signToken({
-            id: foundUser.id,
+            id: foundUser.intraID,
             email: foundUser.email,
         });
         if (!token){
             throw new ForbiddenException();
         }
-        res.cookie("tocken", token)
+        res.cookie("token", token)
         // return {token}
         return res.send("the login was successful!")
     }

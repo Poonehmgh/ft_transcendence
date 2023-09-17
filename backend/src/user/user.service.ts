@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { FriendListDTO, ScoreCardDTO, IdAndNameDTO, NewUserDTO } from '../../../shared/DTO/user-dto'
+import {Injectable} from '@nestjs/common';
+import {PrismaService} from '../prisma/prisma.service';
+import {FriendListDTO, IdAndNameDTO, NewUserDTO, ScoreCardDTO} from '../../../shared/DTO/user-dto'
 
 @Injectable()
 export class UserService {
@@ -16,29 +16,26 @@ export class UserService {
 		});
 	}
 
-
 	async getAllUsers(): Promise<IdAndNameDTO[]>
 	{
 		const users = await this.prisma.user.findMany({
 			select: {
-				id: true,
+				intraID: true,
 				name: true,
 			}
 		});
 		if (users.length === 0)
 			return [];
-		
-		const idAndNameDTOs = users.map(elmnt => {
-			return new IdAndNameDTO(elmnt.id, elmnt.name);
-		});
 
-		return idAndNameDTOs;
+		return users.map(elmnt => {
+			return new IdAndNameDTO(elmnt.intraID, elmnt.name);
+		})
 	}
 
 	async getScoreCard(userID: number): Promise<ScoreCardDTO>
 	{
 		const user = await this.prisma.user.findUnique({
-			where: { id: userID },
+			where: { intraID: userID },
 			select: {
 				name: true,
 				badgeName: true,
@@ -52,7 +49,7 @@ export class UserService {
 		if (!user)
 			throw new Error('getScoreCard: User not found');
 
-		const scoreCard: ScoreCardDTO = {
+		return {
 			name: user.name,
 			badge: user.badgeName,
 			matches: user.matches.length,
@@ -60,55 +57,48 @@ export class UserService {
 			winrate: user.wins / user.matches.length,
 			mmr: user.mmr,
 			online: user.online
-		}
-
-		return scoreCard;
+		};
 	}
 
 	async getMatches(userID: number): Promise<number[]>
 	{
 		const user = await this.prisma.user.findUnique({
-			where: { id: userID },
+			where: { intraID: userID },
 			select: { matches: true	}
 		});
 		if (!user)
 			throw new Error('getMatches: User not found');
-
 		return user.matches;
 	}
 
 	async getFriends(userID: number): Promise<IdAndNameDTO[]>
 	{
 		const user = await this.prisma.user.findUnique({
-			where: { id: userID },
+			where: { intraID: userID },
 			select: { friends: true	}
 		});
 		if (!user)
 			throw new Error('getFriends');
-		
 		const friends = await this.prisma.user.findMany({
 			where: {
-				id: { in: user.friends },
+				intraID: { in: user.friends },
 			},
 			select: {
-				id: true,
+				intraID: true,
 				name: true,
 			}
 		});
 		if (friends.length === 0)
 			return [];
-		
-		const idAndNameDTOs = friends.map((elmnt) => {
-			return new IdAndNameDTO(elmnt.id, elmnt.name);
+		return friends.map((elmnt) => {
+			return new IdAndNameDTO(elmnt.intraID, elmnt.name);
 		});
-		
-		return idAndNameDTOs;
 	}
 
 	async getOnlineFriends(userID: number): Promise<IdAndNameDTO[]>
 	{
 		const user = await this.prisma.user.findUnique({
-			where: { id: userID },
+			where: { intraID: userID },
 			select: { friends: true }
 		});
 		if (!user)
@@ -116,28 +106,25 @@ export class UserService {
 
 		const onlineFriends = await this.prisma.user.findMany({
 				where: {
-					id: { in: user.friends },
+					intraID: { in: user.friends },
 					online: true
 				},
 				select: {
-					id: true,
+					intraID: true,
 					name: true,
 				}
 		});
 		if (onlineFriends.length === 0)
 			return [];
-		
-		const idAndNameDTOs = onlineFriends.map(elmnt => {
-			return new IdAndNameDTO(elmnt.id, elmnt.name);
+		return onlineFriends.map(elmnt => {
+			return new IdAndNameDTO(elmnt.intraID, elmnt.name);
 		});
-
-		return idAndNameDTOs;
 	}
 	
 	async getFriendsData(userID: number): Promise<FriendListDTO>
 	{
 		const user = await this.prisma.user.findUnique({
-			where: { id: userID },
+			where: { intraID: userID },
 			select: {
 				friends: true,
 				friendReq_out: true,
@@ -147,14 +134,12 @@ export class UserService {
 		});
 		if (!user)
 		throw new Error('getFriendsData: User not found');
-		
-		const friendListData: FriendListDTO = {
+
+		return {
 			friends: user.friends,
 			friendReq_out: user.friendReq_out,
 			friendReq_in: user.friendReq_in,
 			blocked: user.blocked
-		}
-		
-		return friendListData;
+		};
 	}
 }
