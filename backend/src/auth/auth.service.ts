@@ -8,6 +8,7 @@ import {Request, Response} from "express"
 
 @Injectable()
 export class AuthService {
+    // constructor(private prisma: PrismaService, private jwt: JwtService, private configService: ConfigService) {}
     constructor(private prisma: PrismaService, private jwt: JwtService) {}
 
     async ft_signin(user)
@@ -17,13 +18,14 @@ export class AuthService {
         const foundUser = await this.findUserByEmail(user.email);
         if (!foundUser)
             return this.registerUser(user);
-        console.log("user is found: ")
+        console.log("user is found: ", user)
         // if already registered, sign in:
         return this.generateJwtToken({
             email: foundUser.email,
-            name: foundUser.name,
-            passHash: foundUser.passHash,
-            intraID: foundUser.intraID,
+            // provider: "42",
+            // user: "pm",
+            // passHash: foundUser.passHash,
+            // intraID: foundUser.intraID,
         })
     }
 
@@ -32,6 +34,69 @@ export class AuthService {
         return "intra_auth"
     }
 
+    async validateUser(payload){
+        const {id} = payload.id;
+        const foundUser = await this.findUserById(id);
+        if (!foundUser)
+            throw new BadRequestException("Unauthenticated.");
+        return foundUser;
+    }
+
+    async registerUser(user){
+        const {id, email, name, surename } = user; //user:intralogin
+        try{
+            const newUser = await this.prisma.user.create({
+                data: {
+                    email: email,
+                    // name: name,
+                    // bananna: "ggg",
+                    // passHash: "intra42", //change later
+                    // intraID: "id",
+                    // chatStatus: "active",
+                    // badgeName: "badge",
+
+                }
+            })
+            return this.generateJwtToken({
+                email: newUser.email,
+                provider: "42",
+                // user: "pm",
+                // // userName: newUser.userName,
+                // passHash: newUser.passHash,
+                // intraID: newUser.intraID,
+            })
+        }
+        catch {
+            throw new InternalServerErrorException();
+        }
+    }
+
+
+    async validateUserByJwt(payload){
+        const {intraID, email} = payload;
+        console.log("payload is", payload, "sub is", intraID)
+        const foundUser = await this.findUserByEmail(email);
+        if (!foundUser)
+            throw new BadRequestException("not found.");
+        return foundUser;
+    }
+
+    async generateJwtToken(payload){
+        const token = await this.jwt.signAsync(payload, {secret: jwtSecret});
+        if (!token){
+            throw new ForbiddenException();
+        }
+        console.log("token is", token);
+        return token;
+    }
+
+    async findUserById(id:number){
+        return this.prisma.user.findUnique({
+            where: {
+                id: id,
+            },
+        });
+    }
     async findUserByEmail(email:string){
         return this.prisma.user.findUnique({
             where: {
@@ -39,44 +104,6 @@ export class AuthService {
             },
         });
     }
-
-    async registerUser(user){
-        const {id, email, name} = user;
-        try{
-            const newUser = await this.prisma.user.create({
-                data: {
-                    email: email,
-                    name: name,
-                    passHash: "intra42", //change later
-                    intraID: "intra42something",
-                }
-            })
-            console.log("new user is ", newUser);
-            return this.generateJwtToken({
-                email: newUser.email,
-                name: newUser.name,
-                passHash: newUser.passHash,
-                intraID: newUser.intraID,
-            })
-        }
-        catch {
-            console.log("bfkfldfjow")
-            throw new InternalServerErrorException();
-        }
-    }
-
-    async generateJwtToken(payload){
-    // generateJwtToken(payload){
-        const token = this.jwt.signAsync(payload, {secret: jwtSecret});
-
-        // const token = this.jwt.sign(payload);
-        if (!token){
-            throw new ForbiddenException();
-        }
-        return token;
-    }
-
-
 
 
     // async signup(dto: AuthDto){

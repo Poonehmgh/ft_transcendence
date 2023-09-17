@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import {AuthDto} from "./dto/auth.dto";
 import {ftAuthGuard} from "./guards/intra_42.guard";
 import {Response} from "express";
-
+import {JwtAuthGuard} from "./guards/jwt-auth.guard";
 
 @Controller('auth')
 export class AuthController {
@@ -35,4 +35,12 @@ export class AuthController {
     // return {msg:"it is redirected here"}
     res.cookie("token", token)
     return res.send("the login was successful!")  }
+
+  @Get("/42/test")
+  @UseGuards(JwtAuthGuard)
+  test(@Req() req){
+    console.log("hello from test", req.user);
+    // return req.user
+  }
+
 }

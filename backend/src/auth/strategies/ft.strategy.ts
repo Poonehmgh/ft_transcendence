@@ -8,7 +8,7 @@ import {AuthService} from "../auth.service";
 export class ftStrategy extends PassportStrategy(Strategy, "42")
 {
     constructor(private authService: AuthService) {
-        super( // super classes constructor
+        super(
             {
                 clientID        : "u-s4t2ud-44b53d4a9d24b54875d1747b38eeafd48138c02c2d654e48821681959a95c4ad",
                 clientSecret    : "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",
@@ -19,15 +19,17 @@ export class ftStrategy extends PassportStrategy(Strategy, "42")
         }
     async validate(accessToken: string, refreshToken: string, profile: Profile, done: VerifyCallback) {
 
-            const {id, username, displayName, emails, login} = profile;
+            const {id, username, emails, name} = profile;
 
             const user: User = {
                 provider: "42",
                 providerId: id,
-                name: displayName,
+                user: username,
                 email: emails[0].value,
+                name: name.givenName,
+                surname: name.familyName,
             };
-            console.log("profile info is " , user.providerId, user.name, user.email);
+            console.log("profile info is " , user.providerId, user.user, user.email, user.name, user.surname);
             done(null, user);
     }
 }
