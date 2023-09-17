@@ -8,7 +8,6 @@ import {Request, Response} from "express"
 
 @Injectable()
 export class AuthService {
-    // constructor(private prisma: PrismaService, private jwt: JwtService, private configService: ConfigService) {}
     constructor(private prisma: PrismaService, private jwt: JwtService) {}
 
     async ft_signin(user)
@@ -19,7 +18,6 @@ export class AuthService {
         if (!foundUser)
             return this.registerUser(user);
         console.log("user is found: ", user)
-        // if already registered, sign in:
         return this.generateJwtToken({
             email: foundUser.email,
             // provider: "42",
@@ -43,7 +41,7 @@ export class AuthService {
     }
 
     async registerUser(user){
-        const {id, email, name, surename } = user; //user:intralogin
+        const {id, email, name, surename } = user;
         try{
             const newUser = await this.prisma.user.create({
                 data: {

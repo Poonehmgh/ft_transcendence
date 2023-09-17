@@ -32,7 +32,6 @@ export class AuthController {
   @UseGuards(ftAuthGuard)
   async ft_redirect(@Req() req, @Res() res: Response){
     const token = await this.authService.ft_signin(req.user);
-    // return {msg:"it is redirected here"}
     res.cookie("token", token)
     return res.send("the login was successful!")  }
 
