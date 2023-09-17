@@ -6,6 +6,7 @@ import {JwtService} from "@nestjs/jwt";
 import {jwtSecret} from "../utils/constants"
 import {Request, Response} from "express"
 
+// to amend: add a function to check if the user is already logged in
 @Injectable()
 export class AuthService {
     constructor(private prisma: PrismaService, private jwt: JwtService) {}
