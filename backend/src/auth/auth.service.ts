@@ -22,7 +22,7 @@ export class AuthService {
             data: {         //investigate later: why cannot skip the items that have a default value like avatar?
                 email: email,
                 passHash: hashedPassword,
-                intraID: intraID,
+                id: intraID,
                 name: name,
                 badgeName: badge,
             }
@@ -48,7 +48,7 @@ export class AuthService {
             throw new BadRequestException("Password is wrong.")
         // sign jwt tokens:
         const token = await this.signToken({
-            id: foundUser.intraID,
+            id: foundUser.id,
             email: foundUser.email,
         });
         if (!token){

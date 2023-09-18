@@ -1,7 +1,7 @@
 export class NewUserDTO
 {
 	constructor(
-		public intraID: number,
+		public id: number,
 		public passHash: string,
 		public name: string,
 		public email: string,
@@ -19,6 +19,7 @@ export class IdAndNameDTO
 export class ScoreCardDTO
 {
 	constructor(
+		public id: number,
 		public name: string,
 		public badge: string,
 		public matches: number,
