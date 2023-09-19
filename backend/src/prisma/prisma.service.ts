@@ -3,6 +3,7 @@ import { Injectable, OnModuleInit } from '@nestjs/common';
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
+	[x: string]: any;
     constructor() {
         super();
     }

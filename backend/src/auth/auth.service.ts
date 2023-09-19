@@ -11,6 +11,7 @@ import {Request, Response} from "express"
 export class AuthService {
     constructor(private prisma: PrismaService, private jwt: JwtService) {}
 
+
     async ft_signin(user)
     {
         if (!user)
@@ -25,6 +26,7 @@ export class AuthService {
             // user: "pm",
             // passHash: foundUser.passHash,
             // intraID: foundUser.intraID,
+
         })
     }
 
