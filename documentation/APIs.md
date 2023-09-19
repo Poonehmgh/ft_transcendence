@@ -1,6 +1,6 @@
 ## User 
 
-#### [user-dto.ts](..%2FDTO%2Fuser-dto.ts)
+#### [user-dto.ts](..%2Fbackend%2Fsrc%2Fuser%2Fuser-dto.ts)
 
 | what              | method  | controller-path        | takes      | returns        | comment                                        |
 |-------------------|---------|------------------------|------------|----------------|------------------------------------------------|
@@ -15,14 +15,14 @@
 
 ## Match
 
-##### [match-dto.ts](..%2FDTO%2Fmatch-dto.ts)
+[match-dto.ts](..%2Fbackend%2Fsrc%2Fmatch%2Fmatch-dto.ts)
 
 | what              | method  | controller-path     | takes      | returns        |
 |-------------------|---------|---------------------|------------|----------------|
 
 ## Game
 
-###### [game-dto.ts](..%2FDTO%2Fgame-dto.ts)
+
 
 | what          | method    | controller-path  | takes | returns        |
 |---------------|-----------|------------------|-------|----------------|
