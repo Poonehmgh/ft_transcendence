@@ -8,13 +8,11 @@ datasource db {
 }
 
 model User {
-
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
   id            Int          @id @unique // this is the intraID
   name          String       @unique
   email         String       @unique
-  passHash      String
   avatarURL     String       @default("defaultPath")
   badgeName     String       @default("noob")
   wins          Int          @default(0)
