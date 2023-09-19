@@ -33,13 +33,15 @@ export class AuthController {
   async ft_redirect(@Req() req, @Res() res: Response){
     const token = await this.authService.ft_signin(req.user);
     res.cookie("token", token)
-    return res.send("the login was successful!")  }
+    return res.send("the login was successful!")
+    // add the redirection to a certain page here later
+  }
 
   @Get("/42/test")
   @UseGuards(JwtAuthGuard)
-  test(@Req() req){
+  async test(@Req() req){
     console.log("hello from test", req.user);
-    // return req.user
+    return req.user
   }
 
 }

@@ -170,5 +170,4 @@ export class AuthService {
     //     const payload = input;
     //     return this.jwt.signAsync(payload, {secret: jwtSecret});
     // }
-
 }
