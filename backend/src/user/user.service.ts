@@ -140,7 +140,7 @@ export class UserService {
         const topUsers = await this.prisma.user.findMany({
             where: { matches: { isEmpty: false } },
             orderBy: { mmr: 'desc' },
-            take: n
+            take: Number(n)
         });
 
         return topUsers.map(({id, name, title, matches, mmr, winrate}) => {

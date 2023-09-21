@@ -8,18 +8,20 @@ datasource db {
 }
 
 model User {
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  id        Int      @id @unique // this is the intraID
-  name      String   @unique
-  email     String   @unique
-  avatarURL String   @default("defaultPath")
-  title     String   @default("noob")
-
-  matches Int[]
-  mmr     Int   @default(1000)
-  winrate Int?
-
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  // registration
+  id            Int         @id @unique // this is the intraID
+  name          String      @unique
+  email         String      @unique
+  // customization
+  avatarURL     String      @default("defaultPath")
+  title         String      @default("noob")
+  // match
+  matches       Int[]
+  mmr           Int         @default(1000)
+  winrate       Int?
+  // chat
   online        Boolean     @default(false)
   friends       Int[]
   friendReq_out Int[]
