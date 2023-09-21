@@ -23,13 +23,13 @@ export class ftStrategy extends PassportStrategy(Strategy, "42")
 
             const user: User = {
                 provider: "42",
-                providerId: id,
+                id: id,
                 user: username,
                 email: emails[0].value,
                 name: name.givenName,
                 surname: name.familyName,
             };
-            console.log("profile info is " , user.providerId, user.user, user.email, user.name, user.surname);
+            console.log("profile info is " , user.id, user.user, user.email, user.name, user.surname);
             done(null, user);
     }
 }

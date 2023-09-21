@@ -6,11 +6,9 @@ import {JwtService} from "@nestjs/jwt";
 import {jwtSecret} from "../utils/constants"
 import {Request, Response} from "express"
 
-// to amend: add a function to check if the user is already logged in
 @Injectable()
 export class AuthService {
     constructor(private prisma: PrismaService, private jwt: JwtService) {}
-
 
     async ft_signin(user)
     {
@@ -22,11 +20,8 @@ export class AuthService {
         console.log("user is found: ", user)
         return this.generateJwtToken({
             email: foundUser.email,
-            // provider: "42",
-            // user: "pm",
-            // passHash: foundUser.passHash,
-            // intraID: foundUser.intraID,
-
+            id: foundUser.id,
+            name: foundUser.name,
         })
     }
 
@@ -44,27 +39,22 @@ export class AuthService {
     }
 
     async registerUser(user){
-        const {id, email, name, surename } = user;
+        const {id, email, surname } = user;
+        const name: string = user.name;
         try{
             const newUser = await this.prisma.user.create({
                 data: {
                     id: id,
                     name: name,
                     email: email,
-                    // bananna: "ggg",
-                    // passHash: "intra42", //change later
-                    // chatStatus: "active",
-                    // badgeName: "badge",
-
+                    //id: Number(id),
+                   // name: name + (surname ? ` ${surname}` : '')
                 }
             })
             return this.generateJwtToken({
                 email: newUser.email,
-                provider: "42",
-                // user: "pm",
-                // // userName: newUser.userName,
-                // passHash: newUser.passHash,
-                // intraID: newUser.intraID,
+                id: newUser.id,
+                name: newUser.name,
             })
         }
         catch {
@@ -74,8 +64,8 @@ export class AuthService {
 
 
     async validateUserByJwt(payload){
-        const {intraID, email} = payload;
-        console.log("payload is", payload, "sub is", intraID)
+        const {id, email} = payload;
+        console.log("payload is", payload, "sub is", id) // why we dont have payload elements that we defined in strategy????
         const foundUser = await this.findUserByEmail(email);
         if (!foundUser)
             throw new BadRequestException("not found.");

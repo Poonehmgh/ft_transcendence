@@ -7,7 +7,7 @@ import {jwtSecret} from "../../utils/constants";
 export class JwtPayload{
     mail: string;
     name: string;
-    sub: string | number;
+    id: string | number;
 }
 
 @Injectable()

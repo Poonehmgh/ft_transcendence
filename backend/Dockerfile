@@ -3,8 +3,8 @@ RUN npm install -g typescript
 WORKDIR /backend
 
 COPY package*.json ./
-RUN npm install
 COPY . .
+RUN npm install
 
 RUN npx prisma generate
 RUN chmod 777 start.sh
