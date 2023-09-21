@@ -2,27 +2,31 @@ import React, {useEffect, useState} from "react";
 import {ScoreCardDTO} from  "../../../backend/src/user/user-dto";
 
 interface NumberOfEntries {
-    n: Number;
+    n: number;
 }
+
+const fetchData = async (n: number): Promise<ScoreCardDTO[]> => {
+    const response: Response = await fetch(`http://localhost:5500/user/leaderboard?top=${n}`, {
+        method: "Get",
+        headers: {
+            //Authorization: `Bearer ${jscookies.get}`,
+            // accepted-content?
+        },
+    });
+    return await response.json();
+}
+
 
 function LeaderBoard(props: NumberOfEntries): Element
 {
     const [leaderTable, setLeaderTable] = useState <ScoreCardDTO[]>([])
     useEffect((): void => {
-        const fetchLeaderBoard = async  (): Promise<void> => {
-            const response: Response = await fetch(`http://localhost:5500/user/leaderboard?top=${props.n}`, {
-                method: "Get",
-                headers: {
-                    //Authorization: `Bearer ${jscookies.get}`,
-                    // accepted-content?
-                },
-            });
-            const data:  ScoreCardDTO[] = await response.json();
+        const fetchLeaderBoard = async (): Promise<void> => {
+            const data = await fetchData(props.n)
             setLeaderTable(data);
         }
-
         void fetchLeaderBoard();
-    }, []);
+    }, [props.n]);
 
     return (
         <ol>
