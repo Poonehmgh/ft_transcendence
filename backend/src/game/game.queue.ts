@@ -1,5 +1,5 @@
 import {Injectable} from "@nestjs/common";
-import {GameUpdateDTO, PlankUpdateDTO} from "./game.DTOs";
+import {GameUpdateDTO, NewRoundDTO, PlankUpdateDTO} from "./game.DTOs";
 import {Socket} from "socket.io";
 
 export class GameData {
@@ -22,8 +22,8 @@ export class GameData {
 	fieldWidth: number = 100;
 	fieldHeight: number = 100;
 	ballRadius: number = 2;
-	plankWidth: number = 6;
-	plankHeight: number = 100;
+	plankWidth: number = 10;
+	plankHeight: number = 20;
 
 	interval: NodeJS.Timer;
 
@@ -41,22 +41,27 @@ export class GameData {
 		if (this.PositionBall[0] - this.ballRadius < this.plankWidth
 			&& this.PositionBall[1] > this.PositionPlank1
 			&& this.PositionBall[1] < this.PositionPlank1 + this.plankHeight) {
-			// const relativeHitPosition = (this.PositionBall[1] - this.PositionPlank1) - (this.plankHeight / 2);
-			// this.VelocityBall[1] = relativeHitPosition / (this.plankHeight / 2);
+			const relativeHitPosition = (this.PositionBall[1] - this.PositionPlank1) - (this.plankHeight / 2);
+			this.VelocityBall[1] = relativeHitPosition / (this.plankHeight / 2);
 			this.VelocityBall[0] *= -1;
 		}
 		if (this.PositionBall[0] - this.ballRadius >= this.fieldWidth - this.plankWidth
 			&& this.PositionBall[1] > this.PositionPlank2
 			&& this.PositionBall[1] < this.PositionPlank2 + this.plankHeight) {
-			// const relativeHitPosition = (this.PositionBall[1] - this.PositionPlank2) - (this.plankHeight / 2);
-			// this.VelocityBall[1] = relativeHitPosition / (this.plankHeight / 2); // Adjust vertical speed + can be tweaked with additional koifficients
+			const relativeHitPosition = (this.PositionBall[1] - this.PositionPlank2) - (this.plankHeight / 2);
+			this.VelocityBall[1] = relativeHitPosition / (this.plankHeight / 2); // Adjust vertical speed + can be tweaked with additional koifficients
 			this.VelocityBall[0] *= -1;
 		}
 	}
 
+	sendNewRoundMessage = () => {
+		this.infoUser1.socket.emit('newRound', new NewRoundDTO(this));
+		this.infoUser2.socket.emit('newRound', new NewRoundDTO(this));
+	}
+
 	resetGameData = () => {
-		this.PositionPlank1 = 0;
-		this.PositionPlank2 = 0;
+		this.PositionPlank1 = 40;
+		this.PositionPlank2 = 40;
 		this.PositionBall = [50, 50];
 		this.VelocityBall = [10, 0];
 	}
@@ -69,6 +74,7 @@ export class GameData {
 		console.log(`points for player ${user}`)
 		clearInterval(this.interval);
 		this.resetGameData();
+		this.sendNewRoundMessage();
 		console.log(this);
 		this.interval = setInterval(this.gameLogic, 1000);
 		console.log('restarted');
@@ -76,15 +82,15 @@ export class GameData {
 	}
 
 	fieldCollision = () => {
-		// if (this.PositionBall[1] - this.ballRadius <= 0 || this.PositionBall[1] + this.ballRadius >= this.fieldHeight) {
-		// 	this.VelocityBall[1] *= -1;
-		// }
-		// if (this.PositionBall[0] - this.ballRadius - 10 <= 0){
-		// 	this.addPointToUser(1);
-		// }
-		// else if (this.PositionBall[0] + this.ballRadius + 10 >= this.fieldWidth) {
-		// 	this.addPointToUser(2);
-		// }
+		if (this.PositionBall[1] - this.ballRadius <= 0 || this.PositionBall[1] + this.ballRadius >= this.fieldHeight) {
+			this.VelocityBall[1] *= -1;
+		}
+		if (this.PositionBall[0] - this.ballRadius < -10){
+			this.addPointToUser(1);
+		}
+		else if (this.PositionBall[0] + this.ballRadius >= this.fieldWidth + 10) {
+			this.addPointToUser(2);
+		}
 	}
 
 	updateBallPosition = () => {
@@ -96,7 +102,7 @@ export class GameData {
 
 	gameLogic = () => {
 		this.plankCollision();
-		// this.fieldCollision();
+		this.fieldCollision();
 		this.updateBallPosition();
 		// console.log(this);
 	}
@@ -135,6 +141,7 @@ export class GameQueue {
 	initGame = (userInfo1: userGateway, userInfo2: userGateway) => {
 		const gameToStart = new GameData(userInfo1, userInfo2, Math.floor(Math.random() * 1000))
 		if (!this.gameList.includes(gameToStart)) {
+			gameToStart.sendNewRoundMessage();
 			gameToStart.interval = setInterval(gameToStart.gameLogic, 1000);
 			console.log(`initialized game with`);
 			this.gameList.push(gameToStart);//add id gen from prisma
