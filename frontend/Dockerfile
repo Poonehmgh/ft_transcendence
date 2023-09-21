@@ -3,11 +3,11 @@ WORKDIR  /frontend
 
 COPY package*.json ./
 
+COPY . .
 RUN npm install --no-audit
 
 RUN npm install
 
-COPY . .
 
 EXPOSE 3000
 
