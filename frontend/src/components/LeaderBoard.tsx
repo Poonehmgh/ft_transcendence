@@ -1,13 +1,16 @@
 import React, {useEffect, useState} from "react";
 import {ScoreCardDTO} from  "../../../backend/src/user/user-dto";
 
-function  LeaderBoard  ({n}: {n: number}): HTMLDivElement
+interface NumberOfEntries {
+    n: Number;
+}
+
+function LeaderBoard(props: NumberOfEntries): Element
 {
     const [leaderTable, setLeaderTable] = useState <ScoreCardDTO[]>([])
-   console.log(`number: ${n}`);
-    useEffect(() => {
+    useEffect((): void => {
         const fetchLeaderBoard = async  (): Promise<void> => {
-            const response = await fetch(`http://localhost:5500/user/leaderboard?top=${n}`, {
+            const response: Response = await fetch(`http://localhost:5500/user/leaderboard?top=${props.n}`, {
                 method: "Get",
                 headers: {
                     //Authorization: `Bearer ${jscookies.get}`,
