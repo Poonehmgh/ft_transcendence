@@ -21,12 +21,10 @@ export class ScoreCardDTO
     constructor(
         public id: number,
         public name: string,
-        public badge: string,
-        public matches: number,
-        public wins: number,
-        public winrate: number,
+        public title: string,
         public mmr: number,
-        public online: boolean
+        public matches: number,
+        public winrate: number
     ) {}
 }
 

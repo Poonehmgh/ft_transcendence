@@ -1,5 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
+import LeaderBoard from "./components/LeaderBoard";
+import React from "react";
 
 function App() {
   return (
@@ -8,6 +10,10 @@ function App() {
         <img src={logo} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.js</code> and save to reload.
+        </p>
+        <p>
+
+          <LeaderBoard n = {5} />
         </p>
         <a
           className="App-link"
