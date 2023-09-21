@@ -48,11 +48,11 @@ export class AuthService {
         try{
             const newUser = await this.prisma.user.create({
                 data: {
+                    id: id,
+                    name: name,
                     email: email,
-                    // name: name,
                     // bananna: "ggg",
                     // passHash: "intra42", //change later
-                    // intraID: "id",
                     // chatStatus: "active",
                     // badgeName: "badge",
 

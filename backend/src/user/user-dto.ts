@@ -23,10 +23,8 @@ export class ScoreCardDTO
         public name: string,
         public badge: string,
         public matches: number,
-        public wins: number,
         public winrate: number,
         public mmr: number,
-        public online: boolean
     ) {}
 }
 

@@ -34,11 +34,10 @@ export class UserService {
             select: {
                 id: true,
                 name: true,
-                badgeName: true,
+                title: true,
                 matches: true,
-                wins: true,
                 mmr: true,
-                online: true
+                winrate: true
             }
         });
         if (!user)
@@ -47,12 +46,10 @@ export class UserService {
         return {
             id: user.id,
             name: user.name,
-            badge: user.badgeName,
+            badge: user.title,
             matches: user.matches.length,
-            wins: user.wins,
-            winrate: user.wins / user.matches.length,
+            winrate: user.winrate,
             mmr: user.mmr,
-            online: user.online
         };
     }
 
@@ -146,8 +143,9 @@ export class UserService {
             take: n
         });
 
-        return topUsers.map(({badgeName, id, matches, mmr, name, online, wins}) => {
-                return new ScoreCardDTO(id, name, badgeName, matches.length, wins, wins / matches.length, mmr, online);
+        return topUsers.map(({id, name, title, matches, mmr, winrate}) => {
+                return new ScoreCardDTO(
+                    id, name, title, matches.length, mmr, winrate,);
         });
     }
 }
