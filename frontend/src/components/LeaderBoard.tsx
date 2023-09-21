@@ -1,8 +1,13 @@
 import React, {useEffect, useState} from "react";
 import {ScoreCardDTO} from  "../../../backend/src/user/user-dto";
 
-interface NumberOfEntries {
+interface leaderBoardProp {
     n: number;
+}
+
+interface rowEntryProp {
+    scoreCard: ScoreCardDTO;
+    rank: number;
 }
 
 const fetchData = async (n: number): Promise<ScoreCardDTO[]> => {
@@ -16,8 +21,7 @@ const fetchData = async (n: number): Promise<ScoreCardDTO[]> => {
     return await response.json();
 }
 
-
-function LeaderBoard(props: NumberOfEntries): Element
+function LeaderBoard(props: leaderBoardProp): Element
 {
     const [leaderTable, setLeaderTable] = useState <ScoreCardDTO[]>([])
     useEffect((): void => {
@@ -40,13 +44,13 @@ function LeaderBoard(props: NumberOfEntries): Element
     );
 }
 
-function RowEntry({scoreCard, rank}: {scoreCard: ScoreCardDTO, rank: number}) {
+function RowEntry(props: rowEntryProp): React.JSX.Element {
     return (
-        <li key = { rank }>
-           <span>{scoreCard.name} </span>
-            <span> {scoreCard.badge} </span>
-          <span>  {scoreCard.mmr} </span>
-          <span>  {scoreCard.winrate} </span>
+        <li key = {props.rank}>
+            <span>{props.scoreCard.name} </span>
+            <span>{props.scoreCard.title} </span>
+            <span>{props.scoreCard.mmr} </span>
+            <span>{props.scoreCard.winrate}</span>
         </li>
     )
 }

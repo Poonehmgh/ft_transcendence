@@ -46,7 +46,7 @@ export class UserService {
         return {
             id: user.id,
             name: user.name,
-            badge: user.title,
+            title: user.title,
             matches: user.matches.length,
             winrate: user.winrate,
             mmr: user.mmr,
