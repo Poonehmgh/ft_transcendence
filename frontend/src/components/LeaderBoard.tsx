@@ -35,10 +35,8 @@ function LeaderBoard(props: leaderBoardProp): Element
     return (
         <ol>
             {leaderTable.map(
-                (element: ScoreCardDTO, idx: number) => (
-                <RowEntry
-                    scoreCard = { element }
-                          rank = {idx + 1}/>
+                (element: ScoreCardDTO, index: number) => (
+                    <RowEntry scoreCard = {element} rank = {index + 1}/>
                 ))}
         </ol>
     );
@@ -48,9 +46,10 @@ function RowEntry(props: rowEntryProp): React.JSX.Element {
     return (
         <li key = {props.rank}>
             <span>{props.scoreCard.name} </span>
-            <span>{props.scoreCard.title} </span>
-            <span>{props.scoreCard.mmr} </span>
-            <span>{props.scoreCard.winrate}</span>
+            <span style={{ fontStyle: 'italic' }}>the {props.scoreCard.title}</span>
+            <span> | mmr: {props.scoreCard.mmr} </span>
+            <span> | matches: {props.scoreCard.matches} </span>
+            <span> | winrate: {props.scoreCard.winrate !== null ? props.scoreCard.winrate : "N/A"}</span>
         </li>
     )
 }

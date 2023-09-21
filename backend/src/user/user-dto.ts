@@ -24,7 +24,7 @@ export class ScoreCardDTO
         public title: string,
         public mmr: number,
         public matches: number,
-        public winrate: number,
+        public winrate: number
     ) {}
 }
 

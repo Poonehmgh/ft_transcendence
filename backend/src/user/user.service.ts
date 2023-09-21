@@ -145,7 +145,7 @@ export class UserService {
 
         return topUsers.map(({id, name, title, matches, mmr, winrate}) => {
                 return new ScoreCardDTO(
-                    id, name, title, matches.length, mmr, winrate,);
+                    id, name, title, mmr, matches.length, winrate);
         });
     }
 }

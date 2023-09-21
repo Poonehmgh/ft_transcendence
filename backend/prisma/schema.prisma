@@ -20,7 +20,7 @@ model User {
   // match
   matches       Int[]
   mmr           Int         @default(1000)
-  winrate       Int?
+  winrate       Float?
   // chat
   online        Boolean     @default(false)
   friends       Int[]
