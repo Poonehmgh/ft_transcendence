@@ -26,6 +26,7 @@ model User {
   chatUsers     Chat_User[]  @relation
   matchUsers    Match_User[] @relation
   matches       Int[]
+  twoFactor     Boolean      @default(false)
 }
 
 model Match {
