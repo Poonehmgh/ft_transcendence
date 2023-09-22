@@ -1,5 +1,6 @@
 "use strict";
 import { AuthModule } from './auth/auth.module';
+import { GameGateway } from './game/game.gateway';
 import { AuthModule } from './auth/auth.module';
 var __esDecorate = (this && this.__esDecorate) || function (ctor, descriptorIn, decorators, contextIn, initializers, extraInitializers) {
     function accept(f) { if (f !== void 0 && typeof f !== "function") throw new TypeError("Function expected"); return f; }
