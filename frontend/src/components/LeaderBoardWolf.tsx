@@ -10,7 +10,7 @@ interface rowEntryProp {
     rank: number;
 }
 
-function LeaderBoard(props: leaderBoardProp): React.JSX.Element {
+function LeaderBoardWolf(props: leaderBoardProp): React.JSX.Element {
     const [leaderTable, setLeaderTable] = useState <ScoreCardDTO[]>([]);
     
     useEffect(() => {
@@ -49,4 +49,4 @@ function RowEntry(props: rowEntryProp): React.JSX.Element {
     )
 }
 
-export default LeaderBoard;
+export default LeaderBoardWolf;
