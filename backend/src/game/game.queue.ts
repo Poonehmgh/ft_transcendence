@@ -172,6 +172,7 @@ export class GameQueue {
 	async addPlayerToQueue(userInfo: userGateway): Promise<void> {
 		const game = this.findGameByUser(userInfo)
 		if (game != null) {
+			userInfo.socket.emit('queueConfirm', 'Confirmed');
 			userInfo.socket.emit('newRound', new NewRoundDTO(game));
 			return;
 		}
