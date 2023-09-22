@@ -1,7 +1,7 @@
 import {Link} from "react-router-dom";
-import './styles.css'
+import '../styles/style.css';
 
-function ErrorPage() {
+function Chat() {
     return (
         <div className="sections-container">
             <div className="section" id="header">
@@ -22,7 +22,7 @@ function ErrorPage() {
             </div>
             <div className="section" id="right-bar">Right Bar</div>
             <div className="section" id="center">
-                <div>Error 404: Page not found</div>
+                <div>Chat</div>
             </div>
             <div className="section" id="left-bar">Left Bar</div>
             <div className="section" id="footer">Footer</div>
@@ -30,4 +30,4 @@ function ErrorPage() {
     );
 }
 
-export default ErrorPage;
+export default Chat;

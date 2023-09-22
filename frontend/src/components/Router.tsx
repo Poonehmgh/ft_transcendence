@@ -4,7 +4,7 @@ import Home from "./Home.tsx";
 import Leaderboard from "./Leaderboard.tsx";
 import Game from "./Game.tsx";
 import Chat from "./Chat.tsx";
-import ErrorPage from "./ErrorPage";
+import ErrorPage from "./ErrorPage.tsx";
 
 function getUserID(): Promise<string> {
   return new Promise((resolve, reject) => {
