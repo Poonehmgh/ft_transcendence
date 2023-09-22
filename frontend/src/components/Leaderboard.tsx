@@ -1,4 +1,5 @@
 import {Link} from "react-router-dom";
+import LeaderBoardWolf from "./LeaderBoardWolf";
 
 function Leaderboard() {
     return (
@@ -21,7 +22,9 @@ function Leaderboard() {
             </div>
             <div className="section" id="right-bar">Right Bar</div>
             <div className="section" id="center">
-                <div>Leaderboard</div>
+                <div>Leaderboard
+                     <LeaderBoardWolf n = {5} />
+                </div>
             </div>
             <div className="section" id="left-bar">Left Bar</div>
             <div className="section" id="footer">Footer</div>
