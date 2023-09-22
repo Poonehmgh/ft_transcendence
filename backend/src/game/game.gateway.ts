@@ -33,6 +33,5 @@ export class GameGateway implements OnModuleInit{
         return;
     console.log(data.userID);
     this.gameQueue.addPlayerToQueue(new userGateway(data.userID, userSocket));
-    userSocket.emit('queueConfirm', 'Confirmed');
   }
 }

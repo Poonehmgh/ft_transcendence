@@ -1,6 +1,7 @@
 import {Injectable} from "@nestjs/common";
 import {GameUpdateDTO, NewRoundDTO, PlankUpdateDTO} from "./game.DTOs";
 import {Socket} from "socket.io";
+import {PrismaService} from "../prisma/prisma.service";
 
 export class GameData {
 
@@ -49,7 +50,7 @@ export class GameData {
 			&& this.PositionBall[1] > this.PositionPlank2
 			&& this.PositionBall[1] < this.PositionPlank2 + this.plankHeight) {
 			const relativeHitPosition = (this.PositionBall[1] - this.PositionPlank2) - (this.plankHeight / 2);
-			this.VelocityBall[1] = relativeHitPosition / (this.plankHeight / 2); // Adjust vertical speed + can be tweaked with additional koifficients
+			this.VelocityBall[1] = relativeHitPosition / (this.plankHeight / 2); // Adjust vertical speed + can be tweaked with additional coefficients
 			this.VelocityBall[0] *= -1;
 		}
 	}
@@ -65,6 +66,9 @@ export class GameData {
 		this.PositionBall = [50, 50];
 		this.VelocityBall = [10, 0];
 	}
+
+
+
 	addPointToUser = (user: number) => {
 		if (user == 1) {
 			this.ScorePlayer1++;
@@ -85,10 +89,9 @@ export class GameData {
 		if (this.PositionBall[1] - this.ballRadius <= 0 || this.PositionBall[1] + this.ballRadius >= this.fieldHeight) {
 			this.VelocityBall[1] *= -1;
 		}
-		if (this.PositionBall[0] - this.ballRadius < -10){
+		if (this.PositionBall[0] - this.ballRadius < -10) {
 			this.addPointToUser(1);
-		}
-		else if (this.PositionBall[0] + this.ballRadius >= this.fieldWidth + 10) {
+		} else if (this.PositionBall[0] + this.ballRadius >= this.fieldWidth + 10) {
 			this.addPointToUser(2);
 		}
 	}
@@ -111,6 +114,7 @@ export class GameData {
 export class userGateway {
 	userID: number;
 	socket: Socket;
+	userName: string = 'dummy';
 
 	constructor(userID: number, socket: Socket) {
 		this.userID = userID;
@@ -122,6 +126,9 @@ export class userGateway {
 export class GameQueue {
 	gameList: GameData[] = [];
 	userQueue: userGateway[] = [];
+
+	constructor(private readonly prismaService: PrismaService) {
+	}
 
 	updatePlankPosition = (data: PlankUpdateDTO) => {
 		const gameData: GameData = this.gameList.find((elem) => elem.infoUser1.userID === data.userID || elem.infoUser1.userID === data.userID);
@@ -147,13 +154,48 @@ export class GameQueue {
 			this.gameList.push(gameToStart);//add id gen from prisma
 		}
 	}
-	addPlayerToQueue = (userInfo: userGateway): void => {
+
+	findGameByUser = (userInfo: userGateway): GameData => {
+		for (const gameData of this.gameList) {
+			if (gameData.infoUser1.userID === userInfo.userID) {
+				gameData.infoUser1.socket = userInfo.socket;
+				return gameData; // User is found in one of the GameData instances
+			}
+			if (gameData.infoUser2.userID === userInfo.userID) {
+				gameData.infoUser2.socket = userInfo.socket;
+				return gameData; // User is found in one of the GameData instances
+			}
+		}
+		return null; // User is not found in any of the GameData instances
+	}
+
+	async addPlayerToQueue(userInfo: userGateway): Promise<void> {
+		const game = this.findGameByUser(userInfo)
+		if (game != null) {
+			userInfo.socket.emit('newRound', new NewRoundDTO(game));
+			return;
+		}
+		const name = await this.prismaService.user.findUnique({
+			where: {
+				id: userInfo.userID,
+			},
+			select: {
+				name: true, // Select the 'name' field
+			},
+		});
+		//check for invalid id
+		if (userInfo.userName == null) {
+			userInfo.socket.emit('queueConfirm', 'InvalidID');
+			return;
+		}
+		userInfo.userName = name.name;
 		if (this.userQueue.includes(userInfo))
 			return;
 		this.userQueue.push(userInfo);
 		console.log(`Added user ${userInfo} to the queue`);
 		if (this.userQueue.length >= 2)
 			this.initGame(this.userQueue.pop(), this.userQueue.pop());
+		userInfo.socket.emit('queueConfirm', 'Confirmed');
 	}
 
 }
