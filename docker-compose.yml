@@ -6,7 +6,7 @@ services:
     ports:
      - 3000:3000
     volumes:
-      - front_volume:/frontend
+      - ./frontend:/frontend
     networks:
       - webapp
 
@@ -18,9 +18,8 @@ services:
     environment:
       - DB_URL=postgresql://swypf:secret@db:5432/postgres_db?schema=public
     volumes:
-      - ./backend/src:/backend/src
       - ./backend/prisma:/backend/prisma
-      - ./shared:/shared
+      - ./backend/src:/backend/src
     networks:
       - database
       - webapp

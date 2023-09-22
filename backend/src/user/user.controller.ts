@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Query, Body } from '@nestjs/common';
-import {FriendListDTO, IdAndNameDTO, NewUserDTO, ScoreCardDTO} from './user-dto';
+import { FriendListDTO, IdAndNameDTO, NewUserDTO, ScoreCardDTO } from './user-dto';
 import { UserService } from './user.service';
 
 
