@@ -1,5 +1,6 @@
 import {Link} from "react-router-dom";
 import LeaderBoardWolf from "./LeaderBoardWolf";
+import React from "react";
 
 function Leaderboard() {
     return (

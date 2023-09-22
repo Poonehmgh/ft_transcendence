@@ -19,8 +19,9 @@
 		"noFallthroughCasesInSwitch": false,
 		"paths": {
 			"@components": ["components/*"],
-			"@DTO": ["../shared/"],
+			"@DTO": ["../shared/"]
 		},
-		"include": ["src/**/*.ts", "node_modules/@prisma/client"]
-	},
+		"include": ["src/**/*.ts", "node_modules/@prisma/client"],
+      "jsx": "react"
+    },
 }
