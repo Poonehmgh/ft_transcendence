@@ -21,21 +21,19 @@ const fetchData = async (n: number): Promise<ScoreCardDTO[]> => {
     return await response.json();
 }
 
-function LeaderBoard(props: leaderBoardProp): Element
-{
-    const [leaderTable, setLeaderTable] = useState <ScoreCardDTO[]>([])
-    useEffect((): void => {
-        const fetchLeaderBoard = async (): Promise<void> => {
+function LeaderBoard(props: leaderBoardProp): Element {
+    const [leaderTable, setLeaderTable] = useState <ScoreCardDTO[]>([]);
+    useEffect(() => {
+        const fetchLeaderBoard = async () => {
             const data = await fetchData(props.n)
             setLeaderTable(data);
         }
         void fetchLeaderBoard();
     }, [props.n]);
-
+    
     return (
         <ol>
-            {leaderTable.map(
-                (element: ScoreCardDTO, index: number) => (
+            {leaderTable.map((element: ScoreCardDTO, index: number) => (
                     <RowEntry scoreCard = {element} rank = {index + 1}/>
                 ))}
         </ol>

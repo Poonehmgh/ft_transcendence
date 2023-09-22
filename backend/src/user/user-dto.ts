@@ -2,7 +2,6 @@ export class NewUserDTO
 {
     constructor(
         public id: number,
-        public passHash: string,
         public name: string,
         public email: string,
     ) {}
@@ -38,3 +37,17 @@ export class FriendListDTO
     ) {}
 }
 
+export class UserProfileDTO
+{
+    constructor(
+        public id: number,
+        public name: string,
+        public email: string,
+        public avatarURL: string,
+        public title: string,
+        public mmr: number,
+        public matches: number,
+        public winrate: number,
+        public online: boolean
+    ) {}
+}
