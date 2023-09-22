@@ -8,16 +8,80 @@ datasource db {
 }
 
 model User {
-  id         Int      @id @default(autoincrement())
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  email      String   @unique
-  userName   String
-  intraID    String
-  passHash   String
-  avatar     String   @default("empty")
-  badgeName  String
-  chatStatus String
-  friends    Int[]    @default([0])
-  test       String   @default("hi")
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  // registration
+  id            Int         @id @unique // this is the intraID
+  name          String      @unique
+  email         String      @unique
+  // customization
+  avatarURL     String      @default("defaultPath")
+  title         String      @default("noob")
+  // match
+  matches       Int[]
+  mmr           Int         @default(1000)
+  winrate       Float?
+  // chat
+  online        Boolean     @default(false)
+  friends       Int[]
+  friendReq_out Int[]
+  friendReq_in  Int[]
+  blocked       Int[]
+  userChats     Chat_User[]
+}
+
+model Match {
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  id         Int       @id @unique @default(autoincrement())
+  begin      DateTime?
+  end        DateTime?
+  length_sec Int       @default(0)
+  player1    Int
+  player2    Int
+  score_p1   Int       @default(0)
+  score_p2   Int       @default(0)
+  winner     Int? // if draw, remains NULL
+
+  @@unique([player1, player2])
+}
+
+model Message {
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  id        Int      @id @unique @default(autoincrement())
+  content   String
+  author    Int
+  chat      Chat     @relation(fields: [chatId], references: [id])
+  chatId    Int
+}
+
+model Chat {
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  id           Int         @id @unique @default(autoincrement())
+  name         String      @default("Unnamed Chat")
+  hidden       Boolean     @default(false)
+  pw_protected Boolean     @default(false)
+  password     String? // hash this?
+  messages     Message[]
+  chatUsers    Chat_User[]
+}
+
+// junction tables
+
+model Chat_User {
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  id        Int      @id @unique @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  chat      Chat     @relation(fields: [chatId], references: [id])
+  chatId    Int
+  owner     Boolean  @default(false)
+  admin     Boolean  @default(false)
+  blocked   Boolean  @default(false)
+  muted     Boolean  @default(false)
+
+  @@index([userId, chatId])
 }
