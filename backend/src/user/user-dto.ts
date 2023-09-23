@@ -51,3 +51,10 @@ export class UserProfileDTO
         public online: boolean
     ) {}
 }
+
+export enum FriendStatus {
+    friends,
+    request_sent,
+    request_received,
+    none
+}

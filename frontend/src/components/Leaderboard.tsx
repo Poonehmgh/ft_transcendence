@@ -1,5 +1,6 @@
 import {Link} from "react-router-dom";
 import LeaderBoardWolf from "./LeaderBoardWolf";
+import UserProfile from "./UserProfile";
 
 function Leaderboard() {
     return (
@@ -23,10 +24,14 @@ function Leaderboard() {
             <div className="section" id="right-bar">Right Bar</div>
             <div className="section" id="center">
                 <div>Leaderboard
-                     <LeaderBoardWolf n = {5} />
+                     <LeaderBoardWolf n={5} />
                 </div>
             </div>
-            <div className="section" id="left-bar">Left Bar</div>
+            <div className="section" id="left-bar">
+                <div>User Profile
+                    <UserProfile userId={1} />
+                </div>
+            </div>
             <div className="section" id="footer">Footer</div>
         </div>
     );

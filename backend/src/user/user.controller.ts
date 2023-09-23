@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Query, Body } from '@nestjs/common';
-import { FriendListDTO, IdAndNameDTO, NewUserDTO, ScoreCardDTO } from './user-dto';
+import {FriendListDTO, FriendStatus, IdAndNameDTO, NewUserDTO, ScoreCardDTO, UserProfileDTO} from './user-dto';
 import { UserService } from './user.service';
 
 
@@ -25,9 +25,14 @@ export class UserController {
         return this.userService.getAllUsers();
     }
 
+    @Get('profile')
+    async getProfile(@Query('id') userId: number): Promise<UserProfileDTO> {
+        return this.userService.getProfile(userId);
+    }
+
     @Get('scorecard')
-    async getScoreCard(userID: number): Promise<ScoreCardDTO> {
-        return this.userService.getScoreCard(userID);
+    async getScoreCard(userId: number): Promise<ScoreCardDTO> {
+        return this.userService.getScoreCard(userId);
     }
 
     @Get('leaderboard')
@@ -36,22 +41,30 @@ export class UserController {
     }
 
     @Get('matches')
-    async getMatches(userID: number): Promise<number[]> {
-        return this.userService.getMatches(userID);
+    async getMatches(userId: number): Promise<number[]> {
+        return this.userService.getMatches(userId);
+    }
+
+    @Get('friendStatus')
+    async getFriendStatus(
+        @Query('id1') userId: number,
+        @Query('id2') otherUserId: number
+    ): Promise<FriendStatus> {
+        return this.userService.getFriendStatus(userId, otherUserId);
     }
 
     @Get('friends')
-    async getFriends(userID: number): Promise<IdAndNameDTO[]> {
-        return this.userService.getFriends(userID);
+    async getFriends(userId: number): Promise<IdAndNameDTO[]> {
+        return this.userService.getFriends(userId);
     }
 
     @Get('friends_online')
-    async getOnlineFriends(userID: number): Promise<IdAndNameDTO[]> {
-        return this.userService.getOnlineFriends(userID);
+    async getOnlineFriends(userId: number): Promise<IdAndNameDTO[]> {
+        return this.userService.getOnlineFriends(userId);
     }
 
     @Get('friends_data')
-    async getFriendsData(userID: number): Promise<FriendListDTO> {
-        return this.userService.getFriendsData(userID);
+    async getFriendsData(userId: number): Promise<FriendListDTO> {
+        return this.userService.getFriendsData(userId);
     }
 }
