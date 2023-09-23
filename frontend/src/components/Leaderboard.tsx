@@ -24,7 +24,7 @@ function Leaderboard() {
             </div>
             <div className="section" id="center">
                 <div>
-                  <p>Leaderboard</p>
+                  <h2>Leaderboard</h2>
                   <table>
                     <thead>
                       <tr>

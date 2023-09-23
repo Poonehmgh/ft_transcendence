@@ -40,9 +40,9 @@ function RowEntry(props: rowEntryProp): React.JSX.Element {
     return (
         <tr key = {props.rank}>
             <td>{props.scoreCard.name} the {props.scoreCard.title} </td>
-            <td> | mmr: {props.scoreCard.mmr} </td>
-            <td> | matches: {props.scoreCard.matches} </td>
-            <td> | winrate: {props.scoreCard.winrate !== null ? props.scoreCard.winrate : "N/A"}</td>
+            <td>{props.scoreCard.mmr} </td>
+            <td>{props.scoreCard.matches} </td>
+            <td>{props.scoreCard.winrate !== null ? props.scoreCard.winrate : "N/A"}</td>
         </tr>
     )
 }

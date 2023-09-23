@@ -10,6 +10,19 @@
     color: var(--text-primary);
 }
 
+table, th, td {
+    border: 1px solid;
+    /*border-collapse: collapse;*/
+}
+
+th,td {
+    padding: 0.5rem;
+}
+
+td {
+    text-align: start;
+}
+
 .link {
     color: var(--text-primary);
 }
@@ -26,7 +39,7 @@
     text-align: center;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
 }
 
 #header {
