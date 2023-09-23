@@ -22,7 +22,10 @@ function LogIn() {
             </div>
             <div className="section" id="right-bar">Right Bar</div>
             <div className="section" id="center">
-                <AuthComponent />
+                {/*<AuthComponent />*/}
+              <div>
+                <button onClick={handleLoginClick}>Authenticate</button>
+              </div>
             </div>
             <div className="section" id="left-bar">Left Bar</div>
             <div className="section" id="footer">Footer</div>
@@ -84,5 +87,15 @@ function AuthComponent() {
   );
 }
 
+const ipAddress = "localhost:3000";
+
+const handleLoginClick = async() => {
+  try {
+    window.location.assign(`https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-ebe5af0f2962dca5114adf05b60c69a7cbbb6ec31e4cd146812b74d954feb284&redirect_uri=http%3A%2F%2F${ipAddress}%3A3003%2Fauth%2Flogin&response_type=code`);
+  }
+  catch (error) {
+    alert('An error occurred during login');
+  }
+}
 
 export default LogIn;
