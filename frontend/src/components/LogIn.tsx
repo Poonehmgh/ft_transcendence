@@ -22,12 +22,67 @@ function LogIn() {
             </div>
             <div className="section" id="right-bar">Right Bar</div>
             <div className="section" id="center">
-                <div>Log in</div>
+                <AuthComponent />
             </div>
             <div className="section" id="left-bar">Left Bar</div>
             <div className="section" id="footer">Footer</div>
         </div>
     );
 }
+
+// function AuthComponent() {
+//   const handleAuthentication = async () => {
+//     try {
+//       // Make a GET request to your NestJS authentication endpoint
+//       const response = await fetch('http://localhost:5500/auth/42/login', {
+//         method: 'GET',
+//         credentials: 'include', // Send cookies with the request
+//       });
+//
+//       if (!response.ok) {
+//         throw new Error(`HTTP error! Status: ${response.status}`);
+//       }
+//
+//       // Parse the response data as JSON
+//       const data = await response.json();
+//
+//       // Handle the response data as needed
+//       console.log(data);
+//     } catch (error) {
+//       // Handle errors here
+//       console.error('Authentication failed:', error);
+//     }
+//   };
+//
+//   return (
+//       <div>
+//         <button onClick={handleAuthentication}>Authenticate</button>
+//       </div>
+//   );
+// }
+
+import axios from 'axios'; // Assuming you have Axios installed
+
+function AuthComponent() {
+  const handleAuthentication = async () => {
+    try {
+      // Make a GET request to your NestJS authentication endpoint
+      const response = await axios.get('http://localhost:5500/auth/42/login', { withCredentials: true });
+      
+      // Handle the response from the server
+      console.log(response.data); // Handle the response data as needed
+    } catch (error) {
+      // Handle errors here
+      console.error('Authentication failed:', error);
+    }
+  };
+  
+  return (
+      <div>
+        <button onClick={handleAuthentication}>Authenticate</button>
+      </div>
+  );
+}
+
 
 export default LogIn;
