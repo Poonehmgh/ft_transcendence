@@ -1,6 +1,7 @@
 import {Link} from "react-router-dom";
 import LeaderBoardWolf from "./LeaderBoardWolf";
 import React from "react";
+import '../styles/leaderboard.css';
 
 function Leaderboard() {
     return (
@@ -21,14 +22,22 @@ function Leaderboard() {
                     </li>
                 </ul>
             </div>
-            <div className="section" id="right-bar">Right Bar</div>
             <div className="section" id="center">
-                <div>Leaderboard
+                <div>
+                  <p>Leaderboard</p>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>MMR</th>
+                        <th>Matches</th>
+                        <th>Win Rate</th>
+                      </tr>
+                    </thead>
                      <LeaderBoardWolf n = {5} />
+                  </table>
                 </div>
             </div>
-            <div className="section" id="left-bar">Left Bar</div>
-            <div className="section" id="footer">Footer</div>
         </div>
     );
 }
