@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Query, Body } from '@nestjs/common';
-import {FriendListDTO, FriendStatus, IdAndNameDTO, NewUserDTO, ScoreCardDTO, UserProfileDTO} from './user-dto';
+import {FriendListDTO, SocialStatus, IdAndNameDTO, NewUserDTO, ScoreCardDTO, UserProfileDTO} from './user-dto';
 import { UserService } from './user.service';
 
 
@@ -49,7 +49,7 @@ export class UserController {
     async getFriendStatus(
         @Query('id1') userId: number,
         @Query('id2') otherUserId: number
-    ): Promise<FriendStatus> {
+    ): Promise<SocialStatus> {
         return this.userService.getFriendStatus(userId, otherUserId);
     }
 

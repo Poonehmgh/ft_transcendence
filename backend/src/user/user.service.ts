@@ -1,6 +1,6 @@
 import {Injectable} from '@nestjs/common';
 import {PrismaService} from '../prisma/prisma.service';
-import {FriendListDTO, FriendStatus, IdAndNameDTO, NewUserDTO, ScoreCardDTO, UserProfileDTO} from './user-dto'
+import {FriendListDTO, SocialStatus, IdAndNameDTO, NewUserDTO, ScoreCardDTO, UserProfileDTO} from './user-dto'
 import {User} from "@prisma/client";
 
 @Injectable()
@@ -72,7 +72,6 @@ export class UserService {
             select: {
                 id: true,
                 name: true,
-                email: true,
                 avatarURL: true,
                 title: true,
                 mmr: true,
@@ -86,7 +85,6 @@ export class UserService {
         return {
             id: profile.id,
             name: profile.name,
-            email: profile.email,
             avatarURL: profile.avatarURL,
             title: profile.title,
             mmr: profile.mmr,
@@ -96,26 +94,29 @@ export class UserService {
         };
     }
 
-    async getFriendStatus(userId: number, otherUserId: number): Promise<FriendStatus>
+    async getFriendStatus(userId: number, otherUserId: number): Promise<SocialStatus>
     {
-        const user = await prisma.user.findUnique({
+        const user = await this.prisma.user.findUnique({
             where: { id: Number(userId) },
             select: {
                 friends: true,
                 friendReq_out: true,
                 friendReq_in: true,
+                blocked: true
             },
         });
         if (!user)
             throw new Error('getFriendStatus');
 
-        if (otherUserId in user.friends)
-            return FriendStatus.friends;
-        if (otherUserId in user.friendReq_out)
-            return FriendStatus.request_sent;
-        if (otherUserId in user.friendReq_in)
-            return FriendStatus.request_received;
-        return FriendStatus.none;
+        if (user.friends.includes(Number(otherUserId)))
+            return SocialStatus.friends;
+        if (user.friendReq_out.includes(Number((otherUserId))))
+            return SocialStatus.request_sent;
+        if (user.friendReq_in.includes(Number(otherUserId)))
+            return SocialStatus.request_received;
+        if (user.blocked.includes(Number(otherUserId)))
+            return SocialStatus.blocked;
+        return SocialStatus.none;
     }
 
     async getFriends(userId: number): Promise<IdAndNameDTO[]>

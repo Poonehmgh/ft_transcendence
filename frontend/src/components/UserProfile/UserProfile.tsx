@@ -1,5 +1,7 @@
 import React, {useEffect, useState} from "react";
-import {UserProfileDTO} from "../../../backend/src/user/user-dto";
+import {UserProfileDTO} from "user-dto";
+import FriendButton from './FriendButton';
+import SocialActionBar from "./SocialActionBar";
 
 interface userProfileProp {
   userId: number
@@ -35,7 +37,9 @@ function UserProfile(props: userProfileProp): React.JSX.Element {
           winrate: {userProfile.winrate}
           <br/>
           {userProfile.online ? 'online' : 'offline'}
-      </div>
+          <br/>
+          <br/>
+        </div>
   );
 }
 
