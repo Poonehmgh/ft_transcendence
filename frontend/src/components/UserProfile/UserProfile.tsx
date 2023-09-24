@@ -28,7 +28,7 @@ function UserProfile(props: userProfileProp): React.JSX.Element {
           <br/>
           Name: {userProfile.name}
           <br/>
-          Rank: {userProfile.title}
+          Rank: {userProfile.rank}
           <br/>
           mmr: {userProfile.mmr}
           <br/>
