@@ -51,11 +51,11 @@ export class GameUpdateDTO {
 
 }
 
-export function isGameUpdateDTOValid(data: GameUpdateDTO): boolean {
-	if (isTwoNumberArray(data.ballPosition) || typeof data.enemyPlankPosition == 'number')
-		return false;
-	return true;
-}
+// export function isGameUpdateDTOValid(data: GameUpdateDTO): boolean {
+// 	if (isTwoNumberArray(data.ballPosition) || typeof data.enemyPlankPosition == 'number')
+// 		return false;
+// 	return true;
+// }
 
 export class NewRoundDTO{
 	//user info

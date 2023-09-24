@@ -3,14 +3,15 @@ import {GameData} from "../game/game.queue";
 export class MatchInfoDTO
 {
 	begin: Date;
-	duration: number;
-	player1_name: string;
-	player2_name: string;
-	player1_score: number;
-	player2_score: number;
+	length_sec: number;
+	// player1_name: string;
+	// player2_name: string;
+	score_p1: number;
+	score_p2: number;
 	player1: number;
 	player2: number;
-	winner: string
+	winner_name: string;
+	winner_id: number = 0;
 
 	constructor(data: GameData) {
 		// Extracting information from GameData
@@ -18,21 +19,23 @@ export class MatchInfoDTO
 
 		// Setting the properties of MatchInfoDTO
 		this.begin = new Date(); // You can set this to the appropriate value
-		this.duration = 0; // You can calculate the duration based on your logic
-		this.player1_name = infoUser1.userName; // Assuming username is a property of userGateway
-		this.player2_name = infoUser2.userName; // Assuming username is a property of userGateway
+		this.length_sec = 0; // You can calculate the duration based on your logic
+		// this.player1_name = infoUser1.userName; // Assuming username is a property of userGateway
+		// this.player2_name = infoUser2.userName; // Assuming username is a property of userGateway
 		this.player1 = infoUser1.userID;
 		this.player2 = infoUser2.userID;
-		this.player1_score = ScorePlayer1;
-		this.player2_score = ScorePlayer2;
+		this.score_p1 = ScorePlayer1;
+		this.score_p2 = ScorePlayer2;
 
-		// Determine the winner based on the scores and set it
+
 		if (ScorePlayer1 > ScorePlayer2) {
-			this.winner = this.player1_name;
+			this.winner_name = infoUser1.userName;
+			this.winner_id = infoUser1.userID;
 		} else if (ScorePlayer2 > ScorePlayer1) {
-			this.winner = this.player2_name;
+			this.winner_name = infoUser2.userName;
+			this.winner_id = infoUser1.userID;
 		} else {
-			this.winner = 'Draw'; // Handle the case of a draw
+			this.winner_name = 'Draw'; // Handle the case of a draw
 		}
 	}
 }

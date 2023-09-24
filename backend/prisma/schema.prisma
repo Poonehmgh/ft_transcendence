@@ -41,7 +41,8 @@ model Match {
   player2    Int
   score_p1   Int       @default(0)
   score_p2   Int       @default(0)
-  winner     Int? // if draw, remains NULL
+  winner_id  Int?
+  winner_name   String? // has a name of a winner or ""
 
   @@unique([player1, player2])
 }

@@ -11,8 +11,8 @@ From user
 
 To user
 
-| what                                            | Message      | takes                         |
-|-------------------------------------------------|--------------|-------------------------------|
-| Receive the confirmation that queue was entered | queueConfirm | text 'Confirm' or 'InvalidID' |
-| Receive the the data to render new match        | newRound     | NewRoundDTO                   |
-| Receive an update while rendering               | gameUpdate   | GameUpdateDTO                 |
+| what                                            | Message      | takes                                                   |
+|-------------------------------------------------|--------------|---------------------------------------------------------|
+| Receive the confirmation that queue was entered | queueConfirm | text 'Confirm' or 'InvalidID' or 'Already in queue' or 'Already in game' |
+| Receive the the data to render new match        | newRound     | NewRoundDTO                                             |
+| Receive an update while rendering               | gameUpdate   | GameUpdateDTO                                           |
