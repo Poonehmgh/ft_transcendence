@@ -46,9 +46,10 @@ const fetchAndSet = async (n: number, setter: React.Dispatch<React.SetStateActio
 function RowEntry(props: rowEntryProp): React.JSX.Element {
     return (
         <tr key = {props.rank}>
-            <td>{props.scoreCard.name} the {props.scoreCard.title} </td>
-            <td>{props.scoreCard.mmr} </td>
-            <td>{props.scoreCard.matches} </td>
+            <td>{props.scoreCard.name}</td>
+            <td>{props.scoreCard.rank}</td>
+            <td>{props.scoreCard.mmr}</td>
+            <td>{props.scoreCard.matches}</td>
             <td>{props.scoreCard.winrate !== null ? props.scoreCard.winrate : "N/A"}</td>
         </tr>
     )

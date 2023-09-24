@@ -1,5 +1,5 @@
 import {Link} from "react-router-dom";
-import LeaderBoardWolf from "./LeaderBoardTable";
+import LeaderBoardTable from "./LeaderBoardTable";
 import UserProfile from "../UserProfile/UserProfile";
 import SocialActionBar from "../UserProfile/SocialActionBar";
 import React from "react";
@@ -32,12 +32,13 @@ function Leaderboard() {
               <thead>
               <tr>
                 <th>Name</th>
+                <th>Rank</th>
                 <th>MMR</th>
                 <th>Matches</th>
                 <th>Win Rate</th>
               </tr>
               </thead>
-              <LeaderBoardWolf n = {5} />
+              <LeaderBoardTable n = {5} />
             </table>
           </div>
         </div>
