@@ -6,6 +6,7 @@ import Game from "./Game";
 import Chat from "./Chat";
 import ErrorPage from "./ErrorPage";
 import React from "react";
+import Profile from "./Profile";
 
 const success = true; // Set this to true for a successful operation, or false for an error.
 // const success = false; // Set this to true for a successful operation, or false for an error.
@@ -69,6 +70,11 @@ const Router = () => {
       {
         path: "/chat",
         element: <Chat />,
+        loader: routeUser,
+      },
+      {
+        path: "/profile",
+        element: <Profile />,
         loader: routeUser,
       },
     ]);
