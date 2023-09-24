@@ -10,6 +10,9 @@ function Header() {
         </div>
         <ul className={"upper-links"}>
           <li>
+            <Link className={"link"} to="/profile">My Profile</Link>
+          </li>
+          <li>
             <Link className={"link"} to="/leaderboard">Leaderboard</Link>
           </li>
           <li>
