@@ -1,10 +1,7 @@
-import {Link} from "react-router-dom";
-import LeaderBoardTable from "./LeaderBoardTable";
-import UserProfile from "../UserProfile/UserProfile";
-import SocialActionBar from "../UserProfile/SocialActionBar";
 import React from "react";
-import '../../styles/leaderboard.css';
 import Header from "../Header";
+import LeaderBoardTable from "./LeaderBoardTable";
+import '../../styles/leaderboard.css';
 
 function Leaderboard() {
   return (

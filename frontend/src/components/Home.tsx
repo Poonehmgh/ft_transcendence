@@ -1,6 +1,6 @@
-import '../styles/style.css';
 import Header from "./Header";
 import React from "react";
+import '../styles/style.css';
 
 function Home() {
     return (
