@@ -1,5 +1,7 @@
 import {Link} from "react-router-dom";
 import LeaderBoardWolf from "./LeaderBoardWolf";
+import UserProfile from "./UserProfile/UserProfile";
+import SocialActionBar from "./UserProfile/SocialActionBar";
 import React from "react";
 import '../styles/leaderboard.css';
 
@@ -21,6 +23,7 @@ function Leaderboard() {
               <Link className={"link"} to="/chat">Chat</Link>
             </li>
           </ul>
+
         </div>
         <div className="section" id="center">
           <div>

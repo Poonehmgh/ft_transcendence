@@ -4,7 +4,10 @@
     "skipLibCheck": true,
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "user-dto": ["../backend/src/user/user-dto"]
+    }
   },
   "include": ["vite.config.ts"]
 }

@@ -11,16 +11,23 @@ interface rowEntryProp {
 }
 
 function LeaderBoardWolf(props: leaderBoardProp): React.JSX.Element {
-    const [leaderTable, setLeaderTable] = useState <ScoreCardDTO[]>([])
+    const [leaderTable, setLeaderTable] = useState <ScoreCardDTO[]>([]);
+
     useEffect(() => {
         void fetchAndSet(props.n, setLeaderTable);
     }, [props.n]);
-    
+
+    if (leaderTable.length === 0)
+        return (
+            <div>
+                <br/>No matches played.
+            </div>
+        );
     return (
         <tbody>
-        {leaderTable.map((element: ScoreCardDTO, index: number) => (
-            <RowEntry scoreCard = {element} rank = {index + 1}/>
-        ))}
+          {leaderTable.map((element: ScoreCardDTO, index: number) => (
+              <RowEntry scoreCard = {element} rank = {index + 1}/>
+          ))}
         </tbody>
     );
 }
@@ -31,10 +38,10 @@ const fetchAndSet = async (n: number, setter: React.Dispatch<React.SetStateActio
         const data = await response.json();
         setter(data);
     } catch (error) {
-        console.error('Error fetching leaderboard data:', error);
+        console.error('Error fetching user/leaderboard:', error);
         setter([]);
     }
-};
+}
 
 function RowEntry(props: rowEntryProp): React.JSX.Element {
     return (

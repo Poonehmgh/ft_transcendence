@@ -28,6 +28,9 @@ model User {
   friendReq_in  Int[]
   blocked       Int[]
   userChats     Chat_User[]
+
+  @@unique([friends, friendReq_out, blocked]) // can be blocked and have incoming friend request
+  @@unique([friends, friendReq_out, friendReq_in])
 }
 
 model Match {

@@ -1,1 +1,3 @@
 /test-website/
+node_modules/*
+.idea

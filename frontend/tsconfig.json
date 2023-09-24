@@ -18,8 +18,7 @@
 		"forceConsistentCasingInFileNames": false,
 		"noFallthroughCasesInSwitch": false,
 		"paths": {
-			"@components": ["components/*"],
-			"@DTO": ["../shared/"]
+			"user-dto": ["../backend/src/user/user-dto"]
 		},
 		"include": ["src/**/*.ts", "node_modules/@prisma/client"],
       "jsx": "react"
