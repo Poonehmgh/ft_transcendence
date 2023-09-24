@@ -7,12 +7,13 @@ import Chat from "./Chat";
 import ErrorPage from "./ErrorPage";
 import React from "react";
 
+const success = true; // Set this to true for a successful operation, or false for an error.
+// const success = false; // Set this to true for a successful operation, or false for an error.
+
 function getUserID(): Promise<string> {
   return new Promise((resolve, reject) => {
     // Simulate an asynchronous operation, e.g., fetching data from an API.
     setTimeout(() => {
-      const success = true; // Set this to true for a successful operation, or false for an error.
-      // const success = false; // Set this to true for a successful operation, or false for an error.
       if (success) {
         // If the operation was successful, resolve the Promise with a result.
         resolve('UserID');

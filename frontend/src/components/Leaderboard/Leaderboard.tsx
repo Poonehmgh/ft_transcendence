@@ -4,27 +4,12 @@ import UserProfile from "../UserProfile/UserProfile";
 import SocialActionBar from "../UserProfile/SocialActionBar";
 import React from "react";
 import '../../styles/leaderboard.css';
+import Header from "../Header";
 
 function Leaderboard() {
   return (
       <div className="sections-container">
-        <div className="section" id="header">
-          <div className={"pongers-logo"}>
-            <Link className={"link"} to="/home">Pongers</Link><br/>
-          </div>
-          <ul className={"upper-links"}>
-            <li>
-              <Link className={"link"} to="/leaderboard">Leaderboard</Link>
-            </li>
-            <li>
-              <Link className={"link"} to="/game">Game</Link>
-            </li>
-            <li>
-              <Link className={"link"} to="/chat">Chat</Link>
-            </li>
-          </ul>
-
-        </div>
+        <Header />
         <div className="section" id="center">
           <div>
             <h2>Leaderboard</h2>
