@@ -1,6 +1,7 @@
 import {Injectable} from '@nestjs/common';
 import {PrismaService} from '../prisma/prisma.service';
-import {FriendListDTO, IdAndNameDTO, NewUserDTO, ScoreCardDTO} from './user-dto'
+import {FriendListDTO, SocialStatus, IdAndNameDTO, NewUserDTO, ScoreCardDTO, UserProfileDTO} from './user-dto'
+import {User} from "@prisma/client";
 
 @Injectable()
 export class UserService {
@@ -27,10 +28,10 @@ export class UserService {
         })
     }
 
-    async getScoreCard(userID: number): Promise<ScoreCardDTO>
+    async getScoreCard(userId: number): Promise<ScoreCardDTO>
     {
         const user = await this.prisma.user.findUnique({
-            where: { id: userID },
+            where: { id: userId },
             select: {
                 id: true,
                 name: true,
@@ -53,21 +54,75 @@ export class UserService {
         };
     }
 
-    async getMatches(userID: number): Promise<number[]>
+    async getMatches(userId: number): Promise<number[]>
     {
         const user = await this.prisma.user.findUnique({
-            where: { id: userID },
-            select: { matches: true    }
+            where: { id: userId },
+            select: { matches: true }
         });
         if (!user)
             throw new Error('getMatches: User not found');
         return user.matches;
     }
 
-    async getFriends(userID: number): Promise<IdAndNameDTO[]>
+    async getProfile(userId: number): Promise<UserProfileDTO>
+    {
+        const profile = await this.prisma.user.findUnique( {
+            where: { id: Number(userId)},
+            select: {
+                id: true,
+                name: true,
+                avatarURL: true,
+                title: true,
+                mmr: true,
+                matches: true,
+                winrate: true,
+                online: true
+            }
+        });
+        if (!profile)
+            throw new Error('getProfile: User not found');
+        return {
+            id: profile.id,
+            name: profile.name,
+            avatarURL: profile.avatarURL,
+            title: profile.title,
+            mmr: profile.mmr,
+            matches: profile.matches.length,
+            winrate: profile.winrate,
+            online: profile.online
+        };
+    }
+
+    async getFriendStatus(userId: number, otherUserId: number): Promise<SocialStatus>
     {
         const user = await this.prisma.user.findUnique({
-            where: { id: userID },
+            where: { id: Number(userId) },
+            select: {
+                friends: true,
+                friendReq_out: true,
+                friendReq_in: true,
+                blocked: true
+            },
+        });
+        if (!user)
+            throw new Error('getFriendStatus');
+
+        if (user.friends.includes(Number(otherUserId)))
+            return SocialStatus.friends;
+        if (user.friendReq_out.includes(Number((otherUserId))))
+            return SocialStatus.request_sent;
+        if (user.friendReq_in.includes(Number(otherUserId)))
+            return SocialStatus.request_received;
+        if (user.blocked.includes(Number(otherUserId)))
+            return SocialStatus.blocked;
+        return SocialStatus.none;
+    }
+
+    async getFriends(userId: number): Promise<IdAndNameDTO[]>
+    {
+        const user = await this.prisma.user.findUnique({
+            where: { id: userId },
             select: { friends: true    }
         });
         if (!user)
@@ -137,7 +192,7 @@ export class UserService {
     }
     //TODO try throw these instead of if(!) all functions!
     async getTopScoreCards(n: number): Promise<ScoreCardDTO[]>{
-        const topUsers = await this.prisma.user.findMany({
+        const topUsers: User[] = await this.prisma.user.findMany({
             where: { matches: { isEmpty: false } },
             orderBy: { mmr: 'desc' },
             take: Number(n)

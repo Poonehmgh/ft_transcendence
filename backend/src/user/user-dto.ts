@@ -42,7 +42,6 @@ export class UserProfileDTO
     constructor(
         public id: number,
         public name: string,
-        public email: string,
         public avatarURL: string,
         public title: string,
         public mmr: number,
@@ -50,4 +49,12 @@ export class UserProfileDTO
         public winrate: number,
         public online: boolean
     ) {}
+}
+
+export enum SocialStatus {
+    friends,
+    request_sent,
+    request_received,
+    blocked,
+    none
 }

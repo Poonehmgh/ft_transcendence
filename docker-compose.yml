@@ -9,6 +9,8 @@ services:
       - ./frontend:/frontend
     networks:
       - webapp
+    env_file:
+      - ./frontend/.env
 
   backend:
     build: ./backend
