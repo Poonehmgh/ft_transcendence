@@ -80,9 +80,9 @@ export class GameData {
     }
     console.log(`points for player ${user}`)
     if (this.ScorePlayer1 >= 3) {
-      // await this.prismaService.match.create({
-      //   data: new MatchInfoDTO(this),
-      // })
+      await this.prismaService.match.create({
+        data: new MatchInfoDTO(this),
+      })
       this.infoUser1.socket.emit('gameResult', 'Won');
       this.infoUser2.socket.emit('gameResult', 'Lost');
       this.GameStatus = 0;
@@ -90,9 +90,9 @@ export class GameData {
       return;
     }
     if (this.ScorePlayer2 >= 3) {
-      // await this.prismaService.match.create({
-      //   data: new MatchInfoDTO(this),
-      // })
+      await this.prismaService.match.create({
+        data: new MatchInfoDTO(this),
+      })
       this.infoUser2.socket.emit('gameResult', 'Won');
       this.infoUser1.socket.emit('gameResult', 'Lost');
       clearInterval(this.interval);

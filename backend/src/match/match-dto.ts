@@ -33,7 +33,7 @@ export class MatchInfoDTO
 			this.winner_id = infoUser1.userID;
 		} else if (ScorePlayer2 > ScorePlayer1) {
 			this.winner_name = infoUser2.userName;
-			this.winner_id = infoUser1.userID;
+			this.winner_id = infoUser2.userID;
 		} else {
 			this.winner_name = 'Draw'; // Handle the case of a draw
 		}
