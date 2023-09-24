@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {ScoreCardDTO} from  "../../../backend/src/user/user-dto";
+import {ScoreCardDTO} from "user-dto";
 
 interface leaderBoardProp {
     n: number;
@@ -10,7 +10,7 @@ interface rowEntryProp {
     rank: number;
 }
 
-function LeaderBoardWolf(props: leaderBoardProp): React.JSX.Element {
+function LeaderBoardTable(props: leaderBoardProp): React.JSX.Element {
     const [leaderTable, setLeaderTable] = useState <ScoreCardDTO[]>([]);
 
     useEffect(() => {
@@ -54,4 +54,4 @@ function RowEntry(props: rowEntryProp): React.JSX.Element {
     )
 }
 
-export default LeaderBoardWolf;
+export default LeaderBoardTable;
