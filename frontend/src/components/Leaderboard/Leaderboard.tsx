@@ -7,7 +7,7 @@ function Leaderboard() {
   return (
       <div className="sections-container">
         <Header />
-        <div className="section" id="center">
+        <div className="section center">
           <div>
             <h2>Leaderboard</h2>
             <table>

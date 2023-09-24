@@ -6,12 +6,12 @@ function Game() {
     return (
         <div className="sections-container">
           <Header />
-            <div className="section" id="right-bar">Right Bar</div>
-            <div className="section" id="center">
+            <div className="section left-bar">Left Bar</div>
+            <div className="section center">
                 <div>Game</div>
             </div>
-            <div className="section" id="left-bar">Left Bar</div>
-            <div className="section" id="footer">Footer</div>
+            <div className="section right-bar">Right Bar</div>
+            <div className="section footer">Footer</div>
         </div>
     );
 }
