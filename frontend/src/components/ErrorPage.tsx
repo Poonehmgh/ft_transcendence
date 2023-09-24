@@ -1,6 +1,5 @@
 import Header from "./Header";
 import React from "react";
-import '../styles/style.css'
 
 function ErrorPage() {
     return (

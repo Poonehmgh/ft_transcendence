@@ -7,7 +7,7 @@ function Profile() {
   return (
       <div className="sections-container">
         <Header />
-        <div className="section center">
+        <div className="section profile-center">
           {/*<UserProfile />*/}
         </div>
       </div>
