@@ -25,9 +25,9 @@ function LeaderBoardWolf(props: leaderBoardProp): React.JSX.Element {
         );
     return (
         <tbody>
-            {leaderTable.map((element: ScoreCardDTO, index: number) => (
-                <RowEntry scoreCard = {element} rank = {index + 1}/>
-            ))}
+          {leaderTable.map((element: ScoreCardDTO, index: number) => (
+              <RowEntry scoreCard = {element} rank = {index + 1}/>
+          ))}
         </tbody>
     );
 }
