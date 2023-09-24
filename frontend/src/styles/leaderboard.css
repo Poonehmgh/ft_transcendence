@@ -1,6 +1,6 @@
-.leaderboard-center {
+#leaderboard-center {
     display: flex;
-    align-items: flex-start;
+    justify-content: center;
     grid-column: 1 / 7;
     grid-row: 2 / 6;
 }
