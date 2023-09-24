@@ -1,7 +1,5 @@
 import React, {useEffect, useState} from "react";
 import {UserProfileDTO} from "user-dto";
-import FriendButton from './FriendButton';
-import SocialActionBar from "./SocialActionBar";
 
 interface userProfileProp {
   userId: number
@@ -28,7 +26,9 @@ function UserProfile(props: userProfileProp): React.JSX.Element {
               style={{ width: '200px', height: 'auto' }}
           />
           <br/>
-          Name: {userProfile.name}, the {userProfile.title}
+          Name: {userProfile.name}
+          <br/>
+          Rank: {userProfile.title}
           <br/>
           mmr: {userProfile.mmr}
           <br/>
