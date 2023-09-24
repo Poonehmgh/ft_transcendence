@@ -20,7 +20,7 @@ export class ScoreCardDTO
     constructor(
         public id: number,
         public name: string,
-        public title: string,
+        public rank: string,
         public mmr: number,
         public matches: number,
         public winrate: number
@@ -43,7 +43,7 @@ export class UserProfileDTO
         public id: number,
         public name: string,
         public avatarURL: string,
-        public title: string,
+        public rank: string,
         public mmr: number,
         public matches: number,
         public winrate: number,

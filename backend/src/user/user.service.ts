@@ -35,7 +35,7 @@ export class UserService {
             select: {
                 id: true,
                 name: true,
-                title: true,
+                rank: true,
                 matches: true,
                 mmr: true,
                 winrate: true
@@ -47,7 +47,7 @@ export class UserService {
         return {
             id: user.id,
             name: user.name,
-            title: user.title,
+            rank: user.rank,
             matches: user.matches.length,
             winrate: user.winrate,
             mmr: user.mmr,
@@ -73,7 +73,7 @@ export class UserService {
                 id: true,
                 name: true,
                 avatarURL: true,
-                title: true,
+                rank: true,
                 mmr: true,
                 matches: true,
                 winrate: true,
@@ -86,7 +86,7 @@ export class UserService {
             id: profile.id,
             name: profile.name,
             avatarURL: profile.avatarURL,
-            title: profile.title,
+            rank: profile.rank,
             mmr: profile.mmr,
             matches: profile.matches.length,
             winrate: profile.winrate,
@@ -198,9 +198,9 @@ export class UserService {
             take: Number(n)
         });
 
-        return topUsers.map(({id, name, title, matches, mmr, winrate}) => {
+        return topUsers.map(({id, name, rank, matches, mmr, winrate}) => {
                 return new ScoreCardDTO(
-                    id, name, title, mmr, matches.length, winrate);
+                    id, name, rank, mmr, matches.length, winrate);
         });
     }
 }
