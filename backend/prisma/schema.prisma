@@ -16,7 +16,7 @@ model User {
   email         String      @unique
   // customization
   avatarURL     String      @default("defaultPath")
-  rank         String      @default("noob")
+  rank          String      @default("noob")
   // match
   matches       Int[]
   mmr           Int         @default(1000)
