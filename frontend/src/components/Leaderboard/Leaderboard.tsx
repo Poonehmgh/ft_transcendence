@@ -1,9 +1,9 @@
 import {Link} from "react-router-dom";
-import LeaderBoardWolf from "./LeaderBoardWolf";
-import UserProfile from "./UserProfile/UserProfile";
-import SocialActionBar from "./UserProfile/SocialActionBar";
+import LeaderBoardWolf from "./LeaderBoardTable";
+import UserProfile from "../UserProfile/UserProfile";
+import SocialActionBar from "../UserProfile/SocialActionBar";
 import React from "react";
-import '../styles/leaderboard.css';
+import '../../styles/leaderboard.css';
 
 function Leaderboard() {
   return (
