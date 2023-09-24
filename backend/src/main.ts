@@ -8,7 +8,10 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({whitelist: true}));
   app.use(cookieParser());
   app.enableCors({origin:"*", credentials: true});
-  await app.listen(5500);
+  await app.listen(5500, '0.0.0.0', () => {
+    console.log('NestJS application is listening on port 5500');
+  });
+  // await app.listen(5500);
 }
 
 bootstrap();

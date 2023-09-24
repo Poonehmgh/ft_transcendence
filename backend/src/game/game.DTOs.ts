@@ -51,16 +51,18 @@ export class GameUpdateDTO {
 
 }
 
-export function isGameUpdateDTOValid(data: GameUpdateDTO): boolean {
-	if (isTwoNumberArray(data.ballPosition) || typeof data.enemyPlankPosition == 'number')
-		return false;
-	return true;
-}
+// export function isGameUpdateDTOValid(data: GameUpdateDTO): boolean {
+// 	if (isTwoNumberArray(data.ballPosition) || typeof data.enemyPlankPosition == 'number')
+// 		return false;
+// 	return true;
+// }
 
 export class NewRoundDTO{
 	//user info
 	userID1: number
 	userID2: number
+	userName1: string
+	userName2: string
 	gameID: number
 
 	//variables
@@ -82,6 +84,8 @@ export class NewRoundDTO{
 	constructor(data : GameData) {
 		this.userID1 = data.infoUser1.userID;
 		this.userID2 = data.infoUser2.userID;
+		this.userName1 = data.infoUser1.userName;
+		this.userName2 = data.infoUser2.userName;
 		this.gameID = data.gameID;
 
 		this.ScorePlayer1 = data.ScorePlayer1;

@@ -3,9 +3,14 @@ import {Server, Socket} from "socket.io";
 import {OnModuleInit} from "@nestjs/common";
 import {GameQueue, userGateway} from "./game.queue";
 import {isJoinGameDTOValid, isPlankUpdateDTOValid, JoinGameDTO, PlankUpdateDTO} from "./game.DTOs";
-import {isUndefined} from "@nestjs/common/utils/shared.utils";
 
-@WebSocketGateway()
+@WebSocketGateway(
+    {
+      cors: {
+        origins: '*',
+      },
+    }
+)
 export class GameGateway implements OnModuleInit{
   constructor(private gameQueue : GameQueue) {}
   @WebSocketServer()
@@ -28,11 +33,10 @@ export class GameGateway implements OnModuleInit{
   }
 
   @SubscribeMessage('joinQueue')
-  handleJoinMessage(@ConnectedSocket() userSocket: Socket, @MessageBody() data : JoinGameDTO){
+  async handleJoinMessage(@ConnectedSocket() userSocket: Socket, @MessageBody() data : JoinGameDTO){
     if(!isJoinGameDTOValid(data))
         return;
     console.log(data.userID);
-    this.gameQueue.addPlayerToQueue(new userGateway(data.userID, userSocket));
-    userSocket.emit('queueConfirm', 'Confirmed');
+    await this.gameQueue.addPlayerToQueue(new userGateway(data.userID, userSocket));
   }
 }
