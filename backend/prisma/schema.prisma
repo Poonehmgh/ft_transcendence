@@ -16,7 +16,7 @@ model User {
   email         String      @unique
   // customization
   avatarURL     String      @default("defaultPath")
-  title         String      @default("noob")
+  rank         String      @default("noob")
   // match
   matches       Int[]
   mmr           Int         @default(1000)
@@ -65,7 +65,7 @@ model Chat {
   updatedAt    DateTime    @updatedAt
   id           Int         @id @unique @default(autoincrement())
   name         String      @default("Unnamed Chat")
-  hidden       Boolean     @default(false)
+  dm       Boolean     @default(false)
   pw_protected Boolean     @default(false)
   password     String? // hash this?
   messages     Message[]
