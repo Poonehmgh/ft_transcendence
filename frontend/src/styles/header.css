@@ -1,0 +1,14 @@
+#header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    grid-column: 1 / 7;
+    grid-row: 1 / 2;
+}
+
+.upper-links {
+    display: flex;
+    list-style-type: none;
+    gap: 1rem;
+}

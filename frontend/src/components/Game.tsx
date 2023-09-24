@@ -1,17 +1,17 @@
 import Header from "./Header";
 import React from "react";
-import '../styles/style.css'
+import '../styles/game.css'
 
 function Game() {
     return (
         <div className="sections-container">
           <Header />
-            <div className="section left-bar">Left Bar</div>
-            <div className="section center">
+            <div className="section game-left-bar">Left Bar</div>
+            <div className="section game-center">
                 <div>Game</div>
             </div>
-            <div className="section right-bar">Right Bar</div>
-            <div className="section footer">Footer</div>
+            <div className="section game-right-bar">Right Bar</div>
+            <div className="section game-footer">Footer</div>
         </div>
     );
 }
