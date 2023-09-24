@@ -2,6 +2,8 @@ import {Link} from "react-router-dom";
 import LeaderBoardWolf from "./LeaderBoardWolf";
 import UserProfile from "./UserProfile/UserProfile";
 import SocialActionBar from "./UserProfile/SocialActionBar";
+import React from "react";
+import '../styles/leaderboard.css';
 
 function Leaderboard() {
     return (
@@ -22,7 +24,6 @@ function Leaderboard() {
                     </li>
                 </ul>
             </div>
-            <div className="section" id="right-bar">Right Bar</div>
             <div className="section" id="center">
                 <div>Leaderboard
                      <LeaderBoardWolf n={5} />
@@ -35,6 +36,7 @@ function Leaderboard() {
                 </div>
             </div>
             <div className="section" id="footer">Footer</div>
+
         </div>
     );
 }

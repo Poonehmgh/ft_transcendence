@@ -24,11 +24,11 @@ function LeaderBoardWolf(props: leaderBoardProp): React.JSX.Element {
             </div>
         );
     return (
-        <ol>
+        <tbody>
             {leaderTable.map((element: ScoreCardDTO, index: number) => (
                 <RowEntry scoreCard = {element} rank = {index + 1}/>
             ))}
-        </ol>
+        </tbody>
     );
 }
 
@@ -45,13 +45,12 @@ const fetchAndSet = async (n: number, setter: React.Dispatch<React.SetStateActio
 
 function RowEntry(props: rowEntryProp): React.JSX.Element {
     return (
-        <li key = {props.rank}>
-            <span>{props.scoreCard.name} </span>
-            <span style={{ fontStyle: 'italic' }}>the {props.scoreCard.title}</span>
-            <span> | mmr: {props.scoreCard.mmr} </span>
-            <span> | matches: {props.scoreCard.matches} </span>
-            <span> | winrate: {props.scoreCard.winrate !== null ? props.scoreCard.winrate : "N/A"}</span>
-        </li>
+        <tr key = {props.rank}>
+            <td>{props.scoreCard.name} the {props.scoreCard.title} </td>
+            <td>{props.scoreCard.mmr} </td>
+            <td>{props.scoreCard.matches} </td>
+            <td>{props.scoreCard.winrate !== null ? props.scoreCard.winrate : "N/A"}</td>
+        </tr>
     )
 }
 

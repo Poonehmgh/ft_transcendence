@@ -1,10 +1,11 @@
 import { createBrowserRouter, RouterProvider, redirect } from "react-router-dom";
-import LogIn from "./LogIn.tsx";
-import Home from "./Home.tsx";
-import Leaderboard from "./Leaderboard.tsx";
-import Game from "./Game.tsx";
-import Chat from "./Chat.tsx";
-import ErrorPage from "./ErrorPage.tsx";
+import LogIn from "./LogIn";
+import Home from "./Home";
+import Leaderboard from "./Leaderboard";
+import Game from "./Game";
+import Chat from "./Chat";
+import ErrorPage from "./ErrorPage";
+import React from "react";
 
 function getUserID(): Promise<string> {
   return new Promise((resolve, reject) => {
