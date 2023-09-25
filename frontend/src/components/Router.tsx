@@ -7,7 +7,7 @@ import Chat from "./Chat";
 import ErrorPage from "./ErrorPage";
 import React from "react";
 import Profile from "./Profile/Profile";
-import {getUserID, routeUser, routeUserAtLogIn} from "../functions/getUserID";
+import {routeUser, routeUserAtLogIn} from "../functions/getUserID";
 
 const Router = () => {
     const router = createBrowserRouter([
