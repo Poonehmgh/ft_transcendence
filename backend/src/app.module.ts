@@ -8,9 +8,10 @@ import {AuthModule} from "./auth/auth.module";
 import {GameGatewayModule} from "./game/game.gateway.module";
 import {UserController} from "./user/user.controller";
 import {UserService} from "./user/user.service";
+import {TwoFaModule} from "./twofa/twofa.module";
 
 @Module({
-  imports: [UserModule, PrismaModule, AuthModule, GameGatewayModule],
+  imports: [UserModule, PrismaModule, AuthModule, GameGatewayModule, TwoFaModule],
   controllers: [AppController, UserController],
   providers: [AppService, PrismaService, UserService],
 })
