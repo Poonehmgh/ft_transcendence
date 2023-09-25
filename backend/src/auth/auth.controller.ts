@@ -34,6 +34,7 @@ export class AuthController {
     const token = await this.authService.ft_signin(req.user);
     res.cookie("token", token)
     return res.send("the login was successful!")
+    // return res.status.json({token});
     // add the redirection to a certain page here later
   }
 

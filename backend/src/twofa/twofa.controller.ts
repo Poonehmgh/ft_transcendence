@@ -6,9 +6,12 @@ import {TwoFaDto} from "./dto/2fa.dto";
 export class TwoFaController {
     constructor(private readonly twoFaService: TwoFaService) {
     }
-  @Post("/activate")
-   activate(@Body() twoFaDto: TwoFaDto){
-    return this.twoFaService.activate(twoFaDto);
+  // @Post("/activate")
+   // activate(@Body() twoFaDto: TwoFaDto){
+   //  return this.twoFaService.activate(twoFaDto);
+  // }
+  @Get("/activate")
+  async activate(){
+      return this.twoFaService.activate();
   }
-  
 }

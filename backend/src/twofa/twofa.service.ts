@@ -7,8 +7,9 @@ import {TwoFaDto} from "./dto/2fa.dto";
 export class TwoFaService {
     constructor() {
     }
-    activate(twoFaDto: TwoFaDto){
-
-        return twoFaDto.username;
+    // activate(twoFaDto: TwoFaDto){
+    async activate(){
+    return {"name": "hi Santiago"};
+        // return twoFaDto.username;
     }
 }
