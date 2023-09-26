@@ -1,11 +1,16 @@
 import { authContentHeader } from "./headers";
+import 'boostrap/dist/css/boostrap.css'
 
-export function userAction(otherId: number, endpoint: string): void {
-  const body: string = JSON.stringify( { otherId: otherId });
-  void fetchPost(endpoint, authContentHeader, body);
+export function userAction(otherId: number, endpoint: string) {
+  const body: string = JSON.stringify({ otherId: otherId });
+  fetchPost(endpoint, authContentHeader, body);
 }
 
-const fetchPost = async (url: string, header: any, body: string): Promise<any> => {
+const fetchPost = async (
+  url: string,
+  header: any,
+  body: string
+): Promise<any> => {
   const fetchUrl: string = process.env.REACT_APP_BACKEND_URL + "/user/" + url;
   try {
     const response: Response = await fetch(fetchUrl, {
