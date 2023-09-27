@@ -27,6 +27,7 @@ From User
 |------------------------------------------|----------------|---------------------|
 | Connect to gateway and get online status | connectMessage | EstablishConnectDTO |
 | Send message to chat room                | sendMessage    | SendMessageDTO      |
+| Create new chat room                     | createChat     | CreateNewChatDTO    |
 
 To user
 
@@ -35,3 +36,5 @@ To user
 | get a new message just sent | updateMessage | SendMessageDTO |
 
 For creating a dm chat name format is name1:name2
+
+Probably should write a callback for users who got connected to chat for it to be displayed instantly
