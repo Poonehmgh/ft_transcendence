@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Query, Body } from "@nestjs/common";
 import {
   FriendListDTO,
-  SocialStatus,
+  UserRelation,
   IdAndNameDTO,
   NewUserDTO,
   ScoreCardDTO,
@@ -24,11 +24,6 @@ export class UserController {
         message: "Failed to create user.",
       };
     }
-  }
-
-  @Get("all")
-  async getAllUsers(): Promise<IdAndNameDTO[]> {
-    return this.userService.getAllUsers();
   }
 
   @Get("profile")
@@ -55,7 +50,7 @@ export class UserController {
   async getFriendStatus(
     @Query("id1") userId: number,
     @Query("id2") otherUserId: number
-  ): Promise<SocialStatus> {
+  ): Promise<UserRelation> {
     return this.userService.getFriendStatus(userId, otherUserId);
   }
 
@@ -74,11 +69,37 @@ export class UserController {
     return this.userService.getFriendsData(userId);
   }
 
+  // getters
+
+  @Get("all_idnames")
+  async getAllIdsAndNames(): Promise<IdAndNameDTO[]> {
+    return this.userService.getAllIdsAndNames();
+  } 
+ 
+  @Get("all_users")
+  async getAllUsers() {
+    return this.userService.getAllUsers();
+  }
+
+  @Get("other_users")
+  async getOtherUsers(@Body() body: { thisId: number }) {
+    const { thisId } = body;
+    return this.userService.getOtherUsers(thisId);
+  }
+
+  // profile management
+
+  @Post("change_name")
+  async changeName(@Body() body: { newName: string }) {
+    const { newName } = body;
+    return this.userService.changeName(newName);
+  }
+
   // friend management
 
   @Post("send_friendreq")
   async sendFriendRequest(@Body() body: { otherId: number }) {
-    const { otherId } = body; // this will get the value and type of "otherId" from the body object
+    const { otherId } = body;
     return this.userService.sendFriendReq(otherId);
   }
 
@@ -117,5 +138,4 @@ export class UserController {
     const { otherId } = body;
     return this.userService.unblockUser(otherId);
   }
-
 }

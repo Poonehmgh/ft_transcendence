@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import {
   FriendListDTO,
-  SocialStatus,
+  UserRelation,
   IdAndNameDTO,
   NewUserDTO,
   ScoreCardDTO,
@@ -21,6 +21,7 @@ import {
   INFO_BLOCK_RM,
   INFO_DECL_FREQ,
   INFO_FREQ_CANCEL,
+  INFO_NAMECHANGED,
   INFO_RM,
   INFO_SEND_FREQ,
   INFO_UNBLOCK,
@@ -36,17 +37,6 @@ export class UserService {
 
   async newUser(userData: NewUserDTO): Promise<void> {
     await this.prisma.user.create({ data: userData });
-  }
-
-  async getAllUsers(): Promise<IdAndNameDTO[]> {
-    const users = await this.prisma.user.findMany({
-      select: { id: true, name: true },
-    });
-    if (users.length === 0) return [];
-
-    return users.map(({ id, name }) => {
-      return new IdAndNameDTO(id, name);
-    });
   }
 
   async getScoreCard(userId: number): Promise<ScoreCardDTO> {
@@ -109,7 +99,7 @@ export class UserService {
     };
   }
 
-  async getFriendStatus(userId: number, otherUserId: number): Promise<SocialStatus> {
+  async getFriendStatus(userId: number, otherUserId: number): Promise<UserRelation> {
     const user = await this.prisma.user.findUnique({
       where: { id: Number(userId) },
       select: {
@@ -121,13 +111,13 @@ export class UserService {
     });
     if (!user) throw new Error("getFriendStatus");
 
-    if (user.friends.includes(Number(otherUserId))) return SocialStatus.friends;
+    if (user.friends.includes(Number(otherUserId))) return UserRelation.friends;
     if (user.friendReq_out.includes(Number(otherUserId)))
-      return SocialStatus.request_sent;
+      return UserRelation.request_sent;
     if (user.friendReq_in.includes(Number(otherUserId)))
-      return SocialStatus.request_received;
-    if (user.blocked.includes(Number(otherUserId))) return SocialStatus.blocked;
-    return SocialStatus.none;
+      return UserRelation.request_received;
+    if (user.blocked.includes(Number(otherUserId))) return UserRelation.blocked;
+    return UserRelation.none;
   }
 
   async getFriends(userId: number): Promise<IdAndNameDTO[]> {
@@ -208,19 +198,62 @@ export class UserService {
 
   // Getters
 
-  async getUserById(userId: number): Promise<User> {
-    const user = await this.prisma.user.findUnique({
+  async getUserById(userId: number) {
+    return await this.prisma.user.findUnique({
       where: { id: userId },
     });
-
-    if (!user) {
-      throw new Error(`User with ID ${userId} not found`);
-    }
-
-    return user;
   }
 
-  // Friend management
+  async getUserByName(userName: string) {
+    return await this.prisma.user.findUnique({
+      where: { name: userName },
+    });
+  }
+
+  async getUserByEmail(userEmail: string) {
+    return await this.prisma.user.findUnique({
+      where: { email: userEmail },
+    });
+  }
+
+  async getAllIdsAndNames(): Promise<IdAndNameDTO[]> {
+    const users = await this.prisma.user.findMany({
+      select: { id: true, name: true },
+    });
+    if (users.length === 0) return [];
+    return users.map(({ id, name }) => {
+      return new IdAndNameDTO(id, name);
+    });
+  }
+
+  async getAllUsers() {
+    return await this.prisma.user.findMany();
+  }
+
+  async getOtherUsers(thisId: number) {
+    return await this.prisma.user.findMany({
+      where: {
+        NOT: {
+          id: thisId,
+        },
+      },
+    });
+  }
+
+  // profile management
+
+  async changeName(newName: string) {
+    const thisId = 1;
+    this.updateString(thisId, "name", newName);
+    return INFO_NAMECHANGED;
+  }
+
+  async changeAvatar(newURL: string) {
+    const thisId = 1;
+    this.updateString(thisId, "avatarURL", newURL);
+  }
+
+  // friend management
 
   // TODO: when localstorage: update userId
   async sendFriendReq(otherId: number) {
@@ -240,7 +273,7 @@ export class UserService {
       return INFO_SEND_FREQ;
     } catch (error) {
       console.log(error);
-      return error.msg;
+      return error;
     }
   }
 
@@ -248,13 +281,13 @@ export class UserService {
     const thisId = 1;
     try {
       await Promise.all([
-        this.delFromArray(thisId, "friendReq_out", otherId),
-        this.delFromArray(otherId, "friendReq_in", thisId),
+        this.filterArray(thisId, "friendReq_out", otherId),
+        this.filterArray(otherId, "friendReq_in", thisId),
       ]);
       return INFO_FREQ_CANCEL;
     } catch (error) {
       console.log(error);
-      return error.msg;
+      return error;
     }
   }
 
@@ -269,11 +302,11 @@ export class UserService {
         throw new Error(ERR_NO_FREQ);
       }
       await Promise.all([
-        this.delFromArray(thisId, "friendReq_in", otherId),
-        this.delFromArray(thisId, "friendReq_out", otherId),
+        this.filterArray(thisId, "friendReq_in", otherId),
+        this.filterArray(thisId, "friendReq_out", otherId),
         this.updateArray(thisId, "friends", [...thisUser.friends, otherId]),
-        this.delFromArray(otherId, "friendReq_out", thisId),
-        this.delFromArray(otherId, "friendReq_in", thisId),
+        this.filterArray(otherId, "friendReq_out", thisId),
+        this.filterArray(otherId, "friendReq_in", thisId),
         this.updateArray(otherId, "friends", [...otherUser.friends, thisId]),
       ]);
       return INFO_ACCEPT_FREQ;
@@ -287,8 +320,8 @@ export class UserService {
     const thisId = 1;
     try {
       await Promise.all([
-        this.delFromArray(thisId, "friendReq_in", otherId),
-        this.delFromArray(otherId, "friendReq_out", thisId),
+        this.filterArray(thisId, "friendReq_in", otherId),
+        this.filterArray(otherId, "friendReq_out", thisId),
       ]);
       return INFO_DECL_FREQ;
     } catch (error) {
@@ -300,12 +333,12 @@ export class UserService {
   async removeFriend(otherId: number) {
     const thisId = 1;
     try {
-      this.delFromArray(thisId, "friends", otherId);
-      this.delFromArray(otherId, "friends", thisId);
+      this.filterArray(thisId, "friends", otherId);
+      this.filterArray(otherId, "friends", thisId);
       return INFO_RM;
     } catch (error) {
       console.log(error);
-      return error.msg;
+      return error;
     }
   }
 
@@ -328,40 +361,53 @@ export class UserService {
       return msg;
     } catch (error) {
       console.log(error);
-      return error.msg;
+      return error;
     }
   }
 
   async unblockUser(otherId: number) {
     const thisId = 1;
     try {
-      this.delFromArray(thisId, "blocked", otherId);
+      this.filterArray(thisId, "blocked", otherId);
       return INFO_UNBLOCK;
     } catch (error) {
       console.log(error);
-      return error.msg;
+      return;
     }
   }
 
   // meta functions
   // maybe externalize later (how to add prisma best then?)
 
+  async updateString(userId: number, field: string, newString: string) {
+    try {
+      return await this.prisma.user.update({
+        where: { id: userId },
+        data: {
+          [field]: newString,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async updateArray(userId: number, field: string, newArray: number[]) {
     try {
       return await this.prisma.user.update({
         where: { id: userId },
         data: {
-          friends: {
+          [field]: {
             set: newArray,
           },
         },
       });
     } catch (error) {
-      console.log(error.msg);
+      console.log(error);
     }
   }
 
-  async delFromArray(userId: number, field: string, valueToDelete: number) {
+  async filterArray(userId: number, field: string, valueToDelete: number) {
     try {
       return await this.prisma.user.update({
         where: { id: userId },
@@ -378,7 +424,7 @@ export class UserService {
         },
       });
     } catch (error) {
-      console.log(error.msg);
+      console.log(error);
     }
   }
 }
