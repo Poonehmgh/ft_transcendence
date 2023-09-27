@@ -78,7 +78,6 @@ export class GameData {
     } else if (user == 2) {
       this.ScorePlayer2++;
     }
-    console.log(`points for player ${user}`)
     if (this.ScorePlayer1 >= 3) {
       await this.prismaService.match.create({
         data: new MatchInfoDTO(this),
@@ -99,9 +98,7 @@ export class GameData {
       this.GameStatus = 0;
       return;
     }
-    console.log(`points for player ${user}`)
     this.resetGameData();
-    console.log(`points for player ${user}`)
     this.sendNewRoundMessage();
     console.log(`points for player ${user}`)
     // console.log(this);

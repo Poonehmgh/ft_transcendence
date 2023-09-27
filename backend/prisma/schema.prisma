@@ -66,6 +66,7 @@ model Chat {
   id           Int         @id @unique @default(autoincrement())
   name         String      @default("Unnamed Chat")
   dm       Boolean     @default(false)
+  //add private option for invite only
   pw_protected Boolean     @default(false)
   password     String? // hash this?
   messages     Message[]
@@ -86,6 +87,7 @@ model Chat_User {
   admin     Boolean  @default(false)
   blocked   Boolean  @default(false)
   muted     Boolean  @default(false)
+  //invited???
 
   @@index([userId, chatId])
 }

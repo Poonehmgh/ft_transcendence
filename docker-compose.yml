@@ -17,6 +17,7 @@ services:
     ports:
       - 5500:5500
       - 5555:5555
+      - 5501:5501
     environment:
       - DB_URL=postgresql://swypf:secret@db:5432/postgres_db?schema=public
     volumes:

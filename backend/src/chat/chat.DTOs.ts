@@ -37,3 +37,19 @@ export class ParticipantListElementDTO {
         this.online = online;
     }
 }
+
+export class SendMessageDTO{
+    chatID:number;
+    userID: number;
+    content: string;
+
+    constructor(chatID: number, userID: number, content: string) {
+        this.chatID = chatID;
+        this.userID = userID;
+        this.content = content;
+    }
+}
+
+export class EstablishConnectDTO{
+    userID:number;
+}
