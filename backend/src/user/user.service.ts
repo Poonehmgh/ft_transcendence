@@ -17,6 +17,7 @@ import {
   ERR_NO_FREQ,
   INFO_ACCEPT_FREQ,
   INFO_BLOCK,
+  INFO_BLOCK_CANCEL,
   INFO_BLOCK_RM,
   INFO_DECL_FREQ,
   INFO_FREQ_CANCEL,
@@ -264,7 +265,6 @@ export class UserService {
         this.getUserById(thisId),
         this.getUserById(otherId),
       ]);
-
       if (!thisUser.friendReq_in.includes(otherId)) {
         throw new Error(ERR_NO_FREQ);
       }
@@ -316,19 +316,15 @@ export class UserService {
       if (thisUser.blocked.includes(otherId)) {
         throw new Error(ERR_ALRDY_BLOCKED);
       }
-      let msg: string;
-      // want to bundle awaits, so need updateArray inside of the if / else
+      let msg: string = INFO_BLOCK;
       if (thisUser.friends.includes(otherId)) {
-        await Promise.all([
-          this.removeFriend(otherId),
-          this.updateArray(thisId, "blocked", [...thisUser.blocked, otherId]),
-        ]);
+        this.removeFriend(otherId);
         msg = INFO_BLOCK_RM;
       } else if (thisUser.friendReq_out.includes(otherId)) {
-      } else {
-        this.updateArray(thisId, "blocked", [...thisUser.blocked, otherId]);
-        msg = INFO_BLOCK;
+        this.cancelFriendReq(otherId);
+        msg = INFO_BLOCK_CANCEL;
       }
+      this.updateArray(thisId, "blocked", [...thisUser.blocked, otherId]);
       return msg;
     } catch (error) {
       console.log(error);
