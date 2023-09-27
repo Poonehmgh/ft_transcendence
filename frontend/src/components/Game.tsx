@@ -1,30 +1,17 @@
-import {Link} from "react-router-dom";
+import Header from "./Header";
+import React from "react";
+import '../styles/game.css'
 
 function Game() {
     return (
-        <div className="sections-container">
-            <div className="section" id="header">
-                <div className={"pongers-logo"}>
-                    <Link className={"link"} to="/home">Pongers</Link><br/>
-                </div>
-                <ul className={"upper-links"}>
-                    <li>
-                        <Link className={"link"} to="/leaderboard">Leaderboard</Link>
-                    </li>
-                    <li>
-                        <Link className={"link"} to="/game">Game</Link>
-                    </li>
-                    <li>
-                        <Link className={"link"} to="/chat">Chat</Link>
-                    </li>
-                </ul>
-            </div>
-            <div className="section" id="right-bar">Right Bar</div>
-            <div className="section" id="center">
+        <div className="game-sections-container">
+          <Header />
+            <div className="section game-left-bar">Left Paddle</div>
+            <div className="section game-center">
                 <div>Game</div>
             </div>
-            <div className="section" id="left-bar">Left Bar</div>
-            <div className="section" id="footer">Footer</div>
+            <div className="section game-right-bar">Right Bar</div>
+            <div className="section game-score">Score</div>
         </div>
     );
 }

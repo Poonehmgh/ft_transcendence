@@ -1,31 +1,17 @@
-import {Link} from "react-router-dom";
-import '../styles/style.css';
+import Header from "./Header";
+import React from "react";
+import '../styles/home.css'
 
 function Home() {
     return (
     <div className="sections-container">
-        <div className="section" id="header">
-            <div className={"pongers-logo"}>
-                <Link className={"link"} to="/home">Pongers</Link><br/>
-            </div>
-            <ul className={"upper-links"}>
-                <li>
-                    <Link className={"link"} to="/leaderboard">Leaderboard</Link>
-                </li>
-                <li>
-                    <Link className={"link"} to="/game">Game</Link>
-                </li>
-                <li>
-                    <Link className={"link"} to="/chat">Chat</Link>
-                </li>
-            </ul>
-        </div>
-        <div className="section" id="right-bar">Right Bar</div>
-        <div className="section" id="center">
+        <Header />
+        <div className="section left-bar">Left Bar</div>
+        <div className="section center">
             <div>Hello User</div>
         </div>
-        <div className="section" id="left-bar">Left Bar</div>
-        <div className="section" id="footer">Footer</div>
+        <div className="section right-bar">Right Bar</div>
+        <div className="section footer">Footer</div>
     </div>
     );
 }

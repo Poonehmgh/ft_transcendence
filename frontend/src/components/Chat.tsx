@@ -1,31 +1,19 @@
-import {Link} from "react-router-dom";
-import '../styles/style.css';
+import Header from "./Header";
+import React from "react";
+import '../styles/chat.css';
 
 function Chat() {
     return (
-        <div className="sections-container">
-            <div className="section" id="header">
-                <div className={"pongers-logo"}>
-                    <Link className={"link"} to="/home">Pongers</Link><br/>
-                </div>
-                <ul className={"upper-links"}>
-                    <li>
-                        <Link className={"link"} to="/leaderboard">Leaderboard</Link>
-                    </li>
-                    <li>
-                        <Link className={"link"} to="/game">Game</Link>
-                    </li>
-                    <li>
-                        <Link className={"link"} to="/chat">Chat</Link>
-                    </li>
-                </ul>
-            </div>
-            <div className="section" id="right-bar">Right Bar</div>
-            <div className="section" id="center">
-                <div>Chat</div>
-            </div>
-            <div className="section" id="left-bar">Left Bar</div>
-            <div className="section" id="footer">Footer</div>
+        <div className="chat-sections-container">
+          <Header />
+          <div className="section chat-upper-left-bar">Channels</div>
+          <div className="section chat-lower-left-bar">New Channel</div>
+          <div className="section chat-center">
+              <div>Chat</div>
+          </div>
+          <div className="section chat-upper-right-bar">Chat Participants</div>
+          <div className="section chat-lower-right-bar">Options</div>
+          <div className="section chat-footer">Message Input</div>
         </div>
     );
 }
