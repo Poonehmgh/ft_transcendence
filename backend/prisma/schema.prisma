@@ -34,18 +34,19 @@ model User {
 }
 
 model Match {
-    createdAt   DateTime  @default(now())
-    updatedAt   DateTime  @updatedAt
-    id          Int       @id @unique @default(autoincrement())
-    begin       DateTime?
-    end         DateTime?
-    length_sec  Int       @default(0)
-    player1     Int
-    player2     Int
-    score_p1    Int       @default(0)
-    score_p2    Int       @default(0)
-    winner_id   Int?
-    winner_name String? // has a name of a winner or "" Ackchyually: this will be null. if you want it to be "", have to do @default("")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  id          Int       @id @unique @default(autoincrement())
+  begin       DateTime?
+  end         DateTime?
+  length_sec  Int       @default(0)
+  player1     Int
+  player2     Int
+  score_p1    Int       @default(0)
+  score_p2    Int       @default(0)
+  winner_id   Int?
+  winner_name String? // has a name of a winner or ""
+  winner_name String? // has a name of a winner or "" Ackchyually: this will be null. if you want it to be "", have to do @default("")
 
     @@unique([player1, player2])
 }
@@ -61,15 +62,16 @@ model Message {
 }
 
 model Chat {
-    createdAt    DateTime    @default(now())
-    updatedAt    DateTime    @updatedAt
-    id           Int         @id @unique @default(autoincrement())
-    name         String      @default("Unnamed Chat")
-    dm           Boolean     @default(false)
-    pw_protected Boolean     @default(false)
-    password     String? // hash this?
-    messages     Message[]
-    chatUsers    Chat_User[]
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  id           Int         @id @unique @default(autoincrement())
+  name         String      @default("Unnamed Chat")
+  dm           Boolean     @default(false)
+  // add private option for invite only
+  pw_protected Boolean     @default(false)
+  password     String? // hash this?
+  messages     Message[]
+  chatUsers    Chat_User[]
 }
 
 // junction tables
@@ -87,5 +89,6 @@ model Chat_User {
     blocked   Boolean  @default(false)
     muted     Boolean  @default(false)
 
-    @@index([userId, chatId])
+  // invited???
+  @@index([userId, chatId])
 }
