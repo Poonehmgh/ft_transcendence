@@ -33,3 +33,5 @@ To user
 | what                        | Message       | takes          |
 |-----------------------------|---------------|----------------|
 | get a new message just sent | updateMessage | SendMessageDTO |
+
+For creating a dm chat name format is name1:name2

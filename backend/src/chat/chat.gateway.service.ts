@@ -1,6 +1,6 @@
 import {Injectable} from "@nestjs/common";
 import {PrismaService} from "../prisma/prisma.service";
-import {SendMessageDTO} from "./chat.DTOs";
+import {ChatUserDTO, CreateNewChatDTO, SendMessageDTO} from "./chat.DTOs";
 import {Socket} from "socket.io";
 import {userGateway} from "./userGateway";
 
@@ -110,5 +110,83 @@ export class ChatGatewayService {
         } catch (error) {
             console.log(`error in sendUpdateMessage: ${error.message}`);
         }
+    }
+
+    async checkIfDMChatExists(userId1: number, userId2: number): Promise<boolean> {
+        const existingChat = await this.prisma.chat.findFirst({
+            where: {
+                dm: true,
+                chatUsers: {
+                    every: {
+                        userId: { in: [userId1, userId2] },
+                    },
+                },
+            },
+        });
+
+        return !!existingChat; // Returns true if an existing chat is found, false otherwise.
+    }
+
+
+    countOwners(chat_users: ChatUserDTO[]): number {
+        let counter: number = 0;
+        for (const user of chat_users) {
+            if (user.owner == true)
+                counter++;
+        }
+        return counter;
+    }
+    async checkIsProperDM(chat: CreateNewChatDTO){
+        if (chat.chat_users.length !== 2) {
+            throw {message: "DM can have only 2 users"};
+        }
+        if (this.countOwners(chat.chat_users) !== 0) {
+            throw {message: "DMs cant have owners"};
+        }
+        const names:string[] = chat.name.split(':');
+        if(!names || names.length !== 2){
+            throw {message: "Wrong DM name format"};
+        }
+        if(await this.checkIfDMChatExists(chat.chat_users[0].userId, chat.chat_users[1].userId)){
+            throw {message: "There could be only one DM chat between 2 users"};
+        }
+    }
+
+    async checkIsProperChat(chat: CreateNewChatDTO) {
+        if (chat.chat_users.length < 2)
+            throw {message: "Not enough users"};
+        const ownerCount: number = this.countOwners(chat.chat_users);
+        if (ownerCount > 1)
+            throw {message: "Too much owners"};
+        if (chat.dm)
+            await this.checkIsProperDM(chat);
+    }
+
+    async createNewEmptyChat(data: CreateNewChatDTO) {
+        try {
+            await this.checkIsProperChat(data);
+            await this.prisma.chat.create({
+                data: {
+                    name: data.name,
+                    dm: Boolean(data.dm),
+                    pw_protected: Boolean(data.pw_protected),
+                    password: data.password,
+                    chatUsers: {
+                        createMany: {
+                            data: data.chat_users.map((chatUser) => ({
+                                userId: chatUser.userId,
+                                owner: chatUser.owner
+                            })),
+                        },
+                    },
+                },
+                include: {
+                    chatUsers: true,
+                },
+            });
+        } catch (error) {
+            console.log(`error in createNewEmptyChat: ${error.message}`);
+        }
+
     }
 }

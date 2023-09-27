@@ -1,3 +1,5 @@
+import {findIndex} from "rxjs";
+
 export class ChatListDTO {
     chatName: string;
     chatID: number;
@@ -38,8 +40,8 @@ export class ParticipantListElementDTO {
     }
 }
 
-export class SendMessageDTO{
-    chatID:number;
+export class SendMessageDTO {
+    chatID: number;
     userID: number;
     content: string;
 
@@ -50,6 +52,43 @@ export class SendMessageDTO{
     }
 }
 
-export class EstablishConnectDTO{
-    userID:number;
+export class EstablishConnectDTO {
+    userID: number;
+}
+
+export class ChatUserDTO {
+    userId: number;
+    owner: boolean = false;
+    admin: boolean = false;
+    blocked: boolean = false;
+    muted: boolean = false;
+    invited: boolean = false;
+
+    constructor(userId: number, owner: boolean, admin: boolean, blocked: boolean, muted: boolean, invited: boolean) {
+        this.userId = userId;
+        this.owner = owner;
+        this.admin = admin;
+        this.blocked = blocked;
+        this.muted = muted;
+        this.invited = invited;
+    }
+
+
+}
+
+export class CreateNewChatDTO {
+    name: string;
+    dm: boolean;
+    pw_protected: boolean;
+    password: string;
+    chat_users: ChatUserDTO[] = [];
+
+    constructor(name: string, dm: boolean, pw_protected: boolean, password: string, chat_users: ChatUserDTO[]) {
+        this.name = name;
+        this.dm = dm;
+        this.pw_protected = pw_protected;
+        this.password = password;
+        this.chat_users = chat_users;
+    }
+
 }

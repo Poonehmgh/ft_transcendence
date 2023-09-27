@@ -34,18 +34,18 @@ model User {
 }
 
 model Match {
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  id         Int       @id @unique @default(autoincrement())
-  begin      DateTime?
-  end        DateTime?
-  length_sec Int       @default(0)
-  player1    Int
-  player2    Int
-  score_p1   Int       @default(0)
-  score_p2   Int       @default(0)
-  winner_id  Int?
-  winner_name   String? // has a name of a winner or ""
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  id          Int       @id @unique @default(autoincrement())
+  begin       DateTime?
+  end         DateTime?
+  length_sec  Int       @default(0)
+  player1     Int
+  player2     Int
+  score_p1    Int       @default(0)
+  score_p2    Int       @default(0)
+  winner_id   Int?
+  winner_name String? // has a name of a winner or ""
 
   @@unique([player1, player2])
 }
@@ -65,8 +65,8 @@ model Chat {
   updatedAt    DateTime    @updatedAt
   id           Int         @id @unique @default(autoincrement())
   name         String      @default("Unnamed Chat")
-  dm       Boolean     @default(false)
-  //add private option for invite only
+  dm           Boolean     @default(false)
+  // add private option for invite only
   pw_protected Boolean     @default(false)
   password     String? // hash this?
   messages     Message[]
@@ -87,7 +87,7 @@ model Chat_User {
   admin     Boolean  @default(false)
   blocked   Boolean  @default(false)
   muted     Boolean  @default(false)
-  //invited???
 
+  // invited???
   @@index([userId, chatId])
 }

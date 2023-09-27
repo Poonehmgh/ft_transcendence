@@ -7,7 +7,7 @@ import {
   WebSocketServer
 } from '@nestjs/websockets';
 import {Server, Socket} from "socket.io";
-import {EstablishConnectDTO, SendMessageDTO} from "./chat.DTOs";
+import {CreateNewChatDTO, EstablishConnectDTO, SendMessageDTO} from "./chat.DTOs";
 import {ChatGatewayService} from "./chat.gateway.service";
 import {userGateway} from "./userGateway";
 import {OnModuleInit} from "@nestjs/common";
@@ -43,4 +43,10 @@ export class ChatGateway implements OnModuleInit, OnGatewayDisconnect{
     const messageID:number = await this.chatGatewayService.addMessageToChat(message);
     await this.chatGatewayService.sendUpdateMessages(messageID, message);
   }
+
+  @SubscribeMessage('createChat')
+  async newChatMessage(@ConnectedSocket() client: Socket, @MessageBody()message: CreateNewChatDTO){
+    await this.chatGatewayService.createNewEmptyChat(message);
+  }
+
 }
