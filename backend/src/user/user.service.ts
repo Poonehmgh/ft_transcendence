@@ -18,6 +18,8 @@ import {
   INFO_ACCEPT_FREQ,
   INFO_ALRDY_FR1,
   INFO_ALRDY_FR2,
+  INFO_AVATARCHANGED,
+  INFO_AVATARUNCHANGED,
   INFO_BLOCK,
   INFO_BLOCK_CANCEL,
   INFO_BLOCK_RM,
@@ -251,8 +253,11 @@ export class UserService {
     return INFO_NAMECHANGED;
   }
 
-  async changeAvatar(thisId: number, newURL: string) {
-    this.updateString(thisId, "avatarURL", newURL);
+  async changeAvatar(thisId: number, avatar: Express.Multer.File) {
+    if (!avatar)
+		return INFO_AVATARUNCHANGED;
+	this.updateString(thisId, "avatarURL", `/upload/avatar-${thisId}`);
+    return INFO_AVATARCHANGED;
   }
 
   // friend management

@@ -4,6 +4,7 @@ export const ERR_NO_FREQ1 = 		"Error accepting friend request: No such id found 
 export const ERR_NO_FREQ2 = 		"Error accepting friend request: No such id found in outgoing requests."
 export const ERR_DECL_FREQ =		"Error declining friend request."
 export const ERR_ALRDY_BLOCKED = 	"Error blocking user: already blocked."
+export const ERR_INVALFILETYPE =	"Invalid file type."
 
 export const INFO_ACCEPT_FREQ = 	"Friend request accepted."
 export const INFO_ALRDY_FR1 = 		"Accept friend request: already friends (thisId)."
@@ -19,3 +20,5 @@ export const INFO_BLOCK_RM = 		"User blocked and removed from friends."
 export const INFO_BLOCK_CANCEL = 	"User blocked and friend request canceled."
 export const INFO_RM = 				"User removed from friends."
 export const INFO_NAMECHANGED = 	"Name changed."
+export const INFO_AVATARCHANGED = 	"Avatar changed."
+export const INFO_AVATARUNCHANGED = "Invalid file. Avatar not changed."
