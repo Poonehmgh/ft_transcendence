@@ -26,7 +26,7 @@ export class AuthController {
   ft_oauth(){
     // return this.authService.ft_oauth();
     console.log("controller at login is called.")
-    return {"msg": "ewjvfw;"}
+    return {"msg": "this is returned when something is wrong with the guards.;"}
   }
 
   @Get("/42/redirect")
