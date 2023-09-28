@@ -232,10 +232,18 @@ export class UserService {
       if (thisUser.friendReq_in.includes(otherId)) {
         return this.acceptFriendReq(otherId);
       }
-      await Promise.all([
-        this.updateArray(thisId, "friendReq_out", [...thisUser.friendReq_out, otherId]),
-        this.updateArray(otherId, "friendReq_in", [...otherUser.friendReq_in, thisId]),
-      ]);
+      const promises = [];
+      if (!otherUser.friendReq_in.includes(thisId)) {
+        promises.push(
+          this.updateArray(thisId, "friendReq_out", [...thisUser.friendReq_out, otherId])
+        );
+      }
+      if (!thisUser.friendReq_out.includes(otherId)) {
+        promises.push(
+          this.updateArray(otherId, "friendReq_in", [...otherUser.friendReq_in, thisId])
+        );
+      }
+      await Promise.all(promises);
       return INFO_SEND_FREQ;
     } catch (error) {
       console.log(error);
