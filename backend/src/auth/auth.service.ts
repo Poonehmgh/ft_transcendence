@@ -42,15 +42,16 @@ export class AuthService {
         const {id, email, surname } = user;
         const name: string = user.name;
         try{
+            console.log("and here")
             const newUser = await this.prisma.user.create({
                 data: {
-                    id: id,
+                    id: Number(id),
                     name: name,
                     email: email,
-                    //id: Number(id),
                    // name: name + (surname ? ` ${surname}` : '')
                 }
             })
+            console.log("here");
             return this.generateJwtToken({
                 email: newUser.email,
                 id: newUser.id,
