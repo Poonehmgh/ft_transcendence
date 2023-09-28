@@ -74,8 +74,8 @@ export class UserController {
   @Get("all_idnames")
   async getAllIdsAndNames(): Promise<IdAndNameDTO[]> {
     return this.userService.getAllIdsAndNames();
-  } 
- 
+  }
+
   @Get("all_users")
   async getAllUsers() {
     return this.userService.getAllUsers();
@@ -90,52 +90,60 @@ export class UserController {
   // profile management
 
   @Post("change_name")
-  async changeName(@Body() body: { newName: string }) {
+  async changeName(@Body() body: { thisId: number; newName: string }) {
+    const { thisId } = body;
     const { newName } = body;
-    return this.userService.changeName(newName);
+    return this.userService.changeName(thisId, newName);
   }
 
   // friend management
 
   @Post("send_friendreq")
-  async sendFriendRequest(@Body() body: { otherId: number }) {
+  async sendFriendRequest(@Body() body: { thisId: number; otherId: number }) {
+    const { thisId } = body;
     const { otherId } = body;
-    return this.userService.sendFriendReq(otherId);
+    return this.userService.sendFriendReq(thisId, otherId);
   }
 
   @Post("cancel_friendreq")
-  async cancelFriendRequest(@Body() body: { otherId: number }) {
+  async cancelFriendRequest(@Body() body: { thisId: number; otherId: number }) {
+    const { thisId } = body;
     const { otherId } = body;
-    return this.userService.cancelFriendReq(otherId);
+    return this.userService.cancelFriendReq(thisId, otherId);
   }
 
   @Post("accept_friendreq")
-  async acceptFriendRequest(@Body() body: { otherId: number }) {
+  async acceptFriendRequest(@Body() body: { thisId: number; otherId: number }) {
+    const { thisId } = body;
     const { otherId } = body;
-    return this.userService.acceptFriendReq(otherId);
+    return this.userService.acceptFriendReq(thisId, otherId);
   }
 
   @Post("decline_friendreq")
-  async declineFriendRequest(@Body() body: { otherId: number }) {
+  async declineFriendRequest(@Body() body: { thisId: number; otherId: number }) {
+    const { thisId } = body;
     const { otherId } = body;
-    return this.userService.declineFriendReq(otherId);
+    return this.userService.declineFriendReq(thisId, otherId);
   }
 
   @Post("remove_friend")
-  async removeFriend(@Body() body: { otherId: number }) {
+  async removeFriend(@Body() body: { thisId: number; otherId: number }) {
+    const { thisId } = body;
     const { otherId } = body;
-    return this.userService.removeFriend(otherId);
+    return this.userService.removeFriend(thisId, otherId);
   }
 
   @Post("block_user")
-  async blockUser(@Body() body: { otherId: number }) {
+  async blockUser(@Body() body: { thisId: number; otherId: number }) {
+    const { thisId } = body;
     const { otherId } = body;
-    return this.userService.blockUser(otherId);
+    return this.userService.blockUser(thisId, otherId);
   }
 
   @Post("unblock_user")
-  async unblockUser(@Body() body: { otherId: number }) {
+  async unblockUser(@Body() body: { thisId: number; otherId: number }) {
+    const { thisId } = body;
     const { otherId } = body;
-    return this.userService.unblockUser(otherId);
+    return this.userService.unblockUser(thisId, otherId);
   }
 }
