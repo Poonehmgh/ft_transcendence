@@ -4,15 +4,16 @@ import '../styles/chat.css';
 
 function Chat() {
     return (
-        <div className="sections-container">
+        <div className="chat-sections-container">
           <Header />
-          <div className="section chat-left-bar">Left Bar</div>
+          <div className="section chat-upper-left-bar">Channels</div>
+          <div className="section chat-lower-left-bar">New Channel</div>
           <div className="section chat-center">
               <div>Chat</div>
           </div>
-          <div className="section chat-upper-right-bar">Upper Right Bar</div>
-          <div className="section chat-lower-right-bar">Lower Right Bar</div>
-          <div className="section chat-footer">Footer</div>
+          <div className="section chat-upper-right-bar">Chat Participants</div>
+          <div className="section chat-lower-right-bar">Options</div>
+          <div className="section chat-footer">Message Input</div>
         </div>
     );
 }

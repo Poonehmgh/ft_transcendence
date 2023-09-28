@@ -25,7 +25,14 @@
 
 ## Game
 
-
+[chat.DTOs.ts](..%2Fbackend%2Fsrc%2Fchat%2Fchat.DTOs.ts)
 
 | what          | method    | controller-path  | takes | returns        |
 |---------------|-----------|------------------|-------|----------------|
+
+## Game
+| what                 | method | controller-path           | takes | returns                     |
+|----------------------|--------|---------------------------|-------|-----------------------------|
+| List of chat rooms   | Get    | chat/:userID              | -     | ChatListDTO[]               |
+| List of messages     | Get    | chat/:chatID/messages     | -     | MessageListElementDTO[]     |
+| List of participants | Get    | chat/:chatID/participants | -     | ParticipantListElementDTO[] |

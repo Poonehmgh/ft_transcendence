@@ -1,5 +1,8 @@
 "use strict";
 import { AuthModule } from './auth/auth.module';
+import { ChatModule } from './chat/chat.module';
+import { ChatController } from './chat/chat.controller';
+import { ChatModule } from './chat/chat.module';
 import { GameGateway } from './game/game.gateway';
 import { AuthModule } from './auth/auth.module';
 var __esDecorate = (this && this.__esDecorate) || function (ctor, descriptorIn, decorators, contextIn, initializers, extraInitializers) {
