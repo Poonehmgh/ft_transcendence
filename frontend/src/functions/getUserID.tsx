@@ -1,7 +1,7 @@
 import {redirect} from "react-router-dom";
 
-const success = true; // Set this to true for a successful operation, or false for an error.
-// const success = false; // Set this to true for a successful operation, or false for an error.
+// const success = true; // Set this to true for a successful operation, or false for an error.
+const success = false; // Set this to true for a successful operation, or false for an error.
 
 function getUserID(): Promise<number> {
   return new Promise((resolve, reject) => {
