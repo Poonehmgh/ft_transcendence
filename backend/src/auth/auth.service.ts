@@ -135,7 +135,6 @@ export class AuthService {
         const url = await this.otpAuthUrl(foundUser.email, foundUser.twoFaSecret);
         const qrCode = await this.generateQRCode(url);
         console.log("QR url", qrCode );
-
         return {qrCode,
             url,};
     }
