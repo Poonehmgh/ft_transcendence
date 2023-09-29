@@ -13,3 +13,18 @@ export class TwoFaDto {
     @IsNotEmpty()
     email: string;
 }
+
+export class TwoFaCodeDto {
+
+    @IsString()
+    @IsNotEmpty()
+    code: string;
+
+    @IsEmail()
+    @IsNotEmpty()
+    email: string;
+
+    @IsNumber()
+    @IsNotEmpty()
+    id: number;
+}
