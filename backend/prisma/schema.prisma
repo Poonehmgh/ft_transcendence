@@ -15,6 +15,7 @@ model User {
   name          String      @unique
   email         String      @unique
   twoFa         Boolean     @default(false)
+  twoFaSecret   String?
   // customization
   avatarURL     String      @default("defaultPath")
   rank          String      @default("noob")

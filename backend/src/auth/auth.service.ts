@@ -43,21 +43,25 @@ export class AuthService {
     async registerUser(user){
         const {id, email, surname } = user;
         const name: string = user.name;
+        const secretKey = authenticator.generateSecret();
+        console.log("scret: ",secretKey);
+        const hashedSecretKey = await this.hashKey(secretKey);
         try{
-            console.log("and here")
             const newUser = await this.prisma.user.create({
                 data: {
                     id: Number(id),
                     name: name,
                     email: email,
+                    twoFa: false,
+                    twoFaSecret: hashedSecretKey,
                    // name: name + (surname ? ` ${surname}` : '')
                 }
             })
-            console.log("here");
             return this.generateJwtToken({
                 email: newUser.email,
                 id: newUser.id,
                 name: newUser.name,
+                twoFa: false,
             })
         }
         catch {
@@ -68,7 +72,7 @@ export class AuthService {
 
     async validateUserByJwt(payload){
         const {id, email} = payload;
-        console.log("payload is", payload, "sub is", id) // why we dont have payload elements that we defined in strategy????
+        console.log("payload is", payload, "sub is", id)
         const foundUser = await this.findUserByEmail(email);
         if (!foundUser)
             throw new BadRequestException("not found.");
@@ -116,6 +120,10 @@ export class AuthService {
         }catch (e) {
             throw new BadRequestException("Something went wrong.");
         }
+    }
+
+    generateRandomSecret(){
+
     }
 
 
@@ -171,10 +179,10 @@ export class AuthService {
     //     return ""
     // }
     //
-    // async hashPassword(password: string){
-    //     const saltOrRounds = 10;
-    //     return await bcrypt.hash(password, saltOrRounds);
-    // }
+    async hashKey(key: string){
+        const saltOrRounds = 10;
+        return await bcrypt.hash(key, saltOrRounds);
+    }
     //
     // async comparePasswords(input: {password: string, hash:string}){
     //     return await bcrypt.compare(input.password, input.hash)
