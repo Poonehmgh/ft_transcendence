@@ -20,7 +20,9 @@ export class ChatGateway implements OnModuleInit, OnGatewayDisconnect{
   @WebSocketServer()
   server: Server
 
-  onModuleInit(): any {
+  async onModuleInit() {
+    await this.chatGatewayService.setAllUsersOffline();
+    console.log('Starting chat gateway');
     this.server.on('connection', (socket) => {
       console.log(`Client ${socket.id} got connected to chat gateway`)
     });

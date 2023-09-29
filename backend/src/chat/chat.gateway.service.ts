@@ -13,6 +13,14 @@ export class ChatGatewayService {
     constructor(private readonly prisma: PrismaService) {
     }
 
+    async setAllUsersOffline(): Promise<void> {
+        await this.prisma.user.updateMany({
+            data: {
+                online: false,
+            },
+        });
+    }
+
     getUserIdFromSocket(socket: Socket) {
         const user: userGateway = this.connectedUsers.find((user) => user.socket === socket)
         return user.userID;
