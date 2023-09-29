@@ -45,7 +45,6 @@ model Match {
   score_p1    Int       @default(0)
   score_p2    Int       @default(0)
   winner_id   Int?
-  winner_name String? // has a name of a winner or ""
   winner_name String? // has a name of a winner or "" Ackchyually: this will be null. if you want it to be "", have to do @default("")
 
     @@unique([player1, player2])
