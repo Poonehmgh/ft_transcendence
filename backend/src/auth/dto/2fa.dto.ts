@@ -8,4 +8,8 @@ export class TwoFaDto {
     @IsString()
     @IsNotEmpty()
     password: string;
+
+    @IsEmail()
+    @IsNotEmpty()
+    email: string;
 }

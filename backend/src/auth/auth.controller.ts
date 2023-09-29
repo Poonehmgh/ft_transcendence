@@ -4,6 +4,7 @@ import {AuthDto} from "./dto/auth.dto";
 import {ftAuthGuard} from "./guards/intra_42.guard";
 import {Response} from "express";
 import {JwtAuthGuard} from "./guards/jwt-auth.guard";
+import {TwoFaDto} from "./dto/2fa.dto";
 
 @Controller('auth')
 export class AuthController {
@@ -47,5 +48,12 @@ export class AuthController {
     console.log("hello from test", req.user);
     return req.user
   }
+
+  @Post("2fa_activate")
+  @UseGuards(JwtAuthGuard)
+  async activate(@Body() twoFaDto: TwoFaDto){
+    return this.authService.activate(twoFaDto);
+  }
+
 
 }

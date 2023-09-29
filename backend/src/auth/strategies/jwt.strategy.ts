@@ -8,6 +8,7 @@ export class JwtPayload{
     mail: string;
     name: string;
     id: string | number;
+    twoFa: boolean;
 }
 
 @Injectable()

@@ -5,6 +5,8 @@ import * as bcrypt from "bcrypt";
 import {JwtService} from "@nestjs/jwt";
 import {jwtSecret} from "../utils/constants"
 import {Request, Response} from "express"
+import {TwoFaDto} from "./dto/2fa.dto";
+import {authenticator} from "otplib";
 
 @Injectable()
 export class AuthService {
@@ -95,6 +97,25 @@ export class AuthService {
                 email: email,
             },
         });
+    }
+
+    async activate(twoFaDto: TwoFaDto){
+        try{
+
+            const foundUser = await this.findUserByEmail(twoFaDto.email);
+            if (!foundUser)
+                return new BadRequestException("User not found.");
+            const updateUser = await this.prisma.user.update({
+                where: {
+                    id: foundUser.id},
+                data:{
+                    twoFa: true,
+                },
+            });
+            return this.generateJwtToken({mail: foundUser.email, id: foundUser.id, name: foundUser.name, twoFa: true})
+        }catch (e) {
+            throw new BadRequestException("Something went wrong.");
+        }
     }
 
 
