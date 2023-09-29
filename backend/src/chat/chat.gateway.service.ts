@@ -193,22 +193,29 @@ export class ChatGatewayService {
     }
 
     async sendChatCreationUpdate(chat: ChatListDTO){
-        const users = await this.prisma.chat.findUnique({
-            where:{
-                id : Number(chat.chatID)
-            },
-            include:{
-                chatUsers : {
-                    select:{
-                        userId : true
+        try{
+            const chatRes = await this.prisma.chat.findUnique({
+                where: {
+                    id: Number(chat.chatID)
+                },
+                include: {
+                    chatUsers: {
+                        select: {
+                            userId: true
+                        }
                     }
                 }
+            });
+            if(chatRes){
+                for (const user of chatRes.chatUsers) {
+                    const socket: Socket = this.getUserSocketFromUserId(user.userId);
+                    socket.emit('updateChat', chat);
+                }
             }
-        });
-        // for (const user of users){
-        //
-        // }
-        console.log(users);
+        }
+        catch (error) {
+            console.log(`error in sendChatCreationUpdate: ${error.message}`);
+        }
     }
 
 }

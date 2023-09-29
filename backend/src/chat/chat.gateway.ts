@@ -47,7 +47,8 @@ export class ChatGateway implements OnModuleInit, OnGatewayDisconnect{
   @SubscribeMessage('createChat')
   async newChatMessage(@ConnectedSocket() client: Socket, @MessageBody()message: CreateNewChatDTO){
     const chat = await this.chatGatewayService.createNewEmptyChat(message);
-    await this.chatGatewayService.sendChatCreationUpdate(chat);
+    if(chat)
+      await this.chatGatewayService.sendChatCreationUpdate(chat);
   }
 
 }

@@ -100,7 +100,7 @@ export class CreateNewChatDTO {
 //     "password": false,
 //     "chat_users": [
 //     {
-//         "userID" : 1,
+//         "userId" : 1,
 //         "owner": false,
 //         "admin": false,
 //         "blocked": false,
@@ -108,7 +108,7 @@ export class CreateNewChatDTO {
 //         "invited": false
 //     },
 //     {
-//         "userID" : 2,
+//         "userId" : 2,
 //         "owner": false,
 //         "admin": false,
 //         "blocked": false,
