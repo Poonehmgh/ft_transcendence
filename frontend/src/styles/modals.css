@@ -1,0 +1,121 @@
+:root {
+  --accent1: 19 25 86;
+}
+
+/* main */
+
+.modal {
+  position: fixed;
+  padding: 1rem 3rem;
+  color: #000000;
+  background: white;
+  max-width: 500px;
+  max-height: 500px;
+  padding-top: 2rem;
+  border-radius: 20px;
+  border: 0;
+  box-shadow: 0 5px 30px 0 rgb(0 0 0 / 10%);
+  animation: fadeIn 1s ease both;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  &::backdrop {
+    animation: fadeIn 1s ease both;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 2;
+    backdrop-filter: blur(20px);
+  }
+}
+
+.modal-h2 {
+  font-weight: 600;
+  font-size: 2rem;
+  padding-bottom: 1rem;
+}
+
+.modal-p {
+  font-size: 1rem;
+  line-height: 1.3rem;
+  padding: 0.5rem 0;
+  a {
+    &:visited {
+      color: rgb(var(--accent1));
+    }
+  }
+}
+
+.modals-table
+ {
+  table-layout: fixed;
+  font-size: 1rem;
+  border: 0px solid;
+  border-collapse: collapse;
+  color: rgb(0, 0, 0);
+  padding: 5px;
+  border-spacing: 10px;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+  width: 100%;
+}
+
+/* images */
+
+.img-avatar {
+  width: 200px;
+  height: auto;
+}
+
+/* buttons */
+
+.button-close {
+  border: none;
+  background: none;
+  position: absolute;
+  text-align: center;
+  top: 15px;
+  right: 10px;
+  transition: transform 0.1s;
+  cursor: pointer;
+  transform-origin: center;
+
+  &:hover {
+    transform: scale(1.3);
+  }
+}
+
+.button-big {
+  display: inline-block;
+  font-size: 0.8rem;
+  color: #fff !important;
+  background: rgb(var(--accent1) / 100%);
+  padding: 13px 25px;
+  margin: 10px;
+  border-radius: 17px;
+  transition: background-color 0.1s ease;
+  box-sizing: border-box;
+  transition: all 0.25s ease;
+  border: 0;
+  cursor: pointer;
+  box-shadow: 0 10px 20px -10px rgb(var(--accent1) / 50%);
+
+  &:hover {
+    box-shadow: 0 20px 20px -10px rgb(var(--accent1) / 50%);
+    transform: translateY(-2px);
+  }
+}
+
+.button-edit {
+  border: 0;
+  cursor: pointer;
+  color: #9a9a9a;
+  font-size: 1.3rem;
+  font-style: italic;
+  border-radius: 17px;
+  background: transparent;
+
+  &:hover {
+    transform: scale(1.05);
+    font-weight: 200;
+  }
+}

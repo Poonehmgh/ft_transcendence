@@ -18,8 +18,6 @@ import {
   INFO_ACCEPT_FREQ,
   INFO_ALRDY_FR1,
   INFO_ALRDY_FR2,
-  INFO_AVATARCHANGED,
-  INFO_AVATARUNCHANGED,
   INFO_BLOCK,
   INFO_BLOCK_CANCEL,
   INFO_BLOCK_RM,
@@ -31,7 +29,9 @@ import {
   INFO_RM,
   INFO_SEND_FREQ,
   INFO_UNBLOCK,
-} from "src/constants/constants.user.service";
+  ERR_NAMETAKEN,
+  ERR_NAMECHANGE,
+} from "../constants/constants.user.service";
 
 @Injectable()
 export class UserService {
@@ -249,15 +249,20 @@ export class UserService {
   // profile management
 
   async changeName(thisId: number, newName: string) {
-    this.updateString(thisId, "name", newName);
-    return INFO_NAMECHANGED;
-  }
-
-  async changeAvatar(thisId: number, avatar: Express.Multer.File) {
-    if (!avatar)
-		return INFO_AVATARUNCHANGED;
-	this.updateString(thisId, "avatarURL", `/upload/avatar-${thisId}`);
-    return INFO_AVATARCHANGED;
+    try {
+		await this.prisma.user.update({
+			where: { id: thisId },
+			data: {
+				name: newName,
+			},
+		});
+      return INFO_NAMECHANGED;
+    } catch (error) {
+		console.log(error);
+      if (error.code === "P2002") {
+        return ERR_NAMETAKEN;
+      } else return ERR_NAMECHANGE;
+    }
   }
 
   // friend management
@@ -316,7 +321,7 @@ export class UserService {
       if (!thisUser.friendReq_in.includes(otherId)) {
         throw new Error(ERR_NO_FREQ1);
       }
-	  if (!otherUser.friendReq_out.includes(thisId)) {
+      if (!otherUser.friendReq_out.includes(thisId)) {
         throw new Error(ERR_NO_FREQ2);
       }
 
@@ -409,16 +414,12 @@ export class UserService {
   // maybe externalize later (how to add prisma best then?)
 
   async updateString(userId: number, field: string, newString: string) {
-    try {
-      return await this.prisma.user.update({
-        where: { id: userId },
-        data: {
-          [field]: newString,
-        },
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    return await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        [field]: newString,
+      },
+    });
   }
 
   async updateArray(userId: number, field: string, newArray: number[]) {

@@ -6,6 +6,7 @@ import {
   Post,
   Query,
   Body,
+  Req,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import express, { Express } from "express";
@@ -19,38 +20,6 @@ import {
   UserProfileDTO,
 } from "./user-dto";
 import { UserService } from "./user.service";
-import { ERR_INVALFILETYPE } from "src/constants/constants.user.service";
-
-const intercept_avatar = {
-  fieldName: "avatar",
-  storage: multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, "./upload/");
-    },
-    filename: function (req, file, cb) {
-      cb(null, `avatar-${req.body.thisId}`);
-    },
-  }),
-  fileFilter: function (req, file, cb) {
-    if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
-      cb(null, true);
-    } else {
-      cb(new Error(ERR_INVALFILETYPE), false);
-    }
-  },
-  limits: {
-	fileSize: 5 * 1024 * 1024
-  },
-};
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "./upload/");
-  },
-  filename: function (req, file, cb) {
-    cb(null, `avatar-${req.body.thisId}}`);
-  },
-});
 
 @Controller("user")
 export class UserController {
@@ -133,21 +102,11 @@ export class UserController {
   // profile management
 
   @Post("change_name")
-  async changeName(@Body() body: { thisId: number; newName: string }) {
-    const { thisId } = body;
-    const { newName } = body;
-    return this.userService.changeName(thisId, newName);
+  async changeName(@Body() body: { id: number; newName: string }) {
+	const {id, newName } = body;
+    return this.userService.changeName(id, newName);
   }
 
-  @Post("change_avatar")
-  @UseInterceptors(FileInterceptor(intercept_avatar.fieldName, intercept_avatar))
-  async changeAvatar(
-    @UploadedFile() avatar: Express.Multer.File,
-    @Body() body: { thisId: number }
-  ) {
-    const { thisId } = body;
-    return this.userService.changeAvatar(thisId, avatar);
-  }
 
   // friend management
 

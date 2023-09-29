@@ -1,7 +1,7 @@
-import { authContentHeader } from "./headers";
+import { authContentHeader, authHeader } from "./headers";
 
 export function userAction(otherId: number, endpoint: string): void {
-  const body: string = JSON.stringify( { otherId: otherId });
+  const body: string = JSON.stringify({ otherId: otherId });
   void fetchPost(endpoint, authContentHeader, body);
 }
 
@@ -10,7 +10,7 @@ const fetchPost = async (url: string, header: any, body: string): Promise<any> =
   try {
     const response: Response = await fetch(fetchUrl, {
       method: "POST",
-      headers: header,
+      headers: header, // maybe dont need to pass this in
       body: body,
       redirect: "follow",
     });
@@ -25,3 +25,22 @@ const fetchPost = async (url: string, header: any, body: string): Promise<any> =
     return { error: "fetchPost: catch" };
   }
 };
+
+export async function getAvatar(id: number) {
+  const fetchUrl: string = process.env.REACT_APP_BACKEND_URL + `/upload/get_avatar/${id}`;
+  try {
+    const response = await fetch(fetchUrl, {
+      method: "GET",
+      headers: authContentHeader(),
+    });
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    const blob = await response.blob();
+    const imgElement = document.createElement("img");
+    imgElement.src = URL.createObjectURL(blob);
+    document.querySelector("#profile-picture-container").appendChild(imgElement);
+  } catch (error) {
+    console.log("Error getting Avatar");
+  }
+}
