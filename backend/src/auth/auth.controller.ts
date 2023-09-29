@@ -55,5 +55,4 @@ export class AuthController {
     return this.authService.activate(twoFaDto);
   }
 
-
 }

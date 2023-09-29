@@ -25,7 +25,7 @@ export class AuthService {
         console.log("user is found: ", user)
         try {
             if (foundUser.twoFa)
-                this.twoFaValidate(user);
+                this.twoFaQRcode(user);
             return this.generateJwtToken({
                 email: foundUser.email,
                 id: foundUser.id,
@@ -70,7 +70,7 @@ export class AuthService {
             })
         }
         catch {
-            throw new InternalServerErrorException();
+            throw new InternalServerErrorException("Unable to register user.");
         }
     }
 
@@ -128,15 +128,16 @@ export class AuthService {
         }
     }
 
-    async twoFaValidate(userData: TwoFaCodeDto){
-        const foundUser = await this.findUserByEmail(userData.email);
+    async twoFaQRcode(user:any){
+        const foundUser = await this.findUserByEmail(user.email);
         if (!foundUser)
             throw new BadRequestException("for some reason user not found.");
-        const isValid = authenticator.verify({
-            secret: foundUser.twoFaSecret,
-            token: userData.code,
-        });
+        const url = await this.otpAuthUrl(foundUser.email, foundUser.twoFaSecret);
+        const qrCode = await this.generateQRCode(url);
+        console.log("QR url", qrCode );
 
+        return {qrCode,
+            url,};
     }
     // async signup(dto: AuthDto){
     //     const {email, password, name, badge, intraID, status, avatar} = dto;
