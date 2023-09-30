@@ -25,7 +25,7 @@ export class AuthController {
   // }
   @Get("/42/login")
   @UseGuards(ftAuthGuard)
-  ftOauth(){
+  ftOAuth(){
     console.log("controller at login is called. (NEVER!)")
     return {"msg": "this is returned when something is wrong with the guards.;"}
   }

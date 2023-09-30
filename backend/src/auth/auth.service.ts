@@ -36,10 +36,6 @@ export class AuthService {
         }
     }
 
-    async ftOauth(){
-        return "This is never called."
-    }
-
     async ft2FaLogin_FirstStep(user: any){
         const foundUser = await this.findUserByEmail(user.email);
         if (!foundUser)
