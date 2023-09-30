@@ -24,7 +24,7 @@ export class AuthController {
   // }
   @Get("/42/login")
   @UseGuards(ftAuthGuard)
-  ft_oauth(){
+  ftOauth(){
     // return this.authService.ft_oauth();
     console.log("controller at login is called.")
     return {"msg": "this is returned when something is wrong with the guards.;"}
@@ -32,14 +32,13 @@ export class AuthController {
 
   @Get("/42/redirect")
   @UseGuards(ftAuthGuard)
-  async ft_redirect(@Req() req, @Res() res: Response){
-    const token = await this.authService.ft_signin(req.user);
+  async ftRedirect(@Req() req, @Res() res: Response){
+    const token = await this.authService.ftSignin(req.user);
     res.cookie("token", token)
     console.log("controller at redirect is called.")
 
     // return res.send("the login was successful!")
     return res.json({"msg": "the login was successful!"});
-    // add the redirection to a certain page here later
   }
 
   @Get("/42/test")
@@ -55,4 +54,25 @@ export class AuthController {
     return this.authService.activate(twoFaDto);
   }
 
+  @Post("/42/logout")
+  @UseGuards(JwtAuthGuard)
+  async ft_logout(@Req() req, @Res() res: Response){
+    res.clearCookie("token");
+    return res.json({"msg": "the logout was successful!"});
+  }
+
+  @Get("42/2fa_login")
+  @UseGuards(JwtAuthGuard)
+    async ft_2fa_login(@Req() req, @Res() res: Response){
+      const {qrCode, url} = await this.authService.ft2FaLogin_FirstStep(req.user);
+      res.cookie("qrCode", qrCode);
+      res.cookie("url", url);
+      return res.json({"msg": "QR code is generated."});
+
+
+  @Get("42/2fa_login/redirect")
+  @UseGuards(JwtAuthGuard)
+    async ft2FaLoginRedirect(@Req() req, @Res() res: Response){
+
+    }
 }

@@ -15,7 +15,7 @@ import * as QRCode from "qrcode"
 export class AuthService {
     constructor(private prisma: PrismaService, private jwt: JwtService) {}
 
-    async ft_signin(user)
+    async ftSignin(user)
     {
         if (!user)
             throw new BadRequestException("Unauthenticated.");
@@ -24,8 +24,8 @@ export class AuthService {
             return this.registerUser(user);
         console.log("user is found: ", user)
         try {
-            if (foundUser.twoFa)
-                this.twoFaQRcode(user);
+            // if (foundUser.twoFa)
+            //     this.twoFaQRcode(user);
             return this.generateJwtToken({
                 email: foundUser.email,
                 id: foundUser.id,
@@ -36,9 +36,26 @@ export class AuthService {
         }
     }
 
-    async ft_oauth(){
-        console.log("hi from inside this")
-        return "intra_auth"
+    async ftOauth(){
+        return "This is never called."
+    }
+
+    async ft2FaLogin_FirstStep(user: any){
+        const foundUser = await this.findUserByEmail(user.email);
+        if (!foundUser)
+            throw new BadRequestException("User not found.");
+        return this.generateTwoFaQRCode(foundUser);
+    }
+
+    async validateTwoFaCode(twoFaCodeDto: TwoFaCodeDto){
+        const {code, email, id} = twoFaCodeDto;
+        const foundUser = await this.findUserByEmail(email);
+        if (!foundUser)
+            throw new BadRequestException("User not found.");
+        const verified = speakeasy.totp.verify({code, foundUser.twoFaSecret});
+        if (!verified)
+            throw new BadRequestException("Invalid code.");
+        return this.generateJwtToken({mail: foundUser.email, id: foundUser.id, name: foundUser.name, twoFa: true})
     }
 
     async validateUser(payload){
@@ -128,11 +145,8 @@ export class AuthService {
         }
     }
 
-    async twoFaQRcode(user:any){
-        const foundUser = await this.findUserByEmail(user.email);
-        if (!foundUser)
-            throw new BadRequestException("for some reason user not found.");
-        const url = await this.otpAuthUrl(foundUser.email, foundUser.twoFaSecret);
+    async generateTwoFaQRCode(user){
+        const url = await this.otpAuthUrl(user.email, user.twoFaSecret);
         const qrCode = await this.generateQRCode(url);
         console.log("QR url", qrCode );
         return {qrCode,
