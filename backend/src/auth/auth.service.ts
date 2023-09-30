@@ -47,12 +47,12 @@ export class AuthService {
         return this.generateTwoFaQRCode(foundUser);
     }
 
-    async validateTwoFaCode(twoFaCodeDto: TwoFaCodeDto){
+    async validate2FaCode(twoFaCodeDto: TwoFaCodeDto){
         const {code, email, id} = twoFaCodeDto;
         const foundUser = await this.findUserByEmail(email);
         if (!foundUser)
             throw new BadRequestException("User not found.");
-        const verified = speakeasy.totp.verify({code, foundUser.twoFaSecret});
+        const verified = authenticator.verify({token: code, secret: foundUser.twoFaSecret})
         if (!verified)
             throw new BadRequestException("Invalid code.");
         return this.generateJwtToken({mail: foundUser.email, id: foundUser.id, name: foundUser.name, twoFa: true})

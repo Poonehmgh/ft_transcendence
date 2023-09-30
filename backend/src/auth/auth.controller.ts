@@ -5,6 +5,7 @@ import {ftAuthGuard} from "./guards/intra_42.guard";
 import {Response} from "express";
 import {JwtAuthGuard} from "./guards/jwt-auth.guard";
 import {TwoFaDto} from "./dto/2fa.dto";
+import {TwoFaCodeDto} from "./dto/2fa.dto";
 
 @Controller('auth')
 export class AuthController {
@@ -63,16 +64,20 @@ export class AuthController {
 
   @Get("42/2fa_login")
   @UseGuards(JwtAuthGuard)
-    async ft_2fa_login(@Req() req, @Res() res: Response){
+    async ft2FaLogin_FirstStep(@Req() req, @Res() res: Response){
       const {qrCode, url} = await this.authService.ft2FaLogin_FirstStep(req.user);
       res.cookie("qrCode", qrCode);
       res.cookie("url", url);
       return res.json({"msg": "QR code is generated."});
+    }
 
 
   @Get("42/2fa_login/redirect")
   @UseGuards(JwtAuthGuard)
-    async ft2FaLoginRedirect(@Req() req, @Res() res: Response){
+  async validate2FaCode(@Req() req, @Res() res: Response, @Body() twoFaCodeDto: TwoFaCodeDto){
+    const token = await this.authService.validate2FaCode(twoFaCodeDto);
+    res.cookie("token", token);
+    return res.json({"msg": "the login was successful!"});
+  }
 
-    }
 }
