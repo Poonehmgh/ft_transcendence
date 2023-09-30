@@ -9,12 +9,12 @@
   padding: 1rem 3rem;
   color: #000000;
   background: rgb(255, 255, 255);
-  max-width: 500px;
-  max-height: 500px;
+  width: 500px;
+  height: 500px;
   padding-top: 2rem;
   border-radius: 20px;
   border: 0;
-  box-shadow: 0 5px 30px 0 rgb(0 0 0 / 10%);
+  box-shadow: 0 5px 30px 0 rgba(255, 255, 255, 0.35);
   animation: fadeIn 1s ease both;
   top: 30%;
   left: 50%;
@@ -31,6 +31,10 @@
 }
 
 .modal-h2 {
+  display: flex;
+  flex-direction: row;
+  justify-content: right;
+  align-items: top;
   font-weight: 600;
   font-size: 2rem;
   padding-bottom: 1rem;
@@ -44,22 +48,32 @@
 
 .modals-table {
   table-layout: fixed;
-  font-size: 1rem;
+  font-size: 0.9rem;
   border: 0px solid;
   border-collapse: collapse;
   color: rgb(0, 0, 0);
-  padding: 5px;
-  border-spacing: 10px;
+  padding: 0px;
+  border-spacing: 5px;
   border-bottom: 1px solid #ddd;
   text-align: center;
   width: 100%;
+  line-height: 2.2;
+}
+
+.modals-expander {
+  width: 300px;
+  background-color: #ffffff;
+  color:#fff
 }
 
 /* images */
 
 .img-avatar {
-  width: 200px;
-  height: auto;
+  width: 210px;
+  height: 210px;
+  object-fit: fill;
+  object-position: center center;
+  border-radius: 17px;
 }
 
 /* buttons */

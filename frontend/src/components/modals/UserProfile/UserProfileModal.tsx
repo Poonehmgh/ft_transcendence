@@ -26,7 +26,7 @@ function UserProfileModal(props: UserProfileModal_prop) {
     fileInputRef.current.click();
   }
 
-  async function fetchData() {
+  async function fetchProfile() {
     if (modalIsOpen) {
       try {
         const url = process.env.REACT_APP_BACKEND_URL + "/user/profile?id=" + props.id;
@@ -48,8 +48,7 @@ function UserProfileModal(props: UserProfileModal_prop) {
   }
 
   async function fetchAvatar() {
-    const url =
-      process.env.REACT_APP_BACKEND_URL + "/uploads/get_avatar/" + props.id;
+    const url = process.env.REACT_APP_BACKEND_URL + "/uploads/get_avatar/" + props.id;
     try {
       const response = await fetch(url, {
         method: "GET",
@@ -67,7 +66,7 @@ function UserProfileModal(props: UserProfileModal_prop) {
   }
 
   useEffect(() => {
-    fetchData();
+    fetchProfile();
     fetchAvatar();
   }, [modalIsOpen]);
 
@@ -90,6 +89,7 @@ function UserProfileModal(props: UserProfileModal_prop) {
     } catch (error) {
       console.log(error);
     }
+    fetchAvatar();
   }
 
   async function handleNameChange() {
@@ -117,7 +117,7 @@ function UserProfileModal(props: UserProfileModal_prop) {
         const res_data = await response.json();
         alert(res_data.message);
       }
-      fetchData();
+      fetchProfile();
     } catch (error) {
       alert(error);
     }
@@ -138,37 +138,51 @@ function UserProfileModal(props: UserProfileModal_prop) {
         {userData ? (
           <div>
             <h2 className="modal-h2">
-              {userData.name}
-              <button className="button-edit" onClick={handleNameChange}>
-                ✎
-              </button>
+              <div>
+                {userData.name}
+                <button className="button-edit" onClick={handleNameChange}>
+                  ✎
+                </button>
+                <div className="modal-p">
+                  <img
+                    src={avatarURL}
+                    className="img-avatar"
+                    alt="User Avatar"
+                    onClick={handleChooseFileClick}
+                  />
+                </div>
+              </div>
+              <div className="modals-expander">
+                <span>lulu</span>
+              </div>
+              <div>
+                <br />
+                <br />
+                <table className="modals-table">
+                  <tr>
+                    <td className="modals-table">mmr</td>
+                    <td className="modals-table">{userData.mmr}</td>
+                  </tr>
+                  <tr>
+                    <td className="modals-table">rank</td>
+                    <td className="modals-table">{userData.rank}</td>
+                  </tr>
+                  <tr>
+                    <td className="modals-table">matches</td>
+                    <td className="modals-table">{userData.matches}</td>
+                  </tr>
+                  <tr>
+                    <td className="modals-table">win rate</td>
+                    <td className="modals-table">{userData.winrate}</td>
+                  </tr>
+                </table>
+              </div>
             </h2>
-            <p className="modal-p">
-              <img src={avatarURL} className="img-avatar" alt="User Avatar" />
-            </p>
-            <table className="modals-table">
-              <thead className="modals-table">
-                <tr>
-                  <th className="modals-table">mmr</th>
-                  <th className="modals-table">rank</th>
-                  <th className="modals-table">matches</th>
-                  <th className="modals-table">win rate</th>
-                </tr>
-              </thead>
-              <tbody>
-                <td className="modals-table">{userData.mmr}</td>
-                <td className="modals-table">{userData.rank}</td>
-                <td className="modals-table">{userData.matches}</td>
-                <td className="modals-table">{userData.winrate}</td>
-              </tbody>
-            </table>
+            <div></div>
             <br></br>
 
             <button className="button-big" onClick={() => console.log("knudelings")}>
               Manage Friends
-            </button>
-            <button className="button-edit" onClick={handleChooseFileClick}>
-              ✎
             </button>
             <input
               type="file"
