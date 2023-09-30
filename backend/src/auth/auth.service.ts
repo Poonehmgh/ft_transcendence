@@ -7,7 +7,6 @@ import {jwtSecret} from "../utils/constants"
 import {Request, Response} from "express"
 import {TwoFaCodeDto, TwoFaDto} from "./dto/2fa.dto";
 import {authenticator} from "otplib"; //chek
-import * as speakeasy from "speakeasy"
 import * as QRCode from "qrcode"
 
 
