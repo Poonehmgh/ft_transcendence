@@ -1,36 +1,38 @@
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DB_URL")
+  provider = "postgresql"
+  url      = env("DB_URL")
 }
 
 model User {
-    createdAt     DateTime    @default(now())
-    updatedAt     DateTime    @updatedAt
-    // registration
-    id            Int         @id @unique // this is the intraID
-    name          String      @unique
-    email         String      @unique
-    // customization
-    avatarURL     String      @default("defaultPath")
-    rank          String      @default("noob")
-    // match
-    matches       Int[]
-    mmr           Int         @default(1000)
-    winrate       Float?
-    // chat
-    online        Boolean     @default(false)
-    friends       Int[]
-    friendReq_out Int[]
-    friendReq_in  Int[]
-    blocked       Int[]
-    userChats     Chat_User[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  // registration
+  id            Int         @id @unique // this is the intraID
+  name          String      @unique
+  email         String      @unique
+  twoFa         Boolean     @default(false)
+  twoFaSecret   String?
+  // customization
+  avatarURL     String      @default("defaultPath")
+  rank          String      @default("noob")
+  // match
+  matches       Int[]
+  mmr           Int         @default(1000)
+  winrate       Float?
+  // chat
+  online        Boolean     @default(false)
+  friends       Int[]
+  friendReq_out Int[]
+  friendReq_in  Int[]
+  blocked       Int[]
+  userChats     Chat_User[]
 
-    @@unique([friends, friendReq_out, blocked]) // can be blocked and have incoming friend request
-    @@unique([friends, friendReq_out, friendReq_in])
+  @@unique([friends, friendReq_out, blocked]) // can be blocked and have incoming friend request
+  @@unique([friends, friendReq_out, friendReq_in])
 }
 
 model Match {
@@ -47,17 +49,18 @@ model Match {
   winner_id   Int?
   winner_name String? // has a name of a winner or "" Ackchyually: this will be null. if you want it to be "", have to do @default("")
 
-    @@unique([player1, player2])
+  // winner_name String? // has a name of a winner or "" Ackchyually: this will be null. if you want it to be "", have to do @default("")
+  @@unique([player1, player2])
 }
 
 model Message {
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    id        Int      @id @unique @default(autoincrement())
-    content   String
-    author    Int
-    chat      Chat     @relation(fields: [chatId], references: [id])
-    chatId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  id        Int      @id @unique @default(autoincrement())
+  content   String
+  author    Int
+  chat      Chat     @relation(fields: [chatId], references: [id])
+  chatId    Int
 }
 
 model Chat {
@@ -76,17 +79,17 @@ model Chat {
 // junction tables
 
 model Chat_User {
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    id        Int      @id @unique @default(autoincrement())
-    user      User     @relation(fields: [userId], references: [id])
-    userId    Int
-    chat      Chat     @relation(fields: [chatId], references: [id])
-    chatId    Int
-    owner     Boolean  @default(false)
-    admin     Boolean  @default(false)
-    blocked   Boolean  @default(false)
-    muted     Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  id        Int      @id @unique @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  chat      Chat     @relation(fields: [chatId], references: [id])
+  chatId    Int
+  owner     Boolean  @default(false)
+  admin     Boolean  @default(false)
+  blocked   Boolean  @default(false)
+  muted     Boolean  @default(false)
 
   // invited???
   @@index([userId, chatId])

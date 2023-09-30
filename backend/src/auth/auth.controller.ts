@@ -4,6 +4,9 @@ import {AuthDto} from "./dto/auth.dto";
 import {ftAuthGuard} from "./guards/intra_42.guard";
 import {Response} from "express";
 import {JwtAuthGuard} from "./guards/jwt-auth.guard";
+import {TwoFaDto} from "./dto/2fa.dto";
+import {TwoFaCodeDto} from "./dto/2fa.dto";
+import * as cookieParser from "cookie-parser"; // for testing the cookies in the request object
 
 @Controller('auth')
 export class AuthController {
@@ -23,22 +26,18 @@ export class AuthController {
   // }
   @Get("/42/login")
   @UseGuards(ftAuthGuard)
-  ft_oauth(){
-    // return this.authService.ft_oauth();
-    console.log("controller at login is called.")
-    return {"msg": "ewjvfw;"}
+  ftOAuth(){
+    console.log("controller at login is called. (NEVER!)")
+    return {"msg": "this is returned when something is wrong with the guards.;"}
   }
 
   @Get("/42/redirect")
   @UseGuards(ftAuthGuard)
-  async ft_redirect(@Req() req, @Res() res: Response){
-    const token = await this.authService.ft_signin(req.user);
+  async ftRedirect(@Req() req, @Res() res: Response){
+    const token = await this.authService.ftSignin(req.user);
     res.cookie("token", token)
     console.log("controller at redirect is called.")
-
-    // return res.send("the login was successful!")
     return res.json({"msg": "the login was successful!"});
-    // add the redirection to a certain page here later
   }
 
   @Get("/42/test")
@@ -46,6 +45,40 @@ export class AuthController {
   async test(@Req() req){
     console.log("hello from test", req.user);
     return req.user
+  }
+
+  @Post("42/2fa_activate")
+  @UseGuards(JwtAuthGuard)
+  async activate(@Req() req: Request, @Res() res: Response, @Body() twoFaDto: TwoFaDto){
+    const newToken = await this.authService.activate(twoFaDto);
+    //** the request object has a cookie or no?
+    res.cookie("token",newToken)
+    return res.json({"msg": "the 2fa was activated successfully!", "token": newToken});
+  }
+
+  @Post("42/logout")
+  @UseGuards(JwtAuthGuard)
+  async ft_logout(@Req() req, @Res() res: Response){
+    res.clearCookie("token");
+    return res.json({"msg": "the logout was successful!"});
+  }
+
+  @Get("42/2fa_login")
+  @UseGuards(JwtAuthGuard)
+    async ft2FaLogin_FirstStep(@Req() req, @Res() res: Response){
+      const {qrCode, url} = await this.authService.ft2FaLogin_FirstStep(req.user);
+      res.cookie("qrCode", qrCode);
+      res.cookie("url", url);
+      return res.json({"msg": "QR code is generated."});
+    }
+
+
+  @Post("42/2fa_login/redirect")
+  @UseGuards(JwtAuthGuard)
+  async validate2FaCode(@Req() req, @Res() res: Response, @Body() twoFaCodeDto: TwoFaCodeDto){
+    const token = await this.authService.validate2FaCode(twoFaCodeDto);
+    res.cookie("token", token);
+    return res.json({"msg": "the  login was successful!"});
   }
 
 }
