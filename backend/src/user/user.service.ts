@@ -250,18 +250,18 @@ export class UserService {
 
   async changeName(thisId: number, newName: string) {
     try {
-		await this.prisma.user.update({
-			where: { id: thisId },
-			data: {
-				name: newName,
-			},
-		});
-      return INFO_NAMECHANGED;
+      await this.prisma.user.update({
+        where: { id: thisId },
+        data: {
+          name: newName,
+        },
+      });
+      return 0;
     } catch (error) {
-		console.log(error);
+      console.log(error);
       if (error.code === "P2002") {
-        return ERR_NAMETAKEN;
-      } else return ERR_NAMECHANGE;
+        return 1;
+      } else return 2;
     }
   }
 

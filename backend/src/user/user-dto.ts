@@ -1,3 +1,5 @@
+import { IsNotEmpty, IsString, Matches, IsNumber, Length } from "class-validator";
+
 export class NewUserDTO {
   constructor(public id: number, public name: string, public email: string) {}
 }
@@ -45,4 +47,20 @@ export enum UserRelation {
   request_received,
   blocked,
   none,
+}
+
+export class ChangeNameDto {
+  @IsNumber()
+  @IsNotEmpty()
+  id: number;
+
+  @IsNotEmpty()
+  @IsString()
+  @Length(3, 15, {
+    message: "name must be from 3 to 15 characters",
+  })
+  @Matches(/^[A-Za-z]{3}[A-Za-z0-9_]*$/, {
+	message: "first three characters must be alphabetic, the rest can be alphanumerical",
+  }) 
+  newName: string;
 }

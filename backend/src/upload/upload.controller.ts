@@ -71,7 +71,7 @@ export class UploadController {
 
   @Get("get_avatar/:id")
   async getMyAvatar(@Param('id') id: number, @Res() res: Response) {
-    console.log("knudel", id);
+    console.log("get_avater backend", id);
     const picture = `./uploads/profile_pictures/${id}.jpeg`;
     fs.access(picture, (error) => {
       if (error) {

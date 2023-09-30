@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import { UserProfileDTO } from "user-dto";
-import "src/styles/modals.css";
 import { getAvatar } from "src/ApiCalls/userActions";
 import { authContentHeader } from "src/ApiCalls/headers";
+import "src/styles/modals.css";
 
-function UserProfileModal() {
+interface UserProfileModal_prop {
+  id: number;
+}
+
+function UserProfileModal(props: UserProfileModal_prop) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [userData, setUserData] = useState<UserProfileDTO | null>(null);
 
@@ -28,8 +32,7 @@ function UserProfileModal() {
         console.log(response);
         const data = await response.json();
         setUserData(data);
-        const thisId = 1;
-        await getAvatar(thisId);
+        await getAvatar(props.id);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -46,38 +49,46 @@ function UserProfileModal() {
 
   async function handleNameChange() {
     try {
-      const thisId = 1;
       const newName = prompt("Enter a new name:");
 
       if (newName === null || newName.trim() === "") {
         return;
       }
       const data = {
-        id: thisId,
+        id: props.id,
         newName: newName,
       };
-      await fetch(process.env.REACT_APP_BACKEND_URL + "/user/change_name", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+      const response = await fetch(
+        process.env.REACT_APP_BACKEND_URL + "/user/change_name",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+      if (!response.ok) {
+        const res_data = await response.json();
+        alert(res_data.message);
+      }
       fetchData();
     } catch (error) {
-      console.log(error);
+      alert(error);
     }
   }
 
   return (
     <div>
-      <button onClick={openModal}>My Profile</button>
+      <button className="button-big" onClick={openModal}>
+        My Profile
+      </button>
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
         contentLabel="My Profile Modal"
         className="modal"
-		overlayClassName="modal-overlay"
+        overlayClassName="modal-overlay"
       >
         {userData ? (
           <div>

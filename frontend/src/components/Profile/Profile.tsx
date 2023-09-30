@@ -12,8 +12,8 @@ function Profile() {
     <div className="sections-container">
       <Header />
       <div className="section profile-center">
-        <UserProfileModal />
         <UserProfile userId={1} />
+		<UserProfileModal id={1}/>
       </div>
     </div>
   );

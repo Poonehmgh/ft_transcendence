@@ -7,9 +7,11 @@ import {
   Query,
   Body,
   Req,
+  Res,
 } from "@nestjs/common";
+import { validate } from "class-validator";
 import { FileInterceptor } from "@nestjs/platform-express";
-import express, { Express } from "express";
+import express, { Express, Response } from "express";
 import * as multer from "multer";
 import {
   FriendListDTO,
@@ -18,6 +20,7 @@ import {
   NewUserDTO,
   ScoreCardDTO,
   UserProfileDTO,
+  ChangeNameDto,
 } from "./user-dto";
 import { UserService } from "./user.service";
 
@@ -102,11 +105,19 @@ export class UserController {
   // profile management
 
   @Post("change_name")
-  async changeName(@Body() body: { id: number; newName: string }) {
-	const {id, newName } = body;
-    return this.userService.changeName(id, newName);
+  async changeName(@Body() changeNameDTO: ChangeNameDto, @Res() res: Response) {
+    const errorType = await this.userService.changeName(
+      changeNameDTO.id,
+      changeNameDTO.newName
+    );
+    if (!errorType) {
+      return res.json({ message: "Name changed." });
+    } else if (errorType === 1){
+		return res.status(400).json({message: "Name already in use."});
+    } else {
+		return res.status(400).json({message: "database error."});
+	}
   }
-
 
   // friend management
 
