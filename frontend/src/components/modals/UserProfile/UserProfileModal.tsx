@@ -60,7 +60,6 @@ function UserProfileModal(props: UserProfileModal_prop) {
 
     const formData = new FormData();
     formData.append("avatar", file);
-	formData.append("id", props.id);
     try {
       const response = await fetch(
         process.env.REACT_APP_BACKEND_URL + `/uploads/put_avatar/${props.id}`,

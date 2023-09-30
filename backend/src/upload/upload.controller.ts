@@ -17,7 +17,7 @@ import {
   BadRequestException,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
-import * as multer from "multer";
+import { diskStorage } from "multer";
 import * as path from "path";
 import { Response } from "express";
 
@@ -34,15 +34,21 @@ export class UploadController {
   @Post("put_avatar/:id")
   @UseInterceptors(
     FileInterceptor("avatar", {
-      dest: "./uploads",
+      storage: diskStorage({
+        destination: "./uploads",
+        filename: (req, file, callback) => {
+          const newFilename = req.params.id + path.extname(file.originalname);
+          callback(null, newFilename);
+        },
+      }),
       limits: {
         fileSize: 1024 * 1024 * 5,
       },
       fileFilter: (req, file, callback) => {
         const allowedExtensions = [".jpg", ".jpeg", ".png", ".gif"];
-        const fileExtension = path.extname(file.originalname);
+        const fileExtension = path.extname(file.originalname).toLowerCase();
 
-        if (allowedExtensions.includes(fileExtension.toLowerCase())) {
+        if (allowedExtensions.includes(fileExtension)) {
           callback(null, true);
         } else {
           return callback(
@@ -59,13 +65,11 @@ export class UploadController {
 
   @Get("get_avatar/:id")
   async getMyAvatar(@Param("id") id: number, @Res() res: Response) {
-    console.log("get_avater backend", id);
-    const picture = `./uploads/profile_pictures/${id}.jpeg`;
+    console.log("get_avatar backend", id);
+    const picture = `./uploads/${id}.png`;
     fs.access(picture, (error) => {
       if (error) {
-        return res.sendFile("default.jpeg", {
-          root: "./upload/",
-        });
+        return res.sendFile("./uploads/default.jpg");
       }
       res.sendFile(picture, { root: "." });
     });

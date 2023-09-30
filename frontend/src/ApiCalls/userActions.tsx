@@ -27,7 +27,7 @@ const fetchPost = async (url: string, header: any, body: string): Promise<any> =
 };
 
 export async function getAvatar(id: number) {
-  const fetchUrl: string = process.env.REACT_APP_BACKEND_URL + `/upload/get_avatar/${id}`;
+  const fetchUrl: string = process.env.REACT_APP_BACKEND_URL + `/uploads/get_avatar/${id}`;
   try {
     const response = await fetch(fetchUrl, {
       method: "GET",
