@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import Modal from "react-modal";
 import { UserProfileDTO } from "user-dto";
-import { getAvatar } from "src/ApiCalls/userActions";
 import { authContentHeader } from "src/ApiCalls/headers";
 import "src/styles/modals.css";
 
@@ -12,9 +11,7 @@ interface UserProfileModal_prop {
 function UserProfileModal(props: UserProfileModal_prop) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [userData, setUserData] = useState<UserProfileDTO | null>(null);
-  //const [selectedFile, setSelectedFile] = useState(null);
-
-  const fileInputRef = useRef(null);
+  const [avatarURL, setAvatarURL] = useState(null);
 
   function openModal() {
     setModalIsOpen(true);
@@ -24,10 +21,7 @@ function UserProfileModal(props: UserProfileModal_prop) {
     setModalIsOpen(false);
   }
 
-  /*  function handleFileChange(e: { target: { files: any[]; }; }) {
-    setSelectedFile(e.target.files[0]);
-  }
- */
+  const fileInputRef = useRef(null);
   function handleChooseFileClick() {
     fileInputRef.current.click();
   }
@@ -35,23 +29,46 @@ function UserProfileModal(props: UserProfileModal_prop) {
   async function fetchData() {
     if (modalIsOpen) {
       try {
-        const url = process.env.REACT_APP_BACKEND_URL + "/user/profile?id=1";
-        const response = await fetch(url);
+        const url = process.env.REACT_APP_BACKEND_URL + "/user/profile?id=" + props.id;
+        const response = await fetch(url, {
+          method: "GET",
+          headers: authContentHeader(),
+        });
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
         console.log(response);
         const data = await response.json();
         setUserData(data);
-        await getAvatar(props.id);
+        await fetchAvatar();
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
     }
   }
 
+  async function fetchAvatar() {
+    const url =
+      process.env.REACT_APP_BACKEND_URL + "/uploads/get_avatar/" + props.id;
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: authContentHeader(),
+      });
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const blob = await response.blob();
+      const imageUrl = URL.createObjectURL(blob);
+      setAvatarURL(imageUrl);
+    } catch (error) {
+      console.log("Error getting Avatar", error);
+    }
+  }
+
   useEffect(() => {
     fetchData();
+    fetchAvatar();
   }, [modalIsOpen]);
 
   async function handleAvatarChange(e) {
@@ -65,7 +82,7 @@ function UserProfileModal(props: UserProfileModal_prop) {
         process.env.REACT_APP_BACKEND_URL + `/uploads/put_avatar/${props.id}`,
         {
           method: "POST",
-          body: formData, 
+          body: formData,
         }
       );
       const data = await response.json();
@@ -127,11 +144,7 @@ function UserProfileModal(props: UserProfileModal_prop) {
               </button>
             </h2>
             <p className="modal-p">
-              {userData.avatarURL ? (
-                <img src={userData.avatarURL} className="img-avatar" alt="User Avatar" />
-              ) : (
-                <p>No profile picture available</p>
-              )}
+              <img src={avatarURL} className="img-avatar" alt="User Avatar" />
             </p>
             <table className="modals-table">
               <thead className="modals-table">

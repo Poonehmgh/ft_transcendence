@@ -6,26 +6,17 @@ import {
   UseInterceptors,
   Body,
   UploadedFile,
-  ParseFilePipe,
-  MaxFileSizeValidator,
-  FileTypeValidator,
   Req,
   Res,
   Param,
-  ParseFilePipeBuilder,
-  HttpStatus,
   BadRequestException,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
 import * as path from "path";
-import { Response } from "express";
-
-import { UploadService } from "./upload.service";
-
 import * as fs from "fs";
-import { PrismaService } from "src/prisma/prisma.service";
-import { ERR_INVALFILETYPE } from "src/constants/constants.upload.service";
+import { Response } from "express";
+import { UploadService } from "./upload.service";
 
 @Controller("uploads")
 export class UploadController {
@@ -65,13 +56,25 @@ export class UploadController {
 
   @Get("get_avatar/:id")
   async getMyAvatar(@Param("id") id: number, @Res() res: Response) {
-    console.log("get_avatar backend", id);
-    const picture = `./uploads/${id}.png`;
-    fs.access(picture, (error) => {
-      if (error) {
-        return res.sendFile("./uploads/default.jpg");
+    const directory = "/backend/uploads";
+
+    fs.readdir(directory, (err, files) => {
+      if (err) {
+        console.error("Error reading directory:", err);
+        return res.status(500).send("Error reading uploads directory");
       }
-      res.sendFile(picture, { root: "." });
+
+      const matchingFile = files.find(
+        (file) => path.basename(file, path.extname(file)) === String(id)
+      );
+
+      if (!matchingFile) {
+        console.log("sending default profile pic backend", id);
+        return res.sendFile("default.jpg", { root: "./uploads" });
+      }
+
+      const filePath = path.join(directory, matchingFile);
+      res.sendFile(filePath);
     });
   }
 }

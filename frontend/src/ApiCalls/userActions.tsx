@@ -26,7 +26,7 @@ const fetchPost = async (url: string, header: any, body: string): Promise<any> =
   }
 };
 
-export async function getAvatar(id: number) {
+export async function getAvatar_global(id: number) {
   const fetchUrl: string = process.env.REACT_APP_BACKEND_URL + `/uploads/get_avatar/${id}`;
   try {
     const response = await fetch(fetchUrl, {
@@ -41,6 +41,6 @@ export async function getAvatar(id: number) {
     imgElement.src = URL.createObjectURL(blob);
     document.querySelector("#profile-picture-container").appendChild(imgElement);
   } catch (error) {
-    console.log("Error getting Avatar");
+    console.log("Error getting Avatar", error);
   }
 }
