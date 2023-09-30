@@ -6,6 +6,7 @@ import {Response} from "express";
 import {JwtAuthGuard} from "./guards/jwt-auth.guard";
 import {TwoFaDto} from "./dto/2fa.dto";
 import {TwoFaCodeDto} from "./dto/2fa.dto";
+import * as cookieParser from "cookie-parser"; // for testing the cookies in the request object
 
 @Controller('auth')
 export class AuthController {
@@ -46,13 +47,16 @@ export class AuthController {
     return req.user
   }
 
-  @Post("2fa_activate")
+  @Post("42/2fa_activate")
   @UseGuards(JwtAuthGuard)
-  async activate(@Body() twoFaDto: TwoFaDto){
-    return this.authService.activate(twoFaDto);
+  async activate(@Req() req: Request, @Res() res: Response, @Body() twoFaDto: TwoFaDto){
+    const newToken = await this.authService.activate(twoFaDto);
+    //** the request object has a cookie or no?
+    res.cookie("token",newToken)
+    return res.json({"msg": "the 2fa was activated successfully!", "token": newToken});
   }
 
-  @Post("/42/logout")
+  @Post("42/logout")
   @UseGuards(JwtAuthGuard)
   async ft_logout(@Req() req, @Res() res: Response){
     res.clearCookie("token");
