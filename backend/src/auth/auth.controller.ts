@@ -26,8 +26,7 @@ export class AuthController {
   @Get("/42/login")
   @UseGuards(ftAuthGuard)
   ftOauth(){
-    // return this.authService.ft_oauth();
-    console.log("controller at login is called.")
+    console.log("controller at login is called. (NEVER!)")
     return {"msg": "this is returned when something is wrong with the guards.;"}
   }
 
@@ -37,8 +36,6 @@ export class AuthController {
     const token = await this.authService.ftSignin(req.user);
     res.cookie("token", token)
     console.log("controller at redirect is called.")
-
-    // return res.send("the login was successful!")
     return res.json({"msg": "the login was successful!"});
   }
 
