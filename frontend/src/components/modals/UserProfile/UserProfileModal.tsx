@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Modal from "react-modal";
 import { UserProfileDTO } from "user-dto";
 import { getAvatar } from "src/ApiCalls/userActions";
@@ -12,6 +12,9 @@ interface UserProfileModal_prop {
 function UserProfileModal(props: UserProfileModal_prop) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [userData, setUserData] = useState<UserProfileDTO | null>(null);
+  //const [selectedFile, setSelectedFile] = useState(null);
+
+  const fileInputRef = useRef(null);
 
   function openModal() {
     setModalIsOpen(true);
@@ -19,6 +22,14 @@ function UserProfileModal(props: UserProfileModal_prop) {
 
   function closeModal() {
     setModalIsOpen(false);
+  }
+
+  /*  function handleFileChange(e: { target: { files: any[]; }; }) {
+    setSelectedFile(e.target.files[0]);
+  }
+ */
+  function handleChooseFileClick() {
+    fileInputRef.current.click();
   }
 
   async function fetchData() {
@@ -43,8 +54,26 @@ function UserProfileModal(props: UserProfileModal_prop) {
     fetchData();
   }, [modalIsOpen]);
 
-  function handleAvatarChange() {
-    console.log("kundeling");
+  async function handleAvatarChange(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("avatar", file);
+	formData.append("id", props.id);
+    try {
+      const response = await fetch(
+        process.env.REACT_APP_BACKEND_URL + `/uploads/put_avatar/${props.id}`,
+        {
+          method: "POST",
+          body: formData, 
+        }
+      );
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async function handleNameChange() {
@@ -123,14 +152,18 @@ function UserProfileModal(props: UserProfileModal_prop) {
             </table>
             <br></br>
 
-            <button className="button-big" onClick={handleAvatarChange}>
-              Change Avatar
+            <button className="button-big" onClick={() => console.log("knudelings")}>
+              Manage Friends
+            </button>
+            <button className="button-edit" onClick={handleChooseFileClick}>
+              ✎
             </button>
             <input
               type="file"
               accept="image/*"
+              ref={fileInputRef}
+              style={{ display: "none" }}
               onChange={handleAvatarChange}
-              className="button-big"
             />
           </div>
         ) : (

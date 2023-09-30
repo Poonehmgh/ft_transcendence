@@ -110,12 +110,15 @@ export class UserController {
       changeNameDTO.id,
       changeNameDTO.newName
     );
-    if (!errorType) {
+    // 0 = no error
+	// 1 = uniqueness constraint violation
+	// 2 = any other error
+	if (!errorType) {
       return res.json({ message: "Name changed." });
     } else if (errorType === 1){
 		return res.status(400).json({message: "Name already in use."});
     } else {
-		return res.status(400).json({message: "database error."});
+		return res.status(400).json({message: "Database error."});
 	}
   }
 
