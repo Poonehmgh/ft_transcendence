@@ -73,7 +73,7 @@ export class AuthController {
     }
 
 
-  @Get("42/2fa_login/redirect")
+  @Post("42/2fa_login/redirect")
   @UseGuards(JwtAuthGuard)
   async validate2FaCode(@Req() req, @Res() res: Response, @Body() twoFaCodeDto: TwoFaCodeDto){
     const token = await this.authService.validate2FaCode(twoFaCodeDto);
