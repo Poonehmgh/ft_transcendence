@@ -105,20 +105,7 @@ export class AuthService {
         return token;
     }
 
-    async findUserById(id:number){
-        return this.prisma.user.findUnique({
-            where: {
-                id: id,
-            },
-        });
-    }
-    async findUserByEmail(email:string){
-        return this.prisma.user.findUnique({
-            where: {
-                email: email,
-            },
-        });
-    }
+
 
     async activate(twoFaDto: TwoFaDto){
         try{
@@ -217,6 +204,20 @@ export class AuthService {
         if (!qrCode)
             throw new BadRequestException("Something went wrong when generating QR code.");
         return qrCode;
+    }
+    async findUserById(id:number){
+        return this.prisma.user.findUnique({
+            where: {
+                id: id,
+            },
+        });
+    }
+    async findUserByEmail(email:string){
+        return this.prisma.user.findUnique({
+            where: {
+                email: email,
+            },
+        });
     }
     //
     // async comparePasswords(input: {password: string, hash:string}){
