@@ -8,7 +8,7 @@
   position: fixed;
   padding: 1rem 3rem;
   color: #000000;
-  background: white;
+  background: rgb(255, 255, 255);
   max-width: 500px;
   max-height: 500px;
   padding-top: 2rem;
@@ -19,13 +19,15 @@
   top: 30%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
 
-  &::backdrop {
-    animation: fadeIn 1s ease both;
-    background: rgba(0, 0, 0, 0.4);
-    z-index: 2;
-    backdrop-filter: blur(20px);
-  }
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
 }
 
 .modal-h2 {
@@ -38,15 +40,9 @@
   font-size: 1rem;
   line-height: 1.3rem;
   padding: 0.5rem 0;
-  a {
-    &:visited {
-      color: rgb(var(--accent1));
-    }
-  }
 }
 
-.modals-table
- {
+.modals-table {
   table-layout: fixed;
   font-size: 1rem;
   border: 0px solid;

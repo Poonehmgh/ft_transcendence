@@ -77,6 +77,7 @@ function UserProfileModal() {
         onRequestClose={closeModal}
         contentLabel="My Profile Modal"
         className="modal"
+		overlayClassName="modal-overlay"
       >
         {userData ? (
           <div>
