@@ -8,17 +8,16 @@
   position: fixed;
   padding: 1rem 3rem;
   color: #000000;
-  background: rgba(255, 255, 255, 1);
+  background: rgb(255, 255, 255);
   width: 500px;
-  height: 800px;
-  padding-top: 2rem;
+  height: 500px;
   border-radius: 20px;
   border: 0;
   box-shadow: 0 5px 30px 0 rgba(255, 255, 255, 0.35);
   animation: fadeIn 1s ease both;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -80%);
 }
 
 .modal-overlay {
@@ -62,7 +61,6 @@
 
 .modal-expander {
   min-width: 50px;
-  background-color: #ffffff;
   color: #fff;
 }
 
@@ -136,6 +134,10 @@
   width: 100%;
 }
 
+.modal-tab-buttons {
+  padding: 0px 0px 0px 10px;
+}
+
 .modal-tab-button_active {
   border-radius: 13px 13px 0px 0px;
   border: none;
@@ -144,30 +146,28 @@
   color: black;
   background: #eeeeee;
   padding: 13px 25px;
-  margin: 0px;
+  margin: 0px 0px -2px 0px;
 }
 
 .modal-tab-button_inactive {
   border-radius: 13px 13px 0px 0px;
   border: none;
-  
   border-color: #ddd;
   font-size: 1rem;
   color: #c2c2c2;
   background: white;
   padding: 13px 25px;
-  margin: 0px;
+  margin: 0px 0px -2px 0px;
 }
 
 .modal-tab-content {
-  border-radius: 0px 13px 13px 13px;
-
-  height: 350px;
+  border-radius: 13px 13px 13px 13px;
+  height: 200px;
   font-size: 1rem;
   color: black;
   background: #eeeeee;
   margin: 0px;
   padding: 6px;
-  border: 0px solid #ddd;
+  border: none;
   overflow-y: auto;
 }
