@@ -27,7 +27,7 @@ function Tabs() {
         {/* Add more tabs as needed */}
       </div>
 
-      <div className="tab-content">
+      <div className="modal-tab-content">
         {activeTab === 0 && <div>Content for Tab 1</div>}
         {activeTab === 1 && <div>ConASDASDtent for Tab 2</div>}
         {/* Add content for additional tabs */}

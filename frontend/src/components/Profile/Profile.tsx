@@ -1,11 +1,10 @@
 import Header from "../Header";
 import React from "react";
-import "../../styles/profile.css";
 import UserProfile from "../UserProfile/UserProfile";
 import { getUserID } from "../../functions/getUserID";
 import MyProfileModal from "../modals/MyProfileModal";
 import Modal from "react-modal";
-import Tabs from "../modals/Tabs";
+import "../../styles/profile.css";
 
 const userID = Number(getUserID());
 
