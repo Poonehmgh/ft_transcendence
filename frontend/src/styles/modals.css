@@ -1,5 +1,5 @@
 :root {
-  --accent1: 19 25 86;
+  --accent1: 30 30 30;
 }
 
 /* main */
@@ -61,7 +61,7 @@
 }
 
 .modals-expander {
-  width: 300px;
+  min-width: 50px;
   background-color: #ffffff;
   color:#fff
 }
@@ -71,7 +71,7 @@
 .img-avatar {
   width: 210px;
   height: 210px;
-  object-fit: fill;
+  object-fit: contain;
   object-position: center center;
   border-radius: 17px;
 }

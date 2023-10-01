@@ -1,18 +1,5 @@
-import {
-  Controller,
-  UseInterceptors,
-  UploadedFile,
-  Get,
-  Post,
-  Query,
-  Body,
-  Req,
-  Res,
-} from "@nestjs/common";
-import { validate } from "class-validator";
-import { FileInterceptor } from "@nestjs/platform-express";
-import express, { Express, Response } from "express";
-import * as multer from "multer";
+import { Controller, Get, Post, Query, Body, Req, Res } from "@nestjs/common";
+import { Response } from "express";
 import {
   FriendListDTO,
   UserRelation,
@@ -111,15 +98,15 @@ export class UserController {
       changeNameDTO.newName
     );
     // 0 = no error
-	// 1 = uniqueness constraint violation
-	// 2 = any other error
-	if (!errorType) {
+    // 1 = uniqueness constraint violation
+    // 2 = any other error
+    if (!errorType) {
       return res.json({ message: "Name changed." });
-    } else if (errorType === 1){
-		return res.status(400).json({message: "Name already in use."});
+    } else if (errorType === 1) {
+      return res.status(400).json({ message: "Name already in use." });
     } else {
-		return res.status(400).json({message: "Database error."});
-	}
+      return res.status(400).json({ message: "Database error." });
+    }
   }
 
   // friend management

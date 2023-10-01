@@ -37,7 +37,6 @@ function UserProfileModal(props: UserProfileModal_prop) {
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
-        console.log(response);
         const data = await response.json();
         setUserData(data);
         await fetchAvatar();
@@ -85,7 +84,6 @@ function UserProfileModal(props: UserProfileModal_prop) {
         }
       );
       const data = await response.json();
-      console.log(data);
     } catch (error) {
       console.log(error);
     }
@@ -152,29 +150,29 @@ function UserProfileModal(props: UserProfileModal_prop) {
                   />
                 </div>
               </div>
-              <div className="modals-expander">
-                <span>lulu</span>
-              </div>
+              <div className="modals-expander"></div>
               <div>
                 <br />
                 <br />
                 <table className="modals-table">
-                  <tr>
-                    <td className="modals-table">mmr</td>
-                    <td className="modals-table">{userData.mmr}</td>
-                  </tr>
-                  <tr>
-                    <td className="modals-table">rank</td>
-                    <td className="modals-table">{userData.rank}</td>
-                  </tr>
-                  <tr>
-                    <td className="modals-table">matches</td>
-                    <td className="modals-table">{userData.matches}</td>
-                  </tr>
-                  <tr>
-                    <td className="modals-table">win rate</td>
-                    <td className="modals-table">{userData.winrate}</td>
-                  </tr>
+                  <tbody>
+                    <tr>
+                      <td className="modals-table">mmr</td>
+                      <td className="modals-table">{userData.mmr}</td>
+                    </tr>
+                    <tr>
+                      <td className="modals-table">rank</td>
+                      <td className="modals-table">{userData.rank}</td>
+                    </tr>
+                    <tr>
+                      <td className="modals-table">matches</td>
+                      <td className="modals-table">{userData.matches}</td>
+                    </tr>
+                    <tr>
+                      <td className="modals-table">win rate</td>
+                      <td className="modals-table">{userData.winrate}</td>
+                    </tr>
+                  </tbody>
                 </table>
               </div>
             </h2>

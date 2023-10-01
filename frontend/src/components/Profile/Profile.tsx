@@ -4,8 +4,11 @@ import "../../styles/profile.css";
 import UserProfile from "../UserProfile/UserProfile";
 import { getUserID } from "../../functions/getUserID";
 import UserProfileModal from "../modals/UserProfile/UserProfileModal";
+import Modal from "react-modal";
 
 const userID = Number(getUserID());
+
+Modal.setAppElement('#root');
 
 function Profile() {
   return (
