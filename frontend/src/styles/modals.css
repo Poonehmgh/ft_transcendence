@@ -1,5 +1,5 @@
 :root {
-  --accent1: 30 30 30;
+  --color1: 30 30 30;
 }
 
 /* main */
@@ -10,13 +10,13 @@
   color: #000000;
   background: rgb(255, 255, 255);
   width: 500px;
-  height: 500px;
+  height: 800px;
   padding-top: 2rem;
   border-radius: 20px;
   border: 0;
   box-shadow: 0 5px 30px 0 rgba(255, 255, 255, 0.35);
   animation: fadeIn 1s ease both;
-  top: 30%;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
@@ -46,7 +46,7 @@
   padding: 0.5rem 0;
 }
 
-.modals-table {
+.modal-table {
   table-layout: fixed;
   font-size: 0.9rem;
   border: 0px solid;
@@ -60,15 +60,15 @@
   line-height: 2.2;
 }
 
-.modals-expander {
+.modal-expander {
   min-width: 50px;
   background-color: #ffffff;
-  color:#fff
+  color: #fff;
 }
 
 /* images */
 
-.img-avatar {
+.modal-avatar {
   width: 210px;
   height: 210px;
   object-fit: contain;
@@ -78,7 +78,7 @@
 
 /* buttons */
 
-.button-close {
+.modal-button-close {
   border: none;
   background: none;
   position: absolute;
@@ -94,11 +94,11 @@
   }
 }
 
-.button-big {
+.modal-button-big {
   display: inline-block;
   font-size: 0.8rem;
-  color: #fff !important;
-  background: rgb(var(--accent1) / 100%);
+  color: #fff;
+  background: rgb(var(--color1));
   padding: 13px 25px;
   margin: 10px;
   border-radius: 17px;
@@ -107,15 +107,15 @@
   transition: all 0.25s ease;
   border: 0;
   cursor: pointer;
-  box-shadow: 0 10px 20px -10px rgb(var(--accent1) / 50%);
+  box-shadow: 0 10px 20px -10px rgb(var(--color1) / 50%);
 
   &:hover {
-    box-shadow: 0 20px 20px -10px rgb(var(--accent1) / 50%);
+    box-shadow: 0 20px 20px -10px rgb(var(--color1) / 50%);
     transform: translateY(-2px);
   }
 }
 
-.button-edit {
+.modal-button-edit {
   border: 0;
   cursor: pointer;
   color: #9a9a9a;
@@ -128,4 +128,24 @@
     transform: scale(1.05);
     font-weight: 200;
   }
+}
+
+.modal-tabs-container {
+  width: 100%;
+}
+
+.modal-tab-button_active {
+  font-size: 0.8rem;
+  color: #fff;
+  background: rgb(var(--color1));
+  padding: 13px 25px;
+  margin: 10px;
+}
+
+.modal-tab-button_inactive {
+  font-size: 0.8rem;
+  color: black;
+  background: white;
+  padding: 13px 25px;
+  margin: 10px;
 }

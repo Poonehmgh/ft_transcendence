@@ -2,13 +2,14 @@ import React, { useState, useEffect, useRef } from "react";
 import Modal from "react-modal";
 import { UserProfileDTO } from "user-dto";
 import { authContentHeader } from "src/ApiCalls/headers";
+import Tabs from "./Tabs";
 import "src/styles/modals.css";
 
-interface UserProfileModal_prop {
+interface MyProfileModal_prop {
   id: number;
 }
 
-function UserProfileModal(props: UserProfileModal_prop) {
+function MyProfileModal(props: MyProfileModal_prop) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [userData, setUserData] = useState<UserProfileDTO | null>(null);
   const [avatarURL, setAvatarURL] = useState(null);
@@ -123,7 +124,7 @@ function UserProfileModal(props: UserProfileModal_prop) {
 
   return (
     <div>
-      <button className="button-big" onClick={openModal}>
+      <button className="modal-button-big" onClick={openModal}>
         My Profile
       </button>
       <Modal
@@ -138,50 +139,45 @@ function UserProfileModal(props: UserProfileModal_prop) {
             <h2 className="modal-h2">
               <div>
                 {userData.name}
-                <button className="button-edit" onClick={handleNameChange}>
+                <button className="modal-button-edit" onClick={handleNameChange}>
                   ✎
                 </button>
                 <div className="modal-p">
                   <img
                     src={avatarURL}
-                    className="img-avatar"
+                    className="modal-avatar"
                     alt="User Avatar"
                     onClick={handleChooseFileClick}
                   />
                 </div>
               </div>
-              <div className="modals-expander"></div>
+              <div className="modal-expander"></div>
               <div>
                 <br />
                 <br />
-                <table className="modals-table">
+                <table className="modal-table">
                   <tbody>
                     <tr>
-                      <td className="modals-table">mmr</td>
-                      <td className="modals-table">{userData.mmr}</td>
+                      <td className="modal-table">mmr</td>
+                      <td className="modal-table">{userData.mmr}</td>
                     </tr>
                     <tr>
-                      <td className="modals-table">rank</td>
-                      <td className="modals-table">{userData.rank}</td>
+                      <td className="modal-table">rank</td>
+                      <td className="modal-table">{userData.rank}</td>
                     </tr>
                     <tr>
-                      <td className="modals-table">matches</td>
-                      <td className="modals-table">{userData.matches}</td>
+                      <td className="modal-table">matches</td>
+                      <td className="modal-table">{userData.matches}</td>
                     </tr>
                     <tr>
-                      <td className="modals-table">win rate</td>
-                      <td className="modals-table">{userData.winrate}</td>
+                      <td className="modal-table">win rate</td>
+                      <td className="modal-table">{userData.winrate}</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
             </h2>
-            <div></div>
-            <br></br>
-
-            <button className="button-big" onClick={() => console.log("knudelings")}>
-              Manage Friends
-            </button>
+			<Tabs />
             <input
               type="file"
               accept="image/*"
@@ -193,7 +189,7 @@ function UserProfileModal(props: UserProfileModal_prop) {
         ) : (
           <p>Loading user data...</p>
         )}
-        <button onClick={closeModal} className="button-close">
+        <button onClick={closeModal} className="modal-button-close">
           ❌
         </button>
       </Modal>
@@ -201,4 +197,4 @@ function UserProfileModal(props: UserProfileModal_prop) {
   );
 }
 
-export default UserProfileModal;
+export default MyProfileModal;

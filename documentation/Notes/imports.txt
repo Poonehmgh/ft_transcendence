@@ -1,9 +1,0 @@
-backend:
-npm install multer @types/multer
-
-frontend:
-npm install react-modal
-
-(npm install --save-dev @types/react-modal)
-
-
