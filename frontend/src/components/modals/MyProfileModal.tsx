@@ -138,16 +138,17 @@ function MyProfileModal(props: MyProfileModal_prop) {
           <div>
             <h2 className="modal-h2">
               {userData.name}
-              <button className="modal-button-edit" onClick={handleNameChange}>
+              <button className="modal-button-edit-name" onClick={handleNameChange}>
                 ✎
               </button>
             </h2>
 
-            <div className="modal-p">
+            <div className="modal-avatar-table">
               <img src={avatarURL} className="modal-avatar" alt="User Avatar" />
 
-              <div className="modal-expander">
-                <button className="modal-button-edit" onClick={handleChooseFileClick}>
+              <div className="modal-expander-hor">
+				<div className="modal-expander-ver"/>
+                <button className="modal-button-edit-avatar" onClick={handleChooseFileClick}>
                   ✎
                 </button>
               </div>
