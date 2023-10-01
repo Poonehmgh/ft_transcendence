@@ -137,24 +137,22 @@ function MyProfileModal(props: MyProfileModal_prop) {
         {userData ? (
           <div>
             <h2 className="modal-h2">
-              <div>
-                {userData.name}
-                <button className="modal-button-edit" onClick={handleNameChange}>
+              {userData.name}
+              <button className="modal-button-edit" onClick={handleNameChange}>
+                ✎
+              </button>
+            </h2>
+
+            <div className="modal-p">
+              <img src={avatarURL} className="modal-avatar" alt="User Avatar" />
+
+              <div className="modal-expander">
+                <button className="modal-button-edit" onClick={handleChooseFileClick}>
                   ✎
                 </button>
-                <div className="modal-p">
-                  <img
-                    src={avatarURL}
-                    className="modal-avatar"
-                    alt="User Avatar"
-                    onClick={handleChooseFileClick}
-                  />
-                </div>
               </div>
-              <div className="modal-expander"></div>
-              <div>
-                <br />
-                <br />
+
+              <div className="modal-table-div">
                 <table className="modal-table">
                   <tbody>
                     <tr>
@@ -176,8 +174,10 @@ function MyProfileModal(props: MyProfileModal_prop) {
                   </tbody>
                 </table>
               </div>
-            </h2>
-			<Tabs />
+			
+            </div>
+
+            <Tabs />
             <input
               type="file"
               accept="image/*"
