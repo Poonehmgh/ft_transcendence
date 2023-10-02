@@ -13,14 +13,38 @@ export async function removeFriend(thisId: number, otherId: number) {
     if (!response.ok) {
       throw new Error(`HTTP error. Status: ${response.status}`);
     }
-	return true;
+    return true;
   } catch (error) {
     console.log(error);
-	return false;
+    return false;
   }
 }
 
-export function userAction(otherId: number, endpoint: string): void {
+export async function unblockUser(thisId: number, otherId: number) {
+  const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/unblock";
+  const body: string = JSON.stringify({ thisId: thisId, otherId: otherId });
+
+  return userAction(body, apiUrl);
+}
+
+export async function userAction(body: string, apiUrl: string) {
+  try {
+    const response: Response = await fetch(apiUrl, {
+      method: "POST",
+      headers: authContentHeader(),
+      body: body,
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error. Status: ${response.status}`);
+    }
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
+export function userAction_(otherId: number, endpoint: string): void {
   const body: string = JSON.stringify({ otherId: otherId });
   void fetchPost(endpoint, authContentHeader, body);
 }

@@ -126,6 +126,8 @@ export class UserService {
     return UserRelation.none;
   }
 
+  // getters
+
   async getFriends(userId: number): Promise<IdAndNameDTO[]> {
     const user = await this.prisma.user.findUnique({
       where: { id: Number(userId) },
@@ -145,10 +147,33 @@ export class UserService {
       return [];
     }
     return friends.map(({ id, name }) => {
-      console.log(id, name);
       return new IdAndNameDTO(id, name);
     });
   }
+
+  async getBlocked(userId: number): Promise<IdAndNameDTO[]> {
+    const user = await this.prisma.user.findUnique({
+      where: { id: Number(userId) },
+      select: { blocked: true },
+    });
+    if (!user) throw new Error("getBlocked");
+    const friends = await this.prisma.user.findMany({
+      where: {
+        id: { in: user.blocked },
+      },
+      select: {
+        id: true,
+        name: true,
+      },
+    });
+    if (friends.length === 0) {
+      return [];
+    }
+    return friends.map(({ id, name }) => {
+      return new IdAndNameDTO(id, name);
+    });
+  }
+
 
   async getFriendsData(userId: number): Promise<FriendListDTO> {
     const user = await this.prisma.user.findUnique({

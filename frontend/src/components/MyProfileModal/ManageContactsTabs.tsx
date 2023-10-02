@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "src/styles/modals.css";
 import FriendList from "./FriendList";
+import BlockedList from "./BlockedList";
 
 interface ManageContactsTabs_prop {
   id: number;
@@ -51,15 +52,10 @@ function ManageContactsTabs(props: ManageContactsTabs_prop) {
       </div>
 
       <div className="modal-tab-content">
-        {activeTab === 0 && (
-          <div>
-            <FriendList id={props.id} />
-          </div>
-        )}
-        {activeTab === 1 && <div>ConASDASDtent for Tab 2</div>}
+        {activeTab === 0 && <FriendList id={props.id} />}
+        {activeTab === 1 && <BlockedList id={props.id} />}
         {activeTab === 2 && <div>Tab3</div>}
         {activeTab === 3 && <div>Tab4</div>}
-        {/* Add content for additional tabs */}
       </div>
     </div>
   );

@@ -32,10 +32,25 @@
   border: none;
   cursor: pointer;
   border-radius: 50%;
-  background-color: rgb(223, 223, 223);
+  background-color: rgb(205, 205, 205);
   margin: 3px;
 
   &:hover {
     transform: translateY(-2px);
   }
 }
+
+.contacts-button-unblock {
+	width: 30px;
+	height: 30px;
+	text-align: center;
+	border: none;
+	cursor: pointer;
+	border-radius: 50%;
+	background-color: rgb(20, 220, 20);
+	margin: 3px;
+  
+	&:hover {
+	  transform: translateY(-2px);
+	}
+  }

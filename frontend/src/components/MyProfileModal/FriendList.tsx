@@ -28,7 +28,7 @@ function FriendList(props: FriendList_props) {
   function handleRemoveFriend(id: number, index: number) {
     if (window.confirm(`Remove friend ${friends[index].name}?`)) {
       if (removeFriend(props.id, friends[index].id)) {
-        alert("Friend removed.");
+        alert("Friend removed");
       } else {
         alert("Error removing friend");
       }

@@ -84,6 +84,11 @@ export class UserController {
     return this.userService.getFriends(id);
   }
 
+  @Get("blocked/:id")
+  async getBlocked(@Param("id") id: number): Promise<IdAndNameDTO[]> {
+    return this.userService.getBlocked(id);
+  }
+
   // profile management
 
   @Post("change_name")
@@ -132,6 +137,7 @@ export class UserController {
     return this.userService.declineFriendReq(thisId, otherId);
   }
 
+  // oke
   @Post("remove_friend")
   async removeFriend(@Body() body: { thisId: number; otherId: number }) {
     const { thisId } = body;
@@ -146,7 +152,7 @@ export class UserController {
     return this.userService.blockUser(thisId, otherId);
   }
 
-  @Post("unblock_user")
+  @Post("unblock")
   async unblockUser(@Body() body: { thisId: number; otherId: number }) {
     const { thisId } = body;
     const { otherId } = body;
