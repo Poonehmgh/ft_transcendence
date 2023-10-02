@@ -1,34 +1,33 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { fetch_IdAndNameDTO } from "src/ApiCalls/fetchers";
-import { IdAndNameDTO } from "user-dto";
 import { blockUser, removeFriend } from "src/ApiCalls/userActions";
 import "src/styles/contactsTable.css";
 
-interface FriendList_props {
+interface props {
   id: number;
 }
 
-let friends: IdAndNameDTO[] = [];
+function FriendList(props: props) {
+  const [group, setGroup] = useState([]);
 
-function FriendList(props: FriendList_props) {
-  function setFriends(newFriends: IdAndNameDTO[]) {
-    friends = newFriends;
+  useEffect(() => {
+    fetchData();
+  }, [props.id]);
+
+  async function fetchData() {
+    try {
+      const data = await fetch_IdAndNameDTO(props.id, "friends");
+      setGroup(data);
+    } catch (error) {
+      console.error("Error fetching blocked:", error);
+    }
   }
 
-  const getList = async () => {
-    try {
-      setFriends(await fetch_IdAndNameDTO(props.id, "friends"));
-    } catch (error) {
-      console.error("Error fetching friends:", error);
-    }
-  };
-
-  getList();
-
   function handleRemoveFriend(id: number, index: number) {
-    if (window.confirm(`Remove friend ${friends[index].name}?`)) {
-      if (removeFriend(props.id, friends[index].id)) {
+    if (window.confirm(`Remove friend ${group[index].name}?`)) {
+      if (removeFriend(props.id, group[index].id)) {
         alert("Friend removed");
+        fetchData();
       } else {
         alert("Error removing friend");
       }
@@ -40,9 +39,10 @@ function FriendList(props: FriendList_props) {
   }
 
   function handleBlockUser(id: number, index: number) {
-    if (window.confirm(`Unfriend and block ${friends[index].name}?`)) {
-      if (blockUser(props.id, friends[index].id)) {
+    if (window.confirm(`Unfriend and block ${group[index].name}?`)) {
+      if (blockUser(props.id, group[index].id)) {
         alert("Removed from friends and blocked");
+        fetchData();
       } else {
         alert("Error unfriending / blocking");
       }
@@ -51,12 +51,12 @@ function FriendList(props: FriendList_props) {
 
   return (
     <div>
-      {!friends || friends.length === 0 ? (
+      {!group || group.length === 0 ? (
         <p>No friends yet!</p>
       ) : (
         <table className="contacts-table">
           <tbody className="contacts-table">
-            {friends.map((friend, index) => (
+            {group.map((friend, index) => (
               <tr className="contacts-table" key={friend.id}>
                 <td className="contacts-table"> {friend.name}</td>
                 <td className="contacts-table">

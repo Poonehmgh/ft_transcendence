@@ -1,34 +1,33 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { fetch_IdAndNameDTO } from "src/ApiCalls/fetchers";
-import { IdAndNameDTO } from "user-dto";
-import { removeFriend, unblockUser } from "src/ApiCalls/userActions";
+import { unblockUser } from "src/ApiCalls/userActions";
 import "src/styles/contactsTable.css";
 
 interface props {
   id: number;
 }
 
-let blocked: IdAndNameDTO[] = [];
-
 function BlockedList(props: props) {
-  function setBlocked(newBlocked: IdAndNameDTO[]) {
-    blocked = newBlocked;
-  }
+  const [group, setGroup] = useState([]);
 
-  const getList = async () => {
+  useEffect(() => {
+    fetchData();
+  }, [props.id]);
+
+  async function fetchData() {
     try {
-      setBlocked(await fetch_IdAndNameDTO(props.id, "blocked"));
+      const data = await fetch_IdAndNameDTO(props.id, "blocked");
+      setGroup(data);
     } catch (error) {
       console.error("Error fetching blocked:", error);
     }
-  };
-
-  getList();
+  }
 
   function handleUnBlockUser(id: number, index: number) {
-    if (window.confirm(`Unblock user ${blocked[index].name}?`)) {
-      if (unblockUser(props.id, blocked[index].id)) {
+    if (window.confirm(`Unblock user ${group[index].name}?`)) {
+      if (unblockUser(props.id, group[index].id)) {
         alert("User unblocked");
+        fetchData();
       } else {
         alert("Error unblocking user");
       }
@@ -37,17 +36,17 @@ function BlockedList(props: props) {
 
   return (
     <div>
-      {!blocked || blocked.length === 0 ? (
-        <p>No toxic ppl (yet)!</p>
+      {!group || group.length === 0 ? (
+        <p>No toxic ppl... yet!</p>
       ) : (
         <table className="contacts-table">
           <tbody className="contacts-table">
-            {blocked.map((entry, index) => (
+            {group.map((entry, index) => (
               <tr className="contacts-table" key={entry.id}>
                 <td className="contacts-table"> {entry.name}</td>
                 <td className="contacts-table">
                   <button
-                    className="contacts-button-positive"
+                    className="contacts-button"
                     onClick={() => handleUnBlockUser(entry.id, index)}
                   >
                     🕊️

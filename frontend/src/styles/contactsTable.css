@@ -26,31 +26,17 @@
 }
 
 .contacts-button {
+  font-size: 1.2rem;
   width: 30px;
   height: 30px;
   text-align: center;
   border: none;
   cursor: pointer;
   border-radius: 50%;
-  background-color: rgb(205, 205, 205);
-  margin: 3px;
+  background-color: rgb(205, 205, 205, 0);
+  margin: 4px;
 
   &:hover {
     transform: translateY(-2px);
   }
 }
-
-.contacts-button-positive {
-	width: 30px;
-	height: 30px;
-	text-align: center;
-	border: none;
-	cursor: pointer;
-	border-radius: 50%;
-	background-color: rgb(20, 220, 20);
-	margin: 3px;
-  
-	&:hover {
-	  transform: translateY(-2px);
-	}
-  }

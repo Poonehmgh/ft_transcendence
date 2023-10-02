@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { fetch_IdAndNameDTO } from "src/ApiCalls/fetchers";
-import { IdAndNameDTO } from "user-dto";
 import { acceptRequest, declineRequest } from "src/ApiCalls/userActions";
 import "src/styles/contactsTable.css";
 
@@ -8,27 +7,27 @@ interface props {
   id: number;
 }
 
-let list: IdAndNameDTO[] = [];
-
 function RequestInList(props: props) {
-  function setList(newList: IdAndNameDTO[]) {
-    list = newList;
+  const [group, setGroup] = useState([]);
+
+  useEffect(() => {
+    fetchData();
+  }, [props.id]);
+
+  async function fetchData() {
+    try {
+      const data = await fetch_IdAndNameDTO(props.id, "request_in");
+      setGroup(data);
+    } catch (error) {
+      console.error("Error fetching blocked:", error);
+    }
   }
 
-  const getList = async () => {
-    try {
-      setList(await fetch_IdAndNameDTO(props.id, "request_in"));
-    } catch (error) {
-      console.error("Error fetching incoming friend requests:", error);
-    }
-  };
-
-  getList();
-
   function handleDecline(id: number, index: number) {
-    if (window.confirm(`Decline friend request from user ${list[index].name}?`)) {
-      if (declineRequest(props.id, list[index].id)) {
+    if (window.confirm(`Decline friend request from user ${group[index].name}?`)) {
+      if (declineRequest(props.id, group[index].id)) {
         alert("Friend request declined");
+        fetchData();
       } else {
         alert("Error declining friend request");
       }
@@ -36,9 +35,10 @@ function RequestInList(props: props) {
   }
 
   function handleAccept(id: number, index: number) {
-    if (window.confirm(`Accept friend request from user ${list[index].name}?`)) {
-      if (acceptRequest(props.id, list[index].id)) {
+    if (window.confirm(`Accept friend request from user ${group[index].name}?`)) {
+      if (acceptRequest(props.id, group[index].id)) {
         alert("Friend request accepted");
+        fetchData();
       } else {
         alert("Error accepting friend request");
       }
@@ -47,17 +47,17 @@ function RequestInList(props: props) {
 
   return (
     <div>
-      {!list || list.length === 0 ? (
+      {!group || group.length === 0 ? (
         <p>No requests for now!</p>
       ) : (
         <table className="contacts-table">
           <tbody className="contacts-table">
-            {list.map((entry, index) => (
+            {group.map((entry, index) => (
               <tr className="contacts-table" key={entry.id}>
                 <td className="contacts-table"> {entry.name}</td>
                 <td className="contacts-table">
                   <button
-                    className="contacts-button-positive"
+                    className="contacts-button"
                     onClick={() => handleAccept(entry.id, index)}
                   >
                     🤝
