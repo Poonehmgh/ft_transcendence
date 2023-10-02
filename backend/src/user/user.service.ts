@@ -220,25 +220,6 @@ export class UserService {
     });
   }
 
-  async getFriendsData(userId: number): Promise<FriendListDTO> {
-    const user = await this.prisma.user.findUnique({
-      where: { id: userId },
-      select: {
-        friends: true,
-        friendReq_out: true,
-        friendReq_in: true,
-        blocked: true,
-      },
-    });
-    if (!user) throw new Error("getFriendsData: User not found");
-
-    return {
-      friends: user.friends,
-      friendReq_out: user.friendReq_out,
-      friendReq_in: user.friendReq_in,
-      blocked: user.blocked,
-    };
-  }
   //TODO try throw these instead of if(!) all functions!
   async getTopScoreCards(n: number): Promise<ScoreCardDTO[]> {
     const topUsers: User[] = await this.prisma.user.findMany({
@@ -276,7 +257,7 @@ export class UserService {
     const users = await this.prisma.user.findMany({
       select: { id: true, name: true },
     });
-    if (users.length === 0) return [];
+    if (users.length === 0) return []; // would it not just do that anyway?
     return users.map(({ id, name }) => {
       return new IdAndNameDTO(id, name);
     });

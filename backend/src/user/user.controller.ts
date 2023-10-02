@@ -56,11 +56,6 @@ export class UserController {
     return this.userService.getFriendStatus(userId, otherUserId);
   }
 
-  @Get("friends_data")
-  async getFriendsData(userId: number): Promise<FriendListDTO> {
-    return this.userService.getFriendsData(userId);
-  }
-
   @Get("all_idnames")
   async getAllIdsAndNames(): Promise<IdAndNameDTO[]> {
     return this.userService.getAllIdsAndNames();
