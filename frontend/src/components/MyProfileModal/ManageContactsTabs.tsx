@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import "src/styles/modals.css";
 import FriendList from "./FriendList";
 import BlockedList from "./BlockedList";
+import RequestInList from "./RequestInList";
 
-interface ManageContactsTabs_prop {
+interface props {
   id: number;
 }
 
-function ManageContactsTabs(props: ManageContactsTabs_prop) {
+function ManageContactsTabs(props: props) {
   const [activeTab, setActiveTab] = useState(0);
 
   function handleTabClick(index: number) {
@@ -39,7 +40,7 @@ function ManageContactsTabs(props: ManageContactsTabs_prop) {
           }
           onClick={() => handleTabClick(2)}
         >
-          📤
+          📥
         </button>
         <button
           className={
@@ -47,14 +48,14 @@ function ManageContactsTabs(props: ManageContactsTabs_prop) {
           }
           onClick={() => handleTabClick(3)}
         >
-          📥
+          📤
         </button>
       </div>
 
       <div className="modal-tab-content">
         {activeTab === 0 && <FriendList id={props.id} />}
         {activeTab === 1 && <BlockedList id={props.id} />}
-        {activeTab === 2 && <div>Tab3</div>}
+        {activeTab === 2 && <RequestInList id={props.id} />}
         {activeTab === 3 && <div>Tab4</div>}
       </div>
     </div>

@@ -27,6 +27,27 @@ export async function unblockUser(thisId: number, otherId: number) {
   return userAction(body, apiUrl);
 }
 
+export async function blockUser(thisId: number, otherId: number) {
+  const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/block";
+  const body: string = JSON.stringify({ thisId: thisId, otherId: otherId });
+
+  return userAction(body, apiUrl);
+}
+
+export async function declineRequest(thisId: number, otherId: number) {
+  const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/decline_friendreq";
+  const body: string = JSON.stringify({ thisId: thisId, otherId: otherId });
+
+  return userAction(body, apiUrl);
+}
+
+export async function acceptRequest(thisId: number, otherId: number) {
+	const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/accept_friendreq";
+	const body: string = JSON.stringify({ thisId: thisId, otherId: otherId });
+  
+	return userAction(body, apiUrl);
+  }
+
 export async function userAction(body: string, apiUrl: string) {
   try {
     const response: Response = await fetch(apiUrl, {

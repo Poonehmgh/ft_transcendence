@@ -174,6 +174,28 @@ export class UserService {
     });
   }
 
+  async getRequestIn(userId: number): Promise<IdAndNameDTO[]> {
+    const user = await this.prisma.user.findUnique({
+      where: { id: Number(userId) },
+      select: { friendReq_in: true },
+    });
+    if (!user) throw new Error("getRequestIn");
+    const group = await this.prisma.user.findMany({
+      where: {
+        id: { in: user.friendReq_in },
+      },
+      select: {
+        id: true,
+        name: true,
+      },
+    });
+    if (group.length === 0) {
+      return [];
+    }
+    return group.map(({ id, name }) => {
+      return new IdAndNameDTO(id, name);
+    });
+  }
 
   async getFriendsData(userId: number): Promise<FriendListDTO> {
     const user = await this.prisma.user.findUnique({

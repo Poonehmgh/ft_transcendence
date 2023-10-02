@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { fetch_IdAndNameDTO } from "src/ApiCalls/fetchers";
 import { IdAndNameDTO } from "user-dto";
-import { removeFriend } from "src/ApiCalls/userActions";
+import { blockUser, removeFriend } from "src/ApiCalls/userActions";
 import "src/styles/contactsTable.css";
 
 interface FriendList_props {
@@ -39,8 +39,14 @@ function FriendList(props: FriendList_props) {
     console.log("Mock execute send msg to user with id ", id);
   }
 
-  function handleBlockUser(id: number) {
-    console.log(id);
+  function handleBlockUser(id: number, index: number) {
+    if (window.confirm(`Unfriend and block ${friends[index].name}?`)) {
+      if (blockUser(props.id, friends[index].id)) {
+        alert("Removed from friends and blocked");
+      } else {
+        alert("Error unfriending / blocking");
+      }
+    }
   }
 
   return (
@@ -68,7 +74,7 @@ function FriendList(props: FriendList_props) {
                   </button>
                   <button
                     className="contacts-button"
-                    onClick={() => handleBlockUser(friend.id)}
+                    onClick={() => handleBlockUser(friend.id, index)}
                   >
                     ⛔
                   </button>
