@@ -2,8 +2,9 @@ import React, { useState, useEffect, useRef } from "react";
 import Modal from "react-modal";
 import { UserProfileDTO } from "user-dto";
 import { authContentHeader } from "src/ApiCalls/headers";
-import Tabs from "./Tabs";
+import FriendsBlockedTabs from "./FriendsBlockedTabs";
 import "src/styles/modals.css";
+import PlayerCardTable from "../PlayerCardTable";
 
 interface MyProfileModal_prop {
   id: number;
@@ -147,38 +148,19 @@ function MyProfileModal(props: MyProfileModal_prop) {
               <img src={avatarURL} className="modal-avatar" alt="User Avatar" />
 
               <div className="modal-expander-hor">
-				<div className="modal-expander-ver"/>
-                <button className="modal-button-edit-avatar" onClick={handleChooseFileClick}>
+                <div className="modal-expander-ver" />
+                <button
+                  className="modal-button-edit-avatar"
+                  onClick={handleChooseFileClick}
+                >
                   ✎
                 </button>
               </div>
-
-              <div className="modal-table-div">
-                <table className="modal-table">
-                  <tbody>
-                    <tr>
-                      <td className="modal-table">mmr</td>
-                      <td className="modal-table">{userData.mmr}</td>
-                    </tr>
-                    <tr>
-                      <td className="modal-table">rank</td>
-                      <td className="modal-table">{userData.rank}</td>
-                    </tr>
-                    <tr>
-                      <td className="modal-table">matches</td>
-                      <td className="modal-table">{userData.matches}</td>
-                    </tr>
-                    <tr>
-                      <td className="modal-table">win rate</td>
-                      <td className="modal-table">{userData.winrate}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-			
+			<PlayerCardTable mmr={userData.mmr} rank={userData.rank} matches={userData.matches} winrate={userData.winrate}/>
             </div>
 
-            <Tabs />
+            <FriendsBlockedTabs />
+			
             <input
               type="file"
               accept="image/*"

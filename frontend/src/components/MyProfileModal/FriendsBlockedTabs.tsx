@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import "src/styles/modals.css";
- 
 
-function Tabs() {
+function FriendsBlockedTabs() {
   const [activeTab, setActiveTab] = useState(0);
 
   function handleTabClick(index: number) {
@@ -13,13 +12,17 @@ function Tabs() {
     <div className="modal-tabs-container">
       <div className="modal-tab-buttons">
         <button
-          className={activeTab === 0 ? "modal-tab-button_active" : "modal-tab-button_inactive"}
+          className={
+            activeTab === 0 ? "modal-tab-button_active" : "modal-tab-button_inactive"
+          }
           onClick={() => handleTabClick(0)}
         >
           Friends
         </button>
         <button
-          className={activeTab === 1 ? "modal-tab-button_active" : "modal-tab-button_inactive"}
+          className={
+            activeTab === 1 ? "modal-tab-button_active" : "modal-tab-button_inactive"
+          }
           onClick={() => handleTabClick(1)}
         >
           Blocked
@@ -36,4 +39,4 @@ function Tabs() {
   );
 }
 
-export default Tabs;
+export default FriendsBlockedTabs;

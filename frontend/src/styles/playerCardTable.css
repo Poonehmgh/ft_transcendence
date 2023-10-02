@@ -1,0 +1,19 @@
+:root {
+  --color1: 30 30 30;
+}
+
+/* main */
+
+.modal-table {
+  table-layout: fixed;
+  font-size: 0.9rem;
+  border: 0px solid;
+  border-collapse: collapse;
+  color: rgb(0, 0, 0);
+  padding: 0px;
+  border-spacing: 5px;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+  width: 100%;
+  line-height: 2.2;
+}

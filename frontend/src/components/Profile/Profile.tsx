@@ -2,7 +2,7 @@ import Header from "../Header";
 import React from "react";
 import UserProfile from "../UserProfile/UserProfile";
 import { getUserID } from "../../functions/getUserID";
-import MyProfileModal from "../modals/MyProfileModal";
+import MyProfileModal from "../MyProfileModal/MyProfileModal";
 import Modal from "react-modal";
 import "../../styles/profile.css";
 
