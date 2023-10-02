@@ -84,9 +84,8 @@ export class UserService {
       select: {
         id: true,
         name: true,
-        avatarURL: true,
-        rank: true,
         mmr: true,
+        rank: true,
         matches: true,
         winrate: true,
         online: true,
@@ -96,7 +95,6 @@ export class UserService {
     return {
       id: profile.id,
       name: profile.name,
-      avatarURL: profile.avatarURL,
       rank: profile.rank,
       mmr: profile.mmr,
       matches: profile.matches.length,
@@ -419,7 +417,8 @@ export class UserService {
       if (thisUser.friends.includes(otherId)) {
         this.removeFriend(thisId, otherId);
         msg = INFO_BLOCK_RM;
-      } if (thisUser.friendReq_out.includes(otherId)) {
+      }
+      if (thisUser.friendReq_out.includes(otherId)) {
         this.cancelFriendReq(thisId, otherId);
         msg = INFO_BLOCK_CANCEL;
       }

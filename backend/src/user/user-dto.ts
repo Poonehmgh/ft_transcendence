@@ -32,9 +32,8 @@ export class UserProfileDTO {
   constructor(
     public id: number,
     public name: string,
-    public avatarURL: string,
-    public rank: string,
     public mmr: number,
+    public rank: string,
     public matches: number,
     public winrate: number,
     public online: boolean

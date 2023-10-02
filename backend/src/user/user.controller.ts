@@ -1,7 +1,6 @@
-import { Controller, Get, Post, Query, Body, Req, Res, Param } from "@nestjs/common";
+import { Controller, Get, Post, Query, Body, Req, Res, Param, UseInterceptors, BadRequestException, UploadedFile } from "@nestjs/common";
 import { Response } from "express";
 import {
-  FriendListDTO,
   UserRelation,
   IdAndNameDTO,
   NewUserDTO,
@@ -10,6 +9,10 @@ import {
   ChangeNameDto,
 } from "./user-dto";
 import { UserService } from "./user.service";
+import * as fs from "fs";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { diskStorage } from "multer";
+import * as path from "path";
 
 @Controller("user")
 export class UserController {
@@ -31,6 +34,30 @@ export class UserController {
   @Get("profile")
   async getProfile(@Query("id") userId: number): Promise<UserProfileDTO> {
     return this.userService.getProfile(userId);
+  }
+
+  @Get("get_avatar/:id")
+  async getMyAvatar(@Param("id") id: number, @Res() res: Response) {
+    const directory = "/backend/uploads";
+
+    fs.readdir(directory, (err, files) => {
+      if (err) {
+        console.error("Error reading directory:", err);
+        return res.status(500).send("Error reading uploads directory");
+      }
+
+      const matchingFile = files.find(
+        (file) => path.basename(file, path.extname(file)) === String(id)
+      );
+
+      if (!matchingFile) {
+        console.log("sending default profile pic backend", id);
+        return res.sendFile("default.jpg", { root: "./uploads" });
+      }
+
+      const filePath = path.join(directory, matchingFile);
+      res.sendFile(filePath);
+    });
   }
 
   @Get("scorecard")
@@ -110,6 +137,38 @@ export class UserController {
     } else {
       return res.status(400).json({ message: "Database error." });
     }
+  }
+
+  @Post("put_avatar/:id")
+  @UseInterceptors(
+    FileInterceptor("avatar", {
+      storage: diskStorage({
+        destination: "./uploads",
+        filename: (req, file, callback) => {
+          const newFilename = req.params.id + path.extname(file.originalname);
+          callback(null, newFilename);
+        },
+      }),
+      limits: {
+        fileSize: 1024 * 1024 * 5,
+      },
+      fileFilter: (req, file, callback) => {
+        const allowedExtensions = [".jpg", ".jpeg", ".png", ".gif"];
+        const fileExtension = path.extname(file.originalname).toLowerCase();
+
+        if (allowedExtensions.includes(fileExtension)) {
+          callback(null, true);
+        } else {
+          return callback(
+            new BadRequestException("Only JPG, JPEG, PNG, and GIF files are allowed"),
+            false
+          );
+        }
+      },
+    })
+  )
+  async uploadFile(@Param("id") id: number, @UploadedFile() file: Express.Multer.File) {
+    return { message: "File uploaded successfully", file };
   }
 
   // friend management

@@ -13,15 +13,11 @@ import { UserModule } from "./user/user.module";
 import { UserController } from "./user/user.controller";
 import { UserService } from "./user/user.service";
 
-import { UploadModule } from "./upload/upload.module";
-import { UploadController } from "./upload/upload.controller";
-import { UploadService } from "./upload/upload.service";
-
 import { ChatModule } from "./chat/chat.module";
 
 @Module({
-  imports: [UserModule, PrismaModule, AuthModule, GameGatewayModule, ChatModule, UploadModule],
-  controllers: [AppController, UserController, UploadController],
-  providers: [AppService, PrismaService, UserService, UploadService],
+  imports: [UserModule, PrismaModule, AuthModule, GameGatewayModule, ChatModule],
+  controllers: [AppController, UserController],
+  providers: [AppService, PrismaService, UserService],
 })
 export class AppModule {}
