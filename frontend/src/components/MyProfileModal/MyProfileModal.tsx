@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Modal from "react-modal";
 import { UserProfileDTO } from "user-dto";
 import { authContentHeader } from "src/ApiCalls/headers";
-import FriendsBlockedTabs from "./FriendsBlockedTabs";
+import ManageContactsTabs from "./ManageContactsTabs";
 import "src/styles/modals.css";
 import PlayerCardTable from "../PlayerCardTable";
 
@@ -156,11 +156,16 @@ function MyProfileModal(props: MyProfileModal_prop) {
                   ✎
                 </button>
               </div>
-			<PlayerCardTable mmr={userData.mmr} rank={userData.rank} matches={userData.matches} winrate={userData.winrate}/>
+              <PlayerCardTable
+                mmr={userData.mmr}
+                rank={userData.rank}
+                matches={userData.matches}
+                winrate={userData.winrate}
+              />
             </div>
 
-            <FriendsBlockedTabs />
-			
+            <ManageContactsTabs />
+
             <input
               type="file"
               accept="image/*"

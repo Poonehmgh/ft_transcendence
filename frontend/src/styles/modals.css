@@ -42,20 +42,6 @@
   line-height: 1.3rem;
 }
 
-.modal-table {
-  table-layout: fixed;
-  font-size: 0.9rem;
-  border: 0px solid;
-  border-collapse: collapse;
-  color: rgb(0, 0, 0);
-  padding: 0px;
-  border-spacing: 5px;
-  border-bottom: 1px solid #ddd;
-  text-align: center;
-  width: 100%;
-  line-height: 2.2;
-}
-
 .modal-expander-hor {
   min-width: 30px;
   color: transparent;
@@ -66,9 +52,9 @@
 }
 
 .modal-expander-ver {
-	height: 165px;
-	color: transparent;
-  }
+  height: 165px;
+  color: transparent;
+}
 
 .modal-table-div {
   display: flex;
@@ -138,18 +124,17 @@
 }
 
 .modal-button-edit-avatar {
-	border: none;
-	cursor: pointer;
-	color: #323232;
-	font-size: 1.3rem;
-	border-radius: 50%;
-	background: rgba(255, 255, 255, 0.6);
-  
-	&:hover {
-	  transform: scale(1.1);
-	}
+  border: none;
+  cursor: pointer;
+  color: #323232;
+  font-size: 1.3rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+
+  &:hover {
+    transform: scale(1.1);
   }
-  
+}
 
 /* tabs */
 
@@ -159,29 +144,35 @@
 }
 
 .modal-tab-buttons {
-  padding: 0px 0px 0px 10px;
+  padding: 0px 0px 0px 0px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .modal-tab-button_active {
+  flex: 1;
   border-radius: 13px 13px 0px 0px;
   border: none;
-  font-size: 1rem;
+  height: 55px;
+  font-size: 1.1rem;
   font-weight: 600;
   color: black;
   background: #eeeeee;
-  padding: 13px 25px;
-  margin: 0px 0px -2px 0px;
+  padding: 0px 10px 5px;
+  margin: 0px 0px -10px 0px;
 }
 
 .modal-tab-button_inactive {
+  flex: 1;
   border-radius: 13px 13px 0px 0px;
   border: none;
   border-color: #ddd;
-  font-size: 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
   color: #c2c2c2;
   background: transparent;
-  padding: 13px 25px;
-  margin: 0px 0px -2px 0px;
+  padding: 0px 10px 5px;
+  margin: 0px 0px -10px 0px;
 }
 
 .modal-tab-content {
