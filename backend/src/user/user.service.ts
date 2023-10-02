@@ -32,6 +32,8 @@ import {
   ERR_NAMETAKEN,
   ERR_NAMECHANGE,
 } from "../constants/constants.user.service";
+import * as fs from "fs";
+import * as path from "path";
 
 @Injectable()
 export class UserService {
@@ -249,6 +251,19 @@ export class UserService {
     return await this.prisma.user.findUnique({
       where: { email: userEmail },
     });
+  }
+
+  getAvatarPath(userId: number) {
+    const directory = "/backend/uploads";
+    const files = fs.readdirSync(directory);
+    const matchingFile = files.find(
+      (file) => path.basename(file, path.extname(file)) === String(userId)
+    );
+    if (matchingFile) {
+      return path.join(directory, matchingFile);
+    } else {
+      return null;
+    }
   }
 
   async getAllIdsAndNames(): Promise<IdAndNameDTO[]> {

@@ -1,4 +1,16 @@
-import { Controller, Get, Post, Query, Body, Req, Res, Param, UseInterceptors, BadRequestException, UploadedFile } from "@nestjs/common";
+import {
+  Controller,
+  Get,
+  Post,
+  Query,
+  Body,
+  Req,
+  Res,
+  Param,
+  UseInterceptors,
+  BadRequestException,
+  UploadedFile,
+} from "@nestjs/common";
 import { Response } from "express";
 import {
   UserRelation,
@@ -38,26 +50,11 @@ export class UserController {
 
   @Get("get_avatar/:id")
   async getMyAvatar(@Param("id") id: number, @Res() res: Response) {
-    const directory = "/backend/uploads";
-
-    fs.readdir(directory, (err, files) => {
-      if (err) {
-        console.error("Error reading directory:", err);
-        return res.status(500).send("Error reading uploads directory");
-      }
-
-      const matchingFile = files.find(
-        (file) => path.basename(file, path.extname(file)) === String(id)
-      );
-
-      if (!matchingFile) {
-        console.log("sending default profile pic backend", id);
-        return res.sendFile("default.jpg", { root: "./uploads" });
-      }
-
-      const filePath = path.join(directory, matchingFile);
-      res.sendFile(filePath);
-    });
+    const filePath = this.userService.getAvatarPath(id);
+    if (!filePath) {
+      return res.sendFile("default.jpg", { root: "./uploads" });
+    }
+    return res.sendFile(filePath);
   }
 
   @Get("scorecard")

@@ -14,8 +14,3 @@ npm install react-modal
 --- to do ---
 
 clean up use effect / use state in MyProfileModal
-check REACT_APP being necessary prefix in env
-move uploadcontroller into user
-
-
-
