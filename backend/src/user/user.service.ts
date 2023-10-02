@@ -128,7 +128,7 @@ export class UserService {
 
   async getFriends(userId: number): Promise<IdAndNameDTO[]> {
     const user = await this.prisma.user.findUnique({
-      where: { id: userId },
+      where: { id: Number(userId) },
       select: { friends: true },
     });
     if (!user) throw new Error("getFriends");
@@ -141,31 +141,11 @@ export class UserService {
         name: true,
       },
     });
-    if (friends.length === 0) return [];
+    if (friends.length === 0) {
+		return [];
+    }
     return friends.map(({ id, name }) => {
-      return new IdAndNameDTO(id, name);
-    });
-  }
-
-  async getOnlineFriends(userId: number): Promise<IdAndNameDTO[]> {
-    const user = await this.prisma.user.findUnique({
-      where: { id: userId },
-      select: { friends: true },
-    });
-    if (!user) throw new Error("getOnlineFriends");
-
-    const onlineFriends = await this.prisma.user.findMany({
-      where: {
-        id: { in: user.friends },
-        online: true,
-      },
-      select: {
-        id: true,
-        name: true,
-      },
-    });
-    if (onlineFriends.length === 0) return [];
-    return onlineFriends.map(({ id, name }) => {
+		console.log(id, name);
       return new IdAndNameDTO(id, name);
     });
   }

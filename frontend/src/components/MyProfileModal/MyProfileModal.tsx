@@ -164,7 +164,7 @@ function MyProfileModal(props: MyProfileModal_prop) {
               />
             </div>
 
-            <ManageContactsTabs />
+            <ManageContactsTabs id={props.id}/>
 
             <input
               type="file"

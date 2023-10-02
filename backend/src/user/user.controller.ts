@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Query, Body, Req, Res } from "@nestjs/common";
+import { Controller, Get, Post, Query, Body, Req, Res, Param } from "@nestjs/common";
 import { Response } from "express";
 import {
   FriendListDTO,
@@ -56,22 +56,10 @@ export class UserController {
     return this.userService.getFriendStatus(userId, otherUserId);
   }
 
-  @Get("friends")
-  async getFriends(userId: number): Promise<IdAndNameDTO[]> {
-    return this.userService.getFriends(userId);
-  }
-
-  @Get("friends_online")
-  async getOnlineFriends(userId: number): Promise<IdAndNameDTO[]> {
-    return this.userService.getOnlineFriends(userId);
-  }
-
   @Get("friends_data")
   async getFriendsData(userId: number): Promise<FriendListDTO> {
     return this.userService.getFriendsData(userId);
   }
-
-  // getters
 
   @Get("all_idnames")
   async getAllIdsAndNames(): Promise<IdAndNameDTO[]> {
@@ -89,6 +77,13 @@ export class UserController {
     return this.userService.getOtherUsers(thisId);
   }
 
+  // getters
+
+  @Get("friends/:id")
+  async getFriends(@Param("id") id: number): Promise<IdAndNameDTO[]> {
+    return this.userService.getFriends(id);
+  }
+
   // profile management
 
   @Post("change_name")
@@ -97,9 +92,7 @@ export class UserController {
       changeNameDTO.id,
       changeNameDTO.newName
     );
-    // 0 = no error
-    // 1 = uniqueness constraint violation
-    // 2 = any other error
+    // 0 = no error; 1 = uniqueness constraint violation; 2 = any other error
     if (!errorType) {
       return res.json({ message: "Name changed." });
     } else if (errorType === 1) {
