@@ -11,24 +11,24 @@ interface PlayerCardTable_prop {
 function PlayerCardTable(props: PlayerCardTable_prop) {
   return (
     <div>
-      <div className="modal-table-div">
-        <table className="modal-table">
+      <div>
+        <table className="playerCard-table">
           <tbody>
             <tr>
-              <td className="modal-table">mmr</td>
-              <td className="modal-table">{props.mmr}</td>
+              <td className="playerCard-table">mmr</td>
+              <td className="playerCard-table">{props.mmr}</td>
             </tr>
             <tr>
-              <td className="modal-table">rank</td>
-              <td className="modal-table">{props.rank}</td>
+              <td className="playerCard-table">rank</td>
+              <td className="playerCard-table">{props.rank}</td>
             </tr>
             <tr>
-              <td className="modal-table">matches</td>
-              <td className="modal-table">{props.matches}</td>
+              <td className="playerCard-table">matches</td>
+              <td className="playerCard-table">{props.matches}</td>
             </tr>
             <tr>
-              <td className="modal-table">win rate</td>
-              <td className="modal-table">{props.winrate ? props.winrate : "-"}</td>
+              <td className="playerCard-table">win rate</td>
+              <td className="playerCard-table">{props.winrate ? props.winrate : "-"}</td>
             </tr>
           </tbody>
         </table>

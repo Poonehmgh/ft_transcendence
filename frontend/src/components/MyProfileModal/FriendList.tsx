@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { fetchFriends } from "src/ApiCalls/fetchers";
 import { IdAndNameDTO } from "user-dto";
+import "src/styles/contactsTable.css";
 
 interface FriendList_props {
   id: number;
@@ -16,18 +17,24 @@ function FriendList(props: FriendList_props) {
   const getList = async () => {
     try {
       setFriends(await fetchFriends(props.id));
-      console.log("friendsarray:", friends);
     } catch (error) {
-		console.error("Error fetching friends:", error);
+      console.error("Error fetching friends:", error);
     }
-};
-console.log("friendsarray outsied:", friends);
+  };
 
   getList();
 
-  console.log("id:", props.id);
+  function handleRemoveFriend(id: number, index: number) {
+    if (window.confirm(`Remove friend ${friends[index].name}?`)) {
+      console.log("Mock execute remove friend ", id);
+    }
+  }
 
-  function handleRemoveFriend(id: number) {
+  function handleSendMsg(id: number) {
+    console.log(id);
+  }
+
+  function handleBlockUser(id: number) {
     console.log(id);
   }
 
@@ -36,23 +43,29 @@ console.log("friendsarray outsied:", friends);
       {!friends || friends.length === 0 ? (
         <p>No friends yet!</p>
       ) : (
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {friends.map((friend) => (
-              <tr key={friend.id}>
-                <td>{friend.name}</td>
-                <td>
-                  <button onClick={() => handleRemoveFriend(friend.id)}>
-                    Remove Friend
+        <table className="contacts-table">
+          <tbody className="contacts-table">
+            {friends.map((friend, index) => (
+              <tr className="contacts-table" key={friend.id}>
+                <td className="contacts-table"> {friend.name}</td>
+                <td className="contacts-table">
+                  <button
+                    className="contacts-button"
+                    onClick={() => handleSendMsg(friend.id)}
+                  >
+                    ✉️
                   </button>
-                  <button onClick={() => handleRemoveFriend(friend.id)}>
-                    Send Message
+                  <button
+                    className="contacts-button"
+                    onClick={() => handleRemoveFriend(friend.id, index)}
+                  >
+                    ❌
+                  </button>
+                  <button
+                    className="contacts-button"
+                    onClick={() => handleBlockUser(friend.id)}
+                  >
+                    ⛔
                   </button>
                 </td>
               </tr>

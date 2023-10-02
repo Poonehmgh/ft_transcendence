@@ -3,8 +3,8 @@ import Modal from "react-modal";
 import { UserProfileDTO } from "user-dto";
 import { authContentHeader } from "src/ApiCalls/headers";
 import ManageContactsTabs from "./ManageContactsTabs";
-import "src/styles/modals.css";
 import PlayerCardTable from "../PlayerCardTable";
+import "src/styles/modals.css";
 
 interface MyProfileModal_prop {
   id: number;
@@ -144,7 +144,7 @@ function MyProfileModal(props: MyProfileModal_prop) {
               </button>
             </h2>
 
-            <div className="modal-avatar-table">
+            <div className="modal-avatar_playerCard">
               <img src={avatarURL} className="modal-avatar" alt="User Avatar" />
 
               <div className="modal-expander-hor">
