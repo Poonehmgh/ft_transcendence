@@ -3,6 +3,7 @@ import "src/styles/modals.css";
 import FriendList from "./FriendList";
 import BlockedList from "./BlockedList";
 import RequestInList from "./RequestInList";
+import RequestOutList from "./RequestOutList";
 
 interface props {
   id: number;
@@ -56,7 +57,7 @@ function ManageContactsTabs(props: props) {
         {activeTab === 0 && <FriendList id={props.id} />}
         {activeTab === 1 && <BlockedList id={props.id} />}
         {activeTab === 2 && <RequestInList id={props.id} />}
-        {activeTab === 3 && <div>Tab4</div>}
+        {activeTab === 3 && <RequestOutList id={props.id} />}
       </div>
     </div>
   );

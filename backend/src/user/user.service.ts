@@ -197,6 +197,29 @@ export class UserService {
     });
   }
 
+  async getRequestOut(userId: number): Promise<IdAndNameDTO[]> {
+    const user = await this.prisma.user.findUnique({
+      where: { id: Number(userId) },
+      select: { friendReq_out: true },
+    });
+    if (!user) throw new Error("getRequestIn");
+    const group = await this.prisma.user.findMany({
+      where: {
+        id: { in: user.friendReq_out },
+      },
+      select: {
+        id: true,
+        name: true,
+      },
+    });
+    if (group.length === 0) {
+      return [];
+    }
+    return group.map(({ id, name }) => {
+      return new IdAndNameDTO(id, name);
+    });
+  }
+
   async getFriendsData(userId: number): Promise<FriendListDTO> {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
@@ -415,7 +438,7 @@ export class UserService {
       if (thisUser.friends.includes(otherId)) {
         this.removeFriend(thisId, otherId);
         msg = INFO_BLOCK_RM;
-      } else if (thisUser.friendReq_out.includes(otherId)) {
+      } if (thisUser.friendReq_out.includes(otherId)) {
         this.cancelFriendReq(thisId, otherId);
         msg = INFO_BLOCK_CANCEL;
       }

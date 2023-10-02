@@ -47,7 +47,7 @@ function BlockedList(props: props) {
                 <td className="contacts-table"> {entry.name}</td>
                 <td className="contacts-table">
                   <button
-                    className="contacts-button-unblock"
+                    className="contacts-button-positive"
                     onClick={() => handleUnBlockUser(entry.id, index)}
                   >
                     🕊️

@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { fetch_IdAndNameDTO } from "src/ApiCalls/fetchers";
 import { IdAndNameDTO } from "user-dto";
-import { acceptRequest, declineRequest, removeFriend, unblockUser } from "src/ApiCalls/userActions";
+import { acceptRequest, declineRequest } from "src/ApiCalls/userActions";
 import "src/styles/contactsTable.css";
 
 interface props {
@@ -57,10 +57,10 @@ function RequestInList(props: props) {
                 <td className="contacts-table"> {entry.name}</td>
                 <td className="contacts-table">
                   <button
-                    className="contacts-button"
+                    className="contacts-button-positive"
                     onClick={() => handleAccept(entry.id, index)}
                   >
-                    ✅
+                    🤝
                   </button>
                   <button
                     className="contacts-button"

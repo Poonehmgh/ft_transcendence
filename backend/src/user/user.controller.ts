@@ -94,6 +94,11 @@ export class UserController {
     return this.userService.getRequestIn(id);
   }
 
+  @Get("request_out/:id")
+  async getRequestOut(@Param("id") id: number): Promise<IdAndNameDTO[]> {
+    return this.userService.getRequestOut(id);
+  }
+
   // profile management
 
   @Post("change_name")
@@ -142,7 +147,6 @@ export class UserController {
     return this.userService.declineFriendReq(thisId, otherId);
   }
 
-  // oke
   @Post("remove_friend")
   async removeFriend(@Body() body: { thisId: number; otherId: number }) {
     const { thisId } = body;
