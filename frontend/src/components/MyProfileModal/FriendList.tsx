@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { fetchFriends } from "src/ApiCalls/fetchers";
+import { fetch_IdAndNameDTO } from "src/ApiCalls/fetchers";
 import { IdAndNameDTO } from "user-dto";
+import { removeFriend } from "src/ApiCalls/userActions";
 import "src/styles/contactsTable.css";
 
 interface FriendList_props {
@@ -16,7 +17,7 @@ function FriendList(props: FriendList_props) {
 
   const getList = async () => {
     try {
-      setFriends(await fetchFriends(props.id));
+      setFriends(await fetch_IdAndNameDTO(props.id, "friends"));
     } catch (error) {
       console.error("Error fetching friends:", error);
     }
@@ -26,12 +27,16 @@ function FriendList(props: FriendList_props) {
 
   function handleRemoveFriend(id: number, index: number) {
     if (window.confirm(`Remove friend ${friends[index].name}?`)) {
-      console.log("Mock execute remove friend ", id);
+      if (removeFriend(props.id, friends[index].id)) {
+        alert("Friend removed.");
+      } else {
+        alert("Error removing friend");
+      }
     }
   }
 
   function handleSendMsg(id: number) {
-    console.log(id);
+    console.log("Mock execute send msg to user with id ", id);
   }
 
   function handleBlockUser(id: number) {

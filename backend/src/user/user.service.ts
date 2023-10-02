@@ -142,10 +142,10 @@ export class UserService {
       },
     });
     if (friends.length === 0) {
-		return [];
+      return [];
     }
     return friends.map(({ id, name }) => {
-		console.log(id, name);
+      console.log(id, name);
       return new IdAndNameDTO(id, name);
     });
   }
@@ -419,18 +419,17 @@ export class UserService {
 
   async filterArray(userId: number, field: string, valueToDelete: number) {
     try {
+      const user = await this.prisma.user.findUnique({
+        where: { id: userId },
+      });
+      if (!user) {
+        return null;
+      }
+      const updatedArray = user[field].filter((value) => value !== valueToDelete);
       return await this.prisma.user.update({
         where: { id: userId },
         data: {
-          [field]: {
-            set: {
-              filter: {
-                NOT: {
-                  equals: valueToDelete,
-                },
-              },
-            },
-          },
+          [field]: updatedArray,
         },
       });
     } catch (error) {

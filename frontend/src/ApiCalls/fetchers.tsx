@@ -1,8 +1,11 @@
 import { IdAndNameDTO } from "user-dto";
 import { authContentHeader, authHeader } from "./headers";
 
-export async function fetchFriends(id: number): Promise<IdAndNameDTO[]> {
-  const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/friends/" + id;
+export async function fetch_IdAndNameDTO(
+  id: number,
+  endPoint: string
+): Promise<IdAndNameDTO[]> {
+  const apiUrl = process.env.REACT_APP_BACKEND_URL + `/user/${endPoint}/${id}`;
   try {
     const response: Response = await fetch(apiUrl, {
       method: "GET",
@@ -12,8 +15,8 @@ export async function fetchFriends(id: number): Promise<IdAndNameDTO[]> {
       console.log(apiUrl, ": ", response.status);
       return null;
     }
-	const data: IdAndNameDTO[] = await response.json();
-	return data;
+    const data: IdAndNameDTO[] = await response.json();
+    return data;
   } catch (error) {
     console.log(error);
     return null;

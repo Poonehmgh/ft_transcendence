@@ -124,6 +124,8 @@
 }
 
 .modal-button-edit-avatar {
+  height: 30px;
+  width: 30px;
   border: none;
   cursor: pointer;
   color: #323232;

@@ -1,5 +1,25 @@
 import { authContentHeader, authHeader } from "./headers";
 
+export async function removeFriend(thisId: number, otherId: number) {
+  const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/remove_friend";
+  const body: string = JSON.stringify({ thisId: thisId, otherId: otherId });
+
+  try {
+    const response: Response = await fetch(apiUrl, {
+      method: "POST",
+      headers: authContentHeader(),
+      body: body,
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error. Status: ${response.status}`);
+    }
+	return true;
+  } catch (error) {
+    console.log(error);
+	return false;
+  }
+}
+
 export function userAction(otherId: number, endpoint: string): void {
   const body: string = JSON.stringify({ otherId: otherId });
   void fetchPost(endpoint, authContentHeader, body);
@@ -12,7 +32,6 @@ const fetchPost = async (url: string, header: any, body: string): Promise<any> =
       method: "POST",
       headers: header, // maybe dont need to pass this in
       body: body,
-      redirect: "follow",
     });
     const result = await response.json();
     if (!response.ok) {
@@ -27,7 +46,8 @@ const fetchPost = async (url: string, header: any, body: string): Promise<any> =
 };
 
 export async function getAvatar_global(id: number) {
-  const fetchUrl: string = process.env.REACT_APP_BACKEND_URL + `/uploads/get_avatar/${id}`;
+  const fetchUrl: string =
+    process.env.REACT_APP_BACKEND_URL + `/uploads/get_avatar/${id}`;
   try {
     const response = await fetch(fetchUrl, {
       method: "GET",
