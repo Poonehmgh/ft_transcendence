@@ -1,6 +1,6 @@
 import {Injectable} from "@nestjs/common";
 import {PrismaService} from "../prisma/prisma.service";
-import {ChatUserDTO, CreateNewChatDTO, SendMessageDTO} from "./chat.DTOs";
+import {ChatListDTO, ChatUserDTO, CreateNewChatDTO, SendMessageDTO} from "./chat.DTOs";
 import {Socket} from "socket.io";
 import {userGateway} from "./userGateway";
 
@@ -11,6 +11,14 @@ export class ChatGatewayService {
     connectedUsers: userGateway[] = [];
 
     constructor(private readonly prisma: PrismaService) {
+    }
+
+    async setAllUsersOffline(): Promise<void> {
+        await this.prisma.user.updateMany({
+            data: {
+                online: false,
+            },
+        });
     }
 
     getUserIdFromSocket(socket: Socket) {
@@ -162,10 +170,12 @@ export class ChatGatewayService {
             await this.checkIsProperDM(chat);
     }
 
+
+
     async createNewEmptyChat(data: CreateNewChatDTO) {
         try {
             await this.checkIsProperChat(data);
-            await this.prisma.chat.create({
+            const newChat = await this.prisma.chat.create({
                 data: {
                     name: data.name,
                     dm: Boolean(data.dm),
@@ -184,9 +194,36 @@ export class ChatGatewayService {
                     chatUsers: true,
                 },
             });
+            return new ChatListDTO(newChat.name, newChat.id);
         } catch (error) {
             console.log(`error in createNewEmptyChat: ${error.message}`);
         }
-
     }
+
+    async sendChatCreationUpdate(chat: ChatListDTO){
+        try{
+            const chatRes = await this.prisma.chat.findUnique({
+                where: {
+                    id: Number(chat.chatID)
+                },
+                include: {
+                    chatUsers: {
+                        select: {
+                            userId: true
+                        }
+                    }
+                }
+            });
+            if(chatRes){
+                for (const user of chatRes.chatUsers) {
+                    const socket: Socket = this.getUserSocketFromUserId(user.userId);
+                    socket.emit('updateChat', chat);
+                }
+            }
+        }
+        catch (error) {
+            console.log(`error in sendChatCreationUpdate: ${error.message}`);
+        }
+    }
+
 }

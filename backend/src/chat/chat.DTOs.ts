@@ -92,3 +92,28 @@ export class CreateNewChatDTO {
     }
 
 }
+//Its json for tests
+// {
+//     "name": "name??",
+//     "dm": false,
+//     "pw_protected": false,
+//     "password": false,
+//     "chat_users": [
+//     {
+//         "userId" : 1,
+//         "owner": false,
+//         "admin": false,
+//         "blocked": false,
+//         "muted": false,
+//         "invited": false
+//     },
+//     {
+//         "userId" : 2,
+//         "owner": false,
+//         "admin": false,
+//         "blocked": false,
+//         "muted": false,
+//         "invited": false
+//     }
+// ]
+// }

@@ -1,10 +1,10 @@
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DB_URL")
+  provider = "postgresql"
+  url      = env("DB_URL")
 }
 
 model User {
@@ -14,6 +14,8 @@ model User {
     id            Int         @id @unique // this is the intraID
     name          String      @unique
     email         String      @unique
+    twoFa         Boolean     @default(false)
+    twoFaSecret   String?
     // scorecard
     mmr           Int         @default(1000)
     rank          String      @default("noob")
