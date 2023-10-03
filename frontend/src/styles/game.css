@@ -3,25 +3,31 @@
     width: 100vw;
     display: inline-grid;
     grid-template:  1fr 1fr 1fr 4fr 1fr /
-                    1fr 1fr 4fr 1fr 1fr;
+    1fr 1fr 4fr 1fr 1fr;
+    background-color: #E1F4CB;
+
 }
 
 .game-score {
+    background-color: #3F4739;
     grid-row: 3 / 4;
     grid-column: 3 / 4;
 }
 
 .game-left-bar {
+    background-color: #3F4739;
     grid-row: 4 / 5;
     grid-column: 2 / 3;
 }
 
 .game-center {
+    background-color: #3F4739;
     grid-row: 4 / 5;
     grid-column: 3 / 4;
 }
 
 .game-right-bar {
+    background-color: #3F4739;
     grid-row: 4 / 5;
     grid-column: 4 / 5;
 }
@@ -30,7 +36,7 @@
     width: 20px; /* Adjust the width as needed */
     height: 150px; /* Adjust the height as needed */
     margin-left: 108px;
-    background-color: cadetblue; /* Background color of the bar */
+    background-color: #BACBA9; /* Background color of the bar */
     position: absolute;
     top: 50%; /* Center the bar vertically */
     transform: translateY(-50%);
@@ -41,10 +47,26 @@
     width: 20px; /* Adjust the width as needed */
     height: 150px; /* Adjust the height as needed */
     margin-left: 1275px;
-    background-color: cadetblue; /* Background color of the bar */
+    background-color: #BACBA9; /* Background color of the bar */
     position: absolute;
     top: 50%; /* Center the bar vertically */
     transform: translateY(-50%);
     border-radius: 30%;
 }
 
+.ball {
+    background-color: #E1F4CB;
+    width: 15px;
+    height: 15px;
+    border-radius: 100%;
+}
+
+.baza {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.score-player{
+    font-size: 28px;
+}

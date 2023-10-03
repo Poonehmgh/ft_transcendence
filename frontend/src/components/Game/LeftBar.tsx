@@ -5,16 +5,16 @@ const LeftBar = () => {
     const [topPosition, setTopPosition] = useState(50); // Initial top position
 
     useEffect(() => {
-        const handleKeyDown = (e) => {
-            e.preventDefault(); //screen is not moving
+        const handleKeyDown = (e: any) => {
+            e.preventDefault();
             switch (e.key) {
                 case 'ArrowUp':
-                    if (topPosition > 0) {
+                    if (topPosition > 46) {
                         setTopPosition(topPosition - 1); // Adjust the step size as needed
                     }
                     break;
                 case 'ArrowDown':
-                    if (topPosition < 100) {
+                    if (topPosition < 81) {
                         setTopPosition(topPosition + 1); // Adjust the step size as needed
                     }
                     break;

@@ -4,6 +4,7 @@ import '../../styles/game.css'
 import MoveBall from "./MoveBall";
 import LeftBar from "./LeftBar";
 import RightBar from "./RightBar";
+import Score from "./ScorePlayers";
 
 function Game() {
     return (
@@ -15,13 +16,15 @@ function Game() {
             <div className="section game-center">
             <div className="leftBarField">
             </div>
-            <div>Game</div>
+            <div className="ball"></div>
             <MoveBall />
             </div>
             <RightBar />
             <div className="section game-right-bar">
             </div>
-            <div className="section game-score">Score</div>
+            <div className="section game-score">
+                <Score />
+            </div>
         </div>
     );
 }

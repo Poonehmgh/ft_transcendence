@@ -32,7 +32,7 @@ const ConfirmQueue = () => {
   
     return (
       <div>
-        <button onClick={sendMessageToServer}>Send Message</button>
+        {/* <button onClick={sendMessageToServer}>Send Message</button> */}
         <div>
           <strong>{receivedMessage}</strong>
         </div>
