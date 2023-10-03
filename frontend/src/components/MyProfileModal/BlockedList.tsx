@@ -49,7 +49,7 @@ function BlockedList(props: props) {
                     className="contacts-button"
                     onClick={() => handleUnBlockUser(entry.id, index)}
                   >
-                    🕊️
+                    ❌
                   </button>
                 </td>
               </tr>

@@ -128,13 +128,42 @@ export class UserService {
 
   // getters
 
+/*   async getIdAndNameDTOArray(userId: number, fieldName: string): Promise<IdAndNameDTO[]> {
+    const user = await this.prisma.user.findUnique({
+      where: { id: Number(userId) },
+      select: { [fieldName]: true },
+    });
+    if (!user) throw new Error(fieldName);
+    const fieldIds = user[fieldName].map((item: User) => item.id);
+
+    const group = await this.prisma.user.findMany({
+      where: {
+        id: { in: fieldIds }, // Use the extracted array of 'id' values
+      },
+      select: {
+        id: true,
+        name: true,
+      },
+    });
+    if (group.length === 0) {
+      return [];
+    }
+    return group.map(({ id, name }) => {
+      return new IdAndNameDTO(id, name);
+    });
+  } */
+
+ /*  async getFriends_(userId: number): Promise<IdAndNameDTO[]> {
+    return this.getIdAndNameDTOArray(userId, "friends");
+  } */
+
   async getFriends(userId: number): Promise<IdAndNameDTO[]> {
     const user = await this.prisma.user.findUnique({
       where: { id: Number(userId) },
       select: { friends: true },
     });
     if (!user) throw new Error("getFriends");
-    const friends = await this.prisma.user.findMany({
+    const group = await this.prisma.user.findMany({
       where: {
         id: { in: user.friends },
       },
@@ -143,10 +172,10 @@ export class UserService {
         name: true,
       },
     });
-    if (friends.length === 0) {
+    if (group.length === 0) {
       return [];
     }
-    return friends.map(({ id, name }) => {
+    return group.map(({ id, name }) => {
       return new IdAndNameDTO(id, name);
     });
   }
