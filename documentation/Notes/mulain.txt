@@ -1,0 +1,16 @@
+--- imports ---
+
+backend:
+npm install multer @types/multer
+
+frontend:
+npm install react-modal
+
+(npm install --save-dev @types/react-modal)
+
+
+
+
+--- to do ---
+
+clean up use effect / use state in MyProfileModal

@@ -8,31 +8,26 @@ datasource db {
 }
 
 model User {
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-  // registration
-  id            Int         @id @unique // this is the intraID
-  name          String      @unique
-  email         String      @unique
-  twoFa         Boolean     @default(false)
-  twoFaSecret   String?
-  // customization
-  avatarURL     String      @default("defaultPath")
-  rank          String      @default("noob")
-  // match
-  matches       Int[]
-  mmr           Int         @default(1000)
-  winrate       Float?
-  // chat
-  online        Boolean     @default(false)
-  friends       Int[]
-  friendReq_out Int[]
-  friendReq_in  Int[]
-  blocked       Int[]
-  userChats     Chat_User[]
-
-  @@unique([friends, friendReq_out, blocked]) // can be blocked and have incoming friend request
-  @@unique([friends, friendReq_out, friendReq_in])
+    createdAt     DateTime    @default(now())
+    updatedAt     DateTime    @updatedAt
+    // registration
+    id            Int         @id @unique // this is the intraID
+    name          String      @unique
+    email         String      @unique
+    twoFa         Boolean     @default(false)
+    twoFaSecret   String?
+    // scorecard
+    mmr           Int         @default(1000)
+    rank          String      @default("noob")
+    matches       Int[]
+    winrate       Float?
+    // chat
+    online        Boolean     @default(false)
+    friends       Int[]
+    friendReq_out Int[]
+    friendReq_in  Int[]
+    blocked       Int[]
+    userChats     Chat_User[]
 }
 
 model Match {
@@ -47,20 +42,18 @@ model Match {
   score_p1    Int       @default(0)
   score_p2    Int       @default(0)
   winner_id   Int?
-  winner_name String? // has a name of a winner or "" Ackchyually: this will be null. if you want it to be "", have to do @default("")
-
-  // winner_name String? // has a name of a winner or "" Ackchyually: this will be null. if you want it to be "", have to do @default("")
+  winner_name String? // has a name of a winner or ""
   @@unique([player1, player2])
 }
 
 model Message {
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  id        Int      @id @unique @default(autoincrement())
-  content   String
-  author    Int
-  chat      Chat     @relation(fields: [chatId], references: [id])
-  chatId    Int
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ id        Int      @id @unique @default(autoincrement())
+ content   String
+ author    Int
+ chat      Chat     @relation(fields: [chatId], references: [id])
+ chatId    Int
 }
 
 model Chat {
