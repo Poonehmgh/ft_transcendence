@@ -52,7 +52,7 @@ export class UserController {
   async getMyAvatar(@Param("id") id: number, @Res() res: Response) {
     const filePath = this.userService.getAvatarPath(id);
     if (!filePath) {
-      return res.sendFile("default.jpg", { root: "./uploads" });
+      return res.sendFile("default.png", { root: "./uploads" });
     }
     return res.sendFile(filePath);
   }

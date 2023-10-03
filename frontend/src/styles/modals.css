@@ -61,14 +61,16 @@
   flex-direction: column;
   align-items: end;
 }
+
 /* images */
 
 .modal-avatar {
   width: 210px;
   height: 210px;
-  object-fit: contain;
+  object-fit: cover;
   object-position: center center;
   border-radius: 17px;
+
 }
 
 /* buttons */

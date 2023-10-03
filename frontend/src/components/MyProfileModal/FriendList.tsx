@@ -7,6 +7,7 @@ interface props {
   id: number;
 }
 
+
 function FriendList(props: props) {
   const [group, setGroup] = useState([]);
 

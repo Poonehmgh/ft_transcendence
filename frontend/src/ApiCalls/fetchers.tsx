@@ -1,5 +1,5 @@
 import { IdAndNameDTO } from "user-dto";
-import { authContentHeader, authHeader } from "./headers";
+import { authContentHeader } from "./headers";
 
 export async function fetch_IdAndNameDTO(
   id: number,

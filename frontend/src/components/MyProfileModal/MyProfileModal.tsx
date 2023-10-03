@@ -77,14 +77,10 @@ function MyProfileModal(props: MyProfileModal_prop) {
     const formData = new FormData();
     formData.append("avatar", file);
     try {
-      const response = await fetch(
-        process.env.REACT_APP_BACKEND_URL + `/user/put_avatar/${props.id}`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-      const data = await response.json();
+      await fetch(process.env.REACT_APP_BACKEND_URL + `/user/put_avatar/${props.id}`, {
+        method: "POST",
+        body: formData,
+      });
     } catch (error) {
       console.log(error);
     }
@@ -163,7 +159,7 @@ function MyProfileModal(props: MyProfileModal_prop) {
               />
             </div>
 
-            <ManageContactsTabs id={props.id}/>
+            <ManageContactsTabs id={props.id} />
 
             <input
               type="file"
