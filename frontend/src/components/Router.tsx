@@ -2,7 +2,7 @@ import { createBrowserRouter, RouterProvider, redirect } from "react-router-dom"
 import LogIn from "./LogIn";
 import Home from "./Home";
 import Leaderboard from "./Leaderboard/Leaderboard";
-import Game from "./Game";
+import Game from "./Game/Game";
 import Chat from "./Chat";
 import ErrorPage from "./ErrorPage";
 import React from "react";

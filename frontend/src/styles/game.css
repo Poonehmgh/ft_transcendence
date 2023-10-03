@@ -26,4 +26,25 @@
     grid-column: 4 / 5;
 }
 
+.left-bar {
+    width: 20px; /* Adjust the width as needed */
+    height: 150px; /* Adjust the height as needed */
+    margin-left: 108px;
+    background-color: cadetblue; /* Background color of the bar */
+    position: absolute;
+    top: 50%; /* Center the bar vertically */
+    transform: translateY(-50%);
+    border-radius: 30%;
+}
+
+.right-bar {
+    width: 20px; /* Adjust the width as needed */
+    height: 150px; /* Adjust the height as needed */
+    margin-left: 1275px;
+    background-color: cadetblue; /* Background color of the bar */
+    position: absolute;
+    top: 50%; /* Center the bar vertically */
+    transform: translateY(-50%);
+    border-radius: 30%;
+}
 
