@@ -1,6 +1,7 @@
 import {Link} from "react-router-dom";
 import React from "react";
 import '../styles/header.css';
+import MyProfileModal from "./MyProfileModal/MyProfileModal";
 
 function Header() {
   return (
@@ -9,11 +10,12 @@ function Header() {
           <Link className={"link"} to="/home">Pongers</Link><br/>
         </div>
         <ul className={"upper-links"}>
-          <li>
-            <Link className={"link"} to="/profile">My Profile</Link>
-          </li>
+          <MyProfileModal id={1}/>
           <li>
             <Link className={"link"} to="/leaderboard">Leaderboard</Link>
+          </li>
+          <li>
+            <Link className={"link"} to="/players">Players</Link>
           </li>
           <li>
             <Link className={"link"} to="/game">Game</Link>

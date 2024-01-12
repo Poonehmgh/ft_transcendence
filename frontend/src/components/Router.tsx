@@ -6,43 +6,44 @@ import Game from "./Game/Game";
 import Chat from "./Chat";
 import ErrorPage from "./ErrorPage";
 import React from "react";
-import Profile from "./Profile/Profile";
-import {routeUser, routeUserAtLogIn} from "../functions/getUserID";
+import { routeUser, routeUserAtLogIn } from "../functions/getUserID";
+import Players from "./Players";
+import MyProfileModal from "./MyProfileModal/MyProfileModal";
 
 const Router = () => {
-    const router = createBrowserRouter([
-      {
-        path: "/",
-        element: <LogIn />,
-        loader: routeUserAtLogIn,
-        errorElement: <ErrorPage />,
-      },
-      {
-        path: "/home",
-        element: <Home />,
-        loader: routeUser,
-      },
-      {
-        path: "/leaderboard",
-        element: <Leaderboard />,
-        loader: routeUser,
-      },
-      {
-        path: "/game",
-        element: <Game />,
-        loader: routeUser,
-      },
-      {
-        path: "/chat",
-        element: <Chat />,
-        loader: routeUser,
-      },
-      {
-        path: "/profile",
-        element: <Profile />,
-        loader: routeUser,
-      },
-    ]);
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <LogIn />,
+      loader: routeUserAtLogIn,
+      errorElement: <ErrorPage />,
+    },
+    {
+      path: "/home",
+      element: <Home />,
+      loader: routeUser,
+    },
+    {
+      path: "/leaderboard",
+      element: <Leaderboard />,
+      loader: routeUser,
+    },
+    {
+      path: "/game",
+      element: <Game />,
+      loader: routeUser,
+    },
+    {
+      path: "/chat",
+      element: <Chat />,
+      loader: routeUser,
+    },
+    {
+      path: "/players",
+      element: <Players />,
+      loader: routeUser,
+    },
+  ]);
 
   return <RouterProvider router={router} />;
 };

@@ -48,6 +48,7 @@ services:
 volumes:
   db_volume:
   front_volume:
+
 networks:
   database:
     driver: bridge

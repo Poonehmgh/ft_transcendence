@@ -10,5 +10,6 @@
 .upper-links {
     display: flex;
     list-style-type: none;
+    align-items: center;
     gap: 1rem;
 }
