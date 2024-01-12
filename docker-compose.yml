@@ -3,6 +3,7 @@ services:
   frontend:
     build: ./frontend
     container_name: frontend
+    image: frontend
     ports:
      - 3000:3000
     volumes:
@@ -15,6 +16,7 @@ services:
   backend:
     build: ./backend
     container_name: backend
+    image: backend
     ports:
       - 5500:5500
       - 5555:5555
