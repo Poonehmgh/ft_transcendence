@@ -15,7 +15,7 @@ function Header() {
             <Link className={"link"} to="/leaderboard">Leaderboard</Link>
           </li>
           <li>
-            <Link className={"link"} to="/players">Players</Link>
+            <Link className={"link"} to="/allusers">All Users</Link>
           </li>
           <li>
             <Link className={"link"} to="/game">Game</Link>

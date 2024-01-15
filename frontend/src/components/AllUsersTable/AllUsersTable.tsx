@@ -2,16 +2,11 @@ import React, {useEffect, useState} from "react";
 import { authContentHeader } from "src/ApiCalls/headers";
 import { UserProfileDTO } from "user-dto";
 
-interface leaderBoardProp {
+interface allUsersTable_prop {
     n: number;
 }
 
-interface rowEntryProp {
-    userProfile: UserProfileDTO;
-    ladderPos: number;
-}
-
-function LeaderBoardTable(props: leaderBoardProp): React.JSX.Element {
+function AllUsersTable(props: allUsersTable_prop): React.JSX.Element {
     const [leaderTable, setLeaderTable] = useState <UserProfileDTO[]>([]);
 
     useEffect(() => {
@@ -25,19 +20,31 @@ function LeaderBoardTable(props: leaderBoardProp): React.JSX.Element {
             </div>
         );
     return (
-        <tbody>
-          {leaderTable.map((element: UserProfileDTO, index: number) => (
-              <tr key = {element.id}>
-                  <td>{index + 1}</td>
-                <td>{element.name}</td>
-                <td>{element.rank}</td>
-                <td>{element.mmr}</td>
-                <td>{element.matches}</td>
-                <td>{element.winrate !== null ? element.winrate : "N/A"}</td>
-                <td>{element.online ? 'online' : 'offline'}</td>
+        <table>
+              <thead>
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Rank</th>
+                <th>MMR</th>
+                <th>Matches</th>
+                <th>Win Rate</th>
               </tr>
-          ))}
-        </tbody>
+              </thead>
+              <tbody>
+                {leaderTable.map((element: UserProfileDTO, index: number) => (
+                    <tr key = {element.id}>
+                        <td>{index + 1}</td>
+                        <td>{element.name}</td>
+                        <td>{element.rank}</td>
+                        <td>{element.mmr}</td>
+                        <td>{element.matches}</td>
+                        <td>{element.winrate !== null ? element.winrate : "N/A"}</td>
+                        <td>{element.online ? 'online' : 'offline'}</td>
+                    </tr>
+                ))}
+            </tbody>
+        </table>
     );
 }
 
@@ -55,4 +62,4 @@ const fetchAndSet = async (n: number, setter: React.Dispatch<React.SetStateActio
     }
 }
 
-export default LeaderBoardTable;
+export default AllUsersTable;
