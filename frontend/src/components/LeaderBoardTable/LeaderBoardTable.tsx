@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import { authContentHeader } from "src/ApiCalls/headers";
 import { UserProfileDTO } from "user-dto";
+import UserProfileModal from "../UserProfileModal/UserProfileModal";
 
 interface leaderBoardProp {
     n: number;
@@ -8,6 +9,17 @@ interface leaderBoardProp {
 
 function LeaderBoardTable(props: leaderBoardProp): React.JSX.Element {
     const [leaderTable, setLeaderTable] = useState <UserProfileDTO[]>([]);
+	const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+	const [modalIsOpen, setModalIsOpen] = useState(false);
+
+	function handleNameClick(userId: number) {
+		setSelectedUserId(userId);
+		setModalIsOpen(true);
+	}
+	  
+	const handleCloseModal = () => {
+		setModalIsOpen(false);
+	}
 
     useEffect(() => {
         void fetchAndSet(props.n, setLeaderTable);
@@ -20,6 +32,8 @@ function LeaderBoardTable(props: leaderBoardProp): React.JSX.Element {
             </div>
         );
     return (
+		<div>
+			<UserProfileModal id = {selectedUserId} isOpen = {modalIsOpen} onClose={handleCloseModal}/>
         <table>
               <thead>
               <tr>
@@ -35,7 +49,11 @@ function LeaderBoardTable(props: leaderBoardProp): React.JSX.Element {
                 {leaderTable.map((element: UserProfileDTO, index: number) => (
                     <tr key = {element.id}>
                         <td>{index + 1}</td>
-                        <td>{element.name}</td>
+                        <td>
+							<button className="modal-button-big" onClick={() => handleNameClick(element.id)}>
+							{element.name}
+							</button>
+						</td>
                         <td>{element.rank}</td>
                         <td>{element.mmr}</td>
                         <td>{element.matches}</td>
@@ -45,6 +63,7 @@ function LeaderBoardTable(props: leaderBoardProp): React.JSX.Element {
                 ))}
             </tbody>
         </table>
+		</div>
     );
 }
 

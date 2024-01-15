@@ -30,9 +30,6 @@ function PlayerCardTable(props: PlayerCardTable_prop) {
               <td className="playerCard-table">win rate</td>
               <td className="playerCard-table">{props.winrate ? props.winrate : "-"}</td>
             </tr>
-			<tr>
-				<td className="playerCard-table">online</td>
-			</tr>
           </tbody>
         </table>
       </div>

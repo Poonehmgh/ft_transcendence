@@ -56,11 +56,8 @@ function UserProfileModal(props: userProfileModal_prop) {
   }
 
   useEffect(() => {
-	if (props.id)
-	{
 		fetchProfile();
 		fetchAvatar();
-	}
   }, [props.isOpen, props.id]);
 
   return (
