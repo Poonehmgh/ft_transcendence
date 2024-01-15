@@ -20,6 +20,8 @@ function UserProfileModal(props: userProfileModal_prop) {
   }
 
   async function fetchProfile() {
+	if (props.id == null)
+		return;
 	  const url = process.env.REACT_APP_BACKEND_URL + "/user/profile?id=" + props.id;
       try {
         const response = await fetch(url, {

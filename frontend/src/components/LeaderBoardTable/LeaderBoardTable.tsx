@@ -34,7 +34,7 @@ function LeaderBoardTable(props: leaderBoardProp): React.JSX.Element {
     return (
 		<div>
 			<UserProfileModal id = {selectedUserId} isOpen = {modalIsOpen} onClose={handleCloseModal}/>
-        <table>
+        <table className="big-table">
               <thead>
               <tr>
                 <th>#</th>

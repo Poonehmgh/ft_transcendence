@@ -97,13 +97,14 @@
   color: #fff;
   background: rgb(var(--color1));
   padding: 13px 25px;
-  margin: 10px;
+  margin: 0px;
   border-radius: 8px;
   transition: background-color 0.1s ease;
   box-sizing: border-box;
   transition: all 0.25s ease;
   border: 0;
   cursor: pointer;
+  min-width: 130px;
   box-shadow: 0 10px 20px -10px rgb(var(--color1) / 50%);
 
   &:hover {
@@ -111,6 +112,20 @@
     transform: translateY(-2px);
   }
 }
+
+.modal-button-mid {
+	display: inline-block;
+	font-size: 0.8rem;
+	color: #fff;
+	background: rgb(var(--color1));
+	padding: 7px 7px;
+	border-radius: 8px;
+	box-sizing: border-box;
+	border: 0;
+	cursor: pointer;
+	min-width: 100px;
+  }
+
 
 .modal-button-edit-name {
   border: none;

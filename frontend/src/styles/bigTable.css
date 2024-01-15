@@ -1,0 +1,41 @@
+:root {
+  --color1: 30 30 30;
+}
+
+/* main */
+
+.big-table {
+	font-size: 0.9rem;
+	border: none;
+  	border-collapse: collapse;
+	color: #ddd;
+	padding: 10px;
+	text-align: left;
+	width: 80%;
+	line-height: 2.2;
+  }
+
+  .big-table th,
+  .big-table tr,
+  .big-table td {
+	  border: none;
+	  white-space: nowrap;
+	  min-width: 100px;
+	  border-bottom: 1px solid #ddd;
+  }
+
+/* .big-table td:not(:first-child),
+.big-table th:not(:first-child){
+    border-bottom: 1px solid #ddd;
+}
+
+
+.big-table td:first-child,
+.big-table th:first-child {
+    font-weight: bold;
+	text-align: center;
+} */
+
+.big-table td:last-child {
+    font-style: italic;
+}

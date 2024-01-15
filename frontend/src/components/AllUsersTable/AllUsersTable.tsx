@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import { authContentHeader } from "src/ApiCalls/headers";
 import { UserProfileDTO } from "user-dto";
 import UserProfileModal from "../UserProfileModal/UserProfileModal";
-
+import "src/styles/bigTable.css";
 // not using pagination so far, we wont ever have that many users.
 // but thats what "n" in the prop is for.
 
@@ -37,7 +37,7 @@ function AllUsersTable(props: allUsersTable_prop): React.JSX.Element {
     return (
 		<div>
 			<UserProfileModal id = {selectedUserId} isOpen = {modalIsOpen} onClose={handleCloseModal}/>
-        <table>
+        <table className="big-table">
               <thead>
               <tr>
                 <th>Name</th>
