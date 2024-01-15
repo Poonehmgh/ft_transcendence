@@ -31,6 +31,8 @@ function MyProfileModal(props: MyProfileModal_prop) {
   async function fetchProfile() {
     if (modalIsOpen) {
       try {
+        console.log(process.env.REACT_APP_BACKEND_URL);
+        console.log(process.env);
         const url = process.env.REACT_APP_BACKEND_URL + "/user/profile?id=" + props.id;
         const response = await fetch(url, {
           method: "GET",
@@ -42,7 +44,7 @@ function MyProfileModal(props: MyProfileModal_prop) {
         const data = await response.json();
         setUserData(data);
       } catch (error) {
-        console.error("Error fetching user data:", error);
+        console.log("Error fetching user data:", error);
       }
     }
   }
@@ -60,7 +62,7 @@ function MyProfileModal(props: MyProfileModal_prop) {
       const blob = await response.blob();
       const imageUrl = URL.createObjectURL(blob);
       setAvatarURL(imageUrl);
-	  console.log("working avatar url:", imageUrl);
+      console.log("working avatar url:", imageUrl);
     } catch (error) {
       console.log("Error getting Avatar", error);
     }

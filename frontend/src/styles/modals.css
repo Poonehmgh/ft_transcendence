@@ -108,7 +108,7 @@
 
   &:hover {
     box-shadow: 0px 20px 20px -10px rgb(var(--color1) / 50%);
-    /* transform: translateY(-2px); */
+    transform: translateY(-2px);
   }
 }
 
