@@ -15,15 +15,16 @@ function UserProfileModal(props: userProfileModal_prop) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [userData, setUserData] = useState<UserProfileDTO | null>(null);
   const [avatarURL, setAvatarURL] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
 
   function closeModal() {
     props.onClose();
   }
 
   async function fetchProfile() {
-    if (modalIsOpen) {
+	  const url = process.env.REACT_APP_BACKEND_URL + "/user/profile?id=" + props.id;
       try {
-        const url = process.env.REACT_APP_BACKEND_URL + "/user/profile?id=" + props.id;
         const response = await fetch(url, {
           method: "GET",
           headers: authContentHeader(),
@@ -35,9 +36,11 @@ function UserProfileModal(props: userProfileModal_prop) {
         setUserData(data);
       } catch (error) {
         console.log("Error fetching user data:", error);
+      } finally {
+        setIsLoading(false);
       }
     }
-  }
+  
 
   async function fetchAvatar() {
     const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/get_avatar/" + props.id;
@@ -60,9 +63,29 @@ function UserProfileModal(props: userProfileModal_prop) {
 
   useEffect(() => {
 	setModalIsOpen(props.isOpen);
-    fetchProfile();
-    fetchAvatar();
-  }, [props.isOpen, props.id]);
+	if (props.id)
+	{
+		fetchProfile();
+		fetchAvatar();
+	}
+  }, [props.isOpen, props.id, isLoading]);
+
+/*   useEffect(() => {
+	if (props.isOpen) {
+	  setIsLoading(true); // Set loading to true when modal opens
+	  fetchProfile();
+	  fetchAvatar();
+	} else {
+	  // Reset the state when the modal is closed
+	  setIsLoading(false);
+	  setUserData(null);
+	  setAvatarURL(null);
+	}
+  }, [props.isOpen, props.id]); */
+
+
+
+
 
   return (
     <div>
@@ -73,7 +96,9 @@ function UserProfileModal(props: userProfileModal_prop) {
         className="modal"
         overlayClassName="modal-overlay"
       >
-        {userData ? (
+		{isLoading ? (
+          <p>Loading shmuser data...</p>
+        ) :
           <div>
             <h2 className="modal-h2">
               {userData.name}
@@ -93,9 +118,7 @@ function UserProfileModal(props: userProfileModal_prop) {
               />
             </div>
           </div>
-        ) : (
-          <p>Loading user data...</p>
-        )}
+        }
         <button onClick={closeModal} className="modal-button-close">
           ❌
         </button>
