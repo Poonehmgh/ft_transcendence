@@ -3,15 +3,16 @@ import {UserProfileDTO} from "user-dto";
 import SocialActionBar from "./SocialActionBar";
 
 interface userProfileProp {
-  userId: number
+  id: number;
+  
 }
 
 function UserProfile(props: userProfileProp): React.JSX.Element {
   const [userProfile, setUserProfile] = useState <UserProfileDTO>();
 
   useEffect(() => {
-    void fetchAndSet(props.userId, setUserProfile);
-  }, [props.userId]);
+    void fetchAndSet(props.id, setUserProfile);
+  }, [props.id]);
 
   if (!userProfile)
     return (
@@ -47,7 +48,8 @@ function UserProfile(props: userProfileProp): React.JSX.Element {
 
 const fetchAndSet = async (userId: number, setter: React.Dispatch<React.SetStateAction<UserProfileDTO>>): Promise<void> => {
   try {
-    const response = await fetch(`http://localhost:5500/user/profile?id=${userId}`);
+    const apiUrl = process.env.REACT_APP_BACKEND_URL + `user/profileid=${userId}`;
+	const response = await fetch(apiUrl);
     const data = await response.json();
     setter(data);
   } catch (error) {

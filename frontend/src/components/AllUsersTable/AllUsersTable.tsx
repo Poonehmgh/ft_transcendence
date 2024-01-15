@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from "react";
 import { authContentHeader } from "src/ApiCalls/headers";
 import { UserProfileDTO } from "user-dto";
+import UserProfileModal from "../UserProfile/UserProfileModal";
 
 // not using pagination so far, we wont ever have that many users.
-// but thats wht the prop is for.
+// but thats what "n" in the prop is for.
 
 interface allUsersTable_prop {
     n: number;
@@ -11,6 +12,18 @@ interface allUsersTable_prop {
 
 function AllUsersTable(props: allUsersTable_prop): React.JSX.Element {
     const [allUsersTable, setAllUsersTable] = useState <UserProfileDTO[]>([]);
+	const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	  
+	function handleNameClick(userId: number) {
+		setSelectedUserId(userId);
+		setIsModalOpen(true);
+		console.log("handleNameClick with id:", userId);
+	}
+	  
+	const handleCloseModal = () => {
+		setIsModalOpen(false); // Close the modal
+	}
 
     useEffect(() => {
         void fetchAndSet(props.n, setAllUsersTable);
@@ -23,6 +36,8 @@ function AllUsersTable(props: allUsersTable_prop): React.JSX.Element {
             </div>
         );
     return (
+		<div>
+			<UserProfileModal id = {selectedUserId} isOpen = {isModalOpen} onClose={handleCloseModal}/>
         <table>
               <thead>
               <tr>
@@ -34,9 +49,13 @@ function AllUsersTable(props: allUsersTable_prop): React.JSX.Element {
               </tr>
               </thead>
               <tbody>
-                {allUsersTable.map((element: UserProfileDTO, index: number) => (
-                    <tr key = {element.id}>
-                        <td>{element.name}</td>
+                {allUsersTable.map((element: UserProfileDTO) => (
+					<tr key = {element.id}>
+						<td>
+							<button className="modal-button-big" onClick={() => handleNameClick(element.id)}>
+							{element.name}
+							</button>
+						</td>
                         <td>{element.rank}</td>
                         <td>{element.mmr}</td>
                         <td>{element.matches}</td>
@@ -46,6 +65,7 @@ function AllUsersTable(props: allUsersTable_prop): React.JSX.Element {
                 ))}
             </tbody>
         </table>
+	</div>
     );
 }
 
