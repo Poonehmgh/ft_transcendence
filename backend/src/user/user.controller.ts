@@ -16,12 +16,10 @@ import {
   UserRelation,
   IdAndNameDTO,
   NewUserDTO,
-  ScoreCardDTO,
   UserProfileDTO,
   ChangeNameDto,
 } from "./user-dto";
 import { UserService } from "./user.service";
-import * as fs from "fs";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
 import * as path from "path";
@@ -57,14 +55,14 @@ export class UserController {
     return res.sendFile(filePath);
   }
 
-  @Get("scorecard")
+/*   @Get("scorecard")
   async getScoreCard(userId: number): Promise<ScoreCardDTO> {
     return this.userService.getScoreCard(userId);
-  }
+  } */
 
   @Get("leaderboard")
-  async getTopScoreCards(@Query("top") top: number): Promise<ScoreCardDTO[]> {
-    return this.userService.getTopScoreCards(top);
+  async getTopProfiles(@Query("top") top: number): Promise<UserProfileDTO[]> {
+    return this.userService.getTopProfiles(top);
   }
 
   @Get("matches")

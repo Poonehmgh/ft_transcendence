@@ -8,7 +8,6 @@ import ErrorPage from "./ErrorPage";
 import React from "react";
 import { routeUser, routeUserAtLogIn } from "../functions/getUserID";
 import Players from "./Players";
-import MyProfileModal from "./MyProfileModal/MyProfileModal";
 
 const Router = () => {
   const router = createBrowserRouter([

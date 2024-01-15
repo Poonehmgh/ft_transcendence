@@ -1,53 +1,50 @@
 import React from "react";
-import { userAction } from "../../ApiCalls/userActions";
+import { acceptRequest, addFriend, cancelRequest, declineRequest, removeFriend } from "../../ApiCalls/userActions";
+import { UserRelation } from "../../DTO/user-dto";
 
-enum SocialStatus {
-  friends,
-  request_sent,
-  request_received,
-  blocked,
-  none
+interface FriendButton_prop {
+    relation: UserRelation,
+    thisId: number,
+    otherId: number,
 }
 
-interface SocialActionBar_a_prop {
-    relation: SocialStatus
-}
+function FriendButton(props: FriendButton_prop): React.JSX.Element {
 
-function SocialActionBar_a(props: SocialActionBar_a_prop): React.JSX.Element {
+
     switch (props.relation) {
-        case SocialStatus.friends:
+        case UserRelation.friends:
             return (
             <button
-                onClick={() => userAction(2, "rm_friend")}>
+                onClick={() => removeFriend(props.thisId, props.otherId)}>
                 Remove friend
             </button>
         );
-        case SocialStatus.request_sent:
+        case UserRelation.request_sent:
             return (
                 <button
-                    onClick={() => userAction(2, "cancel_friendReq")}>
+                    onClick={() => cancelRequest(props.thisId, props.otherId)}>
                     Cancel friend request
                 </button>
             );
-        case SocialStatus.request_received:
+        case UserRelation.request_received:
             return (
                 <div>
                     <button
-                        onClick={() => userAction(2, "accept_friendReq")}>
+                        onClick={() => acceptRequest(props.thisId, props.otherId)}>
                         Accept friend request
                     </button>
                     <button
-                        onClick={() => userAction(2, "decline_friendReq")}>
+                        onClick={() => declineRequest(props.thisId, props.otherId)}>
                         Decline friend request
                     </button>
                 </div>
             );
-        case SocialStatus.blocked:
+        case UserRelation.blocked:
             return (<div/>);
-        case SocialStatus.none:
+        case UserRelation.none:
             return (
                 <button
-                    onClick={() => userAction(2, "add_friend")}>
+                    onClick={() => addFriend(props.thisId, props.otherId)}>
                     Add friend
                 </button>);
         default:
@@ -58,4 +55,4 @@ function SocialActionBar_a(props: SocialActionBar_a_prop): React.JSX.Element {
                 </button>);
     }
 }
-export default SocialActionBar_a;
+export default FriendButton;

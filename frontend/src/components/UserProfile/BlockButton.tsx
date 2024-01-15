@@ -1,32 +1,20 @@
 import React from "react";
+import { UserRelation } from "../../DTO/user-dto";
+import { blockUser, unblockUser } from "src/ApiCalls/userActions";
 
-enum SocialStatus {
-  friends,
-  request_sent,
-  request_received,
-  blocked,
-  none
+interface BlockButton_prop {
+    relation: UserRelation,
+	thisId: number,
+	otherId: number
 }
 
-interface SocialActionBar_b_prop {
-    relation: SocialStatus
-}
-
-function SocialActionBar_b(props: SocialActionBar_b_prop): React.JSX.Element {
+function BlockButton(props: BlockButton_prop): React.JSX.Element {
     switch (props.relation) {
-        case SocialStatus.blocked:
-            return (<button onClick={void handleUnblockUser}>Unblock user</button>);
+        case UserRelation.blocked:
+            return (<button onClick={void unblockUser(props.thisId, props.otherId)}>Unblock user</button>);
         default:
-            return (<button onClick={void handleBlockUser}>Block user</button>);
+            return (<button onClick={void blockUser(props.thisId, props.otherId)}>Block user</button>);
     }
 }
 
-function  handleBlockUser(userId: number, otherId: number): void {
-  // send block request to backend;
-}
-
-function handleUnblockUser(userId: number, otherId: number): void {
-  // send unblock request to backend;
-}
-
-export default SocialActionBar_b;
+export default BlockButton;

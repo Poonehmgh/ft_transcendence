@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
-import SocialActionBar_a from './SocialActionBar_a';
-import SocialActionBar_b from "./SocialActionBar_b";
+import FriendButton from './FriendButton';
+import BlockButton from "./BlockButton";
 
 interface SocialActionBar_prop {
   userId: number,
@@ -12,8 +12,11 @@ function SocialActionBar(props: SocialActionBar_prop): React.JSX.Element {
 
     useEffect(() => {
         const getStatus = async () => {
-            try {
-                const response = await fetch(`http://localhost:5500/user/friendStatus?id1=${props.userId}&id2=${props.otherId}`);
+		const apiUrl = process.env.REACT_APP_BACKEND_URL + `user/friendStatus?id1=${props.userId}&id2=${props.otherId}`;
+            
+			try {
+                //const response = await fetch(`http://localhost:5500/user/friendStatus?id1=${props.userId}&id2=${props.otherId}`);
+                const response = await fetch(apiUrl);
 
                 if (!response.ok) {
                     setStatus(null);
@@ -27,16 +30,17 @@ function SocialActionBar(props: SocialActionBar_prop): React.JSX.Element {
             }
         };
 
+		
         void getStatus();
     }, [props.userId, props.otherId, status]);
 
     return (
         <div>
           <div>
-              <SocialActionBar_a relation={status}/>
+              <FriendButton relation={status} thisId = {props.userId} otherId = {props.otherId} />
           </div>
           <div>
-              <SocialActionBar_b relation={status}/>
+              <BlockButton relation={status} thisId = {props.userId} otherId = {props.otherId}/>
           </div>
         </div>
     )

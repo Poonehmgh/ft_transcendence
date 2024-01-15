@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {UserProfileDTO} from "user-dto";
+import SocialActionBar from "./SocialActionBar";
 
 interface userProfileProp {
   userId: number
@@ -39,6 +40,7 @@ function UserProfile(props: userProfileProp): React.JSX.Element {
           {userProfile.online ? 'online' : 'offline'}
           <br/>
           <br/>
+          <SocialActionBar userId={1} otherId={0} />
         </div>
   );
 }

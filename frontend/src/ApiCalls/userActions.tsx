@@ -3,7 +3,7 @@ import { authContentHeader, authHeader } from "./headers";
 // This is the main function, the other functions prepare their bodies and API
 // endpoints - but they are all the same pattern and can go through this central
 // function.
-async function userAction(body: string, apiUrl: string) {
+export async function userAction(body: string, apiUrl: string) {
   try {
     const response: Response = await fetch(apiUrl, {
       method: "POST",
@@ -19,6 +19,13 @@ async function userAction(body: string, apiUrl: string) {
     return false;
   }
 }
+
+export async function addFriend(thisId: number, otherId: number) {
+	const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/send_friendreq";
+	const body: string = JSON.stringify({ thisId: thisId, otherId: otherId });
+  
+	return userAction(body, apiUrl);
+  }
 
 export async function removeFriend(thisId: number, otherId: number) {
   const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/remove_friend";

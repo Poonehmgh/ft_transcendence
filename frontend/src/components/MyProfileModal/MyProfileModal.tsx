@@ -48,9 +48,9 @@ function MyProfileModal(props: MyProfileModal_prop) {
   }
 
   async function fetchAvatar() {
-    const url = process.env.REACT_APP_BACKEND_URL + "/user/get_avatar/" + props.id;
+    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/get_avatar/" + props.id;
     try {
-      const response = await fetch(url, {
+      const response = await fetch(apiUrl, {
         method: "GET",
         headers: authContentHeader(),
       });
@@ -60,6 +60,7 @@ function MyProfileModal(props: MyProfileModal_prop) {
       const blob = await response.blob();
       const imageUrl = URL.createObjectURL(blob);
       setAvatarURL(imageUrl);
+	  console.log("working avatar url:", imageUrl);
     } catch (error) {
       console.log("Error getting Avatar", error);
     }

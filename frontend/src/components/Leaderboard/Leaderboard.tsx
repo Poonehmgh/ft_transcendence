@@ -13,6 +13,7 @@ function Leaderboard() {
             <table>
               <thead>
               <tr>
+                <th>#</th>
                 <th>Name</th>
                 <th>Rank</th>
                 <th>MMR</th>

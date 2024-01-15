@@ -14,3 +14,33 @@ npm install react-modal
 --- to do ---
 
 clean up use effect / use state in MyProfileModal
+rm ScoreCardDTO, just use user profile dto
+
+- put user avatars to leaderboard
+- make user overview
+	- sortingmode
+	- social action bar? think not
+	- profile clickable
+	- pagination
+	- common component for user row entry
+	- search for user by username?
+
+
+async function fetchAvatar(id: number): Promise<string> {
+    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/get_avatar/" + id;
+    try {
+      const response = await fetch(apiUrl, {
+        method: "GET",
+        headers: authContentHeader(),
+      });
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const blob = await response.blob();
+      const imageUrl = URL.createObjectURL(blob);
+	  console.log("Avatar URL:", imageUrl); 
+      return(imageUrl);
+    } catch (error) {
+      console.log("Error getting Avatar", error);
+    }
+}

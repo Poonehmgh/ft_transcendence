@@ -1,17 +1,18 @@
 import React, {useEffect, useState} from "react";
-import {ScoreCardDTO} from "user-dto";
+import { authContentHeader } from "src/ApiCalls/headers";
+import { UserProfileDTO } from "src/DTO/user-dto";
 
 interface leaderBoardProp {
     n: number;
 }
 
 interface rowEntryProp {
-    scoreCard: ScoreCardDTO;
-    rank: number;
+    userProfile: UserProfileDTO;
+    ladderPos: number;
 }
 
 function LeaderBoardTable(props: leaderBoardProp): React.JSX.Element {
-    const [leaderTable, setLeaderTable] = useState <ScoreCardDTO[]>([]);
+    const [leaderTable, setLeaderTable] = useState <UserProfileDTO[]>([]);
 
     useEffect(() => {
         void fetchAndSet(props.n, setLeaderTable);
@@ -25,8 +26,8 @@ function LeaderBoardTable(props: leaderBoardProp): React.JSX.Element {
         );
     return (
         <tbody>
-          {leaderTable.map((element: ScoreCardDTO, index: number) => (
-              <RowEntry scoreCard = {element} rank = {index + 1}/>
+          {leaderTable.map((element: UserProfileDTO, index: number) => (
+              <RowEntry userProfile = {element} ladderPos = {index + 1}/>
           ))}
         </tbody>
     );
@@ -34,7 +35,8 @@ function LeaderBoardTable(props: leaderBoardProp): React.JSX.Element {
 
 const fetchAndSet = async (n: number, setter: React.Dispatch<React.SetStateAction<ScoreCardDTO[]>>): Promise<void> => {
     try {
-        const response = await fetch(`http://localhost:5500/user/leaderboard?top=${n}`);
+        const url =  process.env.REACT_APP_BACKEND_URL + `/user/leaderboard?top=${n}`;
+		const response = await fetch(url);
         const data = await response.json();
         setter(data);
     } catch (error) {
@@ -44,13 +46,17 @@ const fetchAndSet = async (n: number, setter: React.Dispatch<React.SetStateActio
 }
 
 function RowEntry(props: rowEntryProp): React.JSX.Element {
-    return (
-        <tr key = {props.rank}>
-            <td>{props.scoreCard.name}</td>
-            <td>{props.scoreCard.rank}</td>
-            <td>{props.scoreCard.mmr}</td>
-            <td>{props.scoreCard.matches}</td>
-            <td>{props.scoreCard.winrate !== null ? props.scoreCard.winrate : "N/A"}</td>
+
+	
+	return (
+        <tr key = {props.userProfile.id}>
+            <td>{props.ladderPos}</td>
+            <td>{props.userProfile.name}</td>
+            <td>{props.userProfile.rank}</td>
+            <td>{props.userProfile.mmr}</td>
+            <td>{props.userProfile.matches}</td>
+            <td>{props.userProfile.winrate !== null ? props.userProfile.winrate : "N/A"}</td>
+            <td>{props.userProfile.online ? 'online' : 'offline'}</td>
         </tr>
     )
 }
