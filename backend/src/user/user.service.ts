@@ -304,8 +304,14 @@ export class UserService {
     });
   }
 
-  async getAllUsers() {
-    return await this.prisma.user.findMany();
+  async getAllUsers():  Promise<UserProfileDTO[]> {
+    const allUsers: User[] = await this.prisma.user.findMany({
+      orderBy: { id: "desc" },
+    });
+	
+    return allUsers.map(({ id, name, mmr, rank, matches, winrate, online }) => {
+      return new UserProfileDTO(id, name, mmr, rank, matches.length, winrate, online);
+    });
   }
 
   async getOtherUsers(thisId: number) {

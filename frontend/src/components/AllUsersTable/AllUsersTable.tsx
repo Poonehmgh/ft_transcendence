@@ -2,28 +2,30 @@ import React, {useEffect, useState} from "react";
 import { authContentHeader } from "src/ApiCalls/headers";
 import { UserProfileDTO } from "user-dto";
 
+// not using pagination so far, we wont ever have that many users.
+// but thats wht the prop is for.
+
 interface allUsersTable_prop {
     n: number;
 }
 
 function AllUsersTable(props: allUsersTable_prop): React.JSX.Element {
-    const [leaderTable, setLeaderTable] = useState <UserProfileDTO[]>([]);
+    const [allUsersTable, setAllUsersTable] = useState <UserProfileDTO[]>([]);
 
     useEffect(() => {
-        void fetchAndSet(props.n, setLeaderTable);
+        void fetchAndSet(props.n, setAllUsersTable);
     }, [props.n]);
 
-    if (leaderTable.length === 0)
+    if (allUsersTable.length === 0)
         return (
             <div>
-                <br/>No matches played.
+                <br/>No users. Sadge.
             </div>
         );
     return (
         <table>
               <thead>
               <tr>
-                <th>#</th>
                 <th>Name</th>
                 <th>Rank</th>
                 <th>MMR</th>
@@ -32,9 +34,8 @@ function AllUsersTable(props: allUsersTable_prop): React.JSX.Element {
               </tr>
               </thead>
               <tbody>
-                {leaderTable.map((element: UserProfileDTO, index: number) => (
+                {allUsersTable.map((element: UserProfileDTO, index: number) => (
                     <tr key = {element.id}>
-                        <td>{index + 1}</td>
                         <td>{element.name}</td>
                         <td>{element.rank}</td>
                         <td>{element.mmr}</td>
@@ -50,7 +51,7 @@ function AllUsersTable(props: allUsersTable_prop): React.JSX.Element {
 
 const fetchAndSet = async (n: number, setter: React.Dispatch<React.SetStateAction<ScoreCardDTO[]>>): Promise<void> => {
     try {
-        const apiUrl =  process.env.REACT_APP_BACKEND_URL + `/user/leaderboard?top=${n}`;
+        const apiUrl =  process.env.REACT_APP_BACKEND_URL + "/user/all_users";
         const response = await fetch(apiUrl, {
             headers: authContentHeader()
         });

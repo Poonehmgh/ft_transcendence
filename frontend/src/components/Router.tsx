@@ -7,7 +7,6 @@ import Chat from "./Chat";
 import ErrorPage from "./ErrorPage";
 import React from "react";
 import { routeUser, routeUserAtLogIn } from "../functions/getUserID";
-import Players from "./AllUsers";
 import AllUsers from "./AllUsers";
 
 const Router = () => {
