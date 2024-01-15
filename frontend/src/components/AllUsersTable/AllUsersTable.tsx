@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import { authContentHeader } from "src/ApiCalls/headers";
 import { UserProfileDTO } from "user-dto";
-import UserProfileModal from "../UserProfile/UserProfileModal";
+import UserProfileModal from "../UserProfileModal/UserProfileModal";
 
 // not using pagination so far, we wont ever have that many users.
 // but thats what "n" in the prop is for.
@@ -13,16 +13,15 @@ interface allUsersTable_prop {
 function AllUsersTable(props: allUsersTable_prop): React.JSX.Element {
     const [allUsersTable, setAllUsersTable] = useState <UserProfileDTO[]>([]);
 	const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
-	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [modalIsOpen, setModalIsOpen] = useState(false);
 	  
 	function handleNameClick(userId: number) {
 		setSelectedUserId(userId);
-		setIsModalOpen(true);
-		console.log("handleNameClick with id:", userId);
+		setModalIsOpen(true);
 	}
 	  
 	const handleCloseModal = () => {
-		setIsModalOpen(false); // Close the modal
+		setModalIsOpen(false);
 	}
 
     useEffect(() => {
@@ -37,7 +36,7 @@ function AllUsersTable(props: allUsersTable_prop): React.JSX.Element {
         );
     return (
 		<div>
-			<UserProfileModal id = {selectedUserId} isOpen = {isModalOpen} onClose={handleCloseModal}/>
+			<UserProfileModal id = {selectedUserId} isOpen = {modalIsOpen} onClose={handleCloseModal}/>
         <table>
               <thead>
               <tr>

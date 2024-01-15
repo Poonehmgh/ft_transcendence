@@ -12,11 +12,8 @@ interface userProfileModal_prop {
 }
 
 function UserProfileModal(props: userProfileModal_prop) {
-  const [modalIsOpen, setModalIsOpen] = useState(false);
   const [userData, setUserData] = useState<UserProfileDTO | null>(null);
   const [avatarURL, setAvatarURL] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-
 
   function closeModal() {
     props.onClose();
@@ -36,8 +33,6 @@ function UserProfileModal(props: userProfileModal_prop) {
         setUserData(data);
       } catch (error) {
         console.log("Error fetching user data:", error);
-      } finally {
-        setIsLoading(false);
       }
     }
   
@@ -55,49 +50,30 @@ function UserProfileModal(props: userProfileModal_prop) {
       const blob = await response.blob();
       const imageUrl = URL.createObjectURL(blob);
       setAvatarURL(imageUrl);
-      console.log("working avatar url:", imageUrl);
     } catch (error) {
       console.log("Error getting Avatar", error);
     }
   }
 
   useEffect(() => {
-	setModalIsOpen(props.isOpen);
 	if (props.id)
 	{
 		fetchProfile();
 		fetchAvatar();
 	}
-  }, [props.isOpen, props.id, isLoading]);
-
-/*   useEffect(() => {
-	if (props.isOpen) {
-	  setIsLoading(true); // Set loading to true when modal opens
-	  fetchProfile();
-	  fetchAvatar();
-	} else {
-	  // Reset the state when the modal is closed
-	  setIsLoading(false);
-	  setUserData(null);
-	  setAvatarURL(null);
-	}
-  }, [props.isOpen, props.id]); */
-
-
-
-
+  }, [props.isOpen, props.id]);
 
   return (
     <div>
       <Modal
-        isOpen={modalIsOpen}
+        isOpen={props.isOpen}
         onRequestClose={closeModal}
         contentLabel="User Profile Modal"
         className="modal"
         overlayClassName="modal-overlay"
       >
-		{isLoading ? (
-          <p>Loading shmuser data...</p>
+		{!userData ? (
+          <p>Loading user data...</p>
         ) :
           <div>
             <h2 className="modal-h2">
