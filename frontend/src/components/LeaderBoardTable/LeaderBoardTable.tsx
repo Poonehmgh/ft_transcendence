@@ -50,7 +50,7 @@ function LeaderBoardTable(props: leaderBoardProp): React.JSX.Element {
                     <tr key = {element.id}>
                         <td>{index + 1}</td>
                         <td>
-							<button className="modal-button-big" onClick={() => handleNameClick(element.id)}>
+							<button className="button-as-text" onClick={() => handleNameClick(element.id)}>
 							{element.name}
 							</button>
 						</td>

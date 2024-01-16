@@ -39,3 +39,17 @@
 .big-table td:last-child {
     font-style: italic;
 }
+
+.button-as-text {
+    display: inline;
+    font-size: 0.9rem;
+    color: inherit;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.button-as-text:hover {
+    font-weight: bold;
+}

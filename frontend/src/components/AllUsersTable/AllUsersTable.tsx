@@ -51,7 +51,7 @@ function AllUsersTable(props: allUsersTable_prop): React.JSX.Element {
                 {allUsersTable.map((element: UserProfileDTO) => (
 					<tr key = {element.id}>
 						<td>
-							<button className="modal-button-big" onClick={() => handleNameClick(element.id)}>
+							<button className="button-as-text" onClick={() => handleNameClick(element.id)}>
 							{element.name}
 							</button>
 						</td>
