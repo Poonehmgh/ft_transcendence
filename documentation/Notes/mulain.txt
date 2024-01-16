@@ -9,38 +9,30 @@ npm install react-modal
 (npm install --save-dev @types/react-modal)
 
 
+--- notes meeting fedjrrrrr ---
+
+- get last 50 msg function
+- does a new chat being created and a user being part of it emit a socket event?
+	- if not: how does the frontend know to update the user's channel list?
+	- maybe don't need this, because this happens thru a "new chat request" emission?
 
 
 --- to do ---
 
-clean up use effect / use state in MyProfileModal
-rm ScoreCardDTO, just use user profile dto
+- check if DTO removable from frontend
+- clean up use effect / use state in MyProfileModal
+- rm ScoreCardDTO, just use user profile dto
+- fetchgetSetify stuff
+- write fetchpostset
+- fetchpostsetify stuff
 
-- put user avatars to leaderboard
-- make user overview
+- UserProfile
+	- unify myProfile and other user profile, conditional render depending on calling user id
+
+optional:
+- leaderboard
+	- show avatars
+- all users
 	- sortingmode
-	- social action bar? think not
-	- profile clickable
 	- pagination
-	- common component for user row entry
-	- search for user by username?
-
-
-async function fetchAvatar(id: number): Promise<string> {
-    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/get_avatar/" + id;
-    try {
-      const response = await fetch(apiUrl, {
-        method: "GET",
-        headers: authContentHeader(),
-      });
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      const blob = await response.blob();
-      const imageUrl = URL.createObjectURL(blob);
-	  console.log("Avatar URL:", imageUrl); 
-      return(imageUrl);
-    } catch (error) {
-      console.log("Error getting Avatar", error);
-    }
-}
+	- search for user by username

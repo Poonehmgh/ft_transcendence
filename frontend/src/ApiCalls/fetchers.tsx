@@ -1,5 +1,23 @@
+import React from "react";
 import { IdAndNameDTO, UserRelation } from "user-dto";
 import { authContentHeader } from "./headers";
+
+
+export async function fetch_getSet(apiUrl: string, setter: React.Dispatch<React.SetStateAction<ScoreCardDTO[]>>): Promise<void> {
+    try {
+        const response = await fetch(apiUrl, {
+			method: "GET",
+            headers: authContentHeader()
+        });
+        const data = await response.json();
+        setter(data);
+    } catch (error) {
+        console.error('Error fetch_getSet', error);
+        setter(null);
+    }
+}
+
+
 
 export async function fetch_IdAndNameDTO(
   id: number,
@@ -23,6 +41,22 @@ export async function fetch_IdAndNameDTO(
   }
 }
 
+export async function fetch_get_JSON(apiUrl: string): Promise <JSON | null> {
+	try {
+		const response: Response = await fetch(apiUrl, {
+			method: "GET",
+			headers: authContentHeader(),
+		  });
+		  if (!response.ok) {
+			console.log(apiUrl, ": ", response.status);
+			return null;
+		  }
+		  return await response.json();
+    } catch (error) {
+      console.log(error);
+      return null;
+} }
+
 export async function fetch_UserRelation(
     thisId: number,
     otherId: number): Promise<UserRelation> {
@@ -44,20 +78,3 @@ export async function fetch_UserRelation(
 }
     }
     
-    export async function fetchAvatar_() {
-        const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/get_avatar/" + props.id;
-        try {
-          const response = await fetch(apiUrl, {
-            method: "GET",
-            headers: authContentHeader(),
-          });
-          if (!response.ok) {
-            throw new Error("Network response was not ok");
-          }
-          const blob = await response.blob();
-          const imageUrl = URL.createObjectURL(blob);
-          return imageUrl;
-        } catch (error) {
-          console.log("Error getting Avatar", error);
-        }
-      }

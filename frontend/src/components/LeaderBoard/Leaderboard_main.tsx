@@ -1,7 +1,7 @@
 import React from "react";
-import Header from "./Header";
-import LeaderBoardTable from "./LeaderBoardTable/LeaderBoardTable";
-import '../styles/tableElement.css';
+import Header from "../Header/Header_main";
+import LeaderBoardTable from "./LeaderBoardTable";
+import '../../styles/tableElement.css';
 
 function Leaderboard() {
   return (

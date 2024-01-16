@@ -1,13 +1,13 @@
 import { createBrowserRouter, RouterProvider, redirect } from "react-router-dom";
 import LogIn from "./LogIn";
 import Home from "./Home";
-import Leaderboard from "./Leaderboard";
+import Leaderboard from "./LeaderBoard/Leaderboard_main";
 import Game from "./Game/Game";
-import Chat from "./Chat";
+import Chat from "./Chat/Chat_main";
 import ErrorPage from "./ErrorPage";
 import React from "react";
 import { routeUser, routeUserAtLogIn } from "../functions/getUserID";
-import AllUsers from "./AllUsers";
+import AllUsers from "./AllUsers/AllUsers_main";
 
 const Router = () => {
   const router = createBrowserRouter([

@@ -1,5 +1,5 @@
 import React from "react";
-import Header from "./Header";
+import Header from "./Header/Header_main";
 import '../styles/log-in.css'
 
 function LogIn() {

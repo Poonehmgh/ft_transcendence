@@ -1,4 +1,4 @@
-import Header from "../Header";
+import Header from "../Header/Header_main";
 import React from "react";
 import '../../styles/game.css'
 import MoveBall from "./MoveBall";

@@ -1,7 +1,7 @@
-import Header from "./Header";
+import Header from "../Header/Header_main";
 import React from "react";
 import '../styles/tableElement.css';
-import AllUsersTable from "./AllUsersTable/AllUsersTable";
+import AllUsersTable from "./AllUsersTable";
 
 function AllUsers() {
     return (
@@ -10,7 +10,7 @@ function AllUsers() {
 		<div className="table-center">
           <div>
             <h2>All Users</h2>
-			<AllUsersTable n = {10} />
+			<AllUsersTable startIndex={0} n={10} />
           </div>
         </div>
       </div>

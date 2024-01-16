@@ -1,7 +1,7 @@
 import {Link} from "react-router-dom";
 import React from "react";
-import '../styles/header.css';
-import MyProfileModal from "./MyProfileModal/MyProfileModal";
+import '../../styles/header.css';
+import MyProfileModal from "../MyProfileModal/MyProfileModal";
 
 function Header() {
   return (

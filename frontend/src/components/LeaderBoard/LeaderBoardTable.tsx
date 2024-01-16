@@ -2,19 +2,16 @@ import React, {useEffect, useState} from "react";
 import { authContentHeader } from "src/ApiCalls/headers";
 import { UserProfileDTO } from "user-dto";
 import UserProfileModal from "../UserProfileModal/UserProfileModal";
-import "src/styles/bigTable.css";
-// not using pagination so far, we wont ever have that many users.
-// but thats what "n" in the prop is for.
 
-interface allUsersTable_prop {
+interface leaderBoardProp {
     n: number;
 }
 
-function AllUsersTable(props: allUsersTable_prop): React.JSX.Element {
-    const [allUsersTable, setAllUsersTable] = useState <UserProfileDTO[]>([]);
+function LeaderBoardTable(props: leaderBoardProp): React.JSX.Element {
+    const [leaderTable, setLeaderTable] = useState <UserProfileDTO[]>([]);
 	const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
 	const [modalIsOpen, setModalIsOpen] = useState(false);
-	  
+
 	function handleNameClick(userId: number) {
 		setSelectedUserId(userId);
 		setModalIsOpen(true);
@@ -25,13 +22,13 @@ function AllUsersTable(props: allUsersTable_prop): React.JSX.Element {
 	}
 
     useEffect(() => {
-        void fetchAndSet(props.n, setAllUsersTable);
+        void fetchAndSet(props.n, setLeaderTable);
     }, [props.n]);
 
-    if (allUsersTable.length === 0)
+    if (leaderTable.length === 0)
         return (
             <div>
-                <br/>No users. Sadge.
+                <br/>No matches played.
             </div>
         );
     return (
@@ -40,6 +37,7 @@ function AllUsersTable(props: allUsersTable_prop): React.JSX.Element {
         <table className="big-table">
               <thead>
               <tr>
+                <th>#</th>
                 <th>Name</th>
                 <th>Rank</th>
                 <th>MMR</th>
@@ -48,9 +46,10 @@ function AllUsersTable(props: allUsersTable_prop): React.JSX.Element {
               </tr>
               </thead>
               <tbody>
-                {allUsersTable.map((element: UserProfileDTO) => (
-					<tr key = {element.id}>
-						<td>
+                {leaderTable.map((element: UserProfileDTO, index: number) => (
+                    <tr key = {element.id}>
+                        <td>{index + 1}</td>
+                        <td>
 							<button className="button-as-text" onClick={() => handleNameClick(element.id)}>
 							{element.name}
 							</button>
@@ -64,13 +63,13 @@ function AllUsersTable(props: allUsersTable_prop): React.JSX.Element {
                 ))}
             </tbody>
         </table>
-	</div>
+		</div>
     );
 }
 
 const fetchAndSet = async (n: number, setter: React.Dispatch<React.SetStateAction<ScoreCardDTO[]>>): Promise<void> => {
     try {
-        const apiUrl =  process.env.REACT_APP_BACKEND_URL + "/user/all_users";
+        const apiUrl =  process.env.REACT_APP_BACKEND_URL + "/user/leaderboard?top=" + n;
         const response = await fetch(apiUrl, {
             headers: authContentHeader()
         });
@@ -82,4 +81,4 @@ const fetchAndSet = async (n: number, setter: React.Dispatch<React.SetStateActio
     }
 }
 
-export default AllUsersTable;
+export default LeaderBoardTable;
