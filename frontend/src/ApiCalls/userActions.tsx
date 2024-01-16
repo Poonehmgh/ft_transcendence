@@ -21,11 +21,11 @@ export async function userAction(body: string, apiUrl: string) {
 }
 
 export async function addFriend(thisId: number, otherId: number) {
-	const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/send_friendreq";
-	const body: string = JSON.stringify({ thisId: thisId, otherId: otherId });
-  
-	return userAction(body, apiUrl);
-  }
+  const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/send_friendreq";
+  const body: string = JSON.stringify({ thisId: thisId, otherId: otherId });
+
+  return userAction(body, apiUrl);
+}
 
 export async function removeFriend(thisId: number, otherId: number) {
   const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/remove_friend";

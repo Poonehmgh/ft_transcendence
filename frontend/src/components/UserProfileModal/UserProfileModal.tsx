@@ -20,24 +20,22 @@ function UserProfileModal(props: userProfileModal_prop) {
   }
 
   async function fetchProfile() {
-	if (props.id == null)
-		return;
-	  const url = process.env.REACT_APP_BACKEND_URL + "/user/profile?id=" + props.id;
-      try {
-        const response = await fetch(url, {
-          method: "GET",
-          headers: authContentHeader(),
-        });
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const data = await response.json();
-        setUserData(data);
-      } catch (error) {
-        console.log("Error fetching user data:", error);
+    if (props.id == null) return;
+    const url = process.env.REACT_APP_BACKEND_URL + "/user/profile?id=" + props.id;
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: authContentHeader(),
+      });
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
       }
+      const data = await response.json();
+      setUserData(data);
+    } catch (error) {
+      console.log("Error fetching user data:", error);
     }
-  
+  }
 
   async function fetchAvatar() {
     const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/get_avatar/" + props.id;
@@ -58,8 +56,8 @@ function UserProfileModal(props: userProfileModal_prop) {
   }
 
   useEffect(() => {
-		fetchProfile();
-		fetchAvatar();
+    fetchProfile();
+    fetchAvatar();
   }, [props.isOpen, props.id]);
 
   return (
@@ -71,13 +69,11 @@ function UserProfileModal(props: userProfileModal_prop) {
         className="modal"
         overlayClassName="modal-overlay"
       >
-		{!userData ? (
+        {!userData ? (
           <p>Loading user data...</p>
-        ) :
+        ) : (
           <div>
-            <h2 className="modal-h2">
-              {userData.name}
-            </h2>
+            <h2 className="modal-h2">{userData.name}</h2>
 
             <div className="modal-avatar_playerCard">
               <img src={avatarURL} className="modal-avatar" alt="User Avatar" />
@@ -93,7 +89,7 @@ function UserProfileModal(props: userProfileModal_prop) {
               />
             </div>
           </div>
-        }
+        )}
         <button onClick={closeModal} className="modal-button-close">
           ❌
         </button>
