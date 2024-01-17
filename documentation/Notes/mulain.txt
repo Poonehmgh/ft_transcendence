@@ -22,12 +22,10 @@ npm install react-modal
 - check if DTO removable from frontend
 - clean up use effect / use state in MyProfileModal
 - rm ScoreCardDTO, just use user profile dto
-- fetchgetSetify stuff
-- write fetchpostset
-- fetchpostsetify stuff
 
 - UserProfile
 	- unify myProfile and other user profile, conditional render depending on calling user id
+    - fetchGetSetify this
 
 optional:
 - leaderboard
@@ -35,4 +33,4 @@ optional:
 - all users
 	- sortingmode
 	- pagination
-	- search for user by username
+	- search for user by username / filter columns

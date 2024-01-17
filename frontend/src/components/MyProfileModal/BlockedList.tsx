@@ -8,11 +8,11 @@ import { IdAndNameDTO } from "user-dto";
 // CSS
 import "src/styles/contactsTable.css";
 
-interface props {
+interface blockedListProps {
     id: number;
 }
 
-function BlockedList(props: props) {
+function BlockedList(props: blockedListProps) {
     const [group, setGroup] = useState([]);
     const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/blocked/" + props.id;
 

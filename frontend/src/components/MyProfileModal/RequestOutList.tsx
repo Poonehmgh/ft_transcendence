@@ -16,7 +16,6 @@ function RequestOutList(props: requestOutListProps) {
     const [group, setGroup] = useState<IdAndNameDTO[]>([]);
     const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/request_out/" + props.id;
 
-
     useEffect(() => {
         fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
     }, [apiUrl]);

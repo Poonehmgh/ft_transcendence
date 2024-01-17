@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import FriendButton from "./FriendButton";
 import BlockButton from "./BlockButton";
 
-interface SocialActionBar_prop {
+interface socialActionBarProps {
   userId: number;
   otherId: number;
 }
 
-function SocialActionBar(props: SocialActionBar_prop): React.JSX.Element {
+function SocialActionBar(props: socialActionBarProps): React.JSX.Element {
   const [status, setStatus] = useState(null);
 
   useEffect(() => {

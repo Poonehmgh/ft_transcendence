@@ -8,11 +8,11 @@ import { IdAndNameDTO } from "user-dto";
 // CSS
 import "src/styles/contactsTable.css";
 
-interface props {
+interface friendListProps {
     id: number;
 }
 
-function FriendList(props: props) {
+function FriendList(props: friendListProps) {
     const [group, setGroup] = useState([]);
     const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/friends/" + props.id;
 
