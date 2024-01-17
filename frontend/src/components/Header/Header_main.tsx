@@ -10,7 +10,7 @@ function Header() {
           <Link className={"link"} to="/home">Pongers</Link><br/>
         </div>
         <ul className={"upper-links"}>
-          <MyProfileModal id={1}/>
+          <MyProfileModal id={0}/>
           <li>
             <Link className={"link"} to="/leaderboard">Leaderboard</Link>
           </li>

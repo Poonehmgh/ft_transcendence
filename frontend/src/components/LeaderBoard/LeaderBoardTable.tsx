@@ -43,11 +43,12 @@ function LeaderBoardTable(props: leaderBoardProp): React.JSX.Element {
         <thead>
           <tr>
             <th>#</th>
-            <th>Name</th>
+            <th>Player</th>
             <th>Rank</th>
             <th>MMR</th>
             <th>Matches</th>
             <th>Win Rate</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -66,7 +67,7 @@ function LeaderBoardTable(props: leaderBoardProp): React.JSX.Element {
               <td>{element.mmr}</td>
               <td>{element.matches}</td>
               <td>{element.winrate !== null ? element.winrate : "N/A"}</td>
-              <td>{element.online ? "online" : "offline"}</td>
+              <td>{element.online ? "🟢" : "🔴"}</td>
             </tr>
           ))}
         </tbody>

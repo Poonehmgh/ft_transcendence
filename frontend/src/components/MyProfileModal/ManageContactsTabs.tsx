@@ -1,15 +1,17 @@
 import React, { useState } from "react";
-import "src/styles/modals.css";
 import FriendList from "./FriendList";
 import BlockedList from "./BlockedList";
 import RequestInList from "./RequestInList";
 import RequestOutList from "./RequestOutList";
 
-interface props {
+// CSS
+import "src/styles/modals.css";
+
+interface manageContactsTabsProps {
   id: number;
 }
 
-function ManageContactsTabs(props: props) {
+function ManageContactsTabs(props: manageContactsTabsProps) {
   const [activeTab, setActiveTab] = useState(0);
 
   function handleTabClick(index: number) {

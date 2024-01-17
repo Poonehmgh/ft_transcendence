@@ -1,15 +1,18 @@
 import Header from "../Header/Header_main";
 import React from "react";
 import "../../styles/chat.css";
-import Channels from "./Channels";
+import Chats from "./Chats";
+import io from "socket.io-client";
+
 
 function Chat() {
+  const socket = io(process.env.REACT_APP_BACKEND_URL);
+
   return (
     <div className="chat-sections-container">
       <Header />
       <div className="section chat-upper-left-bar">
-        <h2>Channels:</h2>
-        <Channels id={0} />
+        {/* <Chats id={0} socket={socket}/> */}
       </div>
       <div className="section chat-lower-left-bar">New Channel</div>
       <div className="section chat-center">
