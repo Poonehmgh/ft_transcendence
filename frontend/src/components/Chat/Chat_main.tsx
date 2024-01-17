@@ -32,7 +32,10 @@ function Chat() {
         <div className="chat-sections-container">
             <Header />
             <div className="section chat-upper-left-bar">
-                <ChatList userId={0} socket={socket} selectedChatId={selectedChatId} onSelectChat={setSelectedChatId}/>
+			<div className="chat-button-container">
+
+				<ChatList userId={0} socket={socket} selectedChatId={selectedChatId} onSelectChat={setSelectedChatId}/>
+			</div>
             </div>
             <div className="section chat-lower-left-bar">New Channel</div>
             <div className="section chat-center">

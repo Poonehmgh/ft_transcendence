@@ -31,7 +31,6 @@ function ChatList(props: chatListProps): React.JSX.Element {
     }, [apiUrl]);
 
     function selectChat(chatId: number) {
-        console.log("selectChat with id ", chatId);
 		props.onSelectChat(chatId);
     }
 
@@ -40,13 +39,13 @@ function ChatList(props: chatListProps): React.JSX.Element {
 		  <h2>Chats:</h2>
 		  <ul>
 			{chats.map((chat: { chatID: number; chatName: string; }) => (
-			  <li
-				className={props.selectedChatId === chat.chatID ? "selected-chat" : ""}
+			  <button
+				className={props.selectedChatId === chat.chatID ? "chat-button-selected" : "chat-button"}
 				key={chat.chatID}
 				onClick={() => selectChat(chat.chatID)}
 			  >
 				{chat.chatName}
-			  </li>
+			  </button>
 			))}
 		  </ul>
 		</div>
