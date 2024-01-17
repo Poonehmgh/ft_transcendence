@@ -5,10 +5,12 @@ import MoveBall from "./MoveBall";
 import LeftBar from "./LeftBar";
 import RightBar from "./RightBar";
 import Score from "./ScorePlayers";
+import PlayButton from "./PlayButton";
 
 function Game() {
     return (
         <div className="game-sections-container">
+          <PlayButton />
           <Header />
             <div className="section game-left-bar">
                 <LeftBar />
