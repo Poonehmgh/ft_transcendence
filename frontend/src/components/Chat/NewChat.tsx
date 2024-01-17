@@ -1,31 +1,23 @@
 import React, { useEffect, useState } from "react";
 import io from "socket.io-client";
 import { fetchGetSet } from "src/ApiCalls/fetchers";
-import { ChatListDTO } from "chat-dto";
+import { ChatListDTO, ParticipantListElementDTO } from "chat-dto";
 
-interface chatsProps {
-    userId: number;
+interface newChatProps {
+    id: number;
     socket: SocketIOClient.Socket;
 }
 
-/*
-list of chats:
-    api: backend/chat/:userId
-    return: ChatListDTO:
-        chatName: string;
-        chatID: number;
-*/
-function Chats(props: chatsProps): React.JSX.Element {
+function NewChat(props: newChatProps): React.JSX.Element {
     const [chats, setChats] = useState<ChatListDTO[]>([]);
-    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/chat/" + props.userId;
+    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/chat/" + props.id + "/participants";
 
     useEffect(() => {
-       fetchGetSet<ChatListDTO[]>(apiUrl, setChats);
-        //console.log("chats fetchgetset: ", chats);
+       fetchGetSet<ParticipantListElementDTO[]>(apiUrl, setChats);
     }, [apiUrl]);
 
-    function selectChat(chatId: number) {
-        console.log("selectChat with id ", chatId);
+    function selectChat(id: number) {
+        console.log("selectChat with id ", id);
         /* update:
             - chat msg history (last n=50?)
             - chat participants
@@ -38,7 +30,7 @@ function Chats(props: chatsProps): React.JSX.Element {
         <div>
             <h2>Chats:</h2>
             <ul>
-                {chats.map((chat: { chatID: number; chatName: string; }) => (
+                {chats.map((chat) => (
                     <li key={chat.chatID} onClick={() => selectChat(chat.chatID)}>
                         {chat.chatName}
                     </li>
