@@ -1,5 +1,6 @@
 :root {
     --color1: 30 30 30;
+	--color2: 60 60 60;
     --text-primary: hsl(26, 18%, 43%);
 }
 
@@ -57,14 +58,13 @@
 .chatButtonSelected {
     font-size: 0.8rem;
     color: var(--text-primary);
-    background: rgb(var(--color1));
+	background: rgb(var(--color1));
     padding: 13px 25px;
     margin: 0px;
-    border-radius: 8px;
-    min-width: 200px;
+    width: 100%;
 }
 
 .chatButtonSelected {
-    font-size: 0.8rem;
-    background-color: rgb(205, 205, 205, 0);
+	color: #fff;
+	border: 1px solid #fff
 }
