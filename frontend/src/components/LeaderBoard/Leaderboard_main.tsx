@@ -4,8 +4,9 @@ import UserTable from "../shared/UserTable";
 import RankNumberColumn from "./RankNumberColumn";
 
 // CSS
-import "src/styles/tableElement.css";
 import "src/styles/userTable.css";
+import "src/styles/style.css"
+
 
 function Leaderboard() {
     const getTopN = 3;

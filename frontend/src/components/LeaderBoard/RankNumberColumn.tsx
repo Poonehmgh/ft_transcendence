@@ -3,7 +3,6 @@ import Header from "../Header/Header_main";
 import UserTable from "../shared/UserTable";
 
 // CSS
-import "src/styles/tableElement.css";
 import "src/styles/userTable.css";
 
 interface rankNumberColumnProp {

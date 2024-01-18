@@ -36,7 +36,6 @@ function ChatList(props: chatListProps): React.JSX.Element {
 
   return (
     <div>
-      <h2>Chats:</h2>
       <ul>
         {chats.map((chat: { chatID: number; chatName: string }) => (
           <button

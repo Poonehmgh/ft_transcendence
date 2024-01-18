@@ -17,8 +17,6 @@
 .sections-container {
     height: 100vh;
     width: 100vw;
-    display: inline-grid;
-    grid-template: 0.5fr 1fr 1fr 1fr 0.5fr / 1fr 1fr 1fr 1fr 1fr 1fr;
 }
 
 .section {

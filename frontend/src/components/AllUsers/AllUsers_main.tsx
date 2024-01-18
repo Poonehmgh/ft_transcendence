@@ -3,7 +3,7 @@ import React from "react";
 import UserTable from "../shared/UserTable";
 
 // CSS
-import "src/styles/tableElement.css";
+import "src/styles/style.css";
 
 function AllUsers() {
     const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/all_users";
@@ -14,7 +14,9 @@ function AllUsers() {
             <div className="table-center">
                 <div>
                     <h2>All Users</h2>
-                    <UserTable apiUrl={apiUrl} />
+                    <div className="tablesContainer">
+                        <UserTable apiUrl={apiUrl} />
+                    </div>
                 </div>
             </div>
         </div>

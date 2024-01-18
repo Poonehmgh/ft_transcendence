@@ -3,7 +3,22 @@
     --text-primary: hsl(26, 18%, 43%);
 }
 
-/* main */
+/* divs */
+.table-center {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    text-align: center;
+}
+
+.tablesContainer {
+    display: flex;
+    align-items: top;
+    justify-content: center;
+    width: 90vw;
+}
+
+/* tables */
 
 .userTable,
 .userTable th,
@@ -20,21 +35,3 @@
     border-collapse: collapse;
     border-bottom: 1px solid var(--text-primary);
 }
-
-.big-table th,
-.big-table tr,
-.big-table td {
-    text-align: center;
-    border: none;
-    white-space: nowrap;
-    min-width: 100px;
-    border-bottom: 1px solid #ddd;
-}
-
-/* 
-Syntax example to have specific styles not apply 
-.big-table th:not(:last-child),
-.big-table td:not(:last-child) {
-  border-bottom: 1px solid #ddd;
-}
-*/
