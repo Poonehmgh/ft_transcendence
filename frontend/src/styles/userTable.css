@@ -1,0 +1,40 @@
+:root {
+    --color1: 30 30 30;
+    --text-primary: hsl(26, 18%, 43%);
+}
+
+/* main */
+
+.userTable,
+.userTable th,
+.userTable tr,
+.userTable td {
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    padding: 10px;
+    width: 80%;
+    text-align: center;
+    white-space: nowrap;
+    line-height: 2.2;
+    border: none;
+    border-collapse: collapse;
+    border-bottom: 1px solid var(--text-primary);
+}
+
+.big-table th,
+.big-table tr,
+.big-table td {
+    text-align: center;
+    border: none;
+    white-space: nowrap;
+    min-width: 100px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* 
+Syntax example to have specific styles not apply 
+.big-table th:not(:last-child),
+.big-table td:not(:last-child) {
+  border-bottom: 1px solid #ddd;
+}
+*/

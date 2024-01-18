@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Modal from "react-modal";
 import { authContentHeader } from "src/ApiCalls/headers";
 import ManageContactsTabs from "./ManageContactsTabs";
-import PlayerCardTable from "../PlayerCardTable";
+import PlayerCardTable from "../shared/PlayerCardTable";
 
 // DTO
 import { UserProfileDTO } from "user-dto";
@@ -10,7 +10,6 @@ import { UserProfileDTO } from "user-dto";
 // CSS
 import "src/styles/modals.css";
 import "src/styles/buttons.css";
-
 
 interface myProfileModalProps {
     id: number;
@@ -130,7 +129,7 @@ function MyProfileModal(props: myProfileModalProps) {
 
     return (
         <div>
-            <button className="modal-button-big" onClick={openModal}>
+            <button className="bigButton" onClick={openModal}>
                 My Profile
             </button>
             <Modal
@@ -144,10 +143,7 @@ function MyProfileModal(props: myProfileModalProps) {
                     <div>
                         <h2 className="modal-h2">
                             {userData.name}
-                            <button
-                                className="editName"
-                                onClick={handleNameChange}
-                            >
+                            <button className="editName" onClick={handleNameChange}>
                                 ✎
                             </button>
                         </h2>

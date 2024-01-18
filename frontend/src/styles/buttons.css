@@ -1,10 +1,10 @@
 :root {
     --color1: 30 30 30;
-  }
+}
 
-  /* modals */
+/* modals */
 
-  .bigButton {
+.bigButton {
     display: inline-block;
     font-size: 0.8rem;
     color: #fff;
@@ -15,26 +15,40 @@
     transition: background-color 0.1s ease;
     box-sizing: border-box;
     transition: all 0.25s ease;
-    border: 0;
+    border: 2px solid #ddd;
     cursor: pointer;
     min-width: 130px;
     box-shadow: 0 10px 20px -10px rgb(var(--color1) / 50%);
-  
+
     &:hover {
-      box-shadow: 0px 20px 20px -10px rgb(var(--color1) / 50%);
-      transform: translateY(-2px);
+        box-shadow: 0px 20px 20px -10px rgb(var(--color1) / 50%);
+        #transform: translateY(-2px);
     }
-  }
-  
-  .midButton {
-      display: inline-block;
-      font-size: 0.8rem;
-      color: #fff;
-      background: rgb(var(--color1));
-      padding: 7px 7px;
-      border-radius: 8px;
-      box-sizing: border-box;
-      border: 0;
-      cursor: pointer;
-      min-width: 100px;
+}
+
+.midButton {
+    display: inline-block;
+    font-size: 0.8rem;
+    color: #fff;
+    background: rgb(var(--color1));
+    padding: 7px 7px;
+    border-radius: 8px;
+    box-sizing: border-box;
+    border: 0;
+    cursor: pointer;
+    min-width: 100px;
+}
+
+.textButton {
+    display: inline;
+    font-size: 0.9rem;
+    color: inherit;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+
+    &:hover {
+        font-weight: bold;
     }
+}

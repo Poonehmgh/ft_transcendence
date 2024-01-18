@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Modal from "react-modal";
 import { authContentHeader } from "src/ApiCalls/headers";
-import PlayerCardTable from "../PlayerCardTable";
+import PlayerCardTable from "../shared/PlayerCardTable";
 
 // DTO
 import { UserProfileDTO } from "user-dto";
