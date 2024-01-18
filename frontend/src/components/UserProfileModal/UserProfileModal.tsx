@@ -8,6 +8,7 @@ import { UserProfileDTO } from "user-dto";
 
 // CSS
 import "src/styles/modals.css";
+import "src/styles/buttons.css";
 
 interface userProfileModalProps {
     id: number;
@@ -98,7 +99,7 @@ function UserProfileModal(props: userProfileModalProps) {
                         </div>
                     </div>
                 )}
-                <button onClick={closeModal} className="modal-button-close">
+                <button className="closeX" onClick={closeModal}>
                     ❌
                 </button>
             </Modal>

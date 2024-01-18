@@ -73,88 +73,6 @@
 
 }
 
-/* buttons */
-
-.modal-button-close {
-  border: none;
-  background: none;
-  position: absolute;
-  text-align: center;
-  top: 15px;
-  right: 10px;
-  transition: transform 0.1s;
-  cursor: pointer;
-  transform-origin: center;
-
-  &:hover {
-    transform: scale(1.3);
-  }
-}
-
-.modal-button-big {
-  display: inline-block;
-  font-size: 0.8rem;
-  color: #fff;
-  background: rgb(var(--color1));
-  padding: 13px 25px;
-  margin: 0px;
-  border-radius: 8px;
-  transition: background-color 0.1s ease;
-  box-sizing: border-box;
-  transition: all 0.25s ease;
-  border: 0;
-  cursor: pointer;
-  min-width: 130px;
-  box-shadow: 0 10px 20px -10px rgb(var(--color1) / 50%);
-
-  &:hover {
-    box-shadow: 0px 20px 20px -10px rgb(var(--color1) / 50%);
-    transform: translateY(-2px);
-  }
-}
-
-.modal-button-mid {
-	display: inline-block;
-	font-size: 0.8rem;
-	color: #fff;
-	background: rgb(var(--color1));
-	padding: 7px 7px;
-	border-radius: 8px;
-	box-sizing: border-box;
-	border: 0;
-	cursor: pointer;
-	min-width: 100px;
-  }
-
-
-.modal-button-edit-name {
-  border: none;
-  cursor: pointer;
-  color: #9a9a9a;
-  font-size: 1.3rem;
-  border-radius: 50%;
-  background: transparent;
-
-  &:hover {
-    transform: scale(1.1);
-  }
-}
-
-.modal-button-edit-avatar {
-  height: 30px;
-  width: 30px;
-  border: none;
-  cursor: pointer;
-  color: #323232;
-  font-size: 1.3rem;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.6);
-
-  &:hover {
-    transform: scale(1.1);
-  }
-}
-
 /* tabs */
 
 .modal-tabs-container {
@@ -205,3 +123,48 @@
   border: none;
   overflow-y: auto;
 }
+
+.editName {
+    border: none;
+    cursor: pointer;
+    color: #9a9a9a;
+    font-size: 1.3rem;
+    border-radius: 50%;
+    background: transparent;
+  
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+  
+  .editAvatar {
+    height: 30px;
+    width: 30px;
+    border: none;
+    cursor: pointer;
+    color: #323232;
+    font-size: 1.3rem;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.6);
+  
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+
+  .closeX {
+    border: none;
+    background: none;
+    position: absolute;
+    text-align: center;
+    top: 15px;
+    right: 10px;
+    transition: transform 0.1s;
+    cursor: pointer;
+    transform-origin: center;
+  
+    &:hover {
+      transform: scale(1.3);
+    }
+  }
+  

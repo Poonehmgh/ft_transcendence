@@ -21,12 +21,17 @@
   border: none;
   white-space: nowrap;
   min-width: 100px;
+  border-bottom: 1px solid #ddd;
+
 }
 
+/* 
+Syntax example to have specific styles not apply 
 .big-table th:not(:last-child),
 .big-table td:not(:last-child) {
   border-bottom: 1px solid #ddd;
 }
+*/
 
 .button-as-text {
   display: inline;

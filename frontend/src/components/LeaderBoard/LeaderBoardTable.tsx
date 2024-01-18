@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { authContentHeader } from "src/ApiCalls/headers";
 import { UserProfileDTO } from "user-dto";
 import UserProfileModal from "../UserProfileModal/UserProfileModal";
+import { fetchGetSet } from "src/ApiCalls/fetchers";
 
 interface leaderBoardProp {
   n: number;
@@ -11,6 +12,7 @@ function LeaderBoardTable(props: leaderBoardProp): React.JSX.Element {
   const [leaderTable, setLeaderTable] = useState<UserProfileDTO[]>([]);
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/leaderboard?top=" + props.n;
 
   function handleNameClick(userId: number) {
     setSelectedUserId(userId);
@@ -22,7 +24,7 @@ function LeaderBoardTable(props: leaderBoardProp): React.JSX.Element {
   };
 
   useEffect(() => {
-    void fetchAndSet(props.n, setLeaderTable);
+    fetchGetSet(apiUrl, setLeaderTable);
   }, [props.n]);
 
   if (leaderTable.length === 0)
@@ -48,7 +50,6 @@ function LeaderBoardTable(props: leaderBoardProp): React.JSX.Element {
             <th>MMR</th>
             <th>Matches</th>
             <th>Win Rate</th>
-            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -60,14 +61,13 @@ function LeaderBoardTable(props: leaderBoardProp): React.JSX.Element {
                   className="button-as-text"
                   onClick={() => handleNameClick(element.id)}
                 >
-                  {element.name}
+                  {element.online ? "🟢" : "🔴"} {element.name}
                 </button>
               </td>
               <td>{element.rank}</td>
               <td>{element.mmr}</td>
               <td>{element.matches}</td>
               <td>{element.winrate !== null ? element.winrate : "N/A"}</td>
-              <td>{element.online ? "🟢" : "🔴"}</td>
             </tr>
           ))}
         </tbody>
@@ -75,22 +75,5 @@ function LeaderBoardTable(props: leaderBoardProp): React.JSX.Element {
     </div>
   );
 }
-
-const fetchAndSet = async (
-  n: number,
-  setter: React.Dispatch<React.SetStateAction<ScoreCardDTO[]>>
-): Promise<void> => {
-  try {
-    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/leaderboard?top=" + n;
-    const response = await fetch(apiUrl, {
-      headers: authContentHeader(),
-    });
-    const data = await response.json();
-    setter(data);
-  } catch (error) {
-    console.error("Error fetching user/leaderboard:", error);
-    setter([]);
-  }
-};
 
 export default LeaderBoardTable;

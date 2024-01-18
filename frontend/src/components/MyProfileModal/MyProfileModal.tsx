@@ -9,6 +9,8 @@ import { UserProfileDTO } from "user-dto";
 
 // CSS
 import "src/styles/modals.css";
+import "src/styles/buttons.css";
+
 
 interface myProfileModalProps {
     id: number;
@@ -143,7 +145,7 @@ function MyProfileModal(props: myProfileModalProps) {
                         <h2 className="modal-h2">
                             {userData.name}
                             <button
-                                className="modal-button-edit-name"
+                                className="editName"
                                 onClick={handleNameChange}
                             >
                                 ✎
@@ -160,7 +162,7 @@ function MyProfileModal(props: myProfileModalProps) {
                             <div className="modal-expander-hor">
                                 <div className="modal-expander-ver" />
                                 <button
-                                    className="modal-button-edit-avatar"
+                                    className="editAvatar"
                                     onClick={handleChooseFileClick}
                                 >
                                     ✎
@@ -187,7 +189,7 @@ function MyProfileModal(props: myProfileModalProps) {
                 ) : (
                     <p>Loading user data...</p>
                 )}
-                <button onClick={closeModal} className="modal-button-close">
+                <button onClick={closeModal} className="closeX">
                     ❌
                 </button>
             </Modal>
