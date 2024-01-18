@@ -6,6 +6,7 @@ import Members from "./Members";
 
 // CSS
 import "../../styles/chat.css";
+import "../../styles/style.css";
 
 function Chat() {
     const [selectedChatId, setSelectedChatId] = useState<number | null>(null);
@@ -26,28 +27,30 @@ function Chat() {
     return (
         <div className="sections-container">
             <Header />
+			<div className="section" >
+
             <div className="leftBar_0">
-                Chats
+                leftbar_0
+				Chats
                 <div className="leftBar_1">
                     <ChatList
                         userId={0}
                         socket={socket}
                         selectedChatId={selectedChatId}
                         onSelectChat={setSelectedChatId}
-                    />
+						/>
                 </div>
             </div>
 
-            <div className="section chat-lower-left-bar">New Channel</div>
-            <div className="section chat-center">
-                <div>Chat</div>
+            <div className="middleBar_0">
+                <div>middleBar_0</div>
             </div>
-            <div className="section chat-upper-right-bar">
-                <Members id={0} socket={socket} />
+            <div className="rightBar_0">
+                rightBar_0
+				<Members id={0} socket={socket} />
             </div>
-            <div className="section chat-lower-right-bar">Options</div>
-            <div className="section chat-footer">Message Input</div>
         </div>
+		</div>
     );
 }
 
