@@ -10,7 +10,8 @@ import "../../styles/style.css";
 
 function Chat() {
     const [selectedChatId, setSelectedChatId] = useState<number | null>(null);
-    const socket = io(process.env.REACT_APP_BACKEND_URL);
+    // to do: move this to a central position after successful auth
+    const socket = io(process.env.REACT_APP_CHAT_URL);
 
     /* update:
             - chat msg history (last n=50?)
@@ -32,7 +33,7 @@ function Chat() {
             <div className="leftBar_0">
 				My Chats
                 <div className="leftBar_1">
-					Public Chats:
+					<p>Public Chats:</p>
 					My Chats:
                     <ChatList
                         userId={0}
