@@ -70,7 +70,7 @@ function UserProfileModal(props: userProfileModalProps) {
             <Modal
                 isOpen={props.isOpen}
                 onRequestClose={closeModal}
-                contentLabel="User Profile Modal"
+                contentLabel="User Profile"
                 className="modal"
                 overlayClassName="modal-overlay"
             >

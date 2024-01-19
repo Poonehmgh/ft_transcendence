@@ -9,40 +9,46 @@ import { ChatListDTO } from "chat-dto";
 import "src/styles/chat.css";
 
 interface chatListProps {
-  userId: number;
-  socket: SocketIOClient.Socket;
-  selectedChatId: number;
-  onSelectChat: (chatId: number) => void;
+    userId: number;
+    socket: SocketIOClient.Socket;
+    selectedChatId: number;
+    onSelectChat: (chatId: number) => void;
 }
 
 function ChatList(props: chatListProps): React.JSX.Element {
-  const [chats, setChats] = useState<ChatListDTO[]>([]);
-  const apiUrl = process.env.REACT_APP_BACKEND_URL + "/chat/" + props.userId;
+    const [privateChats, setPrivateChats] = useState<ChatListDTO[]>([]);
+    const apiUrl_privateChats =
+        process.env.REACT_APP_BACKEND_URL + "/chat/" + props.userId;
+    // to do: add api for public chats and display in own area next to / above private chats
 
-  useEffect(() => {
-    fetchGetSet<ChatListDTO[]>(apiUrl, setChats);
-  }, [apiUrl]);
+    useEffect(() => {
+        fetchGetSet<ChatListDTO[]>(apiUrl_privateChats, setPrivateChats);
+    }, [apiUrl_privateChats]);
 
-  function selectChat(chatId: number) {
-    props.onSelectChat(chatId);
-  }
+    function selectChat(chatId: number) {
+        props.onSelectChat(chatId);
+    }
 
-  return (
-    <div className="leftBar_1">
-        {chats.map((chat: { chatID: number; chatName: string }) => (
-          <button
-            className={
-              props.selectedChatId === chat.chatID
-                ? "chatButtonSelected"
-                : "chatButton"
-            }
-            onClick={() => selectChat(chat.chatID)}
-          >
-            {chat.chatName}
-          </button>
-        ))}
-    </div>
-  );
+    return (
+        <div className="leftBar_1">
+            <p>Public Chats</p>
+
+            <p>My Chats</p>
+            {privateChats.map((chat: { chatID: number; chatName: string }) => (
+                <button
+                    key={chat.chatID}
+                    className={
+                        props.selectedChatId === chat.chatID
+                            ? "chatButtonSelected"
+                            : "chatButton"
+                    }
+                    onClick={() => selectChat(chat.chatID)}
+                >
+                    {chat.chatName}
+                </button>
+            ))}
+        </div>
+    );
 }
 
 export default ChatList;

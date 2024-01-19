@@ -123,6 +123,32 @@
     overflow-y: auto;
 }
 
+.modalUserList,
+.modalUserList th,
+.modalUserList tr,
+.modalUserList td {
+    table-layout: fixed;
+    font-size: 0.9rem;
+    border: 0px solid;
+    border-collapse: collapse;
+    color: rgb(0, 0, 0);
+    padding: 0px;
+    border-spacing: 5px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+    width: 100%;
+    line-height: 1.2;
+}
+.modalUserList td {
+    padding: 5px;
+}
+
+.modalUserList tr td:first-child {
+    width: 200px;
+}
+
+/* buttons */
+
 .editName {
     border: none;
     cursor: pointer;
@@ -164,5 +190,21 @@
 
     &:hover {
         transform: scale(1.3);
+    }
+}
+
+.contactsButton {
+    font-size: 1.2rem;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    border-radius: 50%;
+    background-color: rgb(205, 205, 205, 0);
+    margin: 4px;
+
+    &:hover {
+        transform: translateY(-2px);
     }
 }

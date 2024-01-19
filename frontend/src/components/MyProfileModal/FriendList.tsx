@@ -6,7 +6,7 @@ import { blockUser, removeFriend } from "src/ApiCalls/userActions";
 import { IdAndNameDTO } from "user-dto";
 
 // CSS
-import "src/styles/contactsTable.css";
+import "src/styles/modals.css";
 
 interface friendListProps {
     id: number;
@@ -51,20 +51,20 @@ function FriendList(props: friendListProps) {
             {!group || group.length === 0 ? (
                 <p>No friends yet!</p>
             ) : (
-                <table className="contacts-table">
-                    <tbody className="contacts-table">
+                <table className="modalUserList">
+                    <tbody>
                         {group.map((friend, index) => (
-                            <tr className="contacts-table" key={friend.id}>
-                                <td className="contacts-table"> {friend.name}</td>
-                                <td className="contacts-table">
+                            <tr key={friend.id}>
+                                <td> {friend.name}</td>
+                                <td>
                                     <button
-                                        className="contacts-button"
+                                        className="contactsButton"
                                         onClick={() => handleSendMsg(friend.id)}
                                     >
                                         ✉️
                                     </button>
                                     <button
-                                        className="contacts-button"
+                                        className="contactsButton"
                                         onClick={() =>
                                             handleRemoveFriend(friend.id, index)
                                         }
@@ -72,7 +72,7 @@ function FriendList(props: friendListProps) {
                                         ❌
                                     </button>
                                     <button
-                                        className="contacts-button"
+                                        className="contactsButton"
                                         onClick={() => handleBlockUser(friend.id, index)}
                                     >
                                         ⛔

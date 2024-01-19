@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Modal from "react-modal";
 import io from "socket.io-client";
 import { fetchGetSet } from "src/ApiCalls/fetchers";
 
@@ -6,18 +7,38 @@ import { fetchGetSet } from "src/ApiCalls/fetchers";
 import { ChatListDTO } from "chat-dto";
 
 // CSS
-import "src/styles/chat.css";
+import "src/styles/modals.css";
+import "src/styles/buttons.css";
 
 interface newChatProps {
     userId: number;
-    socket: SocketIOClient.Socket;
-    onSelectChat: (chatId: number) => void;
+    onCreateChat: (chatId: number) => void;
 }
 
-function NewChat(props: newChatProps): React.JSX.Element {
-    const [chats, setChats] = useState<ChatListDTO[]>([]);
-    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/chat/" + props.userId;
+/*
+newChatDTO
+name: string;
+    dm: boolean;
+    pw_protected: boolean;
+    password: string;
+    chat_users: ChatUserDTO[] = [];
 
+*/
+
+function NewChat(props: newChatProps): React.JSX.Element {
+    const [modalIsOpen, setModalIsOpen] = useState(false);
+
+    const [chats, setChats] = useState<ChatListDTO[]>([]);
+    // update this when actual API is known
+    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/chat/new";
+
+    function openModal() {
+        setModalIsOpen(true);
+    }
+
+    function closeModal() {
+        setModalIsOpen(false);
+    }
     /*
     open modal to select users
     - action button at bottom renders as "Create DM"
@@ -32,23 +53,36 @@ function NewChat(props: newChatProps): React.JSX.Element {
     }, [apiUrl]);
 
     function selectChat(chatId: number) {
-        props.onSelectChat(chatId);
+        props.onCreateChat(chatId);
+    }
+
+    function createDM() {
+        console.log("createDM");
     }
 
     return (
-        <div className="leftBar_1">
-            {chats.map((chat: { chatID: number; chatName: string }) => (
-                <button
-                    className={
-                        props.selectedChatId === chat.chatID
-                            ? "chatButtonSelected"
-                            : "chatButton"
-                    }
-                    onClick={() => selectChat(chat.chatID)}
-                >
-                    {chat.chatName}
+        <div>
+            <button className="bigButton" onClick={openModal}>
+                +
+            </button>
+            <Modal
+                isOpen={modalIsOpen}
+                onRequestClose={closeModal}
+                contentLabel="New Chat"
+                className="modal"
+                overlayClassName="modal-overlay"
+            >
+                <div>
+                    <h2 className="modal-h2">New Chat</h2>
+                </div>
+                <button className="bigButton" onClick={createDM}>
+                    Create DM
                 </button>
-            ))}
+
+                <button className="closeX" onClick={closeModal}>
+                    ❌
+                </button>
+            </Modal>
         </div>
     );
 }

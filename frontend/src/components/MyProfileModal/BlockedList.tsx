@@ -6,7 +6,7 @@ import { unblockUser } from "src/ApiCalls/userActions";
 import { IdAndNameDTO } from "user-dto";
 
 // CSS
-import "src/styles/contactsTable.css";
+import "src/styles/modals.css";
 
 interface blockedListProps {
     id: number;

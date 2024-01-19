@@ -135,7 +135,7 @@ function MyProfileModal(props: myProfileModalProps) {
             <Modal
                 isOpen={modalIsOpen}
                 onRequestClose={closeModal}
-                contentLabel="My Profile Modal"
+                contentLabel="My Profile"
                 className="modal"
                 overlayClassName="modal-overlay"
             >
