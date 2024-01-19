@@ -9,6 +9,7 @@ import { ChatListDTO } from "chat-dto";
 // CSS
 import "src/styles/modals.css";
 import "src/styles/buttons.css";
+import SelectUsersTable from "./SelectUsersTable";
 
 interface newChatProps {
     userId: number;
@@ -27,8 +28,7 @@ name: string;
 
 function NewChat(props: newChatProps): React.JSX.Element {
     const [modalIsOpen, setModalIsOpen] = useState(false);
-
-    const [chats, setChats] = useState<ChatListDTO[]>([]);
+    const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
     // update this when actual API is known
     const apiUrl = process.env.REACT_APP_BACKEND_URL + "/chat/new";
 
@@ -39,25 +39,43 @@ function NewChat(props: newChatProps): React.JSX.Element {
     function closeModal() {
         setModalIsOpen(false);
     }
-    /*
-    open modal to select users
-    - action button at bottom renders as "Create DM"
-    - if more than 1 user selected, bottom renders as "Create Group Chat
-        - then also renders option: private / public
-        - and option: password
-    
-    */
-
-    useEffect(() => {
-        fetchGetSet<ChatListDTO[]>(apiUrl, setChats);
-    }, [apiUrl]);
 
     function selectChat(chatId: number) {
         props.onCreateChat(chatId);
     }
 
-    function createDM() {
-        console.log("createDM");
+    function createDmChat() {
+        console.log("createDmChat");
+    }
+
+    function createGroupChat() {
+        console.log("createGroupChat");
+    }
+
+    function renderCreateChatButton() {
+        if (selectedUsers.length === 1) {
+            return (
+                <button className="bigButton" onClick={createDmChat}>
+                    Create DM Chat
+                </button>
+            );
+        } else if (selectedUsers.length > 1) {
+            return (
+                <div>
+                    <button className="bigButton" onClick={createGroupChat}>
+                        Create Group Chat
+                    </button>
+                    <label>
+                        <input type="checkbox" /> Use Password
+                    </label>
+                    <label>
+                        <input type="checkbox" /> Public
+                    </label>
+                </div>
+            );
+        } else {
+            return null;
+        }
     }
 
     return (
@@ -69,15 +87,13 @@ function NewChat(props: newChatProps): React.JSX.Element {
                 isOpen={modalIsOpen}
                 onRequestClose={closeModal}
                 contentLabel="New Chat"
-                className="modal"
+                className="modal2"
                 overlayClassName="modal-overlay"
             >
-                <div>
-                    <h2 className="modal-h2">New Chat</h2>
-                </div>
-                <button className="bigButton" onClick={createDM}>
-                    Create DM
-                </button>
+                <div className="modal-h2">Select Users</div>
+                <SelectUsersTable setSelectedUsers={setSelectedUsers} />
+
+                {renderCreateChatButton()}
 
                 <button className="closeX" onClick={closeModal}>
                     ❌

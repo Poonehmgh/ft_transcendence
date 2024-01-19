@@ -1,8 +1,25 @@
 :root {
-    --color1: 30 30 30;
+    --color1: rgb(30, 30, 30);
+    --color2: rgb(60, 60, 60);
+    --text-primary: hsl(26, 18%, 43%);
 }
 
 /* main */
+
+.modal2 {
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 1rem 3rem;
+    background-color: black;
+    width: 400px;
+    max-height: 800px;
+    border-radius: 20px;
+    border: 0;
+    box-shadow: 0 5px 30px 0 rgba(255, 255, 255, 0.1);
+    animation: fadeIn 1s ease both;
+}
 
 .modal {
     position: fixed;
@@ -127,24 +144,25 @@
 .modalUserList th,
 .modalUserList tr,
 .modalUserList td {
+    width: 100%;
     table-layout: fixed;
     font-size: 0.9rem;
     border: 0px solid;
     border-collapse: collapse;
-    color: rgb(0, 0, 0);
+    color: var(--text-primary);
     padding: 0px;
     border-spacing: 5px;
     border-bottom: 1px solid #ddd;
     text-align: left;
-    width: 100%;
     line-height: 1.2;
 }
 .modalUserList td {
     padding: 5px;
+    height: 30px;
 }
 
-.modalUserList tr td:first-child {
-    width: 200px;
+.modalUserList td:first-child {
+    width: 20px;
 }
 
 /* buttons */
@@ -202,7 +220,7 @@
     cursor: pointer;
     border-radius: 50%;
     background-color: rgb(205, 205, 205, 0);
-    margin: 4px;
+    margin: 5px;
 
     &:hover {
         transform: translateY(-2px);

@@ -1,5 +1,7 @@
 :root {
     --color1: 30 30 30;
+    --color2: 60 60 60;
+    --text-primary: hsl(26, 18%, 43%);
 }
 
 /* modals */
@@ -22,7 +24,7 @@
 
     &:hover {
         box-shadow: 0px 20px 20px -10px rgb(var(--color1) / 50%);
-        #transform: translateY(-2px);
+        /* transform: translateY(-2px); */
     }
 }
 
@@ -50,5 +52,20 @@
 
     &:hover {
         font-weight: bold;
+    }
+}
+
+.checkbox {
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+
+    &:checked {
+        background-color: #4caf50;
+        border: solid 3px;
+        border-color: #4caf50;
+        color: #fff;
     }
 }

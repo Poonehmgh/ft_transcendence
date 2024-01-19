@@ -55,11 +55,6 @@ export class UserController {
     return res.sendFile(filePath);
   }
 
-/*   @Get("scorecard")
-  async getScoreCard(userId: number): Promise<ScoreCardDTO> {
-    return this.userService.getScoreCard(userId);
-  } */
-
   @Get("leaderboard")
   async getTopProfiles(@Query("top") top: number): Promise<UserProfileDTO[]> {
     return this.userService.getTopProfiles(top);
@@ -77,24 +72,13 @@ export class UserController {
   ): Promise<UserRelation> {
     return this.userService.getFriendStatus(userId, otherUserId);
   }
-
-/*   @Get("all_idnames")
-  async getAllIdsAndNames(): Promise<IdAndNameDTO[]> {
-    return this.userService.getAllIdsAndNames();
-  } */
+  
+  // getters
 
   @Get("all_users")
   async getAllUsers() {
     return this.userService.getAllUsers();
   }
-
-/*   @Get("other_users")
-  async getOtherUsers(@Body() body: { thisId: number }) {
-    const { thisId } = body;
-    return this.userService.getOtherUsers(thisId);
-  } */
-
-  // getters
 
   @Get("friends/:id")
   async getFriends(@Param("id") id: number): Promise<IdAndNameDTO[]> {
