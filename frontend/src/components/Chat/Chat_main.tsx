@@ -30,9 +30,10 @@ function Chat() {
 			<div className="section" >
 
             <div className="leftBar_0">
-                leftbar_0
-				Chats
+				My Chats
                 <div className="leftBar_1">
+					Public Chats:
+					My Chats:
                     <ChatList
                         userId={0}
                         socket={socket}
