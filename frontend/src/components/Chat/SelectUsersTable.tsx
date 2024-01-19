@@ -15,6 +15,7 @@ interface selectUsersTableProps {
 function SelectUsersTable(props: selectUsersTableProps): React.JSX.Element {
     const [users, setUsers] = useState<UserProfileDTO[]>([]);
     const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
+    // to do: update the backend when user auth is done to exclude the calling user
     const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/all_users";
 
     useEffect(() => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Modal from "react-modal";
 import io from "socket.io-client";
 import { fetchGetSet } from "src/ApiCalls/fetchers";
@@ -29,6 +29,8 @@ name: string;
 function NewChat(props: newChatProps): React.JSX.Element {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
+    const [usePassword, setUsePassword] = React.useState(false);
+    const passwordRef = useRef(null);
     // update this when actual API is known
     const apiUrl = process.env.REACT_APP_BACKEND_URL + "/chat/new";
 
@@ -37,7 +39,9 @@ function NewChat(props: newChatProps): React.JSX.Element {
     }
 
     function closeModal() {
+        setSelectedUsers([]);
         setModalIsOpen(false);
+        setUsePassword(false);
     }
 
     function selectChat(chatId: number) {
@@ -46,31 +50,66 @@ function NewChat(props: newChatProps): React.JSX.Element {
 
     function createDmChat() {
         console.log("createDmChat");
+        closeModal();
     }
 
     function createGroupChat() {
         console.log("createGroupChat");
+        closeModal();
     }
 
     function renderCreateChatButton() {
+        function toggleInputBox() {
+            setUsePassword(!usePassword);
+        }
+
         if (selectedUsers.length === 1) {
             return (
-                <button className="bigButton" onClick={createDmChat}>
+                <button
+                    className="bigButton"
+                    style={{ width: "100%" }}
+                    onClick={createDmChat}
+                >
                     Create DM Chat
                 </button>
             );
         } else if (selectedUsers.length > 1) {
             return (
                 <div>
-                    <button className="bigButton" onClick={createGroupChat}>
+                    <button
+                        className="bigButton"
+                        style={{ width: "100%" }}
+                        onClick={createGroupChat}
+                    >
                         Create Group Chat
                     </button>
-                    <label>
-                        <input type="checkbox" /> Use Password
-                    </label>
-                    <label>
-                        <input type="checkbox" /> Public
-                    </label>
+                    <div style={{ display: "flex", flexDirection: "column" }}>
+                        <br />
+                        <label className="checkboxContainer">
+                            <input
+                                type="checkbox"
+                                className="checkbox"
+                                onChange={toggleInputBox}
+                            />
+                            Use Password
+                            {usePassword && (
+                                <div>
+                                    <input
+                                        type="text"
+                                        className="textInput"
+                                        style={{ marginLeft: "15px" }}
+                                        placeholder="Enter your password"
+                                        ref={passwordRef}
+                                    />
+                                </div>
+                            )}
+                        </label>
+
+                        <br />
+                        <label className="checkboxContainer">
+                            <input type="checkbox" className="checkbox" /> Make Public
+                        </label>
+                    </div>
                 </div>
             );
         } else {
