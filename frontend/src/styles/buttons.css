@@ -5,43 +5,27 @@
     --backgroundHue1: 0;
 }
 
-/* modals */
-
 .bigButton {
     --lightnessOffset: 0%;
 
     display: inline-block;
     font-size: 0.8rem;
     color: var(--text-primary);
-    background-color: hsl(var(--backgroundHue1), 0%, calc(12% + var(--lightnessOffset)));
+    background-color: hsl(var(--backgroundHue1), 0%, calc(5% + var(--lightnessOffset)));
 
-    /* background: hsl(var(--backgroundHue1), 0%, calc(3% + var(--lightnessOffset))); */
     padding: 13px 25px;
     margin: 0px;
-    border-radius: 8px;
+    border-radius: 13px;
     transition: background-color 0.1s ease;
     box-sizing: border-box;
     transition: all 0.25s ease;
     border: 0px solid rgb(var(--color2));
     cursor: pointer;
-    min-width: 130px;
+    width: 100%;
 
     &:hover {
-        --lightnessOffset: -5%;
+        --lightnessOffset: +3%;
     }
-}
-
-.midButton {
-    display: inline-block;
-    font-size: 0.8rem;
-    color: #fff;
-    background: rgb(var(--color1));
-    padding: 7px 7px;
-    border-radius: 8px;
-    box-sizing: border-box;
-    border: 0;
-    cursor: pointer;
-    min-width: 100px;
 }
 
 .textButton {

@@ -4,9 +4,6 @@
     --text-primary: hsl(26, 18%, 43%);
 }
 
-
-/* main */
-
 .big-table {
     font-size: 0.9rem;
     border: none;
@@ -26,11 +23,3 @@
     min-width: 100px;
     border-bottom: 1px solid #ddd;
 }
-
-/* 
-Syntax example to have specific styles not apply 
-.big-table th:not(:last-child),
-.big-table td:not(:last-child) {
-  border-bottom: 1px solid #ddd;
-}
-*/

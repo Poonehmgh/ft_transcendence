@@ -4,19 +4,26 @@
     --text-primary: hsl(26, 18%, 43%);
 }
 
+.chatMain {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
 .leftBar_0 {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    background-color: aliceblue;
-    width: 20%;
+    background-color: transparent;
+    width: 10%;
 }
 
 .leftBar_1 {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    background-color: rgb(18, 64, 104);
+    background-color: transparent;
     width: 100%;
 }
 
@@ -43,7 +50,7 @@
     align-items: flex-start;
 
     background-color: rgb(255, 244, 240);
-    width: 20%;
+    width: 10%;
 }
 
 .rightBar_1 {

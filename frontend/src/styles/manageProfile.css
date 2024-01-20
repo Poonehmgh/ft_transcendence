@@ -38,6 +38,7 @@
     object-fit: cover;
     object-position: center center;
     border-radius: 17px;
+    cursor: pointer;
 }
 
 /* tabs */
@@ -94,4 +95,36 @@
     &:hover {
         transform: scale(1.1);
     }
+}
+
+
+.modalUserListContainer {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.modalUserList,
+.modalUserList tbody,
+.modalUserList th,
+.modalUserList tr,
+.modalUserList td {
+    width: 100%;
+    table-layout: fixed;
+    font-size: 0.9rem;
+    border: 0px solid;
+    border-collapse: collapse;
+    color: var(--text-primary);
+    padding: 0px;
+    border-spacing: 5px;
+    border-bottom: 1px solid var(--text-primary);
+    text-align: left;
+    line-height: 1.2;
+}
+.modalUserList td {
+    padding: 5px;
+    height: 30px;
+}
+
+.modalUserList td:nth-child(2) {
+    text-align: right;
 }

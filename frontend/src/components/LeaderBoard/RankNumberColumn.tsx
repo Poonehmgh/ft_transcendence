@@ -1,6 +1,4 @@
 import React from "react";
-import Header from "../Header/Header_main";
-import UserTable from "../shared/UserTable";
 
 // CSS
 import "src/styles/userTable.css";

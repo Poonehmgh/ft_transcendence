@@ -7,6 +7,7 @@ import PlayerCardTable from "../shared/PlayerCardTable";
 import { UserProfileDTO } from "user-dto";
 
 // CSS
+import "src/styles/style.css";
 import "src/styles/modals.css";
 import "src/styles/buttons.css";
 
@@ -71,14 +72,14 @@ function UserProfileModal(props: userProfileModalProps) {
                 isOpen={props.isOpen}
                 onRequestClose={closeModal}
                 contentLabel="User Profile"
-                className="modal"
-                overlayClassName="modal-overlay"
+                className="modal2"
+                overlayClassName="modalOverlay"
             >
                 {!userData ? (
                     <p>Loading user data...</p>
                 ) : (
                     <div>
-                        <h2 className="modal-h2">{userData.name}</h2>
+                        <h2 className="h2Left">{userData.name}</h2>
 
                         <div className="modal-avatar_playerCard">
                             <img
@@ -88,7 +89,6 @@ function UserProfileModal(props: userProfileModalProps) {
                             />
 
                             <div className="modal-expander-hor">
-                                <div className="modal-expander-ver" />
                             </div>
                             <PlayerCardTable
                                 mmr={userData.mmr}

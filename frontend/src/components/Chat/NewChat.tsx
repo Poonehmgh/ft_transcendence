@@ -48,13 +48,8 @@ function NewChat(props: newChatProps): React.JSX.Element {
         props.onCreateChat(chatId);
     }
 
-    function createDmChat() {
-        console.log("createDmChat");
-        closeModal();
-    }
-
-    function createGroupChat() {
-        console.log("createGroupChat");
+    function createChat() {
+        console.log("createChat");
         closeModal();
     }
 
@@ -72,7 +67,7 @@ function NewChat(props: newChatProps): React.JSX.Element {
                 <button
                     className="bigButton"
                     style={{ width: "100%" }}
-                    onClick={createDmChat}
+                    onClick={createChat}
                 >
                     Create DM Chat
                 </button>
@@ -83,7 +78,7 @@ function NewChat(props: newChatProps): React.JSX.Element {
                     <button
                         className="bigButton"
                         style={{ width: "100%" }}
-                        onClick={createGroupChat}
+                        onClick={createChat}
                     >
                         Create Group Chat
                     </button>
@@ -122,18 +117,18 @@ function NewChat(props: newChatProps): React.JSX.Element {
     }
 
     return (
-        <div>
+        <div style={{ width: "100%" }}>
             <button className="bigButton" onClick={openModal}>
-                +
+                ➕
             </button>
             <Modal
                 isOpen={modalIsOpen}
                 onRequestClose={closeModal}
                 contentLabel="New Chat"
                 className="modal2"
-                overlayClassName="modal-overlay"
+                overlayClassName="modalOverlay"
             >
-                <div className="modal-h2">Select Users</div>
+                <div className="h2">Select Users</div>
                 <SelectUsersTable setSelectedUsers={setSelectedUsersCallBack} />
 
                 {renderCreateChatButton()}

@@ -31,9 +31,9 @@ function ChatList(props: chatListProps): React.JSX.Element {
 
     return (
         <div className="leftBar_1">
-            <p>Public Chats</p>
+            <div className="pCenter">--- public chats ---</div>
 
-            <p>My Chats</p>
+            <div className="pCenter">--- my chats ---</div>
             {privateChats.map((chat: { chatID: number; chatName: string }) => (
                 <button
                     key={chat.chatID}

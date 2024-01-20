@@ -3,7 +3,6 @@
     --text-primary: hsl(26, 18%, 43%);
 }
 
-/* divs */
 .table-center {
     display: flex;
     flex-direction: row;
@@ -17,8 +16,6 @@
     justify-content: center;
     width: 90vw;
 }
-
-/* tables */
 
 .userTable,
 .userTable th,

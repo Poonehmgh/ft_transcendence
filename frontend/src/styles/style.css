@@ -19,24 +19,27 @@
     width: 100vw;
 }
 
-.section {
-    border: 1px solid;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-}
-
-.h2 {
+.h2,
+.h2Left {
     font-weight: 600;
     font-size: 2rem;
     margin: 2rem 0rem 1.2rem 0rem;
     text-align: center;
 }
 
-.p {
+.h2Left {
+    text-align: left;
+}
+
+.p,
+.pCenter {
     font-size: 1rem;
     color: var(--text-primary);
+    width: 100%;
+}
+
+.pCenter {
+    text-align: center;
 }
 
 .leftAligner {
