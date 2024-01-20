@@ -14,7 +14,10 @@ function RankNumberColumn(props: rankNumberColumnProp): React.JSX.Element {
     for (let i = 0; i < props.topN; i++) {
         rankingColumn.push(
             <tr key={i}>
-                <td key={i}>{i + 1}</td>
+                <td key={i}>{i + 1 === 1 ? "🥇" :
+                i + 1 === 2 ? "🥈" :
+                i + 1 === 3 ? "🥉" :
+                i + 1}</td>
             </tr>
         );
     }

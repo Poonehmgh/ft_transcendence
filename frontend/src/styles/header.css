@@ -1,15 +1,62 @@
-#header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-    grid-column: 1 / 7;
-    grid-row: 1 / 2;
+:root {
+    --color1: hsl(0, 0%, 12%); /* is 30 30 30 rgb */
+    --color2: 60, 60, 60;
+    --text-primary: hsl(26, 18%, 43%);
+    --backgroundHue1: 0;
 }
 
-.upper-links {
+.headerMainContainer {
+    border: 1px solid;
+    text-align: center;
     display: flex;
-    list-style-type: none;
+    flex-direction: column;
+    justify-content: end;
     align-items: center;
-    gap: 1rem;
+    height: 300px;
+}
+
+.pongersLogo {
+    position: fixed;
+    top: 12%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-height: 400px;
+    max-width: auto;
+    z-index: 1;
+}
+
+.headerTabsContainer {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    max-height: 200px;
+    z-index: 5;
+}
+
+.headerTabLink {
+    --lightnessOffset: 0%;
+
+    display: inline-block;
+    font-size: 0.8rem;
+    text-decoration: none;
+    color: var(--text-primary);
+    background-color: hsl(var(--backgroundHue1), 0%, calc(7% + var(--lightnessOffset)));
+    padding: 13px 25px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    transition: background-color 0.1s ease;
+    box-sizing: border-box;
+    transition: all 0.25s ease;
+    border: 2px solid rgb(var(--color2));
+    border-bottom: 1px solid rgb(100,100,100);
+
+
+    cursor: pointer;
+    min-width: 130px;
+
+    &:hover {
+        --lightnessOffset: 5%;
+    }
 }

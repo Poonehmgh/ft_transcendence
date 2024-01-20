@@ -1,6 +1,6 @@
 :root {
     --color1: hsl(0, 0%, 12%); /* is 30 30 30 rgb */
-    --color2: 60 60 60;
+    --color2: 60, 60, 60;
     --text-primary: hsl(26, 18%, 43%);
     --backgroundHue1: 0;
 }
@@ -9,13 +9,12 @@
 
 .bigButton {
     --lightnessOffset: 0%;
-   
+
     display: inline-block;
     font-size: 0.8rem;
     color: var(--text-primary);
     background-color: hsl(var(--backgroundHue1), 0%, calc(12% + var(--lightnessOffset)));
 
-    /* background: hsl(0, 0%, 12%); */
     /* background: hsl(var(--backgroundHue1), 0%, calc(3% + var(--lightnessOffset))); */
     padding: 13px 25px;
     margin: 0px;
@@ -23,7 +22,7 @@
     transition: background-color 0.1s ease;
     box-sizing: border-box;
     transition: all 0.25s ease;
-    border: 2px solid #ddd;
+    border: 0px solid rgb(var(--color2));
     cursor: pointer;
     min-width: 130px;
 

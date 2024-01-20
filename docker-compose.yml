@@ -9,6 +9,7 @@ services:
      - 3000:3000
     volumes:
       - ./frontend/src:/frontend/src
+      - ./frontend/public:/frontend/public
     networks:
       - webapp
     env_file:

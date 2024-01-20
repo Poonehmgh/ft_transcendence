@@ -130,7 +130,7 @@ function MyProfileModal(props: myProfileModalProps) {
     return (
         <div>
             <button className="bigButton" onClick={openModal}>
-                My Profile
+                👤
             </button>
             <Modal
                 isOpen={modalIsOpen}

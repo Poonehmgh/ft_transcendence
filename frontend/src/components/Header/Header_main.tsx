@@ -1,31 +1,36 @@
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import React from "react";
-import '../../styles/header.css';
 import MyProfileModal from "../MyProfileModal/MyProfileModal";
 
+// CSS
+import "src/styles/header.css";
+import "src/styles/buttons.css";
+
 function Header() {
-  return (
-      <div className="section" id="header">
-        <div className={"pongers-logo"}>
-          <Link className={"link"} to="/home">Pongers</Link><br/>
+    return (
+        <div>
+            <Link to="/home">
+                <img className="pongersLogo" src="/images/wordart.png" alt="pongers" />
+            </Link>
+            <div className="headerMainContainer">
+                <div className="headerTabsContainer">
+                    <MyProfileModal id={0} />
+                    <Link className="headerTabLink" to="/leaderboard">
+                        🏆
+                    </Link>
+                    <Link className={"link"} to="/allusers">
+                        👥
+                    </Link>
+                    <Link className={"link"} to="/game">
+                        🎮
+                    </Link>
+                    <Link className={"link"} to="/chat">
+                        💬
+                    </Link>
+                </div>
+            </div>
         </div>
-        <ul className={"upper-links"}>
-          <MyProfileModal id={0}/>
-          <li>
-            <Link className={"link"} to="/leaderboard">Leaderboard</Link>
-          </li>
-          <li>
-            <Link className={"link"} to="/allusers">All Users</Link>
-          </li>
-          <li>
-            <Link className={"link"} to="/game">Game</Link>
-          </li>
-          <li>
-            <Link className={"link"} to="/chat">Chat</Link>
-          </li>
-        </ul>
-      </div>
-  );
+    );
 }
 
 export default Header;
