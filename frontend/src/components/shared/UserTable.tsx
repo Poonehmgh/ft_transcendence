@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import UserProfileModal from "../UserProfileModal/UserProfileModal";
-import { fetchGetSet } from "src/ApiCalls/fetchers";
 
 // DTO
 import { UserProfileDTO } from "user-dto";
@@ -9,13 +8,11 @@ import { UserProfileDTO } from "user-dto";
 import "src/styles/buttons.css";
 import "src/styles/userTable.css";
 
-
 interface userTableProp {
-    apiUrl: string;
+    users: UserProfileDTO[];
 }
 
 function UserTable(props: userTableProp): React.JSX.Element {
-    const [userTable, setUserTable] = useState<UserProfileDTO[]>([]);
     const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
     const [modalIsOpen, setModalIsOpen] = useState(false);
 
@@ -28,11 +25,7 @@ function UserTable(props: userTableProp): React.JSX.Element {
         setModalIsOpen(false);
     };
 
-    useEffect(() => {
-        fetchGetSet(props.apiUrl, setUserTable);
-    }, [props.apiUrl]);
-
-    if (userTable.length === 0)
+    if (props.users.length === 0)
         return (
             <div>
                 <br />
@@ -58,7 +51,7 @@ function UserTable(props: userTableProp): React.JSX.Element {
                     </tr>
                 </thead>
                 <tbody>
-                    {userTable.map((element: UserProfileDTO, index: number) => (
+                    {props.users.map((element: UserProfileDTO, index: number) => (
                         <tr key={element.id}>
                             <td>{element.online ? "🟢" : "🔴"}</td>
                             <td>

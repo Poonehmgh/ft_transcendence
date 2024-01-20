@@ -6,18 +6,17 @@ import UserTable from "../shared/UserTable";
 import "src/styles/userTable.css";
 
 interface rankNumberColumnProp {
-    topN: number;
+    n: number;
 }
 
 function RankNumberColumn(props: rankNumberColumnProp): React.JSX.Element {
     const rankingColumn = [];
-    for (let i = 0; i < props.topN; i++) {
+    for (let i = 0; i < props.n; i++) {
         rankingColumn.push(
             <tr key={i}>
-                <td key={i}>{i + 1 === 1 ? "🥇" :
-                i + 1 === 2 ? "🥈" :
-                i + 1 === 3 ? "🥉" :
-                i + 1}</td>
+                <td key={i}>
+                    {i + 1 === 1 ? "🥇" : i + 1 === 2 ? "🥈" : i + 1 === 3 ? "🥉" : i + 1}
+                </td>
             </tr>
         );
     }

@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
-import Header from "../Header/Header_main";
 import UserTable from "../shared/UserTable";
 import RankNumberColumn from "./RankNumberColumn";
+import { UserProfileDTO } from "user-dto";
+import { fetchGetSet } from "src/ApiCalls/fetchers";
 
 // CSS
 import "src/styles/userTable.css";
-import "src/styles/style.css"
-import { UserProfileDTO } from "user-dto";
-import { fetchGetSet } from "src/ApiCalls/fetchers";
+import "src/styles/style.css";
 
 function Leaderboard() {
     const [userList, setUserlist] = useState<UserProfileDTO[]>([]);
@@ -19,15 +18,15 @@ function Leaderboard() {
     }, []);
 
     return (
-            <div className="table-center">
-                <div>
-                    <div className = "h2" >Leaderboard</div>
-                    <div className="tablesContainer">
-                        <RankNumberColumn topN={userList.length}/>
-                        <UserTable apiUrl={apiUrl} />
-                    </div>
+        <div className="table-center">
+            <div>
+                <div className="h2">Leaderboard</div>
+                <div className="tablesContainer">
+                    <RankNumberColumn n={userList.length} />
+                    <UserTable users={userList} />
                 </div>
             </div>
+        </div>
     );
 }
 
