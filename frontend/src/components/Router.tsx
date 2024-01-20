@@ -1,7 +1,6 @@
 import { createBrowserRouter, RouterProvider, redirect } from "react-router-dom";
 import LogIn from "./LogIn";
 import Home from "./Home";
-import RankNumberColumn from "./LeaderBoard/RankNumberColumn";
 import Game from "./Game/Game";
 import Chat from "./Chat/Chat_main";
 import ErrorPage from "./ErrorPage";
