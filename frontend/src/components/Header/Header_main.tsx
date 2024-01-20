@@ -18,13 +18,13 @@ function Header() {
                     <Link className="headerTabLink" to="/leaderboard">
                         🏆
                     </Link>
-                    <Link className={"link"} to="/allusers">
+                    <Link className="headerTabLink" to="/allusers">
                         👥
                     </Link>
-                    <Link className={"link"} to="/game">
+                    <Link className="headerTabLink" to="/game">
                         🎮
                     </Link>
-                    <Link className={"link"} to="/chat">
+                    <Link className="headerTabLink" to="/chat">
                         💬
                     </Link>
                 </div>

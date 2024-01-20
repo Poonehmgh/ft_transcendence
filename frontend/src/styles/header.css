@@ -1,6 +1,7 @@
 :root {
     --color1: hsl(0, 0%, 12%); /* is 30 30 30 rgb */
     --color2: 60, 60, 60;
+    --color3: 19, 100%, 99%;
     --text-primary: hsl(26, 18%, 43%);
     --backgroundHue1: 0;
 }
@@ -13,6 +14,7 @@
     justify-content: end;
     align-items: center;
     height: 300px;
+    z-index: 0;
 }
 
 .pongersLogo {
@@ -30,31 +32,28 @@
     align-items: center;
     margin-top: 20px;
     max-height: 200px;
-    z-index: 5;
+    z-index: 2;
 }
 
 .headerTabLink {
     --lightnessOffset: 0%;
 
     display: inline-block;
-    font-size: 0.8rem;
+    font-size: 1.6rem;
     text-decoration: none;
     color: var(--text-primary);
-    background-color: hsl(var(--backgroundHue1), 0%, calc(7% + var(--lightnessOffset)));
-    padding: 13px 25px;
-    margin-left: 10px;
-    margin-right: 10px;
+    background-color: hsl(var(--backgroundHue1), 0%, calc(6% + var(--lightnessOffset)));
+    padding: 5px 0px;
+    margin-left: 2%;
+    margin-right: 2%;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
     transition: background-color 0.1s ease;
     box-sizing: border-box;
     transition: all 0.25s ease;
-    border: 2px solid rgb(var(--color2));
-    border-bottom: 1px solid rgb(100,100,100);
-
-
+    border: 0px;
     cursor: pointer;
-    min-width: 130px;
+    min-width: 50px;
 
     &:hover {
         --lightnessOffset: 5%;
