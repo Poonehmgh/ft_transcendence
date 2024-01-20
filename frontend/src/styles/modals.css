@@ -148,6 +148,7 @@
 }
 
 .modalUserList,
+.modalUserList tbody,
 .modalUserList th,
 .modalUserList tr,
 .modalUserList td {
@@ -159,7 +160,7 @@
     color: var(--text-primary);
     padding: 0px;
     border-spacing: 5px;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid var(--text-primary);
     text-align: left;
     line-height: 1.2;
 }
@@ -168,8 +169,8 @@
     height: 30px;
 }
 
-.modalUserList td:first-child {
-    width: 20px;
+.modalUserList td:nth-child(2) {
+    text-align: right;
 }
 
 /* buttons */

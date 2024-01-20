@@ -11,7 +11,7 @@ function AllUsers() {
     return (
             <div className="table-center">
                 <div>
-                    <h2>All Users</h2>
+                    <div className="h2" >All Users</div>
                     <div className="tablesContainer">
                         <UserTable apiUrl={apiUrl} />
                     </div>

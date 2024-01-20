@@ -1,22 +1,24 @@
 :root {
-  --color1: 30 30 30;
+    --color1: rgb(30, 30, 30);
+    --color2: rgb(0, 0, 0);
+    --text-primary: hsl(26, 18%, 43%);
 }
 
-/* main */
-
-.playerCard-table {
-  table-layout: fixed;
-  font-size: 0.9rem;
-  border-radius: 10px;
-  border: 1px solid #ddd;
-  color: rgb(0, 0, 0);
-  padding: 0px;
-  border-spacing: 5px;
-  text-align: center;
-  width: 100%;
-  line-height: 2.2;
+.playerCardTable,
+.playerCardTable td {
+    table-layout: fixed;
+    font-size: 0.9rem;
+    border-radius: 10px;
+    border: 0px solid var(--text-primary);
+    color: var(--text-primary);
+    padding: 0px;
+    border-spacing: 5px;
+    text-align: left;
+    width: 100%;
+    line-height: 1.5;
 }
 
-.playerCard-table td {
-  border: none;
+.playerCardTable td {
+    border: none;
+    width: 80px;
 }

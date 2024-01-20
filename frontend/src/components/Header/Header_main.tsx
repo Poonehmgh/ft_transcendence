@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import React from "react";
-import ManageProfile from "../ManageProfile/MyProfileModal";
+import ManageProfile from "../ManageProfile/ManageProfile_main";
 
 // CSS
 import "src/styles/header.css";
@@ -29,8 +29,6 @@ function Header() {
                     <Link className="headerTabLink" to="/userprofile">
                         👤
                     </Link>
-
-                    <ManageProfile id={0} />
                 </div>
             </div>
         </div>

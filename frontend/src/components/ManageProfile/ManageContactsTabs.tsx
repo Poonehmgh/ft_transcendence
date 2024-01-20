@@ -5,7 +5,7 @@ import RequestInList from "./RequestInList";
 import RequestOutList from "./RequestOutList";
 
 // CSS
-import "src/styles/modals.css";
+import "src/styles/manageProfile.css";
 
 interface manageContactsTabsProps {
   id: number;
@@ -19,11 +19,11 @@ function ManageContactsTabs(props: manageContactsTabsProps) {
   }
 
   return (
-    <div className="modal-tabs-container">
-      <div className="modal-tab-buttons">
+    <div className="tabsContainer">
+      <div className="tabButtonsContainer">
         <button
           className={
-            activeTab === 0 ? "modal-tab-button_active" : "modal-tab-button_inactive"
+            activeTab === 0 ? "tabButton_active" : "tabButton_inactive"
           }
           onClick={() => handleTabClick(0)}
         >
@@ -31,7 +31,7 @@ function ManageContactsTabs(props: manageContactsTabsProps) {
         </button>
         <button
           className={
-            activeTab === 1 ? "modal-tab-button_active" : "modal-tab-button_inactive"
+            activeTab === 1 ? "tabButton_active" : "tabButton_inactive"
           }
           onClick={() => handleTabClick(1)}
         >
@@ -39,7 +39,7 @@ function ManageContactsTabs(props: manageContactsTabsProps) {
         </button>
         <button
           className={
-            activeTab === 2 ? "modal-tab-button_active" : "modal-tab-button_inactive"
+            activeTab === 2 ? "tabButton_active" : "tabButton_inactive"
           }
           onClick={() => handleTabClick(2)}
         >
@@ -47,7 +47,7 @@ function ManageContactsTabs(props: manageContactsTabsProps) {
         </button>
         <button
           className={
-            activeTab === 3 ? "modal-tab-button_active" : "modal-tab-button_inactive"
+            activeTab === 3 ? "tabButton_active" : "tabButton_inactive"
           }
           onClick={() => handleTabClick(3)}
         >
@@ -55,7 +55,7 @@ function ManageContactsTabs(props: manageContactsTabsProps) {
         </button>
       </div>
 
-      <div className="modal-tab-content">
+      <div className="tabContent">
         {activeTab === 0 && <FriendList id={props.id} />}
         {activeTab === 1 && <BlockedList id={props.id} />}
         {activeTab === 2 && <RequestInList id={props.id} />}

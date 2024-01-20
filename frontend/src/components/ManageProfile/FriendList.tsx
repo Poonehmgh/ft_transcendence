@@ -6,7 +6,8 @@ import { blockUser, removeFriend } from "src/ApiCalls/userActions";
 import { IdAndNameDTO } from "user-dto";
 
 // CSS
-import "src/styles/modals.css";
+import "src/styles/style.css";
+import "src/styles/manageProfile.css";
 
 interface friendListProps {
     id: number;
@@ -49,13 +50,13 @@ function FriendList(props: friendListProps) {
     return (
         <div>
             {!group || group.length === 0 ? (
-                <p>No friends yet!</p>
+                <div className="p">No friends. Don't be shy!</div>
             ) : (
                 <table className="modalUserList">
                     <tbody>
                         {group.map((friend, index) => (
                             <tr key={friend.id}>
-                                <td> {friend.name}</td>
+                                <td>{friend.name}</td>
                                 <td>
                                     <button
                                         className="contactsButton"

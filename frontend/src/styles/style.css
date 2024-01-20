@@ -1,7 +1,7 @@
 :root {
     font-size: 16px;
-    font-family: 'system-ui', sans-serif;
-    --text-primary: hsl(26, 18%, 43%);;
+    font-family: "system-ui", sans-serif;
+    --text-primary: hsl(26, 18%, 43%);
     --text-secondary: black;
     --bg--primary: black;
     --bg--catalogue: white;
@@ -25,4 +25,22 @@
     display: flex;
     justify-content: center;
     align-items: flex-start;
+}
+
+.h2 {
+    font-weight: 600;
+    font-size: 2rem;
+    margin: 2rem 0rem 1.2rem 0rem;
+    text-align: left;
+}
+
+.p {
+    font-size: 1rem;
+    color: var(--text-primary);
+}
+
+.leftAligner {
+    width: 100%;
+    flex-direction: row;
+    justify-content: start;
 }

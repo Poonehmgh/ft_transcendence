@@ -16,7 +16,7 @@ function Leaderboard() {
     return (
             <div className="table-center">
                 <div>
-                    <h2>Leaderboard</h2>
+                    <div className = "h2" >Leaderboard</div>
                     <div className="tablesContainer">
                         <RankNumberColumn topN={getTopN}/>
                         <UserTable apiUrl={apiUrl} />

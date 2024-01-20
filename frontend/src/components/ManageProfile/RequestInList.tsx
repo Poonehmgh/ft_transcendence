@@ -6,7 +6,8 @@ import { acceptRequest, declineRequest } from "src/ApiCalls/userActions";
 import { IdAndNameDTO } from "user-dto";
 
 // CSS
-import "src/styles/modals.css";
+import "src/styles/style.css";
+import "src/styles/manageProfile.css";
 
 interface requestInListProps {
     id: number;
@@ -45,22 +46,22 @@ function RequestInList(props: requestInListProps) {
     return (
         <div>
             {!group || group.length === 0 ? (
-                <p>No requests for now!</p>
+                <p>No incoming requests. Go talk to ppl!</p>
             ) : (
-                <table className="contacts-table">
-                    <tbody className="contacts-table">
+                <table className="modalUserList">
+                    <tbody>
                         {group.map((entry, index) => (
-                            <tr className="contacts-table" key={entry.id}>
-                                <td className="contacts-table"> {entry.name}</td>
-                                <td className="contacts-table">
+                            <tr key={entry.id}>
+                                <td> {entry.name}</td>
+                                <td>
                                     <button
-                                        className="contacts-button"
+                                        className="contactsButton"
                                         onClick={() => handleAccept(entry.id, index)}
                                     >
                                         🤝
                                     </button>
                                     <button
-                                        className="contacts-button"
+                                        className="contactsButton"
                                         onClick={() => handleDecline(entry.id, index)}
                                     >
                                         ❌
