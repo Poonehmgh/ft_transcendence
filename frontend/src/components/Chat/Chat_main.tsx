@@ -15,9 +15,6 @@ function Chat() {
     const socket = io(process.env.REACT_APP_CHAT_URL);
 
     return (
-        <div className="sections-container">
-            <Header />
-
             <div className="section">
                 <div className="leftBar_0">
                     <NewChat userId={0} onCreateChat={setSelectedChatId} />
@@ -40,7 +37,6 @@ function Chat() {
                     <Members id={0} socket={socket} />
                 </div>
             </div>
-        </div>
     );
 }
 

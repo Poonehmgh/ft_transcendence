@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Header from "src/components/Header/Header_main";
 import Home from "src/components/Home";
 import Leaderboard from "src/components/LeaderBoard/Leaderboard_main";
@@ -12,11 +12,13 @@ function App() {
         <Router>
             <div>
                 <Header />
-                <Route path="/home" Component={Home} />
-                <Route path="/leaderboard" Component={Leaderboard} />
-                <Route path="/allusers" Component={AllUsers} />
-                <Route path="/game"Component={Game} />
-                <Route path="/chat" Component={Chat} />
+                <Routes>
+                    <Route path="/home" Component={Home} />
+                    <Route path="/leaderboard" Component={Leaderboard} />
+                    <Route path="/allusers" Component={AllUsers} />
+                    <Route path="/game" Component={Game} />
+                    <Route path="/chat" Component={Chat} />
+                </Routes>
             </div>
         </Router>
     );

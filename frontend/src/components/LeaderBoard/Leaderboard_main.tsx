@@ -14,8 +14,6 @@ function Leaderboard() {
 
 
     return (
-        <div className="sections-container">
-            <Header />
             <div className="table-center">
                 <div>
                     <h2>Leaderboard</h2>
@@ -25,7 +23,6 @@ function Leaderboard() {
                     </div>
                 </div>
             </div>
-        </div>
     );
 }
 
