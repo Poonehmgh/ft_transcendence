@@ -9,7 +9,6 @@ import Score from "./ScorePlayers";
 function Game() {
   return (
     <div className="game-sections-container">
-      <Header />
       <div className="section game-left-bar">
         <LeftBar />
       </div>

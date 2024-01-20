@@ -13,9 +13,9 @@ function ErrorPage() {
                 marginTop: "100px",
             }}
         >
-            <p>Requested resource does not exist. Have a cat pic instead.</p>
+            <p>Requested resource does not exist.<br></br> Have a cat pic instead:</p>
             <img
-                src="/images/handsome_boi.jpg"
+                src="/images/tekir.jpg"
                 alt="handsome_boi"
                 style={{ height: "auto", width: "400px" }}
             />

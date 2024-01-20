@@ -15,7 +15,7 @@ interface myProfileModalProps {
     id: number;
 }
 
-function MyProfileModal(props: myProfileModalProps) {
+function ManageProfile(props: myProfileModalProps) {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [userData, setUserData] = useState<UserProfileDTO | null>(null);
     const [avatarURL, setAvatarURL] = useState(null);
@@ -193,4 +193,4 @@ function MyProfileModal(props: myProfileModalProps) {
     );
 }
 
-export default MyProfileModal;
+export default ManageProfile;

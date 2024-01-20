@@ -44,10 +44,10 @@
     color: var(--text-primary);
     background-color: hsl(var(--backgroundHue1), 0%, calc(6% + var(--lightnessOffset)));
     padding: 5px 0px;
-    margin-left: 2%;
-    margin-right: 2%;
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
+    margin-left: 1%;
+    margin-right: 1%;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
     transition: background-color 0.1s ease;
     box-sizing: border-box;
     transition: all 0.25s ease;

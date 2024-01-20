@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import React from "react";
-import MyProfileModal from "../MyProfileModal/MyProfileModal";
+import ManageProfile from "../ManageProfile/MyProfileModal";
 
 // CSS
 import "src/styles/header.css";
@@ -30,7 +30,7 @@ function Header() {
                         👤
                     </Link>
 
-                    <MyProfileModal id={0} />
+                    <ManageProfile id={0} />
                 </div>
             </div>
         </div>
