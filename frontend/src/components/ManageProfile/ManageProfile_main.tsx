@@ -107,7 +107,7 @@ function ManageProfile() {
             {userData ? (
                 <div className="manageProfile">
                     <div className="leftAligner">
-                        <div className="h2">
+                        <div className="h2" style={{textAlign:"left"}}>
                             {userData.name}
                             <button className="editName" onClick={handleNameChange}>
                                 ✎

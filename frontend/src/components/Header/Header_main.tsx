@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import React from "react";
-import ManageProfile from "../ManageProfile/ManageProfile_main";
 
 // CSS
 import "src/styles/header.css";
