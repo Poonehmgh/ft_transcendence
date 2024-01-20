@@ -53,7 +53,7 @@
     transition: all 0.25s ease;
     border: 0px;
     cursor: pointer;
-    min-width: 50px;
+    min-width: 70px;
 
     &:hover {
         --lightnessOffset: 5%;

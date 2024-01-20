@@ -14,19 +14,23 @@ function Header() {
             </Link>
             <div className="headerMainContainer">
                 <div className="headerTabsContainer">
-                    <MyProfileModal id={0} />
+                    <Link className="headerTabLink" to="/game">
+                        🎮
+                    </Link>
                     <Link className="headerTabLink" to="/leaderboard">
                         🏆
                     </Link>
                     <Link className="headerTabLink" to="/allusers">
                         👥
                     </Link>
-                    <Link className="headerTabLink" to="/game">
-                        🎮
-                    </Link>
                     <Link className="headerTabLink" to="/chat">
                         💬
                     </Link>
+                    <Link className="headerTabLink" to="/userprofile">
+                        👤
+                    </Link>
+
+                    <MyProfileModal id={0} />
                 </div>
             </div>
         </div>
