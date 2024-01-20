@@ -8,13 +8,13 @@
 
 .modal2 {
     position: fixed;
-    top: 20%;
+    top: 200px;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%);
     padding: 1rem 3rem;
     background-color: black;
     width: 400px;
-    max-height: 800px;
+    min-height: 400px;
     border-radius: 20px;
     border: 0;
     box-shadow: 0 5px 30px 0 rgba(255, 255, 255, 0.1);
@@ -137,6 +137,12 @@
     margin: 0px;
     padding: 20px;
     border: none;
+    overflow-y: auto;
+}
+
+
+.modalUserListContainer {
+    max-height: 500px;
     overflow-y: auto;
 }
 

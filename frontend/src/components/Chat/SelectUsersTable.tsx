@@ -9,7 +9,7 @@ import "src/styles/modals.css";
 import "src/styles/buttons.css";
 
 interface selectUsersTableProps {
-    setSelectedUsers: React.Dispatch<React.SetStateAction<number[]>>;
+    setSelectedUsers: (users: number[]) => void;
 }
 
 function SelectUsersTable(props: selectUsersTableProps): React.JSX.Element {
@@ -23,13 +23,15 @@ function SelectUsersTable(props: selectUsersTableProps): React.JSX.Element {
     }, []);
 
     function handleUserSelection(userId: number) {
-        setSelectedUsers((prevSelectedUsers) => {
-            const updatedSelectedUsers = prevSelectedUsers.includes(userId)
-                ? prevSelectedUsers.filter((id) => id !== userId)
-                : [...prevSelectedUsers, userId];
-            props.setSelectedUsers(updatedSelectedUsers);
-            return updatedSelectedUsers;
-        });
+        const newSelectedUsers = updateSelectedUsers(selectedUsers, userId);
+        setSelectedUsers(newSelectedUsers);
+        props.setSelectedUsers(newSelectedUsers);
+    }
+
+    function updateSelectedUsers(prevSelectedUsers: number[], userId: number) {
+        return prevSelectedUsers.includes(userId)
+            ? prevSelectedUsers.filter((element) => element !== userId)
+            : [...prevSelectedUsers, userId];
     }
 
     return (
@@ -37,24 +39,26 @@ function SelectUsersTable(props: selectUsersTableProps): React.JSX.Element {
             {!users || users.length === 0 ? (
                 <p>Noone to msg.</p>
             ) : (
-                <table className="modalUserList">
-                    <tbody>
-                        {users.map((user, index) => (
-                            <tr key={user.id}>
-                                <td>{user.online ? "🟢" : "🔴"}</td>
-                                <td>{user.name}</td>
-                                <td style={{ textAlign: "right" }}>
-                                    <input
-                                        type="checkbox"
-                                        className="checkbox"
-                                        checked={selectedUsers.includes(user.id)}
-                                        onChange={() => handleUserSelection(user.id)}
-                                    />
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                <div className="modalUserListContainer">
+                    <table className="modalUserList">
+                        <tbody>
+                            {users.map((user, index) => (
+                                <tr key={user.id}>
+                                    <td>{user.online ? "🟢" : "🔴"}</td>
+                                    <td>{user.name}</td>
+                                    <td style={{ textAlign: "right" }}>
+                                        <input
+                                            type="checkbox"
+                                            className="checkbox"
+                                            checked={selectedUsers.includes(user.id)}
+                                            onChange={() => handleUserSelection(user.id)}
+                                        />
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             )}
             <br></br>
         </div>

@@ -58,6 +58,10 @@ function NewChat(props: newChatProps): React.JSX.Element {
         closeModal();
     }
 
+    function setSelectedUsersCallBack(users: number[]) {
+        setSelectedUsers(users);
+    }
+
     function renderCreateChatButton() {
         function toggleInputBox() {
             setUsePassword(!usePassword);
@@ -130,7 +134,7 @@ function NewChat(props: newChatProps): React.JSX.Element {
                 overlayClassName="modal-overlay"
             >
                 <div className="modal-h2">Select Users</div>
-                <SelectUsersTable setSelectedUsers={setSelectedUsers} />
+                <SelectUsersTable setSelectedUsers={setSelectedUsersCallBack} />
 
                 {renderCreateChatButton()}
 

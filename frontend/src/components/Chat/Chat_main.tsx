@@ -14,18 +14,6 @@ function Chat() {
     // to do: move this to a central position after successful auth
     const socket = io(process.env.REACT_APP_CHAT_URL);
 
-    /* update:
-            - chat msg history (last n=50?)
-            - chat participants
-            - chat options (depending on ownership etc)
-            - visual representation of selected chat
-        */
-
-    /* const handleSelectChat = (chatId: number) => {
-			 
-			setSelectedChatId(chatId);
-		}; */
-
     return (
         <div className="sections-container">
             <Header />
@@ -39,7 +27,7 @@ function Chat() {
                             userId={0}
                             socket={socket}
                             selectedChatId={selectedChatId}
-                            onSelectChat={setSelectedChatId}
+                            onSelectChat={() => setSelectedChatId}
                         />
                     </div>
                 </div>
