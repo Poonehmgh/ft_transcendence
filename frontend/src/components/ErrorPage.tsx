@@ -1,16 +1,24 @@
-import Header from "./Header/Header_main";
 import React from "react";
+
+// CSS
+import "src/styles/bigTable.css";
 
 function ErrorPage() {
     return (
-        <div className="sections-container">
-          <Header />
-            <div className="section left-bar">Left Bar</div>
-            <div className="section center">
-                <div>Error 404: Page not found</div>
-            </div>
-            <div className="section right-bar">Right Bar</div>
-            <div className="section footer">Footer</div>
+        <div
+            style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                marginTop: "100px",
+            }}
+        >
+            <p>Requested resource does not exist. Have a cat pic instead.</p>
+            <img
+                src="/images/handsome_boi.jpg"
+                alt="handsome_boi"
+                style={{ height: "auto", width: "400px" }}
+            />
         </div>
     );
 }

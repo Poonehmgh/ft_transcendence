@@ -6,6 +6,7 @@ import Leaderboard from "src/components/LeaderBoard/Leaderboard_main";
 import AllUsers from "src/components/AllUsers/AllUsers_main";
 import Game from "src/components/Game/Game";
 import Chat from "src/components/Chat/Chat_main";
+import ErrorPage from "src/components/ErrorPage";
 
 function App() {
     return (
@@ -18,6 +19,7 @@ function App() {
                     <Route path="/allusers" Component={AllUsers} />
                     <Route path="/game" Component={Game} />
                     <Route path="/chat" Component={Chat} />
+                    <Route path="*" element={<ErrorPage />} />
                 </Routes>
             </div>
         </Router>

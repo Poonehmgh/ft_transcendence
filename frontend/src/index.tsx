@@ -1,9 +1,17 @@
-import Modal from "react-modal";
-
-Modal.setAppElement("#root");
-
 import React from "react";
-import ReactDOM from "react-dom";
+import ReactDOM from "react-dom/client";
+import Modal from "react-modal";
 import App from "src/components/app";
 
-ReactDOM.render(<App />, document.getElementById("root"));
+
+const root = document.getElementById("root");
+Modal.setAppElement("#root");
+
+if (root) {
+    const appRoot = ReactDOM.createRoot(root);
+    appRoot.render(
+        <React.StrictMode>
+            <App />
+        </React.StrictMode>
+    );
+}
