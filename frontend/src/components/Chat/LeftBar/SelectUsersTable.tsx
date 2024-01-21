@@ -58,7 +58,7 @@ function SelectUsersTable(props: selectUsersTableProps): React.JSX.Element {
                 />
             </div>
             {!filteredUsers || filteredUsers.length === 0 ? (
-                <p>👻</p>
+                <p style={{fontSize:"5rem", textAlign:"center"}}>👻</p>
             ) : (
                 <div className="chatUserListContainer">
                     <table className="chatUserTable">
