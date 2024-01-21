@@ -1,13 +1,11 @@
-import Header from "../Header/Header_main";
 import React, { useEffect, useState } from "react";
-import ChatList from "./ChatList";
 import io from "socket.io-client";
 import Members from "./Members";
 
 // CSS
 import "../../styles/chat.css";
 import "../../styles/style.css";
-import NewChat from "./NewChat";
+import LeftBar from "./LeftBar";
 
 function Chat() {
     const [selectedChatId, setSelectedChatId] = useState<number | null>(null);
@@ -16,23 +14,14 @@ function Chat() {
 
     return (
         <div>
-            <div className="h2">Chat</div>
+            <div className="h2">{selectedChatId == null ? "Chat" : selectedChatId}</div>
             <div className="chatMain">
-                <div className="leftBar_0">
-                    <NewChat userId={0} onCreateChat={setSelectedChatId} />
+                <LeftBar
+                    selectedChatId={selectedChatId}
+                    setSelectedChatId={setSelectedChatId}
+                />
 
-                    <div className="leftBar_1">
-                        <ChatList
-                            userId={0}
-                            socket={socket}
-                            selectedChatId={selectedChatId}
-                            onSelectChat={() => setSelectedChatId}
-                        />
-                    </div>
-                </div>
-
-                <div className="middleBar_0">
-                </div>
+                <div className="middleBar_0"></div>
                 <div className="rightBar_0">
                     rightBar_0
                     <Members id={0} socket={socket} />

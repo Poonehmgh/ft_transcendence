@@ -10,7 +10,6 @@ import "src/styles/style.css";
 
 interface chatListProps {
     userId: number;
-    socket: SocketIOClient.Socket;
     selectedChatId: number;
     onSelectChat: (chatId: number) => void;
 }
