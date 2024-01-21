@@ -33,7 +33,7 @@ function RequestOutList(props: requestOutListProps) {
     }
 
     return (
-        <div>
+        <div className="p">
             {!group || group.length === 0 ? (
                 <p>No outgoing requests. Go make some friends!</p>
             ) : (

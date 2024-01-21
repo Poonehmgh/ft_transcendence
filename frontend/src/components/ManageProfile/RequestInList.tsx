@@ -44,7 +44,7 @@ function RequestInList(props: requestInListProps) {
     }
 
     return (
-        <div>
+        <div className="p">
             {!group || group.length === 0 ? (
                 <p>No incoming requests. Go talk to ppl!</p>
             ) : (
