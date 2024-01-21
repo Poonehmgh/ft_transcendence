@@ -96,12 +96,9 @@ function ManageProfile() {
     }
 
     return (
-        <div
-            style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-            }}
+        <div className="mainContainerColumn"
+		style={{alignItems:"center"}}
+		
         >
             <div className="h2">Manage your profile:</div>
             {userData ? (

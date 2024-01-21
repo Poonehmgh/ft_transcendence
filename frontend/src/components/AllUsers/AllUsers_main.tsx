@@ -15,7 +15,7 @@ function AllUsers() {
     }, []);
 
     return (
-        <div className="table-center">
+        <div className="mainContainerRow">
             <div>
                 <div className="h2">All Users</div>
                 <div className="tablesContainer">
