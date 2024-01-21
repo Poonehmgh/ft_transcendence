@@ -5,7 +5,6 @@ import {
   UserRelation,
   IdAndNameDTO,
   NewUserDTO,
-  ScoreCardDTO,
   UserProfileDTO,
 } from "./user-dto";
 import { User } from "@prisma/client";
@@ -47,7 +46,7 @@ export class UserService {
     await this.prisma.user.create({ data: userData });
   }
 
-  async getScoreCard(userId: number): Promise<ScoreCardDTO> {
+/*   async getScoreCard(userId: number): Promise<ScoreCardDTO> {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
       select: {
@@ -69,7 +68,7 @@ export class UserService {
       winrate: user.winrate,
       mmr: user.mmr,
     };
-  }
+  } */
 
   async getMatches(userId: number): Promise<number[]> {
     const user = await this.prisma.user.findUnique({
@@ -250,15 +249,15 @@ export class UserService {
   }
 
   //TODO try throw these instead of if(!) all functions!
-  async getTopScoreCards(n: number): Promise<ScoreCardDTO[]> {
+  async getTopProfiles(n: number): Promise<UserProfileDTO[]> {
     const topUsers: User[] = await this.prisma.user.findMany({
       where: { matches: { isEmpty: false } },
       orderBy: { mmr: "desc" },
       take: Number(n),
     });
 
-    return topUsers.map(({ id, name, rank, matches, mmr, winrate }) => {
-      return new ScoreCardDTO(id, name, rank, mmr, matches.length, winrate);
+    return topUsers.map(({ id, name, mmr, rank, matches, winrate, online }) => {
+      return new UserProfileDTO(id, name, mmr, rank, matches.length, winrate, online);
     });
   }
 
@@ -305,8 +304,14 @@ export class UserService {
     });
   }
 
-  async getAllUsers() {
-    return await this.prisma.user.findMany();
+  async getAllUsers():  Promise<UserProfileDTO[]> {
+    const allUsers: User[] = await this.prisma.user.findMany({
+      orderBy: { id: "desc" },
+    });
+	
+    return allUsers.map(({ id, name, mmr, rank, matches, winrate, online }) => {
+      return new UserProfileDTO(id, name, mmr, rank, matches.length, winrate, online);
+    });
   }
 
   async getOtherUsers(thisId: number) {

@@ -2,6 +2,7 @@
   "extends": "./tsconfig.json",
   "exclude": ["node_modules", "test", "dist", "**/*spec.ts"],
   "paths": {
-    "user-dto": ["../backend/src/user/user-dto"]
+    "user-dto": ["../backend/src/user/user-dto"],
+    "chat-dto": ["../backend/src/chat/chat.DTOs"]
   }
 }

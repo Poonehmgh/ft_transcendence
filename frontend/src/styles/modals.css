@@ -1,192 +1,118 @@
 :root {
-  --color1: 30 30 30;
+    --color1: rgb(30, 30, 30);
+    --color2: rgb(60, 60, 60);
+    --text-primary: hsl(26, 18%, 43%);
 }
 
 /* main */
 
-.modal {
-  position: fixed;
-  top: 40%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 1rem 3rem;
-  color: #000000;
-  background: rgb(255, 255, 255);
-  width: 400px;
-  height: 647px;
-  border-radius: 20px;
-  border: 0;
-  box-shadow: 0 5px 30px 0 rgba(255, 255, 255, 0.35);
-  animation: fadeIn 1s ease both;
+.modal2 {
+    position: fixed;
+    top: 200px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 1rem 3rem;
+    background-color: black;
+    width: 400px;
+    min-height: 400px;
+    border-radius: 20px;
+    border: 0;
+    box-shadow: 0 5px 30px 0 rgba(255, 255, 255, 0.1);
+    animation: fadeIn 1s ease both;
 }
 
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7);
-}
-
-.modal-h2 {
-  font-weight: 600;
-  font-size: 2rem;
-  margin: 2rem 0rem 1.2rem 0rem;
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 9;
 }
 
 .modal-avatar_playerCard {
-  display: flex;
-  align-items: center;
-  font-size: 1rem;
-  line-height: 1.3rem;
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+    line-height: 1.3rem;
 }
 
 .modal-expander-hor {
-  min-width: 30px;
-  color: transparent;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: flex-end !important;
-  margin: 0px 35px 0px -35px;
-}
-
-.modal-expander-ver {
-  height: 165px;
-  color: transparent;
+    min-width: 30px;
+    color: transparent;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    margin: 0px 35px 0px -35px;
 }
 
 .modal-table-div {
-  display: flex;
-  flex-direction: column;
-  align-items: end;
+    display: flex;
+    flex-direction: column;
+    align-items: end;
 }
 
 /* images */
 
 .modal-avatar {
-  width: 210px;
-  height: 210px;
-  object-fit: cover;
-  object-position: center center;
-  border-radius: 17px;
-
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    object-position: center center;
+    border-radius: 17px;
 }
 
-/* buttons */
-
-.modal-button-close {
-  border: none;
-  background: none;
-  position: absolute;
-  text-align: center;
-  top: 15px;
-  right: 10px;
-  transition: transform 0.1s;
-  cursor: pointer;
-  transform-origin: center;
-
-  &:hover {
-    transform: scale(1.3);
-  }
+.chatUserListContainer {
+    max-height: 600px;
+    overflow-y: auto;
 }
 
-.modal-button-big {
-  display: inline-block;
-  font-size: 0.8rem;
-  color: #fff;
-  background: rgb(var(--color1));
-  padding: 13px 25px;
-  margin: 10px;
-  border-radius: 17px;
-  transition: background-color 0.1s ease;
-  box-sizing: border-box;
-  transition: all 0.25s ease;
-  border: 0;
-  cursor: pointer;
-  box-shadow: 0 10px 20px -10px rgb(var(--color1) / 50%);
-
-  &:hover {
-    box-shadow: 0 20px 20px -10px rgb(var(--color1) / 50%);
-    transform: translateY(-2px);
-  }
+.chatUserTable {
+    width: 100%;
+    line-height: 1.8;
+    border: 0px;
+    border-collapse: collapse;
 }
 
-.modal-button-edit-name {
-  border: none;
-  cursor: pointer;
-  color: #9a9a9a;
-  font-size: 1.3rem;
-  border-radius: 50%;
-  background: transparent;
-
-  &:hover {
-    transform: scale(1.1);
-  }
+.chatUserTable tr:hover {
+    background-color: rgb(15, 15, 15);
 }
 
-.modal-button-edit-avatar {
-  height: 30px;
-  width: 30px;
-  border: none;
-  cursor: pointer;
-  color: #323232;
-  font-size: 1.3rem;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.6);
-
-  &:hover {
-    transform: scale(1.1);
-  }
+.chatSearchBox {
+    padding: 5px;
+    line-height: 2;
+    height: 110px;
 }
 
-/* tabs */
+.closeX {
+    border: none;
+    background: none;
+    position: absolute;
+    text-align: center;
+    top: 15px;
+    right: 10px;
+    transition: transform 0.1s;
+    cursor: pointer;
+    transform-origin: center;
 
-.modal-tabs-container {
-  width: 100%;
-  margin: 35px 0 0 0;
+    &:hover {
+        transform: scale(1.3);
+    }
 }
 
-.modal-tab-buttons {
-  padding: 0px 0px 0px 0px;
-  display: flex;
-  justify-content: space-between;
-}
+.contactsButton {
+    font-size: 1.2rem;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    border-radius: 50%;
+    background-color: rgb(205, 205, 205, 0);
+    margin: 5px;
 
-.modal-tab-button_active {
-  flex: 1;
-  border-radius: 13px 13px 0px 0px;
-  border: none;
-  height: 55px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: black;
-  background: #eeeeee;
-  padding: 0px 10px 5px;
-  margin: 0px 0px -10px 0px;
-}
-
-.modal-tab-button_inactive {
-  flex: 1;
-  border-radius: 13px 13px 0px 0px;
-  border: none;
-  border-color: #ddd;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #c2c2c2;
-  background: transparent;
-  padding: 0px 10px 5px;
-  margin: 0px 0px -10px 0px;
-}
-
-.modal-tab-content {
-  border-radius: 13px 13px 13px 13px;
-  height: 200px;
-  font-size: 1rem;
-  color: black;
-  background: #eeeeee;
-  margin: 0px;
-  padding: 20px;
-  border: none;
-  overflow-y: auto;
+    &:hover {
+        transform: translateY(-2px);
+    }
 }
