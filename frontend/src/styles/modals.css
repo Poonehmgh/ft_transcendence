@@ -63,33 +63,27 @@
     border-radius: 17px;
 }
 
-.modalUserListContainer {
-    max-height: 500px;
+.chatUserListContainer {
+    max-height: 600px;
     overflow-y: auto;
 }
 
-.modalUserList,
-.modalUserList tbody,
-.modalUserList th,
-.modalUserList tr,
-.modalUserList td {
+.chatUserTable {
     width: 100%;
-    table-layout: fixed;
-    font-size: 0.9rem;
-    border: 0px solid;
+    line-height: 1.8;
+    border: 0px;
     border-collapse: collapse;
-    color: var(--text-primary);
-    padding: 0px;
-    border-spacing: 5px;
-    border-bottom: 1px solid var(--text-primary);
-    text-align: left;
-    line-height: 1.2;
-}
-.modalUserList td {
-    padding: 5px;
-    height: 30px;
 }
 
+.chatUserTable tr:hover {
+    background-color: rgb(15, 15, 15);
+}
+
+.chatSearchBox {
+    padding: 5px;
+    line-height: 2;
+    height: 110px;
+}
 
 .closeX {
     border: none;

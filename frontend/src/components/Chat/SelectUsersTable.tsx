@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { fetchGet, fetchGetSet } from "src/ApiCalls/fetchers";
+import { fetchGetSet } from "src/ApiCalls/fetchers";
 
 // DTO
 import { UserProfileDTO } from "user-dto";
@@ -15,6 +15,7 @@ interface selectUsersTableProps {
 function SelectUsersTable(props: selectUsersTableProps): React.JSX.Element {
     const [users, setUsers] = useState<UserProfileDTO[]>([]);
     const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
+    const [searchQuery, setSearchQuery] = useState<string>("");
     // to do: update the backend when user auth is done to exclude the calling user
     const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/all_users";
 
@@ -34,17 +35,39 @@ function SelectUsersTable(props: selectUsersTableProps): React.JSX.Element {
             : [...prevSelectedUsers, userId];
     }
 
+    const filteredUsers = users.filter(
+        (user) =>
+            user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            selectedUsers.includes(user.id)
+    );
+
     return (
         <div>
-            {!users || users.length === 0 ? (
-                <p>Noone to msg.</p>
+            <div className="chatSearchBox">
+                <label htmlFor="search" className="h2Left">
+                    Select Users
+                </label>
+                <input
+                    className="textInput"
+                    type="text"
+                    id="search"
+                    placeholder="🔎"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    style={{ width: "100%", margin: "px" }}
+                />
+            </div>
+            {!filteredUsers || filteredUsers.length === 0 ? (
+                <p>👻</p>
             ) : (
-                <div className="modalUserListContainer">
-                    <table className="modalUserList">
+                <div className="chatUserListContainer">
+                    <table className="chatUserTable">
                         <tbody>
-                            {users.map((user, index) => (
+                            {filteredUsers.map((user, index) => (
                                 <tr key={user.id}>
-                                    <td>{user.online ? "🟢" : "🔴"}</td>
+                                    <td style={{ width: "30px", textAlign: "center" }}>
+                                        {user.online ? "🟢" : "🔴"}
+                                    </td>
                                     <td>{user.name}</td>
                                     <td style={{ textAlign: "right" }}>
                                         <input

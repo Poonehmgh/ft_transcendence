@@ -128,7 +128,6 @@ function NewChat(props: newChatProps): React.JSX.Element {
                 className="modal2"
                 overlayClassName="modalOverlay"
             >
-                <div className="h2">Select Users</div>
                 <SelectUsersTable setSelectedUsers={setSelectedUsersCallBack} />
 
                 {renderCreateChatButton()}
