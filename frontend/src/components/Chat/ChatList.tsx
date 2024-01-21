@@ -43,7 +43,7 @@ function ChatList(props: chatListProps): React.JSX.Element {
                         className={
                             props.selectedChatId === chat.chatID
                                 ? "chatButtonSelected"
-                                : "bigButton"
+                                : "chatButton"
                         }
                         onClick={() => selectChat(chat.chatID)}
                     >

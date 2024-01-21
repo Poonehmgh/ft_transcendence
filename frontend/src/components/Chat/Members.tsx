@@ -1,30 +1,31 @@
 import React, { useEffect, useState } from "react";
-import io from "socket.io-client";
 import { fetchGetSet } from "src/ApiCalls/fetchers";
 import { ParticipantListElementDTO } from "chat-dto";
 
 interface membersProps {
-    id: number;
-    socket: SocketIOClient.Socket;
+    selectedChatId: number;
 }
 
 function Members(props: membersProps): React.JSX.Element {
     const [members, setMembers] = useState<ParticipantListElementDTO[]>([]);
-    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/chat/" + props.id + "/participants";
+    // temp to do
+    const userId = 0;
+    const apiUrl =
+        process.env.REACT_APP_BACKEND_URL + "/chat/" + userId + "/participants";
 
     useEffect(() => {
-       fetchGetSet<ParticipantListElementDTO[]>(apiUrl, setMembers);
-    }, [apiUrl]);
+        fetchGetSet<ParticipantListElementDTO[]>(apiUrl, setMembers);
+    }, []);
 
-    function selectChat(id: number) {
-        console.log("selectChat with id ", id);
-        /* update:
-            - chat msg history (last n=50?)
-            - chat participants
-            - chat options (depending on ownership etc)
-            - visual representation of selected chat
-        */
+    function selectMember(userId) {
+        console.log("selectMember: ", userId);
     }
+    
+    /* 
+   - interact with chat members
+   - think of decision tree...
+
+   */
 
     return (
         <div>

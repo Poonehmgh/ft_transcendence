@@ -12,7 +12,6 @@ import "src/styles/buttons.css";
 import SelectUsersTable from "./SelectUsersTable";
 
 interface newChatProps {
-    userId: number;
     onCreateChat: (chatId: number) => void;
 }
 

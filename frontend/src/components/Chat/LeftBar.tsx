@@ -14,7 +14,7 @@ interface leftBarProps {
 function LeftBar(props: leftBarProps): React.JSX.Element {
     return (
         <div className="leftBar_0">
-            <NewChat userId={0} onCreateChat={props.setSelectedChatId} />
+            <NewChat onCreateChat={props.setSelectedChatId} />
 
             <div className="leftBar_1">
                 <ChatList
