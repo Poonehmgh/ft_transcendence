@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { fetchGetSet } from "src/ApiCalls/fetchers";
 
 // DTO
 import { ChatListDTO } from "chat-dto";
@@ -9,26 +8,15 @@ import "src/styles/chat.css";
 import "src/styles/style.css";
 
 interface chatListProps {
-    userId: number;
-    selectedChatId: number;
-    onSelectChat: (chatId: number) => void;
+    selectedChat: ChatListDTO;
+    onSelectChat: (chat: ChatListDTO) => void;
+    privateChats: ChatListDTO[];
+    publicChats: ChatListDTO[];
 }
 
 function ChatList(props: chatListProps): React.JSX.Element {
-    const [privateChats, setPrivateChats] = useState<ChatListDTO[]>([]);
-    const [publicChats, setPublicChats] = useState<ChatListDTO[]>([]);
-
-    const apiUrl_privateChats =
-        process.env.REACT_APP_BACKEND_URL + "/chat/" + props.userId;
-    const apiUrl_publicChats = process.env.REACT_APP_BACKEND_URL + "/public_chat";
-
-    useEffect(() => {
-        fetchGetSet<ChatListDTO[]>(apiUrl_privateChats, setPrivateChats);
-        fetchGetSet<ChatListDTO[]>(apiUrl_publicChats, setPublicChats);
-    }, []);
-
-    function selectChat(chatId: number) {
-        props.onSelectChat(chatId);
+    function selectChat(chat: ChatListDTO) {
+        props.onSelectChat(chat);
     }
 
     return (
@@ -37,15 +25,15 @@ function ChatList(props: chatListProps): React.JSX.Element {
 
             <div className="chatList">
                 --- my chats ---
-                {privateChats.map((chat: { chatID: number; chatName: string }) => (
+                {props.privateChats.map((chat: { chatID: number; chatName: string }) => (
                     <button
                         key={chat.chatID}
                         className={
-                            props.selectedChatId === chat.chatID
+                            props.selectedChat === chat
                                 ? "chatButtonSelected"
                                 : "chatButton"
                         }
-                        onClick={() => selectChat(chat.chatID)}
+                        onClick={() => selectChat(chat)}
                     >
                         {chat.chatName}
                     </button>
