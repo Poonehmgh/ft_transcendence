@@ -32,7 +32,6 @@ function Chat() {
                 </div>
 
                 <div className="middleBar_0">
-                    <div>middleBar_0</div>
                 </div>
                 <div className="rightBar_0">
                     rightBar_0
