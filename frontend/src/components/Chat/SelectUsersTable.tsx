@@ -64,7 +64,10 @@ function SelectUsersTable(props: selectUsersTableProps): React.JSX.Element {
                     <table className="chatUserTable">
                         <tbody>
                             {filteredUsers.map((user, index) => (
-                                <tr key={user.id}>
+                                <tr
+                                    key={user.id}
+                                    onClick={() => handleUserSelection(user.id)}
+                                >
                                     <td style={{ width: "30px", textAlign: "center" }}>
                                         {user.online ? "🟢" : "🔴"}
                                     </td>
@@ -74,7 +77,7 @@ function SelectUsersTable(props: selectUsersTableProps): React.JSX.Element {
                                             type="checkbox"
                                             className="checkbox"
                                             checked={selectedUsers.includes(user.id)}
-                                            onChange={() => handleUserSelection(user.id)}
+                                            readOnly
                                         />
                                     </td>
                                 </tr>
