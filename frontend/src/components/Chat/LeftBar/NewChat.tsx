@@ -1,7 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import Modal from "react-modal";
-import io from "socket.io-client";
-import { fetchGetSet } from "src/ApiCalls/fetchers";
 
 // DTO
 import { ChatListDTO } from "chat-dto";
@@ -12,7 +10,7 @@ import "src/styles/buttons.css";
 import SelectUsersTable from "./SelectUsersTable";
 
 interface newChatProps {
-    onCreateChat: (chatId: number) => void;
+    onCreateChat: (chat: ChatListDTO) => void;
 }
 
 /*

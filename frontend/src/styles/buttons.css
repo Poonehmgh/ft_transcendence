@@ -9,7 +9,8 @@
     --lightnessOffset: 0%;
 
     display: inline-block;
-    font-size: 0.8rem;
+    font-size: 1rem;
+    min-height: 40px;
     color: var(--text-primary);
     background-color: hsl(var(--backgroundHue1), 0%, calc(5% + var(--lightnessOffset)));
     border-radius: 9px;

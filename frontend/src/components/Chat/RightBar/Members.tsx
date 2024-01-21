@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { fetchGetSet } from "src/ApiCalls/fetchers";
-import { ParticipantListElementDTO } from "chat-dto";
+
+// DTO
+import { ChatListDTO, ParticipantListElementDTO } from "chat-dto";
 
 interface membersProps {
-    selectedChatId: number;
+    selectedChat: ChatListDTO | null;
 }
 
 function Members(props: membersProps): React.JSX.Element {
@@ -11,11 +13,11 @@ function Members(props: membersProps): React.JSX.Element {
     // temp to do
     const userId = 0;
     const apiUrl =
-        process.env.REACT_APP_BACKEND_URL + "/chat/" + userId + "/participants";
+        process.env.REACT_APP_BACKEND_URL + "/chat/" + props.selectedChat.chatID + "/participants";
 
     useEffect(() => {
         fetchGetSet<ParticipantListElementDTO[]>(apiUrl, setMembers);
-    }, []);
+    }, [props.selectedChat]);
 
     function selectMember(userId) {
         console.log("selectMember: ", userId);

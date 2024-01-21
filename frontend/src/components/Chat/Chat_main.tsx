@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import Members from "./Members";
 import { fetchGetSet } from "src/ApiCalls/fetchers";
-import LeftBar from "./LeftBar/LeftBar";
+import LeftBar from "src/components/Chat/LeftBar/LeftBar_main";
+import RightBar from "src/components/Chat/RightBar/RightBar_main";
 
 // DTO
 import { ChatListDTO } from "chat-dto";
@@ -40,10 +40,8 @@ function Chat() {
                 />
 
                 <div className="middleBar_0"></div>
-                <div className="rightBar_0">
-                    rightBar_0
-                    <Members selectedChatId={selectedChat} />
-                </div>
+
+                <RightBar selectedChat={selectedChat} setSelectedChat={setSelectedChat} />
             </div>
         </div>
     );

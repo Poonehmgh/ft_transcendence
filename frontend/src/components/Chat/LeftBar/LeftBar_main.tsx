@@ -21,14 +21,12 @@ function LeftBar(props: leftBarProps): React.JSX.Element {
         <div className="leftBar_0">
             <NewChat onCreateChat={props.setSelectedChat} />
 
-            <div className="leftBar_1">
-                <ChatList
-                    selectedChat={props.selectedChat}
-                    onSelectChat={(chat) => props.setSelectedChat(chat)}
-                    privateChats={props.privateChats}
-                    publicChats={props.publicChats}
-                />
-            </div>
+            <ChatList
+                selectedChat={props.selectedChat}
+                onSelectChat={(chat) => props.setSelectedChat(chat)}
+                privateChats={props.privateChats}
+                publicChats={props.publicChats}
+            />
         </div>
     );
 }
