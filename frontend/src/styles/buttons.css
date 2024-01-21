@@ -12,8 +12,6 @@
     font-size: 0.8rem;
     color: var(--text-primary);
     background-color: hsl(var(--backgroundHue1), 0%, calc(5% + var(--lightnessOffset)));
-
-    padding: 13px 25px;
     border-radius: 9px;
     transition: background-color 0.1s ease;
     box-sizing: border-box;

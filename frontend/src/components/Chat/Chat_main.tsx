@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Members from "./Members";
 import { fetchGetSet } from "src/ApiCalls/fetchers";
-import LeftBar from "./LeftBar";
+import LeftBar from "./LeftBar/LeftBar";
 
 // DTO
 import { ChatListDTO } from "chat-dto";
