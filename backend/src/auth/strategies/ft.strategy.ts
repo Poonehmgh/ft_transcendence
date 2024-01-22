@@ -11,7 +11,7 @@ export class ftStrategy extends PassportStrategy(Strategy, "42")
         super(
             {
                 clientID        : "u-s4t2ud-44b53d4a9d24b54875d1747b38eeafd48138c02c2d654e48821681959a95c4ad",
-                clientSecret    : "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",
+                clientSecret    : "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",
                 callbackURL     : "http://localhost:5500/auth/42/redirect",
                 // scope           : null,
             });
