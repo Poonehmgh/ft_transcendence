@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import UserProfileModal from "../UserProfileModal/UserProfileModal";
 
 // DTO
@@ -25,13 +25,9 @@ function UserTable(props: userTableProp): React.JSX.Element {
         setModalIsOpen(false);
     };
 
-    if (props.users.length === 0)
-        return (
-            <div>
-                <br />
-                👻
-            </div>
-        );
+    if (!props.users) return <p>Loading data...</p>;
+    if (props.users.length === 0) return <p className="bigCenterEmoji">👻</p>;
+
     return (
         <div>
             <UserProfileModal

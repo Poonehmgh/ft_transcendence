@@ -100,8 +100,6 @@ function NewChat(props: newChatProps): React.JSX.Element {
                                 </div>
                             )}
                         </label>
-
-                        <br />
                         <label className="checkboxContainer">
                             <input type="checkbox" className="checkbox" /> Make Public
                         </label>

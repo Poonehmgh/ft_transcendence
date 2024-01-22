@@ -96,10 +96,9 @@ function ManageProfile() {
     }
 
     return (
-        <div className="mainContainerColumn"
-		style={{alignItems:"center"}}
-		
-        >
+        <div className="mainContainerColumn" style={{ alignItems: "center" }}>
+            <div className="logOutContainer">knudeling</div>
+            
             <div className="h2">Manage your profile:</div>
             {userData ? (
                 <div className="manageProfile">

@@ -9,7 +9,7 @@ import "src/styles/userTable.css";
 import "src/styles/style.css";
 
 function Leaderboard() {
-    const [userList, setUserlist] = useState<UserProfileDTO[]>([]);
+    const [userList, setUserlist] = useState<UserProfileDTO[]>(null);
     const getTopN = 3;
     const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/leaderboard?top=" + getTopN;
 
@@ -22,7 +22,7 @@ function Leaderboard() {
             <div>
                 <div className="h2">Leaderboard</div>
                 <div className="tablesContainer">
-                    <RankNumberColumn n={userList.length} />
+                    {!userList ? null : <RankNumberColumn n={userList.length} />}
                     <UserTable users={userList} />
                 </div>
             </div>

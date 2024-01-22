@@ -58,6 +58,11 @@ body {
     text-align: center;
 }
 
+.bigCenterEmoji {
+    font-size: 5rem;
+    text-align: center;
+}
+
 .leftAligner {
     width: 100%;
     flex-direction: row;

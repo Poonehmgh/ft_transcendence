@@ -7,7 +7,7 @@ import { UserProfileDTO } from "user-dto";
 import "src/styles/style.css";
 
 function AllUsers() {
-    const [userList, setUserlist] = useState<UserProfileDTO[]>([]);
+    const [userList, setUserlist] = useState<UserProfileDTO[]>(null);
     const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/all_users";
 
     useEffect(() => {
