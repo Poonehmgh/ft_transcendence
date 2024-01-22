@@ -13,7 +13,7 @@ interface selectUsersTableProps {
 }
 
 function SelectUsersTable(props: selectUsersTableProps): React.JSX.Element {
-    const [users, setUsers] = useState<UserProfileDTO[]>([]);
+    const [users, setUsers] = useState<UserProfileDTO[]>(null);
     const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
     const [searchQuery, setSearchQuery] = useState<string>("");
     // to do: update the backend when user auth is done to exclude the calling user
@@ -35,6 +35,8 @@ function SelectUsersTable(props: selectUsersTableProps): React.JSX.Element {
             : [...prevSelectedUsers, userId];
     }
 
+    if (!users) return <div> Loading data...</div>;
+
     const filteredUsers = users.filter(
         (user) =>
             user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -54,10 +56,10 @@ function SelectUsersTable(props: selectUsersTableProps): React.JSX.Element {
                     placeholder="🔎"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    style={{ width: "100%"}}
+                    style={{ width: "100%" }}
                 />
             </div>
-            {!filteredUsers || filteredUsers.length === 0 ? (
+            {filteredUsers.length === 0 ? (
                 <p className="bigCenterEmoji">👻</p>
             ) : (
                 <div className="chatUserListContainer">
