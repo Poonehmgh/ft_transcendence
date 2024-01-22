@@ -54,7 +54,7 @@ function SelectUsersTable(props: selectUsersTableProps): React.JSX.Element {
                     placeholder="🔎"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    style={{ width: "100%", margin: "px" }}
+                    style={{ width: "100%"}}
                 />
             </div>
             {!filteredUsers || filteredUsers.length === 0 ? (
@@ -86,7 +86,6 @@ function SelectUsersTable(props: selectUsersTableProps): React.JSX.Element {
                     </table>
                 </div>
             )}
-            <br></br>
         </div>
     );
 }
