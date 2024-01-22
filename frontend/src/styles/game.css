@@ -80,3 +80,29 @@
 .score-player{
     font-size: 28px;
 }
+
+.player-left-info {
+        color: black;
+        border: #3F4739;
+        background-color: #3F4739;
+        border-width: 1px;
+        grid-row: 3 / 4;
+        grid-column: 2 / 3;
+        width: 100%; /* Adjust the width as needed */
+}
+
+.player-right-info {
+    /* Position relative to header */
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+  
+    /* Adjust grid position to right side */
+    grid-row: 3 / 4;
+    grid-column: 4 / 5;
+    width: 100%; /* Adjust the width as needed */
+    color: black;
+    border: #3F4739;
+    background-color: #3F4739;
+    border-width: 1px;
+  }
