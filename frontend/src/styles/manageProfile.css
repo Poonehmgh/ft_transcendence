@@ -16,6 +16,12 @@
     box-shadow: 0 5px 30px 0 rgba(100, 100, 100, 0.4);
 }
 
+.logOutContainer {
+    position:fixed;
+    top: 100px;
+    left: 100px;
+}
+
 .playerCard {
     display: flex;
     align-items: center;

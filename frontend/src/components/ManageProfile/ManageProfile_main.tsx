@@ -96,18 +96,14 @@ function ManageProfile() {
     }
 
     return (
-        <div
-            style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-            }}
-        >
+        <div className="mainContainerColumn" style={{ alignItems: "center" }}>
+            <div className="logOutContainer">knudeling</div>
+            
             <div className="h2">Manage your profile:</div>
             {userData ? (
                 <div className="manageProfile">
                     <div className="leftAligner">
-                        <div className="h2" style={{textAlign:"left"}}>
+                        <div className="h2Left" style={{ flexDirection: "row", justifyContent:"start", alignItems:"flex-end"}}>
                             {userData.name}
                             <button className="editName" onClick={handleNameChange}>
                                 ✎

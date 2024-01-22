@@ -1,0 +1,14 @@
+:root {
+    --color1: hsl(0, 0%, 12%);
+    --color2: 60, 60, 60;
+    --text-primary: hsl(26, 18%, 43%);
+    --backgroundHue1: 0;
+}
+
+.loginContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 500px;
+    width: 300px;
+}

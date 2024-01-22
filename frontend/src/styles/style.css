@@ -14,9 +14,25 @@
     color: var(--text-primary);
 }
 
+body {
+    margin: 23vh 0 0 0; /* Adjust the margin to match the height of the fixed header */
+}
+
 .sections-container {
     height: 100vh;
     width: 100vw;
+}
+
+.mainContainerRow,
+.mainContainerColumn {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    text-align: center;
+}
+
+.mainContainerColumn {
+	flex-direction: column;
 }
 
 .h2,
@@ -25,10 +41,14 @@
     font-size: 2rem;
     margin: 2rem 0rem 1.2rem 0rem;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .h2Left {
     text-align: left;
+    align-items: start;
 }
 
 .p,
@@ -39,6 +59,11 @@
 }
 
 .pCenter {
+    text-align: center;
+}
+
+.bigCenterEmoji {
+    font-size: 5rem;
     text-align: center;
 }
 

@@ -29,7 +29,7 @@ function Chat() {
     }, []);
 
     return (
-        <div>
+        <div className="mainContainerColumn">
             <div className="h2">{selectedChat ? selectedChat.chatName : "Chat"}</div>
             <div className="chatMain">
                 <LeftBar
