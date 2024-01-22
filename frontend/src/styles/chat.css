@@ -105,3 +105,26 @@
 .chatButtonSelected {
     color: var(--psl);
 }
+
+.chatUserListContainer {
+    max-height: 600px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+}
+
+.chatUserTable {
+    width: 100%;
+    line-height: 1.8;
+    border: 0px;
+    border-collapse: collapse;
+}
+
+.chatUserTable tr:hover {
+    background-color: rgb(15, 15, 15);
+}
+
+.chatSearchBox {
+    padding: 5px;
+    line-height: 2;
+    margin-bottom: 10px;
+}

@@ -4,8 +4,6 @@
     --text-primary: hsl(26, 18%, 43%);
 }
 
-/* main */
-
 .modal2 {
     position: fixed;
     top: 200px;
@@ -53,36 +51,12 @@
     align-items: end;
 }
 
-/* images */
-
 .modal-avatar {
     width: 150px;
     height: 150px;
     object-fit: cover;
     object-position: center center;
     border-radius: 17px;
-}
-
-.chatUserListContainer {
-    max-height: 600px;
-    overflow-y: auto;
-}
-
-.chatUserTable {
-    width: 100%;
-    line-height: 1.8;
-    border: 0px;
-    border-collapse: collapse;
-}
-
-.chatUserTable tr:hover {
-    background-color: rgb(15, 15, 15);
-}
-
-.chatSearchBox {
-    padding: 5px;
-    line-height: 2;
-    height: 110px;
 }
 
 .closeX {
