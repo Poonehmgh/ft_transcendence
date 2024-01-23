@@ -3,14 +3,14 @@ import React from "react";
 // CSS
 import "src/styles/playerCardTable.css";
 
-interface playerCardTable_prop {
+interface playerCardTableProp {
     mmr: number;
     rank: string;
     matches: number;
     winrate: number;
 }
 
-function PlayerCardTable(props: playerCardTable_prop) {
+function PlayerCardTable(props: playerCardTableProp) {
     return (
         <table className="playerCardTable">
             <tbody>

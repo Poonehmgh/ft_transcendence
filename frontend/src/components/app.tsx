@@ -21,7 +21,7 @@ function App() {
                     <Route path="/chat" Component={Chat} />
                     <Route path="/userprofile" Component={ManageProfile} />
                     <Route path="/login" Component={Login} />
-                    <Route path="*" element={<ErrorPage />} />
+                    <Route path="*" Component={ErrorPage} />
                 </Routes>
             </div>
         </Router>

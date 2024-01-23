@@ -25,7 +25,7 @@ function ChatList(props: chatListProps): React.JSX.Element {
 
             <div className="chatList">
                 --- my chats ---
-                {props.privateChats.map((chat: { chatID: number; chatName: string }) => (
+                {!props.privateChats ? <p>none</p> : props.privateChats.map((chat: { chatID: number; chatName: string }) => (
                     <button
                         key={chat.chatID}
                         className={

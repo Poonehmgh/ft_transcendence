@@ -48,7 +48,7 @@ function UserTable(props: userTableProp): React.JSX.Element {
                 </thead>
                 <tbody>
                     {props.users.map((element: UserProfileDTO, index: number) => (
-                        <tr key={element.id}>
+                        <tr key={index}>
                             <td>{element.online ? "🟢" : "🔴"}</td>
                             <td>
                                 <button

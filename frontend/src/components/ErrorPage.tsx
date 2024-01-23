@@ -1,8 +1,5 @@
 import React from "react";
 
-// CSS
-import "src/styles/bigTable.css";
-
 function ErrorPage() {
     return (
         <div
@@ -10,13 +7,19 @@ function ErrorPage() {
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                marginTop: "100px",
+                paddingTop: "7vh",
+                textAlign: "center",
             }}
         >
-            <p>Requested resource does not exist.<br></br> Have a cat pic instead:</p>
+            <p>
+                Requested resource does not exist.
+                <br />
+                <br />
+                Have a cat pic instead:
+            </p>
             <img
                 src="/images/tekir.jpg"
-                alt="handsome_boi"
+                alt="best_boi"
                 style={{ height: "auto", width: "400px" }}
             />
         </div>

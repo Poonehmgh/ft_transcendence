@@ -16,7 +16,15 @@ function AllUsers() {
         fetchGetSet(apiUrl, setUsers);
     }, []);
 
-    if (!users) return <div>Loading data...</div>;
+    if (!users)
+        return (
+            <div className="mainContainerRow">
+                <div>
+                    <div className="h2">All Users</div>
+                    <p>Loading data...</p>
+                </div>
+            </div>
+        );
 
     const filteredUsers = users
         ? users.filter((user) =>

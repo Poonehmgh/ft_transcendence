@@ -97,13 +97,19 @@ function ManageProfile() {
 
     return (
         <div className="mainContainerColumn" style={{ alignItems: "center" }}>
-            <div className="logOutContainer">knudeling</div>
-            
+
             <div className="h2">Manage your profile:</div>
             {userData ? (
                 <div className="manageProfile">
                     <div className="leftAligner">
-                        <div className="h2Left" style={{ flexDirection: "row", justifyContent:"start", alignItems:"flex-end"}}>
+                        <div
+                            className="h2Left"
+                            style={{
+                                flexDirection: "row",
+                                justifyContent: "start",
+                                alignItems: "flex-end",
+                            }}
+                        >
                             {userData.name}
                             <button className="editName" onClick={handleNameChange}>
                                 ✎
@@ -138,7 +144,7 @@ function ManageProfile() {
                     />
                 </div>
             ) : (
-                <p>Loading user data...</p>
+                <p>Loading data...</p>
             )}
         </div>
     );

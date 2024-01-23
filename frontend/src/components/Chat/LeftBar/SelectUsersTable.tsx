@@ -21,7 +21,7 @@ function SelectUsersTable(props: selectUsersTableProps): React.JSX.Element {
 
     useEffect(() => {
         fetchGetSet<UserProfileDTO[]>(apiUrl, setUsers);
-    }, []);
+    });
 
     function handleUserSelection(userId: number) {
         const newSelectedUsers = updateSelectedUsers(selectedUsers, userId);
