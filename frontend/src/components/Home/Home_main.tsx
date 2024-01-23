@@ -1,9 +1,8 @@
 import React from "react";
-
+import Login from "./Login";
 
 // CSS
 import "src/styles/style.css";
-import "src/styles/buttons.css";
 import "src/styles/home.css";
 
 function Home() {
@@ -21,15 +20,7 @@ function Home() {
         <div className="mainContainerRow">
             <div>
                 <div className="h2">Home</div>
-                <div className="loginContainer">
-                    <button
-                        className="bigButton"
-                        style={{ fontSize: "3rem", padding: "20px" }}
-                        onClick={AuthComponent}
-                    >
-                        🔑
-                    </button>
-                </div>
+                <Login />
             </div>
         </div>
     );
