@@ -1,6 +1,7 @@
 {
     "compilerOptions": {
         "module": "commonjs",
+        "moduleResolution": "node",
         "declaration": true,
         "removeComments": true,
         "emitDecoratorMetadata": true,
@@ -20,7 +21,8 @@
         "paths": {
             "user-dto": ["../backend/src/user/user-dto"],
             "chat-dto": ["../backend/src/chat/chat.DTOs"],
-            "match-dto": ["../backend/src/match/match-dto"]
+            "match-dto": ["../backend/src/match/match-dto"],
+            "functions": ["src/functions/"]
         },
         "jsx": "react"
     }

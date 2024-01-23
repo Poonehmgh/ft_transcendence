@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import UserTable from "../shared/UserTable";
 import RankNumberColumn from "./RankNumberColumn";
+import { fetchGetSet } from "src/functions/fetchers";
+
+// DTO
 import { UserProfileDTO } from "user-dto";
-import { fetchGetSet } from "src/ApiCalls/fetchers";
 
 // CSS
 import "src/styles/userTable.css";

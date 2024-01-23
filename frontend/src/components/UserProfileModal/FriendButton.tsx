@@ -5,7 +5,7 @@ import {
     cancelRequest,
     declineRequest,
     removeFriend,
-} from "../../ApiCalls/userActions";
+} from "../../functions/userActions";
 
 // DTO
 import { UserRelation } from "user-dto";

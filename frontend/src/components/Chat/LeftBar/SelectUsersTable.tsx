@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { fetchGetSet } from "src/ApiCalls/fetchers";
+import { fetchGetSet } from "src/functions/fetchers";
 
 // DTO
 import { UserProfileDTO } from "user-dto";

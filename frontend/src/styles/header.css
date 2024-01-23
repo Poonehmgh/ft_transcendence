@@ -8,11 +8,11 @@
 
 .headerMainContainer {
     position: fixed;
-	top: 0;
+    top: 0;
     left: 0;
     right: 0;
-	margin: 10px;
-	background-color: black;
+    margin: 10px;
+    background-color: black;
     border: 1px solid;
     text-align: center;
     display: flex;

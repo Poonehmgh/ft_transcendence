@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { fetchGetSet } from "src/ApiCalls/fetchers";
-import { cancelRequest } from "src/ApiCalls/userActions";
+import { fetchGetSet } from "src/functions/fetchers";
+import { cancelRequest } from "src/functions/userActions";
 
 // DTO
 import { IdAndNameDTO } from "user-dto";

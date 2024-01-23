@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
-import { authContentHeader } from "src/ApiCalls/headers";
+import { authContentHeader } from "src/functions/headers";
 import PlayerCardTable from "../shared/PlayerCardTable";
 
 // DTO

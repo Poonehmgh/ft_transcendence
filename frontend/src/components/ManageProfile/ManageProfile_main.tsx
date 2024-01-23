@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
-import { authContentHeader } from "src/ApiCalls/headers";
+import { authContentHeader } from "src/functions/headers";
 import ManageContactsTabs from "./ManageContactsTabs";
 import PlayerCardTable from "../shared/PlayerCardTable";
-import { fetchGetSet } from "src/ApiCalls/fetchers";
+import { fetchGetSet } from "src/functions/fetchers";
 
 // DTO
 import { UserProfileDTO } from "user-dto";
@@ -97,7 +97,6 @@ function ManageProfile() {
 
     return (
         <div className="mainContainerColumn" style={{ alignItems: "center" }}>
-
             <div className="h2">Manage your profile:</div>
             {userData ? (
                 <div className="manageProfile">
