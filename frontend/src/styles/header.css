@@ -33,11 +33,23 @@
     z-index: 11;
 }
 
+.homeLinkClickArea {
+    position: fixed;
+    top: 6vh;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 30vh;
+    width: 60vh;
+    background-color: transparent;
+    cursor: pointer;
+    z-index: 12;
+}
+
 .headerTabsContainer {
     display: flex;
     flex-direction: row;
     justify-content: center;
-    z-index: 12;
+    z-index: 13;
 }
 
 .headerTabLink {

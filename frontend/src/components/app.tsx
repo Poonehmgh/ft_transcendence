@@ -7,7 +7,7 @@ import Game from "src/components/Game/Game";
 import Chat from "src/components/Chat/Chat_main";
 import ErrorPage from "src/components/ErrorPage";
 import ManageProfile from "src/components/ManageProfile/ManageProfile_main";
-import Login from "./Login";
+import Home from "./Home/Home_main";
 
 function App() {
     return (
@@ -15,12 +15,13 @@ function App() {
             <div>
                 <Header />
                 <Routes>
+                    <Route path="/" Component={Home} />
+                    <Route path="/home" Component={Home} />
                     <Route path="/leaderboard" Component={Leaderboard} />
                     <Route path="/allusers" Component={AllUsers} />
                     <Route path="/game" Component={Game} />
                     <Route path="/chat" Component={Chat} />
                     <Route path="/userprofile" Component={ManageProfile} />
-                    <Route path="/login" Component={Login} />
                     <Route path="*" Component={ErrorPage} />
                 </Routes>
             </div>

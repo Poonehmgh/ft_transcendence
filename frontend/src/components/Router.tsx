@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouterProvider, redirect } from "react-router-dom";
-import LogIn from "./Login";
+import LogIn from "./Home/Login";
 import Home from "./Home";
 import Game from "./Game/Game";
 import Chat from "./Chat/Chat_main";

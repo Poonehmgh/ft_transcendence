@@ -8,8 +8,9 @@ import "src/styles/buttons.css";
 function Header() {
     return (
         <div>
+            <Link className="homeLinkClickArea" to="/home" />
             <div className="headerMainContainer">
-            <img className="pongersLogo" src="/images/wordart.png" alt="pongers" />
+                <img className="pongersLogo" src="/images/wordart.png" alt="pongers" />
                 <div className="headerTabsContainer">
                     <Link className="headerTabLink" to="/game">
                         🎮

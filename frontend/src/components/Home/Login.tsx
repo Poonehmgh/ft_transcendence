@@ -20,7 +20,7 @@ function Login() {
     );
 }
 
-const apiUrl = "http://localhost:5500/auth/42/login";
+const apiUrl = process.env.REACT_APP_BACKEND_URL + "/auth/42/login";
 function AuthComponent() {
     try {
         window.location.assign(apiUrl);
