@@ -41,9 +41,9 @@ export class UserController {
     }
   }
 
-  @Get("profile")
-  async getProfile(@Query("id") userId: number): Promise<UserProfileDTO> {
-    return this.userService.getProfile(userId);
+  @Get("profile/:id")
+  async getProfile(@Param("id") id: number): Promise<UserProfileDTO> {
+    return this.userService.getProfile(id);
   }
 
   @Get("get_avatar/:id")

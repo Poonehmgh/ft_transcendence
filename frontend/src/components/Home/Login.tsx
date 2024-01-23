@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Cookies from "js-cookie";
 
 // CSS
 import "src/styles/style.css";
@@ -10,14 +9,6 @@ function Login() {
     const [authenticated, setAuthenticated] = useState(false);
     const [userData, setUserData] = useState(null);
     const apiUrl = process.env.REACT_APP_BACKEND_URL + "/auth/42/login";
-    const authToken = Cookies.get("token");
-
-    useEffect(() => {
-        if (authToken) {
-            localStorage.setItem("userToken", authToken);
-            //window.location.assign("/home");
-        }
-    }, []);
 
     function loginRedirect() {
         try {

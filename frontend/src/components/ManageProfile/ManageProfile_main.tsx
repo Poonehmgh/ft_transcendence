@@ -40,7 +40,7 @@ function ManageProfile() {
         }
     }
 
-    const apiUrl_profile = process.env.REACT_APP_BACKEND_URL + "/user/profile?id=" + id;
+    const apiUrl_profile = process.env.REACT_APP_BACKEND_URL + "/user/profile/" + id;
 
     useEffect(() => {
         fetchGetSet(apiUrl_profile, setUserData);

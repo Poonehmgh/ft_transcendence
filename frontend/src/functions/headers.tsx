@@ -1,10 +1,8 @@
-import Cookies from "js-cookie";
-
 export function authHeader() {
 
-    const token: string = "Bearer " + Cookies.get("token");
+    //const token: string = "Bearer " + Cookies.get("token");
 
-    //const token: string = "Bearer " + localStorage.getItem("userToken");
+    const token: string = "Bearer " + localStorage.getItem("userToken");
     const myHeaders: Headers = new Headers();
     myHeaders.append("Authorization", token);
     return myHeaders;
