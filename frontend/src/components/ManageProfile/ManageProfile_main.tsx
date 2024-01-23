@@ -45,7 +45,7 @@ function ManageProfile() {
     useEffect(() => {
         fetchGetSet(apiUrl_profile, setUserData);
         fetchAvatar();
-    }, []);
+    }, [apiUrl_profile]);
 
     async function handleAvatarChange(e) {
         const file = e.target.files[0];

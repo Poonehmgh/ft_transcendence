@@ -19,7 +19,7 @@ function FriendList(props: friendListProps) {
 
     useEffect(() => {
         fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
-    }, []);
+    }, [apiUrl]);
 
     function handleRemoveFriend(id: number, index: number) {
         if (window.confirm(`Remove friend ${group[index].name}?`)) {

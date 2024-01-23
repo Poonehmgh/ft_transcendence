@@ -26,9 +26,10 @@ function Chat() {
     useEffect(() => {
         fetchGetSet<ChatListDTO[]>(apiUrl_privateChats, setPrivateChats);
         fetchGetSet<ChatListDTO[]>(apiUrl_publicChats, setPublicChats);
-    }, []);
+    }, [apiUrl_privateChats, apiUrl_publicChats]);
 
     return (
+        
         <div className="mainContainerColumn">
             <div className="h2">{selectedChat ? selectedChat.chatName : "Chat"}</div>
             <div className="chatMain">

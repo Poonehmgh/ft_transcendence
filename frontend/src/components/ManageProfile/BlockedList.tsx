@@ -19,7 +19,7 @@ function BlockedList(props: blockedListProps) {
 
     useEffect(() => {
         fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
-    }, []);
+    }, [apiUrl]);
 
     function handleUnBlockUser(id: number, index: number) {
         if (window.confirm(`Unblock user ${group[index].name}?`)) {

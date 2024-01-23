@@ -17,7 +17,7 @@
     text-align: center;
     display: flex;
     flex-direction: column;
-    justify-content: end;
+    justify-content: flex-end;
     align-items: center;
     height: 23vh;
     z-index: 10;

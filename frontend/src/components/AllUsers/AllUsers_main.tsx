@@ -14,7 +14,7 @@ function AllUsers() {
 
     useEffect(() => {
         fetchGetSet(apiUrl, setUsers);
-    }, []);
+    }, [apiUrl]);
 
     if (!users)
         return (

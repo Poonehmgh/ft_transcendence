@@ -18,7 +18,7 @@ function MatchHistory(props: matchHistoryProp) {
 
     useEffect(() => {
         fetchGetSet<MatchInfoDTO[]>(apiUrl, setMatches);
-    }, []);
+    }, [apiUrl]);
 
     function getCalendarDay(date: Date) {
         const day = date.getDate().toString().padStart(2, "0");

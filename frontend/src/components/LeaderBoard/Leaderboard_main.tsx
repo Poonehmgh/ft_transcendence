@@ -15,7 +15,7 @@ function Leaderboard() {
 
     useEffect(() => {
         fetchGetSet(apiUrl, setUserlist);
-    }, []);
+    }, [apiUrl]);
 
     return (
         <div className="mainContainerRow">

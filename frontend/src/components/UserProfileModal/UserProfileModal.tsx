@@ -25,43 +25,44 @@ function UserProfileModal(props: userProfileModalProps) {
         props.onClose();
     }
 
-    async function fetchProfile() {
-        if (props.id == null) return;
-        const url = process.env.REACT_APP_BACKEND_URL + "/user/profile?id=" + props.id;
-        try {
-            const response = await fetch(url, {
-                method: "GET",
-                headers: authContentHeader(),
-            });
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
-            }
-            const data = await response.json();
-            setUserData(data);
-        } catch (error) {
-            console.log("Error fetching user data:", error);
-        }
-    }
-
-    async function fetchAvatar() {
-        const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/get_avatar/" + props.id;
-        try {
-            const response = await fetch(apiUrl, {
-                method: "GET",
-                headers: authContentHeader(),
-            });
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
-            }
-            const blob = await response.blob();
-            const imageUrl = URL.createObjectURL(blob);
-            setAvatarURL(imageUrl);
-        } catch (error) {
-            console.log("Error getting Avatar", error);
-        }
-    }
-
     useEffect(() => {
+        async function fetchProfile() {
+            if (props.id == null) return;
+            const url =
+                process.env.REACT_APP_BACKEND_URL + "/user/profile?id=" + props.id;
+            try {
+                const response = await fetch(url, {
+                    method: "GET",
+                    headers: authContentHeader(),
+                });
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                const data = await response.json();
+                setUserData(data);
+            } catch (error) {
+                console.log("Error fetching user data:", error);
+            }
+        }
+
+        async function fetchAvatar() {
+            const apiUrl =
+                process.env.REACT_APP_BACKEND_URL + "/user/get_avatar/" + props.id;
+            try {
+                const response = await fetch(apiUrl, {
+                    method: "GET",
+                    headers: authContentHeader(),
+                });
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                const blob = await response.blob();
+                const imageUrl = URL.createObjectURL(blob);
+                setAvatarURL(imageUrl);
+            } catch (error) {
+                console.log("Error getting Avatar", error);
+            }
+        }
         fetchProfile();
         fetchAvatar();
     }, [props.isOpen, props.id]);
@@ -88,8 +89,7 @@ function UserProfileModal(props: userProfileModalProps) {
                                 alt="User Avatar"
                             />
 
-                            <div className="modal-expander-hor">
-                            </div>
+                            <div className="modal-expander-hor"></div>
                             <PlayerCardTable
                                 mmr={userData.mmr}
                                 rank={userData.rank}

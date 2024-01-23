@@ -21,7 +21,7 @@ function SelectUsersTable(props: selectUsersTableProps): React.JSX.Element {
 
     useEffect(() => {
         fetchGetSet<UserProfileDTO[]>(apiUrl, setUsers);
-    });
+    }, [apiUrl]);
 
     function handleUserSelection(userId: number) {
         const newSelectedUsers = updateSelectedUsers(selectedUsers, userId);
@@ -67,7 +67,7 @@ function SelectUsersTable(props: selectUsersTableProps): React.JSX.Element {
                         <tbody>
                             {filteredUsers.map((user, index) => (
                                 <tr
-                                    key={user.id}
+                                    key={index}
                                     onClick={() => handleUserSelection(user.id)}
                                 >
                                     <td style={{ width: "30px", textAlign: "center" }}>
