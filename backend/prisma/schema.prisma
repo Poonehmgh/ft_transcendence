@@ -12,7 +12,7 @@ model User {
     updatedAt     DateTime    @updatedAt
     // registration
     id            Int         @id @unique // this is the intraID
-    token         String?
+    token         String?     @unique
     name          String      @unique
     email         String      @unique
     twoFa         Boolean     @default(false)

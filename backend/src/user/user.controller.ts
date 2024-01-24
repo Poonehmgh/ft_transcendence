@@ -10,25 +10,26 @@ import {
     UseInterceptors,
     BadRequestException,
     UploadedFile,
+    UseGuards,
 } from "@nestjs/common";
 import { Response } from "express";
-import {
-    UserRelation,
-    IdAndNameDTO,
-    NewUserDTO,
-    UserProfileDTO,
-    ChangeNameDto,
-} from "./user-dto";
+import { UserRelation, IdAndNameDTO, UserProfileDTO, ChangeNameDto } from "./user-dto";
 import { UserService } from "./user.service";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
 import * as path from "path";
+import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
+
+
+interface AuthenticatedRequest extends Request {
+    user: any;
+}
 
 @Controller("user")
 export class UserController {
     constructor(private readonly userService: UserService) {}
 
-    @Post("new")
+    /*     @Post("new")
     async newUser(@Body() userInfo: NewUserDTO): Promise<any> {
         try {
             await this.userService.newUser(userInfo);
@@ -39,15 +40,34 @@ export class UserController {
                 message: "Failed to create user.",
             };
         }
-    }
+    } */
 
     @Get("profile/:id")
     async getProfile(@Param("id") id: number): Promise<UserProfileDTO> {
         return this.userService.getProfileById(id);
     }
 
+ 
+
+    @Get("my_profile/")
+    @UseGuards(JwtAuthGuard)
+    async getMyProfile(
+        @Req() req: AuthenticatedRequest,
+        @Res() res: Response
+    ): Promise<UserProfileDTO> {
+        console.log("myProfile headers: ", req.headers);
+        console.log("myProfile req.user: ", req.user);
+
+        const token = req.headers["token"];
+        if (!token) {
+            res.status(401).send("Unauthorized");
+            return;
+        }
+        return this.userService.getProfileById(token);
+    }
+
     @Get("get_avatar/:id")
-    async getMyAvatar(@Param("id") id: number, @Res() res: Response) {
+    async getAvatarById(@Param("id") id: number, @Res() res: Response) {
         const filePath = this.userService.getAvatarPath(id);
         if (!filePath) {
             return res.sendFile("default.png", { root: "./uploads" });
@@ -60,9 +80,10 @@ export class UserController {
         return this.userService.getTopProfiles(top);
     }
 
-    @Get("matches")
-    async getMatches(userId: number): Promise<number[]> {
-        return this.userService.getMatches(userId);
+    // remove or update to give matchinfodto
+    @Get("matches/:id")
+    async getMatches(@Param("id") id: number): Promise<number[]> {
+        return this.userService.getMatches(id);
     }
 
     @Get("friendStatus")
@@ -76,6 +97,7 @@ export class UserController {
     // getters
 
     @Get("all_users")
+    @UseGuards(JwtAuthGuard)
     async getAllUsers() {
         return this.userService.getAllUsers();
     }

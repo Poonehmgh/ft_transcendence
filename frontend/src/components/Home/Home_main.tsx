@@ -8,12 +8,8 @@ import "src/styles/home.css";
 function Home() {
     const apiUrl = process.env.REACT_APP_BACKEND_URL + "/auth/42/login";
 
-    function AuthComponent() {
-        try {
-            window.location.assign(apiUrl);
-        } catch (e) {
-            alert(e);
-        }
+    function printLocalStorage() {
+        console.log(localStorage);
     }
 
     return (
@@ -21,6 +17,9 @@ function Home() {
             <div>
                 <div className="h2">Home</div>
                 <Login />
+                <button onClick={printLocalStorage}>
+                    Print Local Storage
+                </button>
             </div>
         </div>
     );

@@ -9,7 +9,7 @@ import "src/styles/buttons.css";
 function Login() {
     const [userData, setUserData] = useState(null);
     const loginRedirUrl = process.env.REACT_APP_BACKEND_URL + "/auth/42/login";
-    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/my_profile";
+    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/my_profile";
 
     useEffect(() => {
         fetchGetSet(apiUrl, setUserData);
