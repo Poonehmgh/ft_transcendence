@@ -42,16 +42,16 @@ export class AuthService {
     //     return this.generateTwoFaQRCode(foundUser);
     // }
 
-    async validate2FaCode(twoFaCodeDto: TwoFaCodeDto){
-        const {code, email, id} = twoFaCodeDto;
-        const foundUser = await this.findUserByEmail(email);
-        if (!foundUser)
-            throw new BadRequestException("User not found.");
-        const verified = authenticator.verify({token: code, secret: foundUser.twoFaSecret})
-        if (!verified)
-            throw new BadRequestException("Invalid code.");
-        return this.generateJwtToken({mail: foundUser.email, id: foundUser.id, name: foundUser.name, twoFa: true})
-    }
+    // async validate2FaCode(twoFaCodeDto: TwoFaCodeDto){
+    //     const {code} = twoFaCodeDto;
+    //     const foundUser = await this.findUserByEmail(email);
+    //     if (!foundUser)
+    //         throw new BadRequestException("User not found.");
+    //     const verified = authenticator.verify({token: code, secret: foundUser.twoFaSecret})
+    //     if (!verified)
+    //         throw new BadRequestException("Invalid code.");
+    //     return this.generateJwtToken({mail: foundUser.email, id: foundUser.id, name: foundUser.name, twoFa: true})
+    // }
 
     async validateUser(payload){
         const {id} = payload.id;
@@ -89,7 +89,6 @@ export class AuthService {
 
     async validateUserByJwt(payload){
         const {id, email} = payload;
-        console.log("payload is", payload, "sub is", id)
         const foundUser = await this.findUserByEmail(email);
         if (!foundUser)
             throw new BadRequestException("not found.");
@@ -127,11 +126,11 @@ export class AuthService {
         }
     }
 
-    async activate2Fa(twoFaDto: TwoFaDto)
+    async activate2Fa(user)
     {
         try{
             const secretKey = await this.createSecretKey();
-            const foundUser = await this.findUserByEmail(twoFaDto.email);
+            const foundUser = await this.findUserByEmail(user.email);
             if (!foundUser) ///
                 throw new BadRequestException("Activate2Fa: no such user found");
             const {qrcode, url} = await this.generateTwoFaQRCode(foundUser, secretKey);
@@ -150,11 +149,29 @@ export class AuthService {
         {
             throw new BadRequestException("Activate2Fa: Something went wrong.");
         }
+        // return {qrcode: "hi", url:"hello", newToken:"hgjhkgli"};
     }
 
-    async verify2Fa(twoFaDto: TwoFaCodeDto){
-        // const {code} = twoFaDto.code;
+    async verify2Fa(twoFaDto: TwoFaCodeDto, user){
+        console.log(user);
+        const code = twoFaDto.code;
 
+        const foundUser = await this.findUserByEmail(user.email);
+        if (!foundUser)
+            throw new BadRequestException("Verify2Fa: User not found.");
+        const verified = authenticator.verify({
+            token: code,
+            secret:foundUser.twoFaSecret,
+        });
+        if (verified)
+        {
+            const newToken = await this.generateJwtToken({email: foundUser.email,
+                id: foundUser.id,
+                name: foundUser.name,
+                twoFa: foundUser.twoFa});
+            return newToken;
+        }
+        throw new BadRequestException("Verify2Fa: Invalid code.");
     }
     async generateTwoFaQRCode(user, secret){
         const url = await this.otpAuthUrl(user.email, secret);
