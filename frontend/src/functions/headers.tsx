@@ -17,7 +17,7 @@ export function authContentHeader() {
 
 function getTokenFromCookie() {
     const cookies = document.cookie.split(";");
-    let tokenValue = null;
+    let tokenValue = "";
 
     cookies.forEach((cookie) => {
         const [name, value] = cookie.trim().split("=");
