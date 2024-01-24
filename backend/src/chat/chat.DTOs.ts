@@ -117,3 +117,9 @@ export class CreateNewChatDTO {
 //     }
 // ]
 // }
+
+
+export class InviteUserDTO{
+    chatID: number
+    userId: number
+}
