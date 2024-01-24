@@ -109,7 +109,7 @@ export class AuthService {
         // added this, pls give blessing, Pooneh
         await this.prisma.user.update({
             where: { id: payload.id },
-            data: { token: token, online: true },
+            data: { online: true },
         });
 
         console.log("token is", token);

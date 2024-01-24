@@ -1,5 +1,4 @@
 export function authHeader() {
-
     //const token: string = "Bearer " + Cookies.get("token");
 
     const token: string = "bearer " + localStorage.getItem("userToken");
@@ -10,11 +9,22 @@ export function authHeader() {
 
 export function authContentHeader() {
     const myHeaders: Headers = new Headers();
-    const token = "Bearer " + "dd609527e582835b60cfcbc3a56b9df961ce5f94e0181315ae8c4fc7677b1a0d";
-    
-    
-    const token2: string = "Bearer " + localStorage.getItem("userToken");
-    myHeaders.append("Authorization", token2);
-    //myHeaders.append("Content-Type", "application/json");
+
+    const token: string = "Bearer " + getTokenFromCookie();
+    myHeaders.append("Authorization", token);
     return myHeaders;
+}
+
+function getTokenFromCookie() {
+    const cookies = document.cookie.split(";");
+    let tokenValue = null;
+
+    cookies.forEach((cookie) => {
+        const [name, value] = cookie.trim().split("=");
+
+        if (name === "token") {
+            tokenValue = value;
+        }
+    });
+    return tokenValue;
 }

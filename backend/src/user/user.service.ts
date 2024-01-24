@@ -74,31 +74,6 @@ export class UserService {
         };
     }
 
-    async getProfileByToken(token: string): Promise<UserProfileDTO> {
-        const profile = await this.prisma.user.findUnique({
-            where: { token: String(token) },
-            select: {
-                id: true,
-                name: true,
-                mmr: true,
-                rank: true,
-                matches: true,
-                winrate: true,
-                online: true,
-            },
-        });
-        if (!profile) throw new Error("getProfile: User not found");
-        return {
-            id: profile.id,
-            name: profile.name,
-            rank: profile.rank,
-            mmr: profile.mmr,
-            matches: profile.matches.length,
-            winrate: profile.winrate,
-            online: profile.online,
-        };
-    }
-
     async getFriendStatus(userId: number, otherUserId: number): Promise<UserRelation> {
         const user = await this.prisma.user.findUnique({
             where: { id: Number(userId) },

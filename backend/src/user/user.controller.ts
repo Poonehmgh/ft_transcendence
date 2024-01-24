@@ -55,15 +55,10 @@ export class UserController {
         @Req() req: AuthenticatedRequest,
         @Res() res: Response
     ): Promise<UserProfileDTO> {
-        console.log("myProfile headers: ", req.headers);
-        console.log("myProfile req.user: ", req.user);
-
-        const token = req.headers["token"];
-        if (!token) {
-            res.status(401).send("Unauthorized");
-            return;
-        }
-        return this.userService.getProfileById(token);
+        console.log("accepted");
+        return null;
+        
+        //return this.userService.getProfileById(req.id);
     }
 
     @Get("get_avatar/:id")
