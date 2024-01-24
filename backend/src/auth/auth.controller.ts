@@ -57,16 +57,24 @@ export class AuthController {
   }
 
 
-  // @Post("42/2fa")
-  // @UseGuards(JwtAuthGuard)
-  // async activate2Fa(@Req() req: Request, @Res() res:Response, @Body() twoFaDto: TwoFaDto)
-  // {
-  //   const { qrcode, url, newToken} = await this.authService.activate2Fa(twoFaDto, req);
-  //   res.cookie("qrCode", qrcode);
-  //   res.cookie("url", url);
-  //   res.cookie("token", newToken);
-  //   return res.json({"msg:": "the 2fa was activated successfully!", "token": newToken});
-  // }
+  @Post("42/2fa")
+  @UseGuards(JwtAuthGuard)
+  async activate2Fa(@Req() req: Request, @Res() res:Response, @Body() twoFaDto: TwoFaDto)
+  {
+    const { qrcode, url, newToken} = await this.authService.activate2Fa(twoFaDto);
+    res.cookie("qrCode", qrcode);
+    res.cookie("url", url);
+    res.cookie("token", newToken);
+
+    return res.json({"msg:": "the 2fa was activated successfully!", "token": newToken});
+  }
+
+  @Post("42/verify2fa")
+  @UseGuards(JwtAuthGuard)
+  async verify2Fa(@Req() req: Request, @Res() res: Response, twoFaDto: TwoFaCodeDto)
+  {
+    const newToken = await this.authService.verify2Fa(twoFaDto);
+  }
 
   @Post("42/logout")
   @UseGuards(JwtAuthGuard)

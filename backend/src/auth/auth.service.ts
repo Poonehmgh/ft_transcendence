@@ -127,21 +127,21 @@ export class AuthService {
         }
     }
 
-    async activate2Fa(twoFaDto: TwoFaDto, @Req() req: Request)
+    async activate2Fa(twoFaDto: TwoFaDto)
     {
         try{
             const secretKey = await this.createSecretKey();
             const foundUser = await this.findUserByEmail(twoFaDto.email);
             if (!foundUser) ///
                 throw new BadRequestException("Activate2Fa: no such user found");
-            const {qrCode, url} = await this.generateTwoFaQRCode(foundUser, secretKey);
+            const {qrcode, url} = await this.generateTwoFaQRCode(foundUser, secretKey);
             const updateUser = await this.prisma.user.update({
                 where: {id: foundUser.id},
                 data: {twoFa: true, twoFaSecret:secretKey},
             })
             const newToken = await this.generateJwtToken({mail: foundUser.email, id: foundUser.id, name: foundUser.name, twoFa: true});
             return {
-                qrCode,
+                qrcode,
                 url,
                 newToken,
             }
@@ -152,12 +152,16 @@ export class AuthService {
         }
     }
 
+    async verify2Fa(twoFaDto: TwoFaCodeDto){
+        // const {code} = twoFaDto.code;
+
+    }
     async generateTwoFaQRCode(user, secret){
         const url = await this.otpAuthUrl(user.email, secret);
-        const qrCode = await this.generateQRCode(url);
-        console.log("QR url", qrCode );
+        const qrcode = await this.generateQRCode(url);
+        console.log("QR url", qrcode );
         return {
-            qrCode,
+            qrcode,
             url,
         };
     }
