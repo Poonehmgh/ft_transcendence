@@ -28,12 +28,14 @@ From User
 | Connect to gateway and get online status | connectMessage | EstablishConnectDTO |
 | Send message to chat room                | sendMessage    | SendMessageDTO      |
 | Create new chat room                     | createChat     | CreateNewChatDTO    |
+| Invite a specific user to chat           | inviteUser     | InviteUserDTO    |
 
 To user
 
 | what                        | Message       | takes          |
 |-----------------------------|---------------|----------------|
 | get a new message just sent | updateMessage | SendMessageDTO |
+| you was added to a new chat | updateChat    | ChatListDTO    |
 
 For creating a dm chat name format is name1:name2
 
