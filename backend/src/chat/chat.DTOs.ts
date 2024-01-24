@@ -41,13 +41,13 @@ export class ParticipantListElementDTO {
 }
 
 export class SendMessageDTO {
-    chatID: number;
-    userID: number;
+    chatId: number;
+    userId: number;
     content: string;
 
     constructor(chatID: number, userID: number, content: string) {
-        this.chatID = chatID;
-        this.userID = userID;
+        this.chatId = chatID;
+        this.userId = userID;
         this.content = content;
     }
 }
@@ -77,6 +77,7 @@ export class ChatUserDTO {
 }
 
 export class CreateNewChatDTO {
+
     name: string;
     dm: boolean;
     pw_protected: boolean;
@@ -120,6 +121,12 @@ export class CreateNewChatDTO {
 
 
 export class InviteUserDTO{
-    chatID: number
+    chatId: number
     userId: number
+
+
+    constructor(chatID: number, userId: number) {
+        this.chatId = chatID;
+        this.userId = userId;
+    }
 }
