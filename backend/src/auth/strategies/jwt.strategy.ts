@@ -5,7 +5,7 @@ import {AuthService} from "../auth.service";
 import {jwtSecret} from "../../utils/constants";
 
 export class JwtPayload{
-    mail: string;
+    email: string;
     name: string;
     id: string | number;
     twoFa: boolean;
@@ -20,7 +20,6 @@ export class JwtStrategy extends PassportStrategy(Strategy, "jwt"){
         });
     }
     async validate(payload: JwtPayload){
-        console.log("jwt strategy is called");
         const user = await this.authService.validateUserByJwt(payload);
         if (!user)
             console.log("invalid jwt token");
