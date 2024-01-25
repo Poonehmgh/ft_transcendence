@@ -11,7 +11,7 @@ import "src/styles/manageProfile.css";
 
 function FriendList() {
     const [group, setGroup] = useState([]);
-    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/my_friends";
+    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/friends";
 
     useEffect(() => {
         fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);

@@ -48,11 +48,7 @@ export enum UserRelation {
     none,
 }
 
-export class ChangeNameDto {
-    @IsNumber()
-    @IsNotEmpty()
-    id: number;
-
+export class ChangeNameDTO {
     @IsNotEmpty()
     @IsString()
     @Length(3, 15, {

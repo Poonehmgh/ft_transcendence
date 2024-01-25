@@ -13,7 +13,7 @@ import {
     UseGuards,
 } from "@nestjs/common";
 import { Response } from "express";
-import { UserRelation, IdAndNameDTO, UserProfileDTO, ChangeNameDto } from "./user-dto";
+import { UserRelation, IdAndNameDTO, UserProfileDTO, ChangeNameDTO } from "./user-dto";
 import { UserService } from "./user.service";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
@@ -93,11 +93,6 @@ export class UserController {
         return this.userService.getAllUsers();
     }
 
-	@Get("my_friends")
-	async getMyFriends(@Req() req: AuthenticatedRequest):Promise<IdAndNameDTO[]> {
-        return this.userService.getFriends(req.user.id);
-	}
-
     @Get("friends")
     async getFriends(@Req() req: AuthenticatedRequest): Promise<IdAndNameDTO[]> {
         return this.userService.getFriends(req.user.id);
@@ -121,10 +116,8 @@ export class UserController {
     // profile management
 
     @Post("change_name")
-    async changeName(@Body() changeNameDTO: ChangeNameDto, @Res() res: Response) {
-        const errorType = await this.userService.changeName(
-            changeNameDTO.id,
-            changeNameDTO.newName
+    async changeName(@Req() req: AuthenticatedRequest, @Body() changeNameDTO: ChangeNameDTO, @Res() res: Response) {
+		const errorType = await this.userService.changeName(req.user.id, changeNameDTO.newName
         );
         // 0 = no error; 1 = uniqueness constraint violation; 2 = any other error
         if (!errorType) {

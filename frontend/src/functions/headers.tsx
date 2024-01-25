@@ -9,10 +9,13 @@ export function authHeader() {
 
 export function authContentHeader() {
     const myHeaders: Headers = new Headers();
+    
+	myHeaders.append("Content-Type", "application/json");
 
     const token: string = "Bearer " + getTokenFromCookie();
     myHeaders.append("Authorization", token);
-    return myHeaders;
+    
+	return myHeaders;
 }
 
 function getTokenFromCookie() {

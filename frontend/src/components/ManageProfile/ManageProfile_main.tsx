@@ -16,7 +16,7 @@ function ManageProfile() {
     const [userData, setUserData] = useState<UserProfileDTO | null>(null);
     const [avatarURL, setAvatarURL] = useState(null);
     const fileInputRef = useRef(null);
-	const apiUrl_profile = process.env.REACT_APP_BACKEND_URL + "/user/my_profile";
+    const apiUrl_profile = process.env.REACT_APP_BACKEND_URL + "/user/my_profile";
 
     function handleChooseFileClick() {
         fileInputRef.current.click();
@@ -65,23 +65,28 @@ function ManageProfile() {
 
     async function handleNameChange() {
         try {
-            const newName = prompt("Enter a new name:");
+            let newName = prompt("Enter a new name:");
 
-            if (newName === null || newName.trim() === "") {
+            if (newName === null)
                 return;
-            }
-            const data = {
-                newName: newName,
-            };
+            newName = newName.trim();
+            if ( newName === "" || newName == userData.name)
+                return;
+         
+                const changeNameDTO = {
+                    newName: newName
+                };
+            
             const response = await fetch(
                 process.env.REACT_APP_BACKEND_URL + "/user/change_name",
                 {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
+                    headers: authContentHeader(),
+                    body: JSON.stringify(changeNameDTO),
+                
                     },
-                    body: JSON.stringify(data),
-                }
+                                    
+
             );
             if (!response.ok) {
                 const res_data = await response.json();
