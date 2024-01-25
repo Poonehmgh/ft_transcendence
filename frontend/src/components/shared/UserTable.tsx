@@ -21,9 +21,9 @@ function UserTable(props: userTableProp): React.JSX.Element {
         setModalIsOpen(true);
     }
 
-    const handleCloseModal = () => {
+    function handleCloseModal() {
         setModalIsOpen(false);
-    };
+    }
 
     if (!props.users) return <p>Loading data...</p>;
     if (props.users.length === 0) return <p className="bigCenterEmoji">👻</p>;

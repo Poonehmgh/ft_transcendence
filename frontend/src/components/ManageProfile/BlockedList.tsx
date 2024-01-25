@@ -9,13 +9,9 @@ import { IdAndNameDTO } from "user-dto";
 import "src/styles/style.css";
 import "src/styles/manageProfile.css";
 
-interface blockedListProps {
-    id: number;
-}
-
-function BlockedList(props: blockedListProps) {
+function BlockedList() {
     const [group, setGroup] = useState([]);
-    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/blocked/" + props.id;
+    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/blocked";
 
     useEffect(() => {
         fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
@@ -23,7 +19,7 @@ function BlockedList(props: blockedListProps) {
 
     function handleUnBlockUser(id: number, index: number) {
         if (window.confirm(`Unblock user ${group[index].name}?`)) {
-            if (unblockUser(props.id, group[index].id)) {
+            if (unblockUser(group[index].id)) {
                 alert("User unblocked");
                 fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
             } else {
@@ -33,9 +29,9 @@ function BlockedList(props: blockedListProps) {
     }
 
     return (
-        <div>
-            {!group || group.length === 0 ? (
-                <div className="p">No toxic ppl... yet!</div>
+        <div className="p">
+            {!group ? <p>Loading data...</p> : group.length === 0 ? (
+                <p>No toxic ppl... yet!</p>
             ) : (
                 <table className="modalUserList">
                     <tbody>

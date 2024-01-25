@@ -50,7 +50,7 @@ export class UserService {
     }
 
     async getProfileById(userId: number): Promise<UserProfileDTO> {
-        const profile = await this.prisma.user.findUnique({
+		const profile = await this.prisma.user.findUnique({
             where: { id: Number(userId) },
             select: {
                 id: true,
@@ -63,7 +63,8 @@ export class UserService {
             },
         });
         if (!profile) throw new Error("getProfile: User not found");
-        return {
+        
+		return {
             id: profile.id,
             name: profile.name,
             rank: profile.rank,

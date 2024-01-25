@@ -9,21 +9,17 @@ import { IdAndNameDTO } from "user-dto";
 import "src/styles/style.css";
 import "src/styles/manageProfile.css";
 
-interface friendListProps {
-    id: number;
-}
-
-function FriendList(props: friendListProps) {
+function FriendList() {
     const [group, setGroup] = useState([]);
-    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/friends/" + props.id;
+    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/my_friends";
 
     useEffect(() => {
         fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
     }, [apiUrl]);
 
-    function handleRemoveFriend(id: number, index: number) {
+    function handleRemoveFriend(index: number) {
         if (window.confirm(`Remove friend ${group[index].name}?`)) {
-            if (removeFriend(props.id, group[index].id)) {
+            if (removeFriend(group[index].id)) {
                 alert("Friend removed");
                 fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
             } else {
@@ -36,9 +32,9 @@ function FriendList(props: friendListProps) {
         console.log("Mock execute send msg to user with id ", id);
     }
 
-    function handleBlockUser(id: number, index: number) {
+    function handleBlockUser(index: number) {
         if (window.confirm(`Unfriend and block ${group[index].name}?`)) {
-            if (blockUser(props.id, group[index].id)) {
+            if (blockUser(group[index].id)) {
                 alert("Removed from friends and blocked");
                 fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
             } else {
@@ -48,8 +44,8 @@ function FriendList(props: friendListProps) {
     }
 
     return (
-        <div>
-            {!group || group.length === 0 ? (
+        <div className="p">
+            {!group ? <p>Loading data...</p> : group.length === 0 ? (
                 <div className="p">No friends. Don't be shy!</div>
             ) : (
                 <table className="modalUserList">

@@ -16,7 +16,7 @@ function Leaderboard() {
     const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/leaderboard?top=" + getTopN;
 
     useEffect(() => {
-        fetchGetSet(apiUrl, setUserlist);
+        fetchGetSet<UserProfileDTO[]>(apiUrl, setUserlist);
     }, [apiUrl]);
 
     return (

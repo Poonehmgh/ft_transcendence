@@ -9,21 +9,17 @@ import { IdAndNameDTO } from "user-dto";
 import "src/styles/style.css";
 import "src/styles/manageProfile.css";
 
-interface requestInListProps {
-    id: number;
-}
-
-function RequestInList(props: requestInListProps) {
+function RequestInList() {
     const [group, setGroup] = useState([]);
-    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/request_in/" + props.id;
+    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/request_in";
 
     useEffect(() => {
         fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
     }, [apiUrl]);
 
-    function handleDecline(id: number, index: number) {
+    function handleDecline(index: number) {
         if (window.confirm(`Decline friend request from user ${group[index].name}?`)) {
-            if (declineRequest(props.id, group[index].id)) {
+            if (declineRequest(group[index].id)) {
                 alert("Friend request declined");
                 fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
             } else {
@@ -32,9 +28,9 @@ function RequestInList(props: requestInListProps) {
         }
     }
 
-    function handleAccept(id: number, index: number) {
+    function handleAccept(index: number) {
         if (window.confirm(`Accept friend request from user ${group[index].name}?`)) {
-            if (acceptRequest(props.id, group[index].id)) {
+            if (acceptRequest(group[index].id)) {
                 alert("Friend request accepted");
                 fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
             } else {
@@ -45,7 +41,7 @@ function RequestInList(props: requestInListProps) {
 
     return (
         <div className="p">
-            {!group || group.length === 0 ? (
+            {!group ? <p>Loading data...</p> : group.length === 0 ? (
                 <p>No incoming requests. Go talk to ppl!</p>
             ) : (
                 <table className="modalUserList">

@@ -7,11 +7,7 @@ import RequestOutList from "./RequestOutList";
 // CSS
 import "src/styles/manageProfile.css";
 
-interface manageContactsTabsProps {
-  id: number;
-}
-
-function ManageContactsTabs(props: manageContactsTabsProps) {
+function ManageContactsTabs() {
   const [activeTab, setActiveTab] = useState(0);
 
   function handleTabClick(index: number) {
@@ -56,10 +52,10 @@ function ManageContactsTabs(props: manageContactsTabsProps) {
       </div>
 
       <div className="tabContent">
-        {activeTab === 0 && <FriendList id={props.id} />}
-        {activeTab === 1 && <BlockedList id={props.id} />}
-        {activeTab === 2 && <RequestInList id={props.id} />}
-        {activeTab === 3 && <RequestOutList id={props.id} />}
+        {activeTab === 0 && <FriendList />}
+        {activeTab === 1 && <BlockedList />}
+        {activeTab === 2 && <RequestInList />}
+        {activeTab === 3 && <RequestOutList />}
       </div>
     </div>
   );

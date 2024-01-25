@@ -19,13 +19,16 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
 import * as path from "path";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
-
-
-interface AuthenticatedRequest extends Request {
-    user: any;
-}
+  
+  interface AuthenticatedRequest extends Request {
+	user: {id: number;
+		name: string;
+		iat: number;
+		exp: number;};
+  }
 
 @Controller("user")
+@UseGuards(JwtAuthGuard)
 export class UserController {
     constructor(private readonly userService: UserService) {}
 
@@ -47,18 +50,11 @@ export class UserController {
         return this.userService.getProfileById(id);
     }
 
- 
-
-    @Get("my_profile/")
-    @UseGuards(JwtAuthGuard)
+    @Get("my_profile")
     async getMyProfile(
         @Req() req: AuthenticatedRequest,
-        @Res() res: Response
     ): Promise<UserProfileDTO> {
-        console.log("accepted");
-        return null;
-        
-        //return this.userService.getProfileById(req.id);
+        return this.userService.getProfileById(req.user.id);
     }
 
     @Get("get_avatar/:id")
@@ -97,24 +93,29 @@ export class UserController {
         return this.userService.getAllUsers();
     }
 
-    @Get("friends/:id")
-    async getFriends(@Param("id") id: number): Promise<IdAndNameDTO[]> {
-        return this.userService.getFriends(id);
+	@Get("my_friends")
+	async getMyFriends(@Req() req: AuthenticatedRequest):Promise<IdAndNameDTO[]> {
+        return this.userService.getFriends(req.user.id);
+	}
+
+    @Get("friends")
+    async getFriends(@Req() req: AuthenticatedRequest): Promise<IdAndNameDTO[]> {
+        return this.userService.getFriends(req.user.id);
     }
 
-    @Get("blocked/:id")
-    async getBlocked(@Param("id") id: number): Promise<IdAndNameDTO[]> {
-        return this.userService.getBlocked(id);
+    @Get("blocked")
+    async getBlocked(@Req() req: AuthenticatedRequest): Promise<IdAndNameDTO[]> {
+        return this.userService.getBlocked(req.user.id);
     }
 
-    @Get("request_in/:id")
-    async getRequestIn(@Param("id") id: number): Promise<IdAndNameDTO[]> {
-        return this.userService.getRequestIn(id);
+    @Get("request_in")
+    async getRequestIn(@Req() req: AuthenticatedRequest): Promise<IdAndNameDTO[]> {
+        return this.userService.getRequestIn(req.user.id);
     }
 
-    @Get("request_out/:id")
-    async getRequestOut(@Param("id") id: number): Promise<IdAndNameDTO[]> {
-        return this.userService.getRequestOut(id);
+    @Get("request_out")
+    async getRequestOut(@Req() req: AuthenticatedRequest): Promise<IdAndNameDTO[]> {
+        return this.userService.getRequestOut(req.user.id);
     }
 
     // profile management
@@ -141,7 +142,7 @@ export class UserController {
             storage: diskStorage({
                 destination: "./uploads",
                 filename: (req, file, callback) => {
-                    const newFilename = req.params.id + path.extname(file.originalname);
+					const newFilename = req.params.id + path.extname(file.originalname);
                     callback(null, newFilename);
                 },
             }),
@@ -172,51 +173,44 @@ export class UserController {
     // friend management
 
     @Post("send_friendreq")
-    async sendFriendRequest(@Body() body: { thisId: number; otherId: number }) {
-        const { thisId } = body;
+    async sendFriendRequest(@Req() req: AuthenticatedRequest, @Body() body: { otherId: number }) {
         const { otherId } = body;
-        return this.userService.sendFriendReq(thisId, otherId);
+        return this.userService.sendFriendReq(req.user.id, otherId);
     }
 
     @Post("cancel_friendreq")
-    async cancelFriendRequest(@Body() body: { thisId: number; otherId: number }) {
-        const { thisId } = body;
+    async cancelFriendRequest(@Req() req: AuthenticatedRequest, @Body() body: { otherId: number }) {
         const { otherId } = body;
-        return this.userService.cancelFriendReq(thisId, otherId);
+        return this.userService.cancelFriendReq(req.user.id, otherId);
     }
 
     @Post("accept_friendreq")
-    async acceptFriendRequest(@Body() body: { thisId: number; otherId: number }) {
-        const { thisId } = body;
+    async acceptFriendRequest(@Req() req: AuthenticatedRequest, @Body() body: { otherId: number }) {
         const { otherId } = body;
-        return this.userService.acceptFriendReq(thisId, otherId);
+        return this.userService.acceptFriendReq(req.user.id, otherId);
     }
 
     @Post("decline_friendreq")
-    async declineFriendRequest(@Body() body: { thisId: number; otherId: number }) {
-        const { thisId } = body;
+    async declineFriendRequest(@Req() req: AuthenticatedRequest, @Body() body: { otherId: number }) {
         const { otherId } = body;
-        return this.userService.declineFriendReq(thisId, otherId);
+        return this.userService.declineFriendReq(req.user.id, otherId);
     }
 
     @Post("remove_friend")
-    async removeFriend(@Body() body: { thisId: number; otherId: number }) {
-        const { thisId } = body;
+    async removeFriend(@Req() req: AuthenticatedRequest, @Body() body: { otherId: number }) {
         const { otherId } = body;
-        return this.userService.removeFriend(thisId, otherId);
+        return this.userService.removeFriend(req.user.id, otherId);
     }
 
     @Post("block")
-    async blockUser(@Body() body: { thisId: number; otherId: number }) {
-        const { thisId } = body;
+    async blockUser(@Req() req: AuthenticatedRequest, @Body() body: { otherId: number }) {
         const { otherId } = body;
-        return this.userService.blockUser(thisId, otherId);
+        return this.userService.blockUser(req.user.id, otherId);
     }
 
     @Post("unblock")
-    async unblockUser(@Body() body: { thisId: number; otherId: number }) {
-        const { thisId } = body;
+    async unblockUser(@Req() req: AuthenticatedRequest, @Body() body: { otherId: number }) {
         const { otherId } = body;
-        return this.userService.unblockUser(thisId, otherId);
+        return this.userService.unblockUser(req.user.id, otherId);
     }
 }

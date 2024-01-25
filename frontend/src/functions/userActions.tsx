@@ -3,7 +3,6 @@ import { authContentHeader } from "./headers";
 /*
 This is the main function that connects to the backend.
 The other functions just prepare the vars.
-to do: remove thisId once auth is complete
 */
 async function userAction(body: string, apiUrl: string) {
     try {
@@ -22,71 +21,51 @@ async function userAction(body: string, apiUrl: string) {
     }
 }
 
-export async function addFriend(thisId: number, otherId: number) {
+export async function addFriend(otherId: number) {
     const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/send_friendreq";
-    const body: string = JSON.stringify({ thisId: thisId, otherId: otherId });
+    const body: string = JSON.stringify({ otherId: otherId });
 
     return userAction(body, apiUrl);
 }
 
-export async function removeFriend(thisId: number, otherId: number) {
+export async function removeFriend(otherId: number) {
     const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/remove_friend";
-    const body: string = JSON.stringify({ thisId: thisId, otherId: otherId });
+    const body: string = JSON.stringify({ otherId: otherId });
 
     return userAction(body, apiUrl);
 }
 
-export async function unblockUser(thisId: number, otherId: number) {
+export async function unblockUser(otherId: number) {
     const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/unblock";
-    const body: string = JSON.stringify({ thisId: thisId, otherId: otherId });
+    const body: string = JSON.stringify({ otherId: otherId });
 
     return userAction(body, apiUrl);
 }
 
-export async function blockUser(thisId: number, otherId: number) {
+export async function blockUser(otherId: number) {
     const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/block";
-    const body: string = JSON.stringify({ thisId: thisId, otherId: otherId });
+    const body: string = JSON.stringify({ otherId: otherId });
 
     return userAction(body, apiUrl);
 }
 
-export async function cancelRequest(thisId: number, otherId: number) {
+export async function cancelRequest(otherId: number) {
     const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/cancel_friendreq";
-    const body: string = JSON.stringify({ thisId: thisId, otherId: otherId });
+    const body: string = JSON.stringify({ otherId: otherId });
 
     return userAction(body, apiUrl);
 }
 
-export async function acceptRequest(thisId: number, otherId: number) {
+export async function acceptRequest(otherId: number) {
     const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/accept_friendreq";
-    const body: string = JSON.stringify({ thisId: thisId, otherId: otherId });
+    const body: string = JSON.stringify({ otherId: otherId });
 
     return userAction(body, apiUrl);
 }
 
-export async function declineRequest(thisId: number, otherId: number) {
+export async function declineRequest(otherId: number) {
     const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/decline_friendreq";
-    const body: string = JSON.stringify({ thisId: thisId, otherId: otherId });
+    const body: string = JSON.stringify({ otherId: otherId });
 
     return userAction(body, apiUrl);
-}
-
-export async function getAvatar_global(id: number) {
-    const fetchUrl: string =
-        process.env.REACT_APP_BACKEND_URL + `/uploads/get_avatar/${id}`;
-    try {
-        const response = await fetch(fetchUrl, {
-            method: "GET",
-            headers: authContentHeader(),
-        });
-        if (!response.ok) {
-            throw new Error("Network response was not ok");
-        }
-        const blob = await response.blob();
-        const imgElement = document.createElement("img");
-        imgElement.src = URL.createObjectURL(blob);
-        document.querySelector("#profile-picture-container").appendChild(imgElement);
-    } catch (error) {
-        console.log("Error getting Avatar", error);
-    }
 }

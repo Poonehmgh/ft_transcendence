@@ -16,14 +16,14 @@ function ManageProfile() {
     const [userData, setUserData] = useState<UserProfileDTO | null>(null);
     const [avatarURL, setAvatarURL] = useState(null);
     const fileInputRef = useRef(null);
-    const id = 0; //this is just temp
+	const apiUrl_profile = process.env.REACT_APP_BACKEND_URL + "/user/my_profile";
 
     function handleChooseFileClick() {
         fileInputRef.current.click();
     }
 
     async function fetchAvatar() {
-        const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/get_avatar/" + id;
+        const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/my_profile";
         try {
             const response = await fetch(apiUrl, {
                 method: "GET",
@@ -40,7 +40,6 @@ function ManageProfile() {
         }
     }
 
-    const apiUrl_profile = process.env.REACT_APP_BACKEND_URL + "/user/profile/" + id;
 
     useEffect(() => {
         fetchGetSet(apiUrl_profile, setUserData);
@@ -54,7 +53,7 @@ function ManageProfile() {
         const formData = new FormData();
         formData.append("avatar", file);
         try {
-            await fetch(process.env.REACT_APP_BACKEND_URL + `/user/put_avatar/${id}`, {
+            await fetch(process.env.REACT_APP_BACKEND_URL + `/user/put_avatar}`, {
                 method: "POST",
                 body: formData,
             });
@@ -72,7 +71,6 @@ function ManageProfile() {
                 return;
             }
             const data = {
-                id: id,
                 newName: newName,
             };
             const response = await fetch(
@@ -132,7 +130,7 @@ function ManageProfile() {
                         />
                     </div>
 
-                    <ManageContactsTabs id={id} />
+                    <ManageContactsTabs />
 
                     <input
                         type="file"

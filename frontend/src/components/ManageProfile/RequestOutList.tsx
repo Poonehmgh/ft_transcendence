@@ -9,21 +9,17 @@ import { IdAndNameDTO } from "user-dto";
 import "src/styles/style.css";
 import "src/styles/manageProfile.css";
 
-interface requestOutListProps {
-    id: number;
-}
-
-function RequestOutList(props: requestOutListProps) {
+function RequestOutList() {
     const [group, setGroup] = useState<IdAndNameDTO[]>([]);
-    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/request_out/" + props.id;
+    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/request_out";
 
     useEffect(() => {
         fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
     }, [apiUrl]);
 
-    function handleCancel(id: number, index: number) {
+    function handleCancel(index: number) {
         if (window.confirm(`Cancel friend request to user ${group[index].name}?`)) {
-            if (cancelRequest(props.id, group[index].id)) {
+            if (cancelRequest(group[index].id)) {
                 alert("Friend request canceled");
                 fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
             } else {
@@ -34,7 +30,7 @@ function RequestOutList(props: requestOutListProps) {
 
     return (
         <div className="p">
-            {!group || group.length === 0 ? (
+            {!group ? <p>Loading data...</p> : group.length === 0 ? (
                 <p>No outgoing requests. Go make some friends!</p>
             ) : (
                 <table className="modalUserList">

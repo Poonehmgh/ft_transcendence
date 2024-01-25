@@ -5,13 +5,19 @@ import { authContentHeader } from "./headers";
 import { UserRelation } from "user-dto";
 
 export async function fetchGet<T>(apiUrl: string): Promise<T> {
-  try {
+  console.log("fetchGet");
+    try {
     const response: Response = await fetch(apiUrl, {
       method: "GET",
       headers: authContentHeader(),
     });
+    console.log("after fetch");
     if (!response.ok) {
       console.log(apiUrl, ": ", response.status);
+
+      console.log("not response ok in fetchget");
+
+
       return null;
     }
     return await response.json();
@@ -25,8 +31,11 @@ export async function fetchGetSet<T>(
   apiUrl: string,
   setter: React.Dispatch<React.SetStateAction<T | null>>
 ) {
-  try {
+  console.log("fetchGetSet");
+    
+    try {
     const data = await fetchGet<T>(apiUrl);
+    console.log("data in fetchGetSet after fetchGet: ", data);
     setter(data);
   } catch (error) {
     console.log("Error fetchGetSet on ", apiUrl, ": ", error);
