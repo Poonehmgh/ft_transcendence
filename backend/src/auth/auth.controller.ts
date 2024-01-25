@@ -2,12 +2,12 @@ import {Controller, Post, Get, Body, Req, Res, UseGuards} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {AuthDto} from "./dto/auth.dto";
 import {ftAuthGuard} from "./guards/intra_42.guard";
-import {Response} from "express";
+import {Response, Request} from "express";
 import {JwtAuthGuard} from "./guards/jwt-auth.guard";
 import {TwoFaDto} from "./dto/2fa.dto";
 import {TwoFaCodeDto} from "./dto/2fa.dto";
 import * as cookieParser from "cookie-parser"; // for testing the cookies in the request object
-
+import {signInReturn} from "./auth.service";
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -27,17 +27,19 @@ export class AuthController {
   @Get("/42/login")
   @UseGuards(ftAuthGuard)
   ftOAuth(){
-    console.log("controller at login is called. (NEVER!)")
     return {"msg": "this is returned when something is wrong with the guards.;"}
   }
 
   @Get("/42/redirect")
   @UseGuards(ftAuthGuard)
   async ftRedirect(@Req() req, @Res() res: Response){
-    const token = await this.authService.ftSignin(req.user);
-    res.cookie("token", token)
-    console.log("controller at redirect is called.")
-    return res.json({"msg": "the login was successful!"});
+    const { qrcode, url, newToken}: signInReturn = await this.authService.ftSignin(req.user);
+    if (qrcode != undefined) // for some reason this isnt sent back to browser.
+      res.cookie("qrCode", qrcode);
+    if (url != undefined)
+      res.cookie("url", url);
+    res.cookie("token", newToken);
+    res.json("Return");
   }
 
   @Get("/42/test")
@@ -52,8 +54,7 @@ export class AuthController {
   async activate(@Req() req: Request, @Res() res: Response, @Body() twoFaDto: TwoFaDto){
     const newToken = await this.authService.activate(twoFaDto);
     //** the request object has a cookie or no?
-    res.cookie("token",newToken)
-    return res.json({"msg": "the 2fa was activated successfully!", "token": newToken});
+    res.cookie("token", newToken);
   }
 
 

@@ -9,30 +9,49 @@ import {TwoFaCodeDto, TwoFaDto} from "./dto/2fa.dto";
 import {authenticator} from "otplib"; //chek
 import * as QRCode from "qrcode"
 
+export type signInReturn = {
+    qrcode?: any,
+    url?: string,
+    newToken: string,
+};
+
 
 @Injectable()
 export class AuthService {
     constructor(private prisma: PrismaService, private jwt: JwtService) {}
 
-    async ftSignin(user)
+    async ftSignin(user): Promise<signInReturn>
     {
+
         if (!user)
             throw new BadRequestException("Unauthenticated.");
         const foundUser = await this.findUserByEmail(user.email);
         if (!foundUser)
-            return this.registerUser(user);
-        console.log("user is found: ", user)
-        try {
-            // if (foundUser.twoFa)
-            //     this.twoFaQRcode(user);
-            return this.generateJwtToken({
+            await this.registerUser(user);
+            if (foundUser && foundUser.twoFa)
+            {
+                console.log("user needs twoFa");
+                const {qrcode, url} = await this.generateTwoFaQRCode(foundUser, foundUser.twoFaSecret);
+                const newToken = await this.generateJwtToken(
+                    {
+                    email: foundUser.email,
+                    id: foundUser.id,
+                    name: foundUser.name,
+                    twoFa: true});
+                return {
+                    qrcode,
+                    url,
+                    newToken,
+                }
+            }
+            const newToken = await this.generateJwtToken({
                 email: foundUser.email,
                 id: foundUser.id,
                 name: foundUser.name,
             })
-        } catch (e) {
-            throw new BadRequestException("Something went wrong when trying to authenticate via two factor.");
-        }
+            return {
+                newToken,
+            };
     }
 
     // async ft2FaLogin_FirstStep(user: any){
