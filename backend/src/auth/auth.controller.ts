@@ -49,15 +49,6 @@ export class AuthController {
     return req.user
   }
 
-  @Post("42/2fa_activate")
-  @UseGuards(JwtAuthGuard)
-  async activate(@Req() req: Request, @Res() res: Response, @Body() twoFaDto: TwoFaDto){
-    const newToken = await this.authService.activate(twoFaDto);
-    //** the request object has a cookie or no?
-    res.cookie("token", newToken);
-  }
-
-
   @Post("42/2fa")
   @UseGuards(JwtAuthGuard)
   async activate2Fa(@Req() req, @Res() res:Response)
@@ -85,25 +76,5 @@ export class AuthController {
     res.clearCookie("token");
     return res.json({"msg": "the logout was successful!"});
   }
-
-  // @Get("42/2fa_login")
-  // @UseGuards(JwtAuthGuard)
-  //   async ft2FaLogin_FirstStep(@Req() req, @Res() res: Response){
-  //     const {qrCode, url} = await this.authService.ft2FaLogin_FirstStep(req.user);
-  //     res.cookie("qrCode", qrCode);
-  //     res.cookie("url", url);
-  //     return res.json({"msg": "QR code is generated."});
-  //   }
-
-
-  // @Post("42/2fa_login/redirect")
-  // @UseGuards(JwtAuthGuard)
-  // async validate2FaCode(@Req() req, @Res() res: Response, @Body() twoFaCodeDto: TwoFaCodeDto){
-  //   const token = await this.authService.validate2FaCode(twoFaCodeDto);
-  //   res.cookie("token", token);
-  //   return res.json({"msg": "the  login was successful!"});
-  // }
-
-
 
 }

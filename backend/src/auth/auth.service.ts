@@ -22,15 +22,13 @@ export class AuthService {
 
     async ftSignin(user): Promise<signInReturn>
     {
-
         if (!user)
-            throw new BadRequestException("Unauthenticated.");
+            throw new BadRequestException("Unauthenticated user.");
         const foundUser = await this.findUserByEmail(user.email);
         if (!foundUser)
             await this.registerUser(user);
             if (foundUser && foundUser.twoFa)
             {
-                console.log("user needs twoFa");
                 const {qrcode, url} = await this.generateTwoFaQRCode(foundUser, foundUser.twoFaSecret);
                 const newToken = await this.generateJwtToken(
                     {
@@ -53,24 +51,6 @@ export class AuthService {
                 newToken,
             };
     }
-
-    // async ft2FaLogin_FirstStep(user: any){
-    //     const foundUser = await this.findUserByEmail(user.email);
-    //     if (!foundUser)
-    //         throw new BadRequestException("User not found.");
-    //     return this.generateTwoFaQRCode(foundUser);
-    // }
-
-    // async validate2FaCode(twoFaCodeDto: TwoFaCodeDto){
-    //     const {code} = twoFaCodeDto;
-    //     const foundUser = await this.findUserByEmail(email);
-    //     if (!foundUser)
-    //         throw new BadRequestException("User not found.");
-    //     const verified = authenticator.verify({token: code, secret: foundUser.twoFaSecret})
-    //     if (!verified)
-    //         throw new BadRequestException("Invalid code.");
-    //     return this.generateJwtToken({mail: foundUser.email, id: foundUser.id, name: foundUser.name, twoFa: true})
-    // }
 
     async validateUser(payload){
         const {id} = payload.id;
@@ -123,28 +103,6 @@ export class AuthService {
         return token;
     }
 
-
-
-    async activate(twoFaDto: TwoFaDto){
-        try{
-            const secretKey = await this.createSecretKey();
-            const foundUser = await this.findUserByEmail(twoFaDto.email);
-            if (!foundUser)
-                return new BadRequestException("User not found.");
-            const updateUser = await this.prisma.user.update({
-                where: {
-                    id: foundUser.id},
-                data:{
-                    twoFa: true,
-                    twoFaSecret: secretKey,
-                },
-            });
-            return this.generateJwtToken({mail: foundUser.email, id: foundUser.id, name: foundUser.name, twoFa: true})
-        } catch (e) {
-            throw new BadRequestException("Something went wrong.");
-        }
-    }
-
     async activate2Fa(user)
     {
         try{
@@ -168,7 +126,6 @@ export class AuthService {
         {
             throw new BadRequestException("Activate2Fa: Something went wrong.");
         }
-        // return {qrcode: "hi", url:"hello", newToken:"hgjhkgli"};
     }
 
     async verify2Fa(twoFaDto: TwoFaCodeDto, user){
@@ -192,6 +149,7 @@ export class AuthService {
         }
         throw new BadRequestException("Verify2Fa: Invalid code.");
     }
+
     async generateTwoFaQRCode(user, secret){
         const url = await this.otpAuthUrl(user.email, secret);
         const qrcode = await this.generateQRCode(url);
