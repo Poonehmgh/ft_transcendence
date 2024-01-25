@@ -39,7 +39,8 @@ export class AuthController {
     if (url != undefined)
       res.cookie("url", url);
     res.cookie("token", newToken);
-    res.json("Return");
+    // res.json("Return");
+    res.redirect("/");
   }
 
   @Get("/42/test")
