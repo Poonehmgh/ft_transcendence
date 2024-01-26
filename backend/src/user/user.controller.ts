@@ -41,29 +41,16 @@ interface reqUser {
 export class UserController {
     constructor(private readonly userService: UserService) {}
 
-    /*     @Post("new")
-    async newUser(@Body() userInfo: NewUserDTO): Promise<any> {
-        try {
-            await this.userService.newUser(userInfo);
-            return { message: "User created." };
-        } catch {
-            return {
-                StatusCode: 500,
-                message: "Failed to create user.",
-            };
-        }
-    } */
-
-    @Get("profile/:id")
-    async getProfile(@Param("id") id: number): Promise<UserProfileDTO> {
-        return this.userService.getProfileById(id);
-    }
-
-    @Get("my_profile")
+	@Get("my_profile")
     async getMyProfile(
         @Req() req: AuthenticatedRequest,
     ): Promise<UserProfileDTO> {
         return this.userService.getProfileById(req.user.id);
+    }
+	
+	@Get("profile/:id")
+    async getProfile(@Param("id") id: number): Promise<UserProfileDTO> {
+        return this.userService.getProfileById(id);
     }
 
 	@Get("my_avatar")
@@ -78,7 +65,7 @@ export class UserController {
         return res.sendFile(filePath);
     }
 
-    @Get("get_avatar/:id")
+    @Get("avatar/:id")
     async getAvatarById(@Param("id") id: number, @Res() res: Response) {
         const filePath = this.userService.getAvatarPath(id);
         if (!filePath) {
@@ -98,18 +85,17 @@ export class UserController {
         return this.userService.getMatches(id);
     }
 
-    @Get("friendStatus")
-    async getFriendStatus(
-        @Query("id1") userId: number,
-        @Query("id2") otherUserId: number
+    @Get("user_relation/:id")
+    async getUserRelation(
+        @Req() req: AuthenticatedRequest,
+        @Param("id") otherId: number
     ): Promise<UserRelation> {
-        return this.userService.getFriendStatus(userId, otherUserId);
+        return this.userService.getFriendStatus(req.user.id, otherId);
     }
 
     // getters
 
     @Get("all_users")
-    @UseGuards(JwtAuthGuard)
     async getAllUsers() {
         return this.userService.getAllUsers();
     }

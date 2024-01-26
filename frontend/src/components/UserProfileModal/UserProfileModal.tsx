@@ -47,7 +47,7 @@ function UserProfileModal(props: userProfileModalProps) {
 
         async function fetchAvatar() {
             const apiUrl =
-                process.env.REACT_APP_BACKEND_URL + "/user/get_avatar/" + props.id;
+                process.env.REACT_APP_BACKEND_URL + "/user/avatar/" + props.id;
             try {
                 const response = await fetch(apiUrl, {
                     method: "GET",
