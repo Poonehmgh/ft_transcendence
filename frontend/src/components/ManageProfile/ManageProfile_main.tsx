@@ -41,7 +41,6 @@ function ManageProfile() {
         }
     }
 
-
     useEffect(() => {
         fetchGetSet(apiUrl_profile, setUserData);
         fetchAvatar();
@@ -56,8 +55,8 @@ function ManageProfile() {
         try {
             await fetch(process.env.REACT_APP_BACKEND_URL + "/user/put_avatar", {
                 method: "POST",
+                headers: authHeader(),
                 body: formData,
-                headers: authHeader()
             });
         } catch (error) {
             console.log(error);

@@ -18,7 +18,7 @@ function Login() {
 		console.log("useeffect called, userdata:", userData);
     }, [apiUrl]);
 
-    return userData ? "hielo user " + userData.name : (
+    return userData ? "Welcome, " + userData.name + "!" : (
         <div className="loginContainer">
             <div className="h2">Pls log in!</div>
             <button

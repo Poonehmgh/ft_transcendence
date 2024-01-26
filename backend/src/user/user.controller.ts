@@ -23,7 +23,6 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
 import * as path from "path";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
-import { Observable } from 'rxjs';
 
   
 interface reqUser {
@@ -35,16 +34,6 @@ interface reqUser {
 
   interface AuthenticatedRequest extends Request {
 	user: reqUser;
-  }
-
-  @Injectable()
-  export class UserInterceptor implements NestInterceptor {
-	intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-	  const reqInt = context.switchToHttp().getRequest();
-	  return next.handle();
-	  
-
-	}
   }
 
 @Controller("user")
@@ -163,7 +152,7 @@ export class UserController {
 
     @Post("put_avatar")
     @UseInterceptors(
-        UserInterceptor, FileInterceptor("avatar", {
+        FileInterceptor("avatar", {
             storage: diskStorage({
                 destination: "./uploads",
                 filename: (req, file, callback) => {
