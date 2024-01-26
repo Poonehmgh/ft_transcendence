@@ -25,8 +25,8 @@ function UserTable(props: userTableProp): React.JSX.Element {
         setModalIsOpen(false);
     }
 
-    if (!props.users) return <p>Loading data...</p>;
-    if (props.users.length === 0) return <p className="bigCenterEmoji">👻</p>;
+    if (!props.users) return <div className="p"> Loading data...</div>;
+    if (props.users.length === 0) return <div className="bigCenterEmoji">👻</div>;
 
     return (
         <div>

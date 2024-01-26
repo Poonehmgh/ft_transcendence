@@ -52,13 +52,13 @@ function RequestInList() {
                                 <td>
                                     <button
                                         className="contactsButton"
-                                        onClick={() => handleAccept(entry.id, index)}
+                                        onClick={() => handleAccept(index)}
                                     >
                                         🤝
                                     </button>
                                     <button
                                         className="contactsButton"
-                                        onClick={() => handleDecline(entry.id, index)}
+                                        onClick={() => handleDecline(index)}
                                     >
                                         ❌
                                     </button>

@@ -43,34 +43,32 @@ function FriendList() {
         }
     }
 
+	if (!group) return <div className="p">Loading data...</div>;
+	if (group.length === 0) return <div className="p">No friends. Don't be shy!</div>;
     return (
-        <div className="p">
-            {!group ? <p>Loading data...</p> : group.length === 0 ? (
-                <div className="p">No friends. Don't be shy!</div>
-            ) : (
                 <table className="modalUserList">
                     <tbody>
-                        {group.map((friend, index) => (
-                            <tr key={friend.id}>
-                                <td>{friend.name}</td>
+                        {group.map((element, index) => (
+                            <tr key={index}>
+                                <td>{element.name}</td>
                                 <td>
                                     <button
                                         className="contactsButton"
-                                        onClick={() => handleSendMsg(friend.id)}
+                                        onClick={() => handleSendMsg(element.id)}
                                     >
                                         ✉️
                                     </button>
                                     <button
                                         className="contactsButton"
                                         onClick={() =>
-                                            handleRemoveFriend(friend.id, index)
+                                            handleRemoveFriend(index)
                                         }
                                     >
                                         ❌
                                     </button>
                                     <button
                                         className="contactsButton"
-                                        onClick={() => handleBlockUser(friend.id, index)}
+                                        onClick={() => handleBlockUser(index)}
                                     >
                                         ⛔
                                     </button>
@@ -79,9 +77,7 @@ function FriendList() {
                         ))}
                     </tbody>
                 </table>
-            )}
-        </div>
-    );
+            );
 }
 
 export default FriendList;

@@ -41,7 +41,7 @@ function RequestOutList() {
                                 <td>
                                     <button
                                         className="contactsButton"
-                                        onClick={() => handleCancel(entry.id, index)}
+                                        onClick={() => handleCancel(index)}
                                     >
                                         ❌
                                     </button>
