@@ -33,7 +33,7 @@ function RequestInList() {
     return (
                 <table className="modalUserList">
                     <tbody>
-                        {group.map((element, index) => (
+                        {group.map((element) => (
                             <tr key={element.id}>
                                 <td> {element.name}</td>
                                 <td>

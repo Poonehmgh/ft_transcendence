@@ -83,7 +83,7 @@ function UserProfileModal(props: userProfileModalProps) {
                                 winrate={userProfile.winrate}
                             />
                         </div>
-						<SocialActionBar otherId={userProfile}/>
+						<SocialActionBar otherProfile={userProfile}/>
                     </div>
                 )}
                 <button className="closeX" onClick={closeModal}>

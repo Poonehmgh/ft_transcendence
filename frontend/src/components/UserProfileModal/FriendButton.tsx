@@ -16,7 +16,6 @@ interface friendButtonProps {
 }
 
 function FriendButton(props: friendButtonProps): React.JSX.Element {
-   console.log("user relation: ", props.relation);
 	switch (props.relation) {
         case UserRelation.friends:
             return (

@@ -19,6 +19,9 @@ function SocialActionBar(props: socialActionBarProps): React.JSX.Element {
 	fetchGetSet(apiUrl, setStatus);
   }, [apiUrl]);
 
+  console.log("SocialActionBar - otherProfile:", props.otherProfile);
+  console.log("SocialActionBar - status:", status);
+
   return (
     <div>
       <div>

@@ -10,19 +10,31 @@ interface blockButtonProps {
 }
 
 function BlockButton(props: blockButtonProps): React.JSX.Element {
-    switch (props.relation) {
+    console.log("BlockButton - otherProfile:", props.otherProfile);
+console.log("BlockButton - status:", props.relation);
+
+	function doBlockUser(id: number, name: string) {
+		handleBlockUser(id, name);
+	}
+
+	function doUnblockUser(id: number, name: string) {
+		handleUnBlockUser(id, name);
+	}
+	
+	switch (props.relation) {
         case UserRelation.blocked:
             return (
-                <button onClick={() => handleUnBlockUser(props.otherProfile.id, props.otherProfile.name)}>
+                <button onClick={() => doUnblockUser(props.otherProfile.id, props.otherProfile.name)}>
                     Unblock user
                 </button>
             );
 
         default:
             return (
-                <button onClick={() => handleBlockUser(props.otherProfile.id, props.otherProfile.name)}>
+                <button onClick={() => doBlockUser(props.otherProfile.id, props.otherProfile.name)}>
                     Block user
                 </button>
+
             );
     }
 }
