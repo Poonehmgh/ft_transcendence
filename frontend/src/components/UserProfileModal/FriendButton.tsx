@@ -1,41 +1,42 @@
 import React from "react";
 import {
-    acceptRequest,
-    addFriend,
-    cancelRequest,
-    declineRequest,
-    removeFriend,
+	handleRemoveFriend,
+	handleCancelRequest,
+	handleAcceptRequest,
+	handleDeclineRequest,
+	handleSendFriendRequest,
 } from "../../functions/userActions";
 
 // DTO
-import { UserRelation } from "../shared/DTO";
+import { UserProfileDTO, UserRelation } from "../shared/DTO";
 
 interface friendButtonProps {
     relation: UserRelation;
-    otherId: number;
+    otherProfile: UserProfileDTO;
 }
 
 function FriendButton(props: friendButtonProps): React.JSX.Element {
-    switch (props.relation) {
+   console.log("user relation: ", props.relation);
+	switch (props.relation) {
         case UserRelation.friends:
             return (
-                <button onClick={() => removeFriend(props.otherId)}>
+                <button onClick={() => handleRemoveFriend(props.otherProfile.id, props.otherProfile.name)}>
                     Remove friend
                 </button>
             );
         case UserRelation.request_sent:
             return (
-                <button onClick={() => cancelRequest(props.otherId)}>
+                <button onClick={() => handleCancelRequest(props.otherProfile.id, props.otherProfile.name)}>
                     Cancel friend request
                 </button>
             );
         case UserRelation.request_received:
             return (
                 <div>
-                    <button onClick={() => acceptRequest(props.otherId)}>
+                    <button onClick={() => handleAcceptRequest(props.otherProfile.id, props.otherProfile.name)}>
                         Accept friend request
                     </button>
-                    <button onClick={() => declineRequest(props.otherId)}>
+                    <button onClick={() => handleDeclineRequest(props.otherProfile.id, props.otherProfile.name)}>
                         Decline friend request
                     </button>
                 </div>
@@ -44,19 +45,13 @@ function FriendButton(props: friendButtonProps): React.JSX.Element {
             return <div />;
         case UserRelation.none:
             return (
-                <button onClick={() => addFriend(props.otherId)}>
+                <button onClick={() => handleSendFriendRequest(props.otherProfile.id, props.otherProfile.name)}>
                     Add friend
                 </button>
             );
         default:
             return (
-                <button
-                    onClick={() =>
-                        console.error("Error resolving relation between users")
-                    }
-                >
-                    Error
-                </button>
+				<p>Error resolving relation between users.</p>
             );
     }
 }

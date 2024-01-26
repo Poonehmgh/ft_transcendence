@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { fetchGetSet } from "src/functions/fetchers";
-import { acceptRequest, declineRequest } from "src/functions/userActions";
+import { handleAcceptRequest, handleDeclineRequest } from "src/functions/userActions";
 
 // DTO
 import { IdAndNameDTO } from "user-dto";
@@ -17,27 +17,15 @@ function RequestInList() {
         fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
     }, [apiUrl]);
 
-    function handleDecline(index: number) {
-        if (window.confirm(`Decline friend request from user ${group[index].name}?`)) {
-            if (declineRequest(group[index].id)) {
-                alert("Friend request declined");
-                fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
-            } else {
-                alert("Error declining friend request");
-            }
-        }
-    }
+	function doDeclineRequest(id: number, name: string) {
+		handleDeclineRequest(id, name);
+        fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
+	}
 
-    function handleAccept(index: number) {
-        if (window.confirm(`Accept friend request from user ${group[index].name}?`)) {
-            if (acceptRequest(group[index].id)) {
-                alert("Friend request accepted");
-                fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
-            } else {
-                alert("Error accepting friend request");
-            }
-        }
-    }
+	function doAcceptRequest(id: number, name: string) {
+		handleAcceptRequest(id, name);
+        fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
+	}
 
 	if (!group) return <div className="p">Loading data...</div>;
 	if (group.length === 0) return <div className="p">No incoming requests. Go talk to ppl!</div>;
@@ -45,19 +33,19 @@ function RequestInList() {
     return (
                 <table className="modalUserList">
                     <tbody>
-                        {group.map((entry, index) => (
-                            <tr key={entry.id}>
-                                <td> {entry.name}</td>
+                        {group.map((element, index) => (
+                            <tr key={element.id}>
+                                <td> {element.name}</td>
                                 <td>
                                     <button
                                         className="contactsButton"
-                                        onClick={() => handleAccept(index)}
+										onClick={() => doAcceptRequest(element.id, element.name)}
                                     >
                                         🤝
                                     </button>
                                     <button
                                         className="contactsButton"
-                                        onClick={() => handleDecline(index)}
+                                        onClick={() => doDeclineRequest(element.id, element.name)}
                                     >
                                         ❌
                                     </button>

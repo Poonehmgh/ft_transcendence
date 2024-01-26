@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { fetchGetSet } from "src/functions/fetchers";
-import { unblockUser } from "src/functions/userActions";
+import { handleUnBlockUser } from "src/functions/userActions";
 
 // DTO
 import { IdAndNameDTO } from "user-dto";
@@ -17,16 +17,10 @@ function BlockedList() {
         fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
     }, [apiUrl]);
 
-    function handleUnBlockUser(id: number, index: number) {
-        if (window.confirm(`Unblock user ${group[index].name}?`)) {
-            if (unblockUser(group[index].id)) {
-                alert("User unblocked");
-                fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
-            } else {
-                alert("Error unblocking user");
-            }
-        }
-    }
+	function doUnblockUser(id: number, name: string) {
+		handleUnBlockUser(id, name)
+		fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
+	}
 
 	if (!group) return <div className="p">Loading data...</div>;
 	if (group.length === 0) return <div className="p">No toxic ppl... yet!</div>;
@@ -34,13 +28,13 @@ function BlockedList() {
     return (
                 <table className="modalUserList">
                     <tbody>
-                        {group.map((entry, index) => (
-                            <tr key={entry.id}>
-                                <td> {entry.name}</td>
+                        {group.map((element, index) => (
+                            <tr key={element.id}>
+                                <td> {element.name}</td>
                                 <td>
                                     <button
                                         className="contactsButton"
-                                        onClick={() => handleUnBlockUser(entry.id, index)}
+                                        onClick={() => doUnblockUser(element.id, element.name)}
                                     >
                                         ❌
                                     </button>

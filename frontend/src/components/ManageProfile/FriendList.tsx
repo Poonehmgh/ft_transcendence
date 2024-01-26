@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { fetchGetSet } from "src/functions/fetchers";
-import { blockUser, removeFriend } from "src/functions/userActions";
+import { handleBlockUser, handleRemoveFriend } from "src/functions/userActions";
 
 // DTO
 import { IdAndNameDTO } from "user-dto";
@@ -17,35 +17,24 @@ function FriendList() {
         fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
     }, [apiUrl]);
 
-    function handleRemoveFriend(index: number) {
-        if (window.confirm(`Remove friend ${group[index].name}?`)) {
-            if (removeFriend(group[index].id)) {
-                alert("Friend removed");
-                fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
-            } else {
-                alert("Error removing friend");
-            }
-        }
-    }
+
+	function doRemoveFriend(id: number, name: string) {
+		handleRemoveFriend(id, name);
+		fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
+	}
+
+	function doRemoveAndBlockFriend(id: number, name: string) {
+		handleBlockUser(id, name);
+		fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
+	}
 
     function handleSendMsg(id: number) {
         console.log("Mock execute send msg to user with id ", id);
     }
 
-    function handleBlockUser(index: number) {
-        if (window.confirm(`Unfriend and block ${group[index].name}?`)) {
-            if (blockUser(group[index].id)) {
-                alert("Removed from friends and blocked");
-                fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
-            } else {
-                alert("Error unfriending / blocking");
-            }
-        }
-    }
-
 	if (!group) return <div className="p">Loading data...</div>;
 	if (group.length === 0) return <div className="p">No friends. Don't be shy!</div>;
-	
+
     return (
                 <table className="modalUserList">
                     <tbody>
@@ -62,14 +51,14 @@ function FriendList() {
                                     <button
                                         className="contactsButton"
                                         onClick={() =>
-                                            handleRemoveFriend(index)
+                                            doRemoveFriend(element.id, element.name)
                                         }
                                     >
                                         ❌
                                     </button>
                                     <button
                                         className="contactsButton"
-                                        onClick={() => handleBlockUser(index)}
+                                        onClick={() => doRemoveAndBlockFriend(element.id, element.name)}
                                     >
                                         ⛔
                                     </button>

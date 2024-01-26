@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { fetchGetSet } from "src/functions/fetchers";
-import { cancelRequest } from "src/functions/userActions";
+import { handleCancelRequest } from "src/functions/userActions";
 
 // DTO
 import { IdAndNameDTO } from "user-dto";
@@ -17,16 +17,10 @@ function RequestOutList() {
         fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
     }, [apiUrl]);
 
-    function handleCancel(index: number) {
-        if (window.confirm(`Cancel friend request to user ${group[index].name}?`)) {
-            if (cancelRequest(group[index].id)) {
-                alert("Friend request canceled");
-                fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
-            } else {
-                alert("Error canceling friend request");
-            }
-        }
-    }
+	function doCancelRequest(id: number, name: string) {
+		handleCancelRequest(id, name);
+        fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
+	}
 
 	if (!group) return <div className="p">Loading data...</div>;
 	if (group.length === 0) return <div className="p">No outgoing requests. Go make some friends!</div>;
@@ -34,13 +28,13 @@ function RequestOutList() {
 	return (
 		<table className="modalUserList">
 			<tbody>
-				{group.map((entry, index) => (
-					<tr key={entry.id}>
-						<td>{entry.name}</td>
+				{group.map((element, index) => (
+					<tr key={element.id}>
+						<td>{element.name}</td>
 						<td>
 							<button
 								className="contactsButton"
-								onClick={() => handleCancel(index)}
+								onClick={() => doCancelRequest(element.id, element.name)}
 							>
 								❌
 							</button>

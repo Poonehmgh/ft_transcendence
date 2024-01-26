@@ -1,25 +1,26 @@
 import React from "react";
-import { blockUser, unblockUser } from "src/functions/userActions";
+import { handleBlockUser, handleUnBlockUser } from "src/functions/userActions";
 
 // DTO
-import { UserRelation } from "../shared/DTO";
+import { UserProfileDTO, UserRelation } from "../shared/DTO";
 
 interface blockButtonProps {
     relation: UserRelation;
-    otherId: number;
+    otherProfile: UserProfileDTO;
 }
 
 function BlockButton(props: blockButtonProps): React.JSX.Element {
     switch (props.relation) {
         case UserRelation.blocked:
             return (
-                <button onClick={void unblockUser(props.otherId)}>
+                <button onClick={() => handleUnBlockUser(props.otherProfile.id, props.otherProfile.name)}>
                     Unblock user
                 </button>
             );
+
         default:
             return (
-                <button onClick={void blockUser(props.otherId)}>
+                <button onClick={() => handleBlockUser(props.otherProfile.id, props.otherProfile.name)}>
                     Block user
                 </button>
             );

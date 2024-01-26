@@ -75,9 +75,12 @@ export class UserService {
         };
     }
 
-    async getFriendStatus(userId: number, otherUserId: number): Promise<UserRelation> {
+    async getFriendStatus(thisId: number, otherId: number): Promise<UserRelation> {
+		console.log("getFriends:\nthisId:" , thisId);
+		console.log("otherid: ", otherId);
+
         const user = await this.prisma.user.findUnique({
-            where: { id: Number(userId) },
+            where: { id: Number(thisId) },
             select: {
                 friends: true,
                 friendReq_out: true,
@@ -87,13 +90,19 @@ export class UserService {
         });
         if (!user) throw new Error("getFriendStatus");
 
-        if (user.friends.includes(Number(otherUserId))) return UserRelation.friends;
-        if (user.friendReq_out.includes(Number(otherUserId)))
-            return UserRelation.request_sent;
-        if (user.friendReq_in.includes(Number(otherUserId)))
-            return UserRelation.request_received;
-        if (user.blocked.includes(Number(otherUserId))) return UserRelation.blocked;
-        return UserRelation.none;
+		let relation: UserRelation;
+        if (user.friends.includes(Number(otherId)))
+			relation = UserRelation.friends;
+        else if (user.friendReq_out.includes(Number(otherId)))
+			relation = UserRelation.request_sent;
+        else if (user.friendReq_in.includes(Number(otherId)))
+			relation = UserRelation.request_received;
+        else if (user.blocked.includes(Number(otherId)))
+			relation = UserRelation.blocked;
+		else
+       		relation = UserRelation.none;
+		console.log("returning userrelation: ", relation);
+		return relation;
     }
 
     // getters
@@ -450,6 +459,7 @@ export class UserService {
     }
 
     async blockUser(thisId: number, otherId: number) {
+		console.log("\n\n\nblockuser called\n\n\n");
         try {
             const thisUser = await this.getUserById(thisId);
             if (thisUser.blocked.includes(otherId)) {
