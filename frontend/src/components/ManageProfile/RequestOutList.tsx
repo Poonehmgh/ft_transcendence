@@ -28,31 +28,28 @@ function RequestOutList() {
         }
     }
 
-    return (
-        <div className="p">
-            {!group ? <p>Loading data...</p> : group.length === 0 ? (
-                <p>No outgoing requests. Go make some friends!</p>
-            ) : (
-                <table className="modalUserList">
-                    <tbody>
-                        {group.map((entry, index) => (
-                            <tr key={entry.id}>
-                                <td> {entry.name}</td>
-                                <td>
-                                    <button
-                                        className="contactsButton"
-                                        onClick={() => handleCancel(index)}
-                                    >
-                                        ❌
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            )}
-        </div>
-    );
+	if (!group) return <div className="p">Loading data...</div>;
+	if (group.length === 0) return <div className="p">No outgoing requests. Go make some friends!</div>;
+	
+	return (
+		<table className="modalUserList">
+			<tbody>
+				{group.map((entry, index) => (
+					<tr key={entry.id}>
+						<td>{entry.name}</td>
+						<td>
+							<button
+								className="contactsButton"
+								onClick={() => handleCancel(index)}
+							>
+								❌
+							</button>
+						</td>
+					</tr>
+				))}
+			</tbody>
+		</table>
+	);
 }
 
 export default RequestOutList;

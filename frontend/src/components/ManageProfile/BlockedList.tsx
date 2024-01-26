@@ -28,11 +28,10 @@ function BlockedList() {
         }
     }
 
+	if (!group) return <div className="p">Loading data...</div>;
+	if (group.length === 0) return <div className="p">No toxic ppl... yet!</div>;
+
     return (
-        <div className="p">
-            {!group ? <p>Loading data...</p> : group.length === 0 ? (
-                <p>No toxic ppl... yet!</p>
-            ) : (
                 <table className="modalUserList">
                     <tbody>
                         {group.map((entry, index) => (
@@ -50,8 +49,6 @@ function BlockedList() {
                         ))}
                     </tbody>
                 </table>
-            )}
-        </div>
     );
 }
 

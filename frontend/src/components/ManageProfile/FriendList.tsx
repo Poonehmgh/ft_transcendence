@@ -45,6 +45,7 @@ function FriendList() {
 
 	if (!group) return <div className="p">Loading data...</div>;
 	if (group.length === 0) return <div className="p">No friends. Don't be shy!</div>;
+	
     return (
                 <table className="modalUserList">
                     <tbody>

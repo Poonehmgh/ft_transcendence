@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import { authContentHeader } from "src/functions/headers";
 import PlayerCardTable from "../shared/PlayerCardTable";
+import SocialActionBar from "./SocialActionBar";
 
 // DTO
 import { UserProfileDTO } from "user-dto";
@@ -10,6 +11,7 @@ import { UserProfileDTO } from "user-dto";
 import "src/styles/style.css";
 import "src/styles/modals.css";
 import "src/styles/buttons.css";
+import { fetchGetSet } from "src/functions/fetchers";
 
 interface userProfileModalProps {
     id: number;
@@ -18,33 +20,15 @@ interface userProfileModalProps {
 }
 
 function UserProfileModal(props: userProfileModalProps) {
-    const [userData, setUserData] = useState<UserProfileDTO | null>(null);
+    const [userProfile, setUserProfile] = useState<UserProfileDTO | null>(null);
     const [avatarURL, setAvatarURL] = useState(null);
+	const apiUrl_profile = process.env.REACT_APP_BACKEND_URL + "/user/profile/" + props.id;
 
     function closeModal() {
         props.onClose();
     }
 
     useEffect(() => {
-        async function fetchProfile() {
-            if (props.id == null) return;
-            const url =
-                process.env.REACT_APP_BACKEND_URL + "/user/profile/" + props.id;
-            try {
-                const response = await fetch(url, {
-                    method: "GET",
-                    headers: authContentHeader(),
-                });
-                if (!response.ok) {
-                    throw new Error("Network response was not ok");
-                }
-                const data = await response.json();
-                setUserData(data);
-            } catch (error) {
-                console.log("Error fetching user data:", error);
-            }
-        }
-
         async function fetchAvatar() {
             const apiUrl =
                 process.env.REACT_APP_BACKEND_URL + "/user/avatar/" + props.id;
@@ -63,9 +47,11 @@ function UserProfileModal(props: userProfileModalProps) {
                 console.log("Error getting Avatar", error);
             }
         }
-        fetchProfile();
-        fetchAvatar();
-    }, [props.isOpen, props.id]);
+		if (props.id) {
+			fetchGetSet(apiUrl_profile, setUserProfile);
+			fetchAvatar();
+		}
+    }, [props.isOpen, props.id, apiUrl_profile]);
 
     return (
         <div>
@@ -76,11 +62,11 @@ function UserProfileModal(props: userProfileModalProps) {
                 className="modal2"
                 overlayClassName="modalOverlay"
             >
-                {!userData ? (
+                {!userProfile ? (
                     <p>Loading user data...</p>
                 ) : (
                     <div>
-                        <h2 className="h2Left">{userData.name}</h2>
+                        <h2 className="h2Left">{userProfile.name}</h2>
 
                         <div className="modal-avatar_playerCard">
                             <img
@@ -91,12 +77,13 @@ function UserProfileModal(props: userProfileModalProps) {
 
                             <div className="modal-expander-hor"></div>
                             <PlayerCardTable
-                                mmr={userData.mmr}
-                                rank={userData.rank}
-                                matches={userData.matches}
-                                winrate={userData.winrate}
+                                mmr={userProfile.mmr}
+                                rank={userProfile.rank}
+                                matches={userProfile.matches}
+                                winrate={userProfile.winrate}
                             />
                         </div>
+						<SocialActionBar otherId={props.id}/>
                     </div>
                 )}
                 <button className="closeX" onClick={closeModal}>

@@ -11,11 +11,9 @@ function Login() {
     const [userData, setUserData] = useState<UserProfileDTO>(null);
     const loginRedirUrl = process.env.REACT_APP_BACKEND_URL + "/auth/42/login";
     const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/my_profile";
-    //const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/profile/" + "98525";
 
     useEffect(() => {
         fetchGetSet(apiUrl, setUserData);
-		console.log("useeffect called, userdata:", userData);
     }, [apiUrl]);
 
     return userData ? "Welcome, " + userData.name + "!" : (

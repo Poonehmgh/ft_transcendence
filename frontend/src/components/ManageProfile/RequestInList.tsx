@@ -39,11 +39,10 @@ function RequestInList() {
         }
     }
 
+	if (!group) return <div className="p">Loading data...</div>;
+	if (group.length === 0) return <div className="p">No incoming requests. Go talk to ppl!</div>;
+
     return (
-        <div className="p">
-            {!group ? <p>Loading data...</p> : group.length === 0 ? (
-                <p>No incoming requests. Go talk to ppl!</p>
-            ) : (
                 <table className="modalUserList">
                     <tbody>
                         {group.map((entry, index) => (
@@ -67,8 +66,6 @@ function RequestInList() {
                         ))}
                     </tbody>
                 </table>
-            )}
-        </div>
     );
 }
 
