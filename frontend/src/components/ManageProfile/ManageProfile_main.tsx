@@ -11,6 +11,7 @@ import { UserProfileDTO } from "user-dto";
 import "src/styles/buttons.css";
 import "src/styles/style.css";
 import "src/styles/manageProfile.css";
+import { authHeader } from "../../functions/headers";
 
 function ManageProfile() {
     const [userData, setUserData] = useState<UserProfileDTO | null>(null);
@@ -23,7 +24,7 @@ function ManageProfile() {
     }
 
     async function fetchAvatar() {
-        const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/my_profile";
+        const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/my_avatar";
         try {
             const response = await fetch(apiUrl, {
                 method: "GET",
@@ -53,9 +54,10 @@ function ManageProfile() {
         const formData = new FormData();
         formData.append("avatar", file);
         try {
-            await fetch(process.env.REACT_APP_BACKEND_URL + `/user/put_avatar}`, {
+            await fetch(process.env.REACT_APP_BACKEND_URL + "/user/put_avatar", {
                 method: "POST",
                 body: formData,
+                headers: authHeader()
             });
         } catch (error) {
             console.log(error);

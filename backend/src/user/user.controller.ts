@@ -11,6 +11,10 @@ import {
     BadRequestException,
     UploadedFile,
     UseGuards,
+	Injectable,
+	NestInterceptor,
+	CallHandler,
+	ExecutionContext,
 } from "@nestjs/common";
 import { Response } from "express";
 import { UserRelation, IdAndNameDTO, UserProfileDTO, ChangeNameDTO } from "./user-dto";
@@ -19,12 +23,28 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
 import * as path from "path";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
+import { Observable } from 'rxjs';
+
   
-  interface AuthenticatedRequest extends Request {
-	user: {id: number;
+interface reqUser {
+	id: number;
 		name: string;
 		iat: number;
-		exp: number;};
+		exp: number;
+  }
+
+  interface AuthenticatedRequest extends Request {
+	user: reqUser;
+  }
+
+  @Injectable()
+  export class UserInterceptor implements NestInterceptor {
+	intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+	  const reqInt = context.switchToHttp().getRequest();
+	  return next.handle();
+	  
+
+	}
   }
 
 @Controller("user")
@@ -55,6 +75,18 @@ export class UserController {
         @Req() req: AuthenticatedRequest,
     ): Promise<UserProfileDTO> {
         return this.userService.getProfileById(req.user.id);
+    }
+
+	@Get("my_avatar")
+    async getMyAvatar(
+        @Req() req: AuthenticatedRequest,
+		@Res() res: Response
+    ) {
+        const filePath = this.userService.getAvatarPath(req.user.id);
+        if (!filePath) {
+            return res.sendFile("default.png", { root: "./uploads" });
+        }
+        return res.sendFile(filePath);
     }
 
     @Get("get_avatar/:id")
@@ -129,13 +161,13 @@ export class UserController {
         }
     }
 
-    @Post("put_avatar/:id")
+    @Post("put_avatar")
     @UseInterceptors(
-        FileInterceptor("avatar", {
+        UserInterceptor, FileInterceptor("avatar", {
             storage: diskStorage({
                 destination: "./uploads",
                 filename: (req, file, callback) => {
-					const newFilename = req.params.id + path.extname(file.originalname);
+					const newFilename = (req.user as reqUser).id + path.extname(file.originalname);
                     callback(null, newFilename);
                 },
             }),
@@ -159,7 +191,7 @@ export class UserController {
             },
         })
     )
-    async uploadFile(@Param("id") id: number, @UploadedFile() file: Express.Multer.File) {
+    async uploadFile(@Req() req: AuthenticatedRequest, @UploadedFile() file: Express.Multer.File) {
         return { message: "File uploaded successfully", file };
     }
 

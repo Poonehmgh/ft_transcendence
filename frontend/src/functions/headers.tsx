@@ -1,17 +1,13 @@
 export function authHeader() {
-    //const token: string = "Bearer " + Cookies.get("token");
-
-    const token: string = "bearer " + localStorage.getItem("userToken");
     const myHeaders: Headers = new Headers();
+    const token: string = "Bearer " + getTokenFromCookie();
     myHeaders.append("Authorization", token);
-    return myHeaders;
+	return myHeaders;
 }
 
 export function authContentHeader() {
     const myHeaders: Headers = new Headers();
-    
 	myHeaders.append("Content-Type", "application/json");
-
     const token: string = "Bearer " + getTokenFromCookie();
     myHeaders.append("Authorization", token);
     
