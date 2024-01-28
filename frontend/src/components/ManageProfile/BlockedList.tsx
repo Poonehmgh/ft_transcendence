@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { fetchGetSet } from "src/functions/fetchers";
+import { fetchGetSet } from "src/functions/utils";
 import { handleUnBlockUser } from "src/functions/userActions";
 
 // DTO

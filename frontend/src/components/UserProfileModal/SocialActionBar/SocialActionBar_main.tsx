@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import FriendButton from "./FriendButton";
 import BlockButton from "./BlockButton";
-import { fetchGetSet } from "src/functions/fetchers";
+import { fetchGetSet } from "src/functions/utils";
 
 // DTO
-import { UserRelation, UserProfileDTO } from "../shared/DTO";
+import { UserRelation, UserProfileDTO } from "../../shared/DTO";
 
 // CSS
 import "src/styles/socialActionBar.css";
@@ -46,5 +46,3 @@ function SocialActionBar(props: socialActionBarProps): React.JSX.Element {
 }
 
 export default SocialActionBar;
-
-//setSelectedChat: React.Dispatch<React.SetStateAction<ChatListDTO | null>>;

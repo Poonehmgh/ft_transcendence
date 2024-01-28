@@ -1,4 +1,4 @@
-import { authContentHeader } from "./headers";
+import { authContentHeader } from "./utils";
 
 // to do: pass the strings and 2nd lvl functions into a central handler function.
 
@@ -119,8 +119,9 @@ async function cancelRequest(otherId: number) {
 }
 
 // Accept / Decline Request Dispatch
+// to do: defuglify this prompt
 
-export async function manageIncomingRequest(otherId: number, otherName: string) {
+export async function handleIncomingRequest(otherId: number, otherName: string) {
     const userInput = prompt(
         "Select an option:\n\n1. Accept\n2. Decline\n3. Ignore for now"
     );

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { fetchGetSet } from "src/functions/fetchers";
+import { fetchGetSet } from "src/functions/utils";
 
 // DTO
 import { MatchDTO } from "match-dto";
+import { UserProfileDTO } from "../shared/DTO";
 
 // CSS
 import "src/styles/style.css";
 import "src/styles/matchHistory.css";
-import { UserProfileDTO } from "../shared/DTO";
 
 interface matchHistoryProps {
     id: number;
@@ -25,13 +25,6 @@ function MatchHistory(props: matchHistoryProps): React.JSX.Element {
         fetchGetSet<MatchDTO[]>(apiUrl_matches, setMatches);
     }, [apiUrl_matches]);
 
-    function getCalendarDay(date: Date) {
-        const day = date.getDate().toString().padStart(2, "0");
-        const month = (date.getMonth() + 1).toString().padStart(2, "0");
-        const year = date.getFullYear();
-
-        return `${day}.${month}.${year}`;
-    }
 
     if (!matches) return <div className="p">Loading data...</div>;
     if (matches.length === 0) return <div className="p">No matches played.</div>;

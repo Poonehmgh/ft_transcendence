@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
-import { authContentHeader } from "src/functions/headers";
+import { authContentHeader } from "src/functions/utils";
 import ManageContactsTabs from "./ManageContactsTabs";
 import PlayerCardTable from "../shared/PlayerCardTable";
-import { fetchGetSet } from "src/functions/fetchers";
+import { fetchGetSet } from "src/functions/utils";
 
 // DTO
 import { UserProfileDTO } from "user-dto";
@@ -11,7 +11,7 @@ import { UserProfileDTO } from "user-dto";
 import "src/styles/buttons.css";
 import "src/styles/style.css";
 import "src/styles/manageProfile.css";
-import { authHeader } from "../../functions/headers";
+import { authHeader } from "../../functions/utils";
 
 function ManageProfile() {
     const [userData, setUserData] = useState<UserProfileDTO | null>(null);

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
-import { authContentHeader } from "src/functions/headers";
+import { authContentHeader } from "src/functions/utils";
 import PlayerCardTable from "../shared/PlayerCardTable";
-import SocialActionBar from "./SocialActionBar";
+import SocialActionBar from "./SocialActionBar/SocialActionBar_main";
+import { fetchGetSet } from "src/functions/utils";
+import MatchHistory from "./MatchHistory";
 
 // DTO
 import { UserProfileDTO } from "user-dto";
@@ -11,8 +13,6 @@ import { UserProfileDTO } from "user-dto";
 import "src/styles/style.css";
 import "src/styles/modals.css";
 import "src/styles/buttons.css";
-import { fetchGetSet } from "src/functions/fetchers";
-import MatchHistory from "./MatchHistory";
 
 interface userProfileModalProps {
     id: number;

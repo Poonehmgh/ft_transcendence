@@ -2,14 +2,12 @@ import React from "react";
 import {
     handleRemoveFriend,
     handleCancelRequest,
-    handleAcceptRequest,
-    handleDeclineRequest,
     handleSendFriendRequest,
-    manageIncomingRequest,
-} from "../../functions/userActions";
+    handleIncomingRequest,
+} from "../../../functions/userActions";
 
 // DTO
-import { UserProfileDTO, UserRelation } from "../shared/DTO";
+import { UserProfileDTO, UserRelation } from "../../shared/DTO";
 
 // CSS
 import "src/styles/buttons.css";
@@ -34,7 +32,7 @@ function FriendButton(props: FriendButtonProps): React.JSX.Element | null {
                 handleCancelRequest(props.otherProfile.id, props.otherProfile.name);
                 break;
             case UserRelation.request_received:
-                manageIncomingRequest(props.otherProfile.id, props.otherProfile.name);
+                handleIncomingRequest(props.otherProfile.id, props.otherProfile.name);
                 break;
             case UserRelation.blocked:
                 // already handled

@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { handleBlockUser, handleUnBlockUser } from "src/functions/userActions";
 
 // DTO
-import { UserProfileDTO, UserRelation } from "../shared/DTO";
+import { UserProfileDTO, UserRelation } from "../../shared/DTO";
 
 interface blockButtonProps {
     relation: UserRelation;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import UserTable from "../shared/UserTable";
-import { fetchGetSet } from "src/functions/fetchers";
+import { fetchGetSet } from "src/functions/utils";
 
 import { UserProfileDTO } from "user-dto";
 

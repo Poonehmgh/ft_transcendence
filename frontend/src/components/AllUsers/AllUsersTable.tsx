@@ -28,7 +28,6 @@ function AllUsersTable(props: allUsersTable_prop): React.JSX.Element {
 
     const handleCloseModal = () => {
         setModalIsOpen(false);
-
     };
 
     useEffect(() => {

@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { fetchGetSet } from "src/functions/fetchers";
+import { fetchGetSet } from "src/functions/utils";
+
+// DTO
+import { UserProfileDTO } from "user-dto";
 
 // CSS
 import "src/styles/style.css";
 import "src/styles/home.css";
 import "src/styles/buttons.css";
-import { UserProfileDTO } from "user-dto";
 
 function Login() {
     const [userData, setUserData] = useState<UserProfileDTO>(null);
@@ -16,7 +18,9 @@ function Login() {
         fetchGetSet(apiUrl, setUserData);
     }, [apiUrl]);
 
-    return userData ? "Welcome, " + userData.name + "!" : (
+    return userData ? (
+        "Welcome, " + userData.name + "!"
+    ) : (
         <div className="loginContainer">
             <div className="h2">Pls log in!</div>
             <button
