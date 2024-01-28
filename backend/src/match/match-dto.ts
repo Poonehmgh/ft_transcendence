@@ -1,4 +1,31 @@
+import { Match } from "@prisma/client";
 import {GameData} from "../game/game.queue";
+
+export class MatchDTO {
+	id: number;
+	begin: Date | null;
+	end: Date | null;
+	length_sec: number;
+	player1_id: number;
+	player2_id: number;
+	score_p1: number;
+	score_p2: number;
+	winner_id: number | null;
+	winner_name: string | null;
+  
+	constructor(match: Match) {
+	  this.id = match.id;
+	  this.begin = match.begin || null;
+	  this.end = match.end || null;
+	  this.length_sec = match.length_sec;
+	  this.player1_id = match.player1;
+	  this.player2_id = match.player2;
+	  this.score_p1 = match.score_p1;
+	  this.score_p2 = match.score_p2;
+	  this.winner_id = match.winner_id || null;
+	  this.winner_name = match.winner_name || null;
+	}
+  }
 
 export class MatchInfoDTO
 {

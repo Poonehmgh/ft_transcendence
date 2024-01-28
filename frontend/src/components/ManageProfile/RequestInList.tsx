@@ -10,7 +10,7 @@ import "src/styles/style.css";
 import "src/styles/manageProfile.css";
 
 function RequestInList() {
-    const [group, setGroup] = useState([]);
+    const [group, setGroup] = useState(null);
     const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/request_in";
 
     useEffect(() => {

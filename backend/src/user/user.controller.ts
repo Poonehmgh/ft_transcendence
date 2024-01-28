@@ -23,6 +23,7 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
 import * as path from "path";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
+import { MatchDTO, MatchInfoDTO } from "src/match/match-dto";
 
   
 interface reqUser {
@@ -79,10 +80,10 @@ export class UserController {
         return this.userService.getTopProfiles(top);
     }
 
-    // remove or update to give matchinfodto
     @Get("matches/:id")
-    async getMatches(@Param("id") id: number): Promise<number[]> {
-        return this.userService.getMatches(id);
+    async getMatches(@Param("id") id: number): Promise<MatchDTO[]> {
+        const matchIds = await this.userService.getMatchIds(id);
+		return this.userService.getMatchDtos(matchIds);
     }
 
     @Get("user_relation/:id")
@@ -92,8 +93,6 @@ export class UserController {
     ): Promise<UserRelation> {
         return this.userService.getFriendStatus(req.user.id, otherId);
     }
-
-    // getters
 
     @Get("all_users")
     async getAllUsers() {

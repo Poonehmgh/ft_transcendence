@@ -5,7 +5,7 @@ import { fetchGetSet } from "src/ApiCalls/fetchers";
 import { MatchInfoDTO } from "match-dto";
 
 // CSS
-import "src/styles/stlye.css";
+import "src/styles/style.css";
 import "src/styles/matchHistory.css";
 
 interface matchHistoryProp {

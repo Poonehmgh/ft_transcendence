@@ -12,6 +12,7 @@ import "src/styles/style.css";
 import "src/styles/modals.css";
 import "src/styles/buttons.css";
 import { fetchGetSet } from "src/functions/fetchers";
+import MatchHistory from "./MatchHistory";
 
 interface userProfileModalProps {
     id: number;
@@ -84,6 +85,7 @@ function UserProfileModal(props: userProfileModalProps) {
                             />
                         </div>
 						<SocialActionBar otherProfile={userProfile}/>
+						<MatchHistory id={props.id} />
                     </div>
                 )}
                 <button className="closeX" onClick={closeModal}>

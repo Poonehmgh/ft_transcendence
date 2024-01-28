@@ -17,3 +17,16 @@ export enum UserRelation {
         public online: boolean
     ) {}
 }
+
+export class MatchDTO {
+	id: number;
+	begin: Date | null;
+	end: Date | null;
+	length_sec: number;
+	player1_id: number;
+	player2_id: number;
+	score_p1: number;
+	score_p2: number;
+	winner_id: number | null;
+	winner_name: string | null;
+  }

@@ -27,27 +27,52 @@ import {
 } from "../constants/constants.user.service";
 import * as fs from "fs";
 import * as path from "path";
+import { MatchDTO, MatchInfoDTO } from "src/match/match-dto";
 
 @Injectable()
 export class UserService {
     constructor(private readonly prisma: PrismaService) {}
 
-    async createUser(userData) {
+ /*    async createUser(userData) {
         return this.prisma.user.create({ data: userData });
     }
 
     async newUser(userData: NewUserDTO): Promise<void> {
         await this.prisma.user.create({ data: userData });
-    }
+    } */
 
-    async getMatches(userId: number): Promise<number[]> {
-        const user = await this.prisma.user.findUnique({
-            where: { id: userId },
-            select: { matches: true },
-        });
-        if (!user) throw new Error("getMatches: User not found");
-        return user.matches;
-    }
+	async getMatchIds(userId: number): Promise<number[]> {
+		try {
+			const user = await this.prisma.user.findUnique({
+				where: { id: userId },
+				select: { matches: true },
+			});
+	
+			if (!user) throw new Error("getMatchIds: User not found");
+	
+			return user.matches;
+		} catch (error) {
+			console.error('Error retrieving match DTOs:', error);
+			throw error;
+		}
+	}
+
+	async getMatchDtos(matchIds: number[]): Promise<MatchDTO[]> {
+		try {
+		  const matches = await this.prisma.match.findMany({
+			where: {
+			  id: {
+				in: matchIds,
+			  },
+			},
+		  });
+	  
+		  return matches.map(match => new MatchDTO(match));
+		} catch (error) {
+		  console.error('Error retrieving match DTOs:', error);
+		  throw error;
+		}
+	  }
 
     async getProfileById(userId: number): Promise<UserProfileDTO> {
 		const profile = await this.prisma.user.findUnique({
