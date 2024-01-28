@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { UserProfileDTO } from "user-dto";
 import UserProfileModal from "../UserProfileModal/UserProfileModal_main";
-import "src/styles/bigTable.css";
-import { fetchGetSet } from "src/ApiCalls/fetchers";
+import { fetchGetSet } from "src/functions/fetchers";
+
+// DTO
+import { UserProfileDTO } from "user-dto";
+
+// CSS
+import "src/styles/style.css";
+import "src/styles/buttons.css";
 
 // not using pagination so far, we wont ever have that many users.
 // but thats what the propdata are for.
@@ -23,6 +28,7 @@ function AllUsersTable(props: allUsersTable_prop): React.JSX.Element {
 
     const handleCloseModal = () => {
         setModalIsOpen(false);
+
     };
 
     useEffect(() => {
@@ -44,7 +50,7 @@ function AllUsersTable(props: allUsersTable_prop): React.JSX.Element {
                 isOpen={modalIsOpen}
                 onClose={handleCloseModal}
             />
-            <table className="big-table">
+            <table>
                 <thead>
                     <tr>
                         <th>Player</th>

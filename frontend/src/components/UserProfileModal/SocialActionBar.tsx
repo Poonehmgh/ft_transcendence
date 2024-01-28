@@ -6,6 +6,9 @@ import { fetchGetSet } from "src/functions/fetchers";
 // DTO
 import { UserRelation, UserProfileDTO } from "../shared/DTO";
 
+// CSS
+import "src/styles/socialActionBar.css"
+
 interface socialActionBarProps {
   otherProfile: UserProfileDTO;
 }
@@ -23,13 +26,9 @@ function SocialActionBar(props: socialActionBarProps): React.JSX.Element {
   console.log("SocialActionBar - status:", status);
 
   return (
-    <div>
-      <div>
+    <div className="socialActionBarMain">
         <FriendButton relation={status} otherProfile={props.otherProfile} />
-      </div>
-      <div>
         <BlockButton relation={status} otherProfile={props.otherProfile} />
-      </div>
     </div>
   );
 }

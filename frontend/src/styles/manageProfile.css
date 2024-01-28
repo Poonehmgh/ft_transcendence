@@ -17,7 +17,7 @@
 }
 
 .logOutContainer {
-    position:fixed;
+    position: fixed;
     top: 100px;
     left: 100px;
 }
@@ -103,7 +103,6 @@
     }
 }
 
-
 .modalUserListContainer {
     max-height: 500px;
     overflow-y: auto;
@@ -126,6 +125,7 @@
     text-align: left;
     line-height: 1.2;
 }
+
 .modalUserList td {
     padding: 5px;
     height: 30px;

@@ -71,7 +71,7 @@
     border: 0px;
     cursor: pointer;
     min-width: 70px;
-    z-index: 12;
+    z-index: 13;
 
     &:hover {
         --lightnessOffset: 5%;
