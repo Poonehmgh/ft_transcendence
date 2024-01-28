@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { fetchGetSet } from "src/functions/utils";
+import { fetchGetSet, getCalendarDay } from "src/functions/utils";
 
 // DTO
 import { MatchDTO } from "match-dto";
@@ -24,7 +24,6 @@ function MatchHistory(props: matchHistoryProps): React.JSX.Element {
     useEffect(() => {
         fetchGetSet<MatchDTO[]>(apiUrl_matches, setMatches);
     }, [apiUrl_matches]);
-
 
     if (!matches) return <div className="p">Loading data...</div>;
     if (matches.length === 0) return <div className="p">No matches played.</div>;

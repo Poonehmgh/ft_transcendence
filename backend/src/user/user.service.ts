@@ -33,7 +33,7 @@ import { MatchDTO, MatchInfoDTO } from "src/match/match-dto";
 export class UserService {
     constructor(private readonly prisma: PrismaService) {}
 
- /*    async createUser(userData) {
+    /*    async createUser(userData) {
         return this.prisma.user.create({ data: userData });
     }
 
@@ -41,41 +41,41 @@ export class UserService {
         await this.prisma.user.create({ data: userData });
     } */
 
-	async getMatchIds(userId: number): Promise<number[]> {
-		try {
-			const user = await this.prisma.user.findUnique({
-				where: { id: userId },
-				select: { matches: true },
-			});
-	
-			if (!user) throw new Error("getMatchIds: User not found");
-	
-			return user.matches;
-		} catch (error) {
-			console.error('Error retrieving match DTOs:', error);
-			throw error;
-		}
-	}
+    async getMatchIds(userId: number): Promise<number[]> {
+        try {
+            const user = await this.prisma.user.findUnique({
+                where: { id: userId },
+                select: { matches: true },
+            });
 
-	async getMatchDtos(matchIds: number[]): Promise<MatchDTO[]> {
-		try {
-		  const matches = await this.prisma.match.findMany({
-			where: {
-			  id: {
-				in: matchIds,
-			  },
-			},
-		  });
-	  
-		  return matches.map(match => new MatchDTO(match));
-		} catch (error) {
-		  console.error('Error retrieving match DTOs:', error);
-		  throw error;
-		}
-	  }
+            if (!user) throw new Error("getMatchIds: User not found");
+
+            return user.matches;
+        } catch (error) {
+            console.error("Error retrieving match DTOs:", error);
+            throw error;
+        }
+    }
+
+    async getMatchDtos(matchIds: number[]): Promise<MatchDTO[]> {
+        try {
+            const matches = await this.prisma.match.findMany({
+                where: {
+                    id: {
+                        in: matchIds,
+                    },
+                },
+            });
+
+            return matches.map((match) => new MatchDTO(match));
+        } catch (error) {
+            console.error("Error retrieving match DTOs:", error);
+            throw error;
+        }
+    }
 
     async getProfileById(userId: number): Promise<UserProfileDTO> {
-		const profile = await this.prisma.user.findUnique({
+        const profile = await this.prisma.user.findUnique({
             where: { id: Number(userId) },
             select: {
                 id: true,
@@ -88,8 +88,8 @@ export class UserService {
             },
         });
         if (!profile) throw new Error("getProfile: User not found");
-        
-		return {
+
+        return {
             id: profile.id,
             name: profile.name,
             rank: profile.rank,
@@ -101,9 +101,6 @@ export class UserService {
     }
 
     async getFriendStatus(thisId: number, otherId: number): Promise<UserRelation> {
-		console.log("getFriends:\nthisId:" , thisId);
-		console.log("otherid: ", otherId);
-
         const user = await this.prisma.user.findUnique({
             where: { id: Number(thisId) },
             select: {
@@ -115,19 +112,15 @@ export class UserService {
         });
         if (!user) throw new Error("getFriendStatus");
 
-		let relation: UserRelation;
-        if (user.friends.includes(Number(otherId)))
-			relation = UserRelation.friends;
+        let relation: UserRelation;
+        if (user.friends.includes(Number(otherId))) relation = UserRelation.friends;
         else if (user.friendReq_out.includes(Number(otherId)))
-			relation = UserRelation.request_sent;
+            relation = UserRelation.request_sent;
         else if (user.friendReq_in.includes(Number(otherId)))
-			relation = UserRelation.request_received;
-        else if (user.blocked.includes(Number(otherId)))
-			relation = UserRelation.blocked;
-		else
-       		relation = UserRelation.none;
-		console.log("returning userrelation: ", relation);
-		return relation;
+            relation = UserRelation.request_received;
+        else if (user.blocked.includes(Number(otherId))) relation = UserRelation.blocked;
+        else relation = UserRelation.none;
+        return relation;
     }
 
     // getters
@@ -484,7 +477,6 @@ export class UserService {
     }
 
     async blockUser(thisId: number, otherId: number) {
-		console.log("\n\n\nblockuser called\n\n\n");
         try {
             const thisUser = await this.getUserById(thisId);
             if (thisUser.blocked.includes(otherId)) {

@@ -11,10 +11,6 @@ import {
     BadRequestException,
     UploadedFile,
     UseGuards,
-	Injectable,
-	NestInterceptor,
-	CallHandler,
-	ExecutionContext,
 } from "@nestjs/common";
 import { Response } from "express";
 import { UserRelation, IdAndNameDTO, UserProfileDTO, ChangeNameDTO } from "./user-dto";
@@ -25,40 +21,34 @@ import * as path from "path";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
 import { MatchDTO, MatchInfoDTO } from "src/match/match-dto";
 
-  
 interface reqUser {
-	id: number;
-		name: string;
-		iat: number;
-		exp: number;
-  }
+    id: number;
+    name: string;
+    iat: number;
+    exp: number;
+}
 
-  interface AuthenticatedRequest extends Request {
-	user: reqUser;
-  }
+interface AuthenticatedRequest extends Request {
+    user: reqUser;
+}
 
 @Controller("user")
 @UseGuards(JwtAuthGuard)
 export class UserController {
     constructor(private readonly userService: UserService) {}
 
-	@Get("my_profile")
-    async getMyProfile(
-        @Req() req: AuthenticatedRequest,
-    ): Promise<UserProfileDTO> {
+    @Get("my_profile")
+    async getMyProfile(@Req() req: AuthenticatedRequest): Promise<UserProfileDTO> {
         return this.userService.getProfileById(req.user.id);
     }
-	
-	@Get("profile/:id")
+
+    @Get("profile/:id")
     async getProfile(@Param("id") id: number): Promise<UserProfileDTO> {
         return this.userService.getProfileById(id);
     }
 
-	@Get("my_avatar")
-    async getMyAvatar(
-        @Req() req: AuthenticatedRequest,
-		@Res() res: Response
-    ) {
+    @Get("my_avatar")
+    async getMyAvatar(@Req() req: AuthenticatedRequest, @Res() res: Response) {
         const filePath = this.userService.getAvatarPath(req.user.id);
         if (!filePath) {
             return res.sendFile("default.png", { root: "./uploads" });
@@ -82,8 +72,8 @@ export class UserController {
 
     @Get("matches/:id")
     async getMatches(@Param("id") id: number): Promise<MatchDTO[]> {
-        const matchIds = await this.userService.getMatchIds(id);
-		return this.userService.getMatchDtos(matchIds);
+        const matchIds = await this.userService.getMatchIds(Number(id));
+        return this.userService.getMatchDtos(matchIds);
     }
 
     @Get("user_relation/:id")
@@ -122,8 +112,14 @@ export class UserController {
     // profile management
 
     @Post("change_name")
-    async changeName(@Req() req: AuthenticatedRequest, @Body() changeNameDTO: ChangeNameDTO, @Res() res: Response) {
-		const errorType = await this.userService.changeName(req.user.id, changeNameDTO.newName
+    async changeName(
+        @Req() req: AuthenticatedRequest,
+        @Body() changeNameDTO: ChangeNameDTO,
+        @Res() res: Response
+    ) {
+        const errorType = await this.userService.changeName(
+            req.user.id,
+            changeNameDTO.newName
         );
         // 0 = no error; 1 = uniqueness constraint violation; 2 = any other error
         if (!errorType) {
@@ -141,7 +137,8 @@ export class UserController {
             storage: diskStorage({
                 destination: "./uploads",
                 filename: (req, file, callback) => {
-					const newFilename = (req.user as reqUser).id + path.extname(file.originalname);
+                    const newFilename =
+                        (req.user as reqUser).id + path.extname(file.originalname);
                     callback(null, newFilename);
                 },
             }),
@@ -165,38 +162,56 @@ export class UserController {
             },
         })
     )
-    async uploadFile(@Req() req: AuthenticatedRequest, @UploadedFile() file: Express.Multer.File) {
+    async uploadFile(
+        @Req() req: AuthenticatedRequest,
+        @UploadedFile() file: Express.Multer.File
+    ) {
         return { message: "File uploaded successfully", file };
     }
 
     // friend management
 
     @Post("send_friendreq")
-    async sendFriendRequest(@Req() req: AuthenticatedRequest, @Body() body: { otherId: number }) {
+    async sendFriendRequest(
+        @Req() req: AuthenticatedRequest,
+        @Body() body: { otherId: number }
+    ) {
         const { otherId } = body;
         return this.userService.sendFriendReq(req.user.id, otherId);
     }
 
     @Post("cancel_friendreq")
-    async cancelFriendRequest(@Req() req: AuthenticatedRequest, @Body() body: { otherId: number }) {
+    async cancelFriendRequest(
+        @Req() req: AuthenticatedRequest,
+        @Body() body: { otherId: number }
+    ) {
         const { otherId } = body;
         return this.userService.cancelFriendReq(req.user.id, otherId);
     }
 
     @Post("accept_friendreq")
-    async acceptFriendRequest(@Req() req: AuthenticatedRequest, @Body() body: { otherId: number }) {
+    async acceptFriendRequest(
+        @Req() req: AuthenticatedRequest,
+        @Body() body: { otherId: number }
+    ) {
         const { otherId } = body;
         return this.userService.acceptFriendReq(req.user.id, otherId);
     }
 
     @Post("decline_friendreq")
-    async declineFriendRequest(@Req() req: AuthenticatedRequest, @Body() body: { otherId: number }) {
+    async declineFriendRequest(
+        @Req() req: AuthenticatedRequest,
+        @Body() body: { otherId: number }
+    ) {
         const { otherId } = body;
         return this.userService.declineFriendReq(req.user.id, otherId);
     }
 
     @Post("remove_friend")
-    async removeFriend(@Req() req: AuthenticatedRequest, @Body() body: { otherId: number }) {
+    async removeFriend(
+        @Req() req: AuthenticatedRequest,
+        @Body() body: { otherId: number }
+    ) {
         const { otherId } = body;
         return this.userService.removeFriend(req.user.id, otherId);
     }
@@ -208,7 +223,10 @@ export class UserController {
     }
 
     @Post("unblock")
-    async unblockUser(@Req() req: AuthenticatedRequest, @Body() body: { otherId: number }) {
+    async unblockUser(
+        @Req() req: AuthenticatedRequest,
+        @Body() body: { otherId: number }
+    ) {
         const { otherId } = body;
         return this.userService.unblockUser(req.user.id, otherId);
     }
