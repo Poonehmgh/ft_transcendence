@@ -26,13 +26,13 @@ async function userAction(body: string, apiUrl: string) {
 // Send friend request
 
 export async function handleSendFriendRequest(otherId: number, otherName: string) {
-	if (window.confirm("Send friend request to user " + otherName + "?")) {
-		if (sendFriendRequest(otherId)) {
-			alert("Friend request sent");
-		} else {
-			alert("Error sending friend request");
-		}
-	}
+    if (window.confirm("Send friend request to user " + otherName + "?")) {
+        if (sendFriendRequest(otherId)) {
+            alert("Friend request sent");
+        } else {
+            alert("Error sending friend request");
+        }
+    }
 }
 
 async function sendFriendRequest(otherId: number) {
@@ -45,13 +45,13 @@ async function sendFriendRequest(otherId: number) {
 // Remove friend
 
 export async function handleRemoveFriend(otherId: number, otherName: string) {
-	if (window.confirm("Remove friend " + otherName + "?")) {
-		if (removeFriend(otherId)) {
-			alert("Friend removed");
-		} else {
-			alert("Error removing friend");
-		}
-	}
+    if (window.confirm("Remove friend " + otherName + "?")) {
+        if (removeFriend(otherId)) {
+            alert("Friend removed");
+        } else {
+            alert("Error removing friend");
+        }
+    }
 }
 
 async function removeFriend(otherId: number) {
@@ -64,13 +64,13 @@ async function removeFriend(otherId: number) {
 // Unblock user
 
 export async function handleUnBlockUser(otherId: number, otherName: string) {
-	if (window.confirm("Unblock user " + otherName + "?")) {
-		if (unblockUser(otherId)) {
-			alert("User unblocked");
-		} else {
-			alert("Error unblocking user");
-		}
-	}
+    if (window.confirm("Unblock user " + otherName + "?")) {
+        if (unblockUser(otherId)) {
+            alert("User unblocked");
+        } else {
+            alert("Error unblocking user");
+        }
+    }
 }
 
 async function unblockUser(otherId: number) {
@@ -83,13 +83,13 @@ async function unblockUser(otherId: number) {
 // Block user
 
 export async function handleBlockUser(otherId: number, otherName: string) {
-	if (window.confirm("Block user " + otherName + "?")) {
-		if (blockUser(otherId)) {
-			alert("User blocked");
-		} else {
-			alert("Error blocking user");
-		}
-	}
+    if (window.confirm("Block user " + otherName + "?")) {
+        if (blockUser(otherId)) {
+            alert("User blocked");
+        } else {
+            alert("Error blocking user");
+        }
+    }
 }
 
 async function blockUser(otherId: number) {
@@ -102,13 +102,13 @@ async function blockUser(otherId: number) {
 // Cancel Request
 
 export async function handleCancelRequest(otherId: number, otherName: string) {
-	if (window.confirm("Cancel friend request to user " + otherName + "?")) {
-		if (cancelRequest(otherId)) {
-			alert("Friend request canceled");
-		} else {
-			alert("Error canceling friend request");
-		}
-	}
+    if (window.confirm("Cancel friend request to user " + otherName + "?")) {
+        if (cancelRequest(otherId)) {
+            alert("Friend request canceled");
+        } else {
+            alert("Error canceling friend request");
+        }
+    }
 }
 
 async function cancelRequest(otherId: number) {
@@ -118,16 +118,37 @@ async function cancelRequest(otherId: number) {
     return userAction(body, apiUrl);
 }
 
+// Accept / Decline Request Dispatch
+
+export async function manageIncomingRequest(otherId: number, otherName: string) {
+    const userInput = prompt(
+        "Select an option:\n\n1. Accept\n2. Decline\n3. Ignore for now"
+    );
+
+    switch (userInput) {
+        case "1":
+            handleAcceptRequest(otherId, otherName);
+            break;
+        case "2":
+            handleDeclineRequest(otherId, otherName);
+            break;
+        case "3":
+            break;
+        default:
+            console.log("Invalid option selected");
+    }
+}
+
 // Accept Request
 
 export async function handleAcceptRequest(otherId: number, otherName: string) {
-	if (window.confirm("Accept friend request from user " + otherName + "?")) {
-		if (acceptRequest(otherId)) {
-			alert("Friend request accepted");
-		} else {
-			alert("Error accepting friend request");
-		}
-	}
+    if (window.confirm("Accept friend request from user " + otherName + "?")) {
+        if (acceptRequest(otherId)) {
+            alert("Friend request accepted");
+        } else {
+            alert("Error accepting friend request");
+        }
+    }
 }
 
 async function acceptRequest(otherId: number) {
@@ -140,13 +161,13 @@ async function acceptRequest(otherId: number) {
 // Decline Request
 
 export async function handleDeclineRequest(otherId: number, otherName: string) {
-	if (window.confirm("Decline friend request from user " + otherName + "?")) {
-		if (declineRequest(otherId)) {
-			alert("Friend request declined");
-		} else {
-			alert("Error declining friend request");
-		}
-	}
+    if (window.confirm("Decline friend request from user " + otherName + "?")) {
+        if (declineRequest(otherId)) {
+            alert("Friend request declined");
+        } else {
+            alert("Error declining friend request");
+        }
+    }
 }
 
 async function declineRequest(otherId: number) {

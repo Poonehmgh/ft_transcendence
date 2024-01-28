@@ -68,26 +68,21 @@ function ManageProfile() {
         try {
             let newName = prompt("Enter a new name:");
 
-            if (newName === null)
-                return;
+            if (newName === null) return;
             newName = newName.trim();
-            if ( newName === "" || newName == userData.name)
-                return;
-         
-                const changeNameDTO = {
-                    newName: newName
-                };
-            
+            if (newName === "" || newName == userData.name) return;
+
+            const changeNameDTO = {
+                newName: newName,
+            };
+
             const response = await fetch(
                 process.env.REACT_APP_BACKEND_URL + "/user/change_name",
                 {
                     method: "POST",
                     headers: authContentHeader(),
                     body: JSON.stringify(changeNameDTO),
-                
-                    },
-                                    
-
+                }
             );
             if (!response.ok) {
                 const res_data = await response.json();

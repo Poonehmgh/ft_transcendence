@@ -17,43 +17,44 @@ function RequestInList() {
         fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
     }, [apiUrl]);
 
-	function doDeclineRequest(id: number, name: string) {
-		handleDeclineRequest(id, name);
+    function doDeclineRequest(id: number, name: string) {
+        handleDeclineRequest(id, name);
         fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
-	}
+    }
 
-	function doAcceptRequest(id: number, name: string) {
-		handleAcceptRequest(id, name);
+    function doAcceptRequest(id: number, name: string) {
+        handleAcceptRequest(id, name);
         fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
-	}
+    }
 
-	if (!group) return <div className="p">Loading data...</div>;
-	if (group.length === 0) return <div className="p">No incoming requests. Go talk to ppl!</div>;
+    if (!group) return <div className="p">Loading data...</div>;
+    if (group.length === 0)
+        return <div className="p">No incoming requests. Go talk to ppl!</div>;
 
     return (
-                <table className="modalUserList">
-                    <tbody>
-                        {group.map((element) => (
-                            <tr key={element.id}>
-                                <td> {element.name}</td>
-                                <td>
-                                    <button
-                                        className="contactsButton"
-										onClick={() => doAcceptRequest(element.id, element.name)}
-                                    >
-                                        🤝
-                                    </button>
-                                    <button
-                                        className="contactsButton"
-                                        onClick={() => doDeclineRequest(element.id, element.name)}
-                                    >
-                                        ❌
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+        <table className="modalUserList">
+            <tbody>
+                {group.map((element) => (
+                    <tr key={element.id}>
+                        <td> {element.name}</td>
+                        <td>
+                            <button
+                                className="contactsButton"
+                                onClick={() => doAcceptRequest(element.id, element.name)}
+                            >
+                                🤝
+                            </button>
+                            <button
+                                className="contactsButton"
+                                onClick={() => doDeclineRequest(element.id, element.name)}
+                            >
+                                ❌
+                            </button>
+                        </td>
+                    </tr>
+                ))}
+            </tbody>
+        </table>
     );
 }
 

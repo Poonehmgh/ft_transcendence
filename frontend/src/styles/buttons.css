@@ -26,6 +26,38 @@
     }
 }
 
+.userActionButton {
+    position: relative;
+    font-size: 1.2rem;
+    color: var(--text-primary);
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    border-radius: 50%;
+    background-color: rgb(205, 205, 205, 0);
+    margin: 5px;
+
+    &:hover::before {
+        content: attr(data-tooltip);
+        font-size: 0.8rem;
+        display: block;
+        position: absolute;
+        color: var(--text-primary);
+        background-color: transparent;
+        padding: 5px;
+        border-radius: 3px;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        white-space: nowrap;
+    }
+
+    &:hover {
+        transform: translateY(-2px);
+    }
+}
+
+
 .textButton {
     display: inline;
     font-size: 0.9rem;

@@ -23,7 +23,8 @@ interface userProfileModalProps {
 function UserProfileModal(props: userProfileModalProps) {
     const [userProfile, setUserProfile] = useState<UserProfileDTO | null>(null);
     const [avatarURL, setAvatarURL] = useState(null);
-	const apiUrl_profile = process.env.REACT_APP_BACKEND_URL + "/user/profile/" + props.id;
+    const apiUrl_profile =
+        process.env.REACT_APP_BACKEND_URL + "/user/profile/" + props.id;
 
     function closeModal() {
         props.onClose();
@@ -31,8 +32,7 @@ function UserProfileModal(props: userProfileModalProps) {
 
     useEffect(() => {
         async function fetchAvatar() {
-            const apiUrl =
-                process.env.REACT_APP_BACKEND_URL + "/user/avatar/" + props.id;
+            const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/avatar/" + props.id;
             try {
                 const response = await fetch(apiUrl, {
                     method: "GET",
@@ -48,10 +48,10 @@ function UserProfileModal(props: userProfileModalProps) {
                 console.log("Error getting Avatar", error);
             }
         }
-		if (props.id) {
-			fetchGetSet(apiUrl_profile, setUserProfile);
-			fetchAvatar();
-		}
+        if (props.id) {
+            fetchGetSet(apiUrl_profile, setUserProfile);
+            fetchAvatar();
+        }
     }, [props.isOpen, props.id, apiUrl_profile]);
 
     return (
@@ -84,8 +84,8 @@ function UserProfileModal(props: userProfileModalProps) {
                                 winrate={userProfile.winrate}
                             />
                         </div>
-						<SocialActionBar otherProfile={userProfile}/>
-						<MatchHistory id={props.id} />
+                        <SocialActionBar otherProfile={userProfile} />
+                        <MatchHistory id={props.id} />
                     </div>
                 )}
                 <button className="closeX" onClick={closeModal}>

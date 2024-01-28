@@ -17,57 +17,57 @@ function FriendList() {
         fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
     }, [apiUrl]);
 
+    function doRemoveFriend(id: number, name: string) {
+        handleRemoveFriend(id, name);
+        fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
+    }
 
-	function doRemoveFriend(id: number, name: string) {
-		handleRemoveFriend(id, name);
-		fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
-	}
-
-	function doRemoveAndBlockFriend(id: number, name: string) {
-		handleBlockUser(id, name);
-		fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
-	}
+    function doRemoveAndBlockFriend(id: number, name: string) {
+        handleBlockUser(id, name);
+        fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
+    }
 
     function handleSendMsg(id: number) {
         console.log("Mock execute send msg to user with id ", id);
     }
 
-	if (!group) return <div className="p">Loading data...</div>;
-	if (group.length === 0) return <div className="p">No friends. Don't be shy!</div>;
+    if (!group) return <div className="p">Loading data...</div>;
+    if (group.length === 0)
+        return <div className="p">No friends.</div>;
 
     return (
-                <table className="modalUserList">
-                    <tbody>
-                        {group.map((element, index) => (
-                            <tr key={index}>
-                                <td>{element.name}</td>
-                                <td>
-                                    <button
-                                        className="contactsButton"
-                                        onClick={() => handleSendMsg(element.id)}
-                                    >
-                                        ✉️
-                                    </button>
-                                    <button
-                                        className="contactsButton"
-                                        onClick={() =>
-                                            doRemoveFriend(element.id, element.name)
-                                        }
-                                    >
-                                        ❌
-                                    </button>
-                                    <button
-                                        className="contactsButton"
-                                        onClick={() => doRemoveAndBlockFriend(element.id, element.name)}
-                                    >
-                                        ⛔
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            );
+        <table className="modalUserList">
+            <tbody>
+                {group.map((element, index) => (
+                    <tr key={index}>
+                        <td>{element.name}</td>
+                        <td>
+                            <button
+                                className="contactsButton"
+                                onClick={() => handleSendMsg(element.id)}
+                            >
+                                ✉️
+                            </button>
+                            <button
+                                className="contactsButton"
+                                onClick={() => doRemoveFriend(element.id, element.name)}
+                            >
+                                ❌
+                            </button>
+                            <button
+                                className="contactsButton"
+                                onClick={() =>
+                                    doRemoveAndBlockFriend(element.id, element.name)
+                                }
+                            >
+                                🚫
+                            </button>
+                        </td>
+                    </tr>
+                ))}
+            </tbody>
+        </table>
+    );
 }
 
 export default FriendList;

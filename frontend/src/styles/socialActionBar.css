@@ -8,5 +8,6 @@
 .socialActionBarMain {
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
+    height: 50px;
+    margin-bottom: 0.8rem;
 }
