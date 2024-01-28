@@ -11,33 +11,27 @@ interface blockButtonProps {
 }
 
 function BlockButton(props: blockButtonProps): React.JSX.Element {
-    const [isBlocked, setIsBlocked] = useState(props.relation === UserRelation.blocked);
-
     function doBlockUser(id: number, name: string) {
         handleBlockUser(id, name);
-        setIsBlocked(true);
         props.reRender();
     }
 
     function doUnblockUser(id: number, name: string) {
         handleUnBlockUser(id, name);
-        setIsBlocked(false);
         props.reRender();
     }
 
     return (
         <button
             className="userActionButton"
-            data-tooltip={isBlocked ? "Unblock" : "Block"}
+            data-tooltip={props.relation === UserRelation.blocked ? "Unblock" : "Block"}
             onClick={() => {
-                if (isBlocked) {
-                    doUnblockUser(props.otherProfile.id, props.otherProfile.name);
-                } else {
-                    doBlockUser(props.otherProfile.id, props.otherProfile.name);
-                }
+                props.relation === UserRelation.blocked
+                    ? doUnblockUser(props.otherProfile.id, props.otherProfile.name)
+                    : doBlockUser(props.otherProfile.id, props.otherProfile.name);
             }}
         >
-            {isBlocked ? "🕊️" : "🚫"}
+            {props.relation === UserRelation.blocked ? "🕊️" : "🚫"}
         </button>
     );
 }

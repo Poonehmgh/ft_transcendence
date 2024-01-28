@@ -23,7 +23,7 @@ interface FriendButtonProps {
 function FriendButton(props: FriendButtonProps): React.JSX.Element | null {
     if (!props.otherProfile) return <div className="p">Loading data...</div>;
     if (props.relation === UserRelation.blocked)
-        return <div className="p">Unblock to interact</div>;
+        return <div className="pInfo">Unblock to interact</div>;
 
     function doAction() {
         switch (props.relation) {
@@ -48,16 +48,50 @@ function FriendButton(props: FriendButtonProps): React.JSX.Element | null {
         props.reRender();
     }
 
+    function selectTooltip() {
+        switch (props.relation) {
+            case UserRelation.friends:
+                return "Remove friend";
+            case UserRelation.request_sent:
+                return "Cancel friend request";
+
+            case UserRelation.request_received:
+                return "Accept / decline friend request";
+
+            case UserRelation.blocked:
+                return ""; // already handled
+
+            case UserRelation.none:
+                return "Send friend request";
+        }
+    }
+
+    function selectButtonText() {
+        switch (props.relation) {
+            case UserRelation.friends:
+                return "💔";
+
+            case UserRelation.request_sent:
+                return "🤝❌";
+
+            case UserRelation.request_received:
+                return "👋";
+
+            case UserRelation.blocked:
+                return ""; // already handled
+
+            case UserRelation.none:
+                return "🤝";
+        }
+    }
+
     return (
-        <button className="userActionButton" onClick={() => doAction()}>
-            {props.relation === UserRelation.friends ? "Remove friend 💔" : null}
-            {props.relation === UserRelation.request_sent
-                ? "Cancel friend request"
-                : null}
-            {props.relation === UserRelation.request_received
-                ? "Accept / decline friend request"
-                : null}
-            {props.relation === UserRelation.none ? "Send friend request 👋" : null}
+        <button
+            className="userActionButton"
+            onClick={() => doAction()}
+            data-tooltip={selectTooltip()}
+        >
+            {selectButtonText()}
         </button>
     );
 }
