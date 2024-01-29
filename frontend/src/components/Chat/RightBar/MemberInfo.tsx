@@ -15,7 +15,25 @@ function MemberInfo(props: memberInfoProps): React.JSX.Element {
     return (
         <div className="sideBar_sub1">
             <div className="chatElementDiv">
-                {"--- chat user info --" + props.member.userName}
+                {"--- " + props.member.userName + " ---"}
+
+                <table className="userTable">
+                    <thead>
+                        <tr>
+                            <th>Owner</th>
+                            <th>Admin</th>
+                            <th>Online</th>
+                            <th>Muted</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{props.member.owner ? "✔️" : "❌"}</td>
+                            <td>{props.member.admin ? "✔️" : "❌"}</td>
+                            <td>{props.member.online ? "✔️" : "❌"}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     );
