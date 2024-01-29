@@ -17,9 +17,9 @@ export class JwtPayload{
 export class JwtStrategy extends PassportStrategy(Strategy, "jwt"){
     constructor(private readonly authService: AuthService) {
         super({
-            // jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
             // jwtFromRequest: getToken,
-            jwtFromRequest:ExtractJwt.fromExtractors([getToken, fromAuthHeaderAsBearerToken()]),
+            // jwtFromRequest:ExtractJwt.fromExtractors([getToken, fromAuthHeaderAsBearerToken()]),
             secretOrKey: jwtSecret,
         });
     }
