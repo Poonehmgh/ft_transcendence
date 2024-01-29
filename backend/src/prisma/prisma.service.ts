@@ -1,9 +1,9 @@
-import { PrismaClient } from '@prisma/client';
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { PrismaClient } from "@prisma/client";
+import { Injectable, OnModuleInit } from "@nestjs/common";
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
-	[x: string]: any;
+    [x: string]: any;
     constructor() {
         super();
     }
@@ -12,4 +12,3 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
         await this.$connect();
     }
 }
-

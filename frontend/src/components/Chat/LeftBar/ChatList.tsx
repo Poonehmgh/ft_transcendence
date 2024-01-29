@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 // DTO
 import { ChatListDTO } from "chat-dto";
@@ -20,24 +20,30 @@ function ChatList(props: chatListProps): React.JSX.Element {
     }
 
     return (
-        <div className="leftBar_1">
-            <div className="chatList">--- public chats ---</div>
+        <div className="sideBar_sub1">
+            <div className="chatElementDiv">--- public chats ---</div>
 
-            <div className="chatList">
+            <div className="chatElementDiv">
                 --- my chats ---
-                {props.privateChats.map((chat: { chatID: number; chatName: string }) => (
-                    <button
-                        key={chat.chatID}
-                        className={
-                            props.selectedChat === chat
-                                ? "chatButtonSelected"
-                                : "chatButton"
-                        }
-                        onClick={() => selectChat(chat)}
-                    >
-                        {chat.chatName}
-                    </button>
-                ))}
+                {!props.privateChats ? (
+                    <p>none</p>
+                ) : (
+                    props.privateChats.map(
+                        (chat: { chatID: number; chatName: string }) => (
+                            <button
+                                key={chat.chatID}
+                                className={
+                                    props.selectedChat === chat
+                                        ? "chatButtonSelected"
+                                        : "chatButton"
+                                }
+                                onClick={() => selectChat(chat)}
+                            >
+                                {chat.chatName}
+                            </button>
+                        )
+                    )
+                )}
             </div>
         </div>
     );

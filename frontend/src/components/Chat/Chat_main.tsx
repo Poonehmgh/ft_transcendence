@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { fetchGetSet } from "src/ApiCalls/fetchers";
+import { fetchGetSet } from "src/functions/utils";
 import LeftBar from "src/components/Chat/LeftBar/LeftBar_main";
 import RightBar from "src/components/Chat/RightBar/RightBar_main";
 
 // DTO
-import { ChatListDTO } from "chat-dto";
+import { ChatListDTO, ParticipantListElementDTO as ChatUserDTO } from "chat-dto";
 
 // CSS
 import "../../styles/chat.css";
@@ -12,6 +12,8 @@ import "../../styles/style.css";
 
 function Chat() {
     const [selectedChat, setSelectedChat] = useState<ChatListDTO | null>(null);
+    const [selectedMember, setSelectedMember] = useState<ChatUserDTO | null>(null);
+
     // to do: move this to a central position after successful auth
     //const socket = io(process.env.REACT_APP_CHAT_URL);
     // to do temp
@@ -23,10 +25,16 @@ function Chat() {
     const apiUrl_privateChats = process.env.REACT_APP_BACKEND_URL + "/chat/" + userId;
     const apiUrl_publicChats = process.env.REACT_APP_BACKEND_URL + "/public_chat";
 
+    function selectChat(newChat: ChatListDTO) {
+        setSelectedChat(newChat);
+        setSelectedMember(null);
+    }
+
+
     useEffect(() => {
         fetchGetSet<ChatListDTO[]>(apiUrl_privateChats, setPrivateChats);
         fetchGetSet<ChatListDTO[]>(apiUrl_publicChats, setPublicChats);
-    }, []);
+    }, [apiUrl_privateChats, apiUrl_publicChats]);
 
     return (
         <div className="mainContainerColumn">
@@ -34,14 +42,18 @@ function Chat() {
             <div className="chatMain">
                 <LeftBar
                     selectedChat={selectedChat}
-                    setSelectedChat={setSelectedChat}
+                    selectChat={selectChat}
                     privateChats={privateChats}
                     publicChats={publicChats}
                 />
 
                 <div className="middleBar_0"></div>
 
-                <RightBar selectedChat={selectedChat} setSelectedChat={setSelectedChat} />
+                <RightBar
+                    selectedChat={selectedChat}
+                    selectedMember={selectedMember}
+                    setSelectedMember={setSelectedMember}
+                />
             </div>
         </div>
     );

@@ -11,19 +11,20 @@ import ChatList from "./ChatList";
 
 interface leftBarProps {
     selectedChat: ChatListDTO | null;
-    setSelectedChat: React.Dispatch<React.SetStateAction<ChatListDTO | null>>;
+    selectChat: React.Dispatch<React.SetStateAction<ChatListDTO | null>>;
     privateChats: ChatListDTO[];
     publicChats: ChatListDTO[];
 }
 
 function LeftBar(props: leftBarProps): React.JSX.Element {
+    const newChat = null;
     return (
-        <div className="leftBar_0">
-            <NewChat onCreateChat={props.setSelectedChat} />
+        <div className="sideBar">
+            <NewChat onCreateChat={(newChat) => props.selectChat(newChat)} />
 
             <ChatList
                 selectedChat={props.selectedChat}
-                onSelectChat={(chat) => props.setSelectedChat(chat)}
+                onSelectChat={(chat) => props.selectChat(chat)}
                 privateChats={props.privateChats}
                 publicChats={props.publicChats}
             />

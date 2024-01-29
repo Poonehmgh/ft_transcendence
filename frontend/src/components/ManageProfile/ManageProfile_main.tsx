@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
-import { authContentHeader } from "src/ApiCalls/headers";
+import { authContentHeader } from "src/functions/utils";
 import ManageContactsTabs from "./ManageContactsTabs";
 import PlayerCardTable from "../shared/PlayerCardTable";
-import { fetchGetSet } from "src/ApiCalls/fetchers";
+import { fetchGetSet } from "src/functions/utils";
 
 // DTO
 import { UserProfileDTO } from "user-dto";
@@ -11,19 +11,20 @@ import { UserProfileDTO } from "user-dto";
 import "src/styles/buttons.css";
 import "src/styles/style.css";
 import "src/styles/manageProfile.css";
+import { authHeader } from "../../functions/utils";
 
 function ManageProfile() {
     const [userData, setUserData] = useState<UserProfileDTO | null>(null);
     const [avatarURL, setAvatarURL] = useState(null);
     const fileInputRef = useRef(null);
-    const id = 0; //this is just temp
+    const apiUrl_profile = process.env.REACT_APP_BACKEND_URL + "/user/my_profile";
 
     function handleChooseFileClick() {
         fileInputRef.current.click();
     }
 
     async function fetchAvatar() {
-        const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/get_avatar/" + id;
+        const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/my_avatar";
         try {
             const response = await fetch(apiUrl, {
                 method: "GET",
@@ -40,12 +41,10 @@ function ManageProfile() {
         }
     }
 
-    const apiUrl_profile = process.env.REACT_APP_BACKEND_URL + "/user/profile?id=" + id;
-
     useEffect(() => {
         fetchGetSet(apiUrl_profile, setUserData);
         fetchAvatar();
-    }, []);
+    }, [apiUrl_profile]);
 
     async function handleAvatarChange(e) {
         const file = e.target.files[0];
@@ -54,8 +53,9 @@ function ManageProfile() {
         const formData = new FormData();
         formData.append("avatar", file);
         try {
-            await fetch(process.env.REACT_APP_BACKEND_URL + `/user/put_avatar/${id}`, {
+            await fetch(process.env.REACT_APP_BACKEND_URL + "/user/put_avatar", {
                 method: "POST",
+                headers: authHeader(),
                 body: formData,
             });
         } catch (error) {
@@ -66,23 +66,22 @@ function ManageProfile() {
 
     async function handleNameChange() {
         try {
-            const newName = prompt("Enter a new name:");
+            let newName = prompt("Enter a new name:");
 
-            if (newName === null || newName.trim() === "") {
-                return;
-            }
-            const data = {
-                id: id,
+            if (newName === null) return;
+            newName = newName.trim();
+            if (newName === "" || newName == userData.name) return;
+
+            const changeNameDTO = {
                 newName: newName,
             };
+
             const response = await fetch(
                 process.env.REACT_APP_BACKEND_URL + "/user/change_name",
                 {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(data),
+                    headers: authContentHeader(),
+                    body: JSON.stringify(changeNameDTO),
                 }
             );
             if (!response.ok) {
@@ -97,13 +96,18 @@ function ManageProfile() {
 
     return (
         <div className="mainContainerColumn" style={{ alignItems: "center" }}>
-            <div className="logOutContainer">knudeling</div>
-            
             <div className="h2">Manage your profile:</div>
             {userData ? (
                 <div className="manageProfile">
                     <div className="leftAligner">
-                        <div className="h2Left" style={{ flexDirection: "row", justifyContent:"start", alignItems:"flex-end"}}>
+                        <div
+                            className="h2Left"
+                            style={{
+                                flexDirection: "row",
+                                justifyContent: "start",
+                                alignItems: "flex-end",
+                            }}
+                        >
                             {userData.name}
                             <button className="editName" onClick={handleNameChange}>
                                 ✎
@@ -127,7 +131,7 @@ function ManageProfile() {
                         />
                     </div>
 
-                    <ManageContactsTabs id={id} />
+                    <ManageContactsTabs />
 
                     <input
                         type="file"
@@ -138,7 +142,7 @@ function ManageProfile() {
                     />
                 </div>
             ) : (
-                <p>Loading user data...</p>
+                <p>Loading data...</p>
             )}
         </div>
     );

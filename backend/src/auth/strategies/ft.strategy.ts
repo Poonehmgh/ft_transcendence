@@ -12,6 +12,7 @@ export class ftStrategy extends PassportStrategy(Strategy, "42")
     constructor(private authService: AuthService) {
         super(
             {
+
                 clientID    : process.env.CLIENT_ID,
                 clientSecret    : process.env.CLIENT_SECRET,
                 callbackURL     : process.env.CALLBACK_URL,

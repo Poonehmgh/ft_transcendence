@@ -1,10 +1,10 @@
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DB_URL")
+    provider = "postgresql"
+    url      = env("DB_URL")
 }
 
 model User {
@@ -31,43 +31,46 @@ model User {
 }
 
 model Match {
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  id          Int       @id @unique @default(autoincrement())
-  begin       DateTime?
-  end         DateTime?
-  length_sec  Int       @default(0)
-  player1     Int
-  player2     Int
-  score_p1    Int       @default(0)
-  score_p2    Int       @default(0)
-  winner_id   Int?
-  winner_name String? // has a name of a winner or ""
+    // match
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime  @updatedAt
+    id          Int       @id @unique @default(autoincrement())
+    begin       DateTime?
+    end         DateTime?
+    length_sec  Int       @default(0)
+    // players
+    player1     Int
+    player2     Int
+    // outcome
+    score_p1    Int       @default(0)
+    score_p2    Int       @default(0)
+    winner_id   Int?
+    winner_name String?
 
-  @@unique([player1, player2])
+    @@unique([player1, player2])
 }
 
 model Message {
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  id        Int      @id @unique @default(autoincrement())
-  content   String
-  author    Int
-  chat      Chat     @relation(fields: [chatId], references: [id])
-  chatId    Int
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    id        Int      @id @unique @default(autoincrement())
+    content   String
+    author    Int
+    chat      Chat     @relation(fields: [chatId], references: [id])
+    chatId    Int
 }
 
 model Chat {
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-  id           Int         @id @unique @default(autoincrement())
-  name         String      @default("Unnamed Chat")
-  dm           Boolean     @default(false)
-  // privat       Boolean     @default(false)
-  pw_protected Boolean     @default(false)
-  password     String? // hash this? yes
-  messages     Message[]
-  chatUsers    Chat_User[]
+    createdAt    DateTime    @default(now())
+    updatedAt    DateTime    @updatedAt
+    id           Int         @id @unique @default(autoincrement())
+    name         String      @default("Unnamed Chat")
+    dm           Boolean     @default(false)
+    // privat       Boolean     @default(false)
+    pw_protected Boolean     @default(false)
+    password     String? // hash this?
+    messages     Message[]
+    chatUsers    Chat_User[]
 }
 
 // junction tables

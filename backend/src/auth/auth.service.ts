@@ -15,7 +15,6 @@ export type signInReturn = {
     newToken: string,
 };
 
-
 @Injectable()
 export class AuthService {
     constructor(private prisma: PrismaService, private jwt: JwtService) {}
@@ -54,17 +53,17 @@ export class AuthService {
         };
     }
 
-    async validateUser(payload){
-        const {id} = payload.id;
+    async validateUser(payload) {
+        const { id } = payload.id;
         const foundUser = await this.findUserById(id);
-        if (!foundUser)
-            throw new BadRequestException("Unauthenticated.");
+        if (!foundUser) throw new BadRequestException("Unauthenticated.");
         return foundUser;
     }
 
-    async registerUser(user){
-        const {id, email, surname } = user;
+    async registerUser(user) {
+        const { id, email, surname } = user;
         const name: string = user.name;
+
         try{
             const newUser = this.prisma.user.create({
                 data: {
@@ -72,6 +71,7 @@ export class AuthService {
                     name: name,
                     email: email,
                     twoFa: false,
+
                    // name: name + (surname ? ` ${surname}` : '')
                 }
             })
@@ -83,6 +83,7 @@ export class AuthService {
     }
 
 
+
     async validateUserByJwt(payload){
         const {id, email} = payload;
         const foundUser = await this.findUserByEmail(email);
@@ -91,11 +92,18 @@ export class AuthService {
         return foundUser;
     }
 
-    async generateJwtToken(payload){
-        const token = await this.jwt.signAsync(payload, {secret: jwtSecret});
-        if (!token){
+    async generateJwtToken(payload) {
+        const token = await this.jwt.signAsync(payload, { secret: jwtSecret });
+        if (!token) {
             throw new ForbiddenException();
         }
+
+        // added this, pls give blessing, Pooneh
+        await this.prisma.user.update({
+            where: { id: payload.id },
+            data: { online: true },
+        });
+
         console.log("token is", token);
         return token;
     }
@@ -191,9 +199,10 @@ export class AuthService {
         return await bcrypt.hash(key, saltOrRounds);
     }
 
-    async otpAuthUrl(email: string, secretKey: string){
+    async otpAuthUrl(email: string, secretKey: string) {
         return authenticator.keyuri(email, "transcendence", secretKey);
     }
+
 
     async generateQRCode(url: string){
         const qrCode = QRCode.toDataURL(url);
@@ -201,14 +210,14 @@ export class AuthService {
             throw new BadRequestException("Activate2Fa:Something went wrong when generating QR code.");
         return qrCode;
     }
-    async findUserById(id:number){
+    async findUserById(id: number) {
         return this.prisma.user.findUnique({
             where: {
                 id: id,
             },
         });
     }
-    async findUserByEmail(email:string){
+    async findUserByEmail(email: string) {
         return this.prisma.user.findUnique({
             where: {
                 email: email,

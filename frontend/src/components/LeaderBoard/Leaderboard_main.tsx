@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import UserTable from "../shared/UserTable";
 import RankNumberColumn from "./RankNumberColumn";
+import { fetchGetSet } from "src/functions/utils";
+
+// DTO
 import { UserProfileDTO } from "user-dto";
-import { fetchGetSet } from "src/ApiCalls/fetchers";
 
 // CSS
 import "src/styles/userTable.css";
@@ -14,8 +16,8 @@ function Leaderboard() {
     const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/leaderboard?top=" + getTopN;
 
     useEffect(() => {
-        fetchGetSet(apiUrl, setUserlist);
-    }, []);
+        fetchGetSet<UserProfileDTO[]>(apiUrl, setUserlist);
+    }, [apiUrl]);
 
     return (
         <div className="mainContainerRow">

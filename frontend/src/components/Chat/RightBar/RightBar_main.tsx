@@ -1,22 +1,31 @@
 import React from "react";
-import Members from "./Members";
+import MemberList from "./MemberList";
 
 // DTO
-import { ChatListDTO } from "chat-dto";
+import { ChatListDTO, ParticipantListElementDTO as ChatUserDTO } from "chat-dto";
+import { UserProfileDTO } from "user-dto";
 
 // CSS
 import "src/styles/chat.css";
 import "src/styles/style.css";
+import MemberInfo from "./MemberInfo";
 
 interface rightBarProps {
     selectedChat: ChatListDTO | null;
-    setSelectedChat: React.Dispatch<React.SetStateAction<ChatListDTO | null>>;
+    selectedMember: ChatUserDTO | null;
+    setSelectedMember: React.Dispatch<React.SetStateAction<ChatUserDTO | null>>;
 }
 
 function RightBar(props: rightBarProps): React.JSX.Element {
     return (
-        <div className="rightBar_0">
-            {props.selectedChat && <Members selectedChat={props.selectedChat} />}
+        <div className="sideBar">
+            {props.selectedChat && (
+                <MemberList
+                    selectedChat={props.selectedChat}
+                    onSelectMember={props.setSelectedMember}
+                />
+            )}
+            {props.selectedMember && <MemberInfo member={props.selectedMember} />}
         </div>
     );
 }

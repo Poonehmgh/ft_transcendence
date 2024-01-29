@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import Modal from "react-modal";
+import SelectUsersTable from "./SelectUsersTable";
 
 // DTO
 import { ChatListDTO } from "chat-dto";
@@ -7,7 +8,6 @@ import { ChatListDTO } from "chat-dto";
 // CSS
 import "src/styles/modals.css";
 import "src/styles/buttons.css";
-import SelectUsersTable from "./SelectUsersTable";
 
 interface newChatProps {
     onCreateChat: (chat: ChatListDTO) => void;
@@ -29,7 +29,7 @@ function NewChat(props: newChatProps): React.JSX.Element {
     const [usePassword, setUsePassword] = React.useState(false);
     const passwordRef = useRef(null);
     // update this when actual API is known
-    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/chat/new";
+    //const apiUrl = process.env.REACT_APP_BACKEND_URL + "/chat/new";
 
     function openModal() {
         setModalIsOpen(true);
@@ -41,7 +41,8 @@ function NewChat(props: newChatProps): React.JSX.Element {
         setUsePassword(false);
     }
 
-    function selectChat(chatId: number) {
+    // should prolly take the setter from the parent
+    function selectChat(chatId: ChatListDTO) {
         props.onCreateChat(chatId);
     }
 
@@ -115,7 +116,11 @@ function NewChat(props: newChatProps): React.JSX.Element {
         <div style={{ width: "100%" }}>
             <button
                 className="bigButton"
-                style={{ fontSize: "2rem", color: "hsl(18, 100%, 50%)" }}
+                style={{
+                    fontSize: "2rem",
+                    color: "hsl(18, 100%, 50%)",
+                    marginBottom: "10px",
+                }}
                 onClick={openModal}
             >
                 +

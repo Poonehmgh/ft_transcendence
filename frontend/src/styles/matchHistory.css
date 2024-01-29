@@ -1,0 +1,20 @@
+:root {
+    --color1: hsl(0, 0%, 12%); /* is 30 30 30 rgb */
+    --color2: 60, 60, 60;
+    --text-primary: hsl(26, 18%, 43%);
+    --backgroundHue1: 0;
+}
+
+.matchHistoryTable,
+.matchHistoryTable th,
+.matchHistoryTable tr,
+.matchHistoryTable td {
+    background-color: transparent;
+    font-size: 0.9rem;
+    width: 100%;
+    text-align: left;
+    min-width: 80px;
+    min-height: 100px;
+    border-collapse: collapse;
+    border-bottom: 1px solid var(--text-primary);
+}

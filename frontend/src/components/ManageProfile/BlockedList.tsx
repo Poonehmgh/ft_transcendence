@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { fetchGetSet } from "src/ApiCalls/fetchers";
-import { unblockUser } from "src/ApiCalls/userActions";
+import { fetchGetSet } from "src/functions/utils";
+import { handleUnBlockUser } from "src/functions/userActions";
 
 // DTO
 import { IdAndNameDTO } from "user-dto";
@@ -9,53 +9,40 @@ import { IdAndNameDTO } from "user-dto";
 import "src/styles/style.css";
 import "src/styles/manageProfile.css";
 
-interface blockedListProps {
-    id: number;
-}
-
-function BlockedList(props: blockedListProps) {
-    const [group, setGroup] = useState([]);
-    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/blocked/" + props.id;
+function BlockedList() {
+    const [group, setGroup] = useState(null);
+    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/blocked";
 
     useEffect(() => {
         fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
     }, [apiUrl]);
 
-    function handleUnBlockUser(id: number, index: number) {
-        if (window.confirm(`Unblock user ${group[index].name}?`)) {
-            if (unblockUser(props.id, group[index].id)) {
-                alert("User unblocked");
-                fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
-            } else {
-                alert("Error unblocking user");
-            }
-        }
+    function doUnblockUser(id: number, name: string) {
+        handleUnBlockUser(id, name);
+        fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
     }
 
+    if (!group) return <div className="p">Loading data...</div>;
+    if (group.length === 0) return <div className="p">No toxic ppl... yet!</div>;
+
     return (
-        <div>
-            {!group || group.length === 0 ? (
-                <div className="p">No toxic ppl... yet!</div>
-            ) : (
-                <table className="modalUserList">
-                    <tbody>
-                        {group.map((entry, index) => (
-                            <tr key={entry.id}>
-                                <td> {entry.name}</td>
-                                <td>
-                                    <button
-                                        className="contactsButton"
-                                        onClick={() => handleUnBlockUser(entry.id, index)}
-                                    >
-                                        ❌
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            )}
-        </div>
+        <table className="modalUserList">
+            <tbody>
+                {group.map((element) => (
+                    <tr key={element.id}>
+                        <td> {element.name}</td>
+                        <td>
+                            <button
+                                className="contactsButton"
+                                onClick={() => doUnblockUser(element.id, element.name)}
+                            >
+                                🕊️
+                            </button>
+                        </td>
+                    </tr>
+                ))}
+            </tbody>
+        </table>
     );
 }
 

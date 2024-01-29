@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { fetchGetSet } from "src/ApiCalls/fetchers";
-import { acceptRequest, declineRequest } from "src/ApiCalls/userActions";
+import { fetchGetSet } from "src/functions/utils";
+import { handleAcceptRequest, handleDeclineRequest } from "src/functions/userActions";
 
 // DTO
 import { IdAndNameDTO } from "user-dto";
@@ -9,70 +9,52 @@ import { IdAndNameDTO } from "user-dto";
 import "src/styles/style.css";
 import "src/styles/manageProfile.css";
 
-interface requestInListProps {
-    id: number;
-}
-
-function RequestInList(props: requestInListProps) {
-    const [group, setGroup] = useState([]);
-    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/request_in/" + props.id;
+function RequestInList() {
+    const [group, setGroup] = useState(null);
+    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/request_in";
 
     useEffect(() => {
         fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
     }, [apiUrl]);
 
-    function handleDecline(id: number, index: number) {
-        if (window.confirm(`Decline friend request from user ${group[index].name}?`)) {
-            if (declineRequest(props.id, group[index].id)) {
-                alert("Friend request declined");
-                fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
-            } else {
-                alert("Error declining friend request");
-            }
-        }
+    function doDeclineRequest(id: number, name: string) {
+        handleDeclineRequest(id, name);
+        fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
     }
 
-    function handleAccept(id: number, index: number) {
-        if (window.confirm(`Accept friend request from user ${group[index].name}?`)) {
-            if (acceptRequest(props.id, group[index].id)) {
-                alert("Friend request accepted");
-                fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
-            } else {
-                alert("Error accepting friend request");
-            }
-        }
+    function doAcceptRequest(id: number, name: string) {
+        handleAcceptRequest(id, name);
+        fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
     }
+
+    if (!group) return <div className="p">Loading data...</div>;
+    if (group.length === 0)
+        return <div className="p">No incoming requests. Go talk to ppl!</div>;
 
     return (
-        <div className="p">
-            {!group || group.length === 0 ? (
-                <p>No incoming requests. Go talk to ppl!</p>
-            ) : (
-                <table className="modalUserList">
-                    <tbody>
-                        {group.map((entry, index) => (
-                            <tr key={entry.id}>
-                                <td> {entry.name}</td>
-                                <td>
-                                    <button
-                                        className="contactsButton"
-                                        onClick={() => handleAccept(entry.id, index)}
-                                    >
-                                        🤝
-                                    </button>
-                                    <button
-                                        className="contactsButton"
-                                        onClick={() => handleDecline(entry.id, index)}
-                                    >
-                                        ❌
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            )}
-        </div>
+        <table className="modalUserList">
+            <tbody>
+                {group.map((element) => (
+                    <tr key={element.id}>
+                        <td> {element.name}</td>
+                        <td>
+                            <button
+                                className="contactsButton"
+                                onClick={() => doAcceptRequest(element.id, element.name)}
+                            >
+                                🤝
+                            </button>
+                            <button
+                                className="contactsButton"
+                                onClick={() => doDeclineRequest(element.id, element.name)}
+                            >
+                                ❌
+                            </button>
+                        </td>
+                    </tr>
+                ))}
+            </tbody>
+        </table>
     );
 }
 
