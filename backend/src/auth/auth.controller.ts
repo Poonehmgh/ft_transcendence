@@ -33,14 +33,16 @@ export class AuthController {
   @Get("/42/redirect")
   @UseGuards(ftAuthGuard)
   async ftRedirect(@Req() req, @Res() res: Response){
-    const { qrcode, url, newToken}: signInReturn = await this.authService.ftSignin(req.user);
-    if (qrcode != undefined) // for some reason this isnt sent back to browser.
-      res.cookie("qrCode", qrcode);
+    const {url, newToken}: signInReturn = await this.authService.ftSignin(req.user);
+
     if (url != undefined)
       res.cookie("url", url);
     res.cookie("token", newToken);
-    res.json("Return");
-    // res.redirect("/");
+    // if (req.user.twoFa)
+    //   res.redirect("http://localhost:3000/2fa")
+    // else
+    //   res.redirect("http://localhost:3000/")
+    res.redirect("/");
   }
 
   @Get("/42/test")
@@ -71,11 +73,20 @@ export class AuthController {
     return res.json({"msg": "Verification successful.", "token": newToken});
   }
 
-  @Get("42/logout") //should be post, but for sake of browser test
+  @Post("42/logout")
   @UseGuards(JwtAuthGuard)
   async ft_logout(@Req() req, @Res() res: Response){
     res.clearCookie("token");
     return res.json({"msg": "the logout was successful!"});
+  }
+
+  @Post("42/deactivate2fa")
+  @UseGuards(JwtAuthGuard)
+  async deactivate2fa(@Req() req, @Res() res: Response, @Body() twoFaDto: TwoFaCodeDto)
+  {
+    const newToken = await this.authService.deactivate2fa(twoFaDto, req.user);
+    res.cookie("token", newToken);
+    res.redirect("/");
   }
 
 }

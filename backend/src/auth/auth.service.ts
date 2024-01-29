@@ -29,20 +29,20 @@ export class AuthService {
         if (!foundUser)
             foundUser = await this.registerUser(user);
 
-        if (foundUser && foundUser.twoFa)
+        if (foundUser && !foundUser.twoFa && foundUser.twoFaSecret)
         {
             const {qrcode, url} = await this.generateTwoFaQRCode(foundUser, foundUser.twoFaSecret);
             const newToken = await this.generateJwtToken(
                 {
-                email: foundUser.email,
-                id: foundUser.id,
-                name: foundUser.name,
-                twoFa: true});
-                return {
-                    qrcode,
-                    url,
-                    newToken,
-                }
+                    email: foundUser.email,
+                    id: foundUser.id,
+                    name: foundUser.name,
+                    twoFa: true});
+            return {
+                qrcode,
+                url,
+                newToken,
+            }
         }
         const newToken = await this.generateJwtToken({
                 email: foundUser.email,
@@ -100,13 +100,12 @@ export class AuthService {
         return token;
     }
 
-    async activate2Fa(user)
-    {
+    async activate2Fa(user) {
         try{
             const secretKey = await this.createSecretKey();
             const foundUser = await this.findUserByEmail(user.email);
             if (!foundUser)
-                throw new BadRequestException("Activate2Fa: no such user found");
+                throw new BadRequestException("Activate2Fa: No such user found.");
             const {qrcode, url} = await this.generateTwoFaQRCode(foundUser, secretKey);
             const updateUser = await this.prisma.user.update({
                 where: {id: foundUser.id},
@@ -123,6 +122,28 @@ export class AuthService {
         {
             throw new BadRequestException("Activate2Fa: Something went wrong.");
         }
+    }
+
+    async deactivate2fa(twoFaDto: TwoFaCodeDto, user){
+            const foundUser = await this.findUserByEmail(user.email);
+            if (!foundUser)
+                throw new BadRequestException("Deactivate2Fa: No such user found.");
+            if (authenticator.verify({
+                token: twoFaDto.code,
+                secret:foundUser.twoFaSecret }))
+            {
+            const updateUser = await this.prisma.user.update({
+                where: {id: foundUser.id},
+                data: {twoFa: false, twoFaSecret:''},
+            })
+            const newToken = await this.generateJwtToken({mail: foundUser.email, id: foundUser.id, name: foundUser.name, twoFa: false});
+            return {
+                newToken,
+            }
+            }
+            else
+                throw new BadRequestException("Deactivate2Fa: Wrong code")
+
     }
 
     async verify2Fa(twoFaDto: TwoFaCodeDto, user){
