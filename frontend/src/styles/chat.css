@@ -22,10 +22,6 @@
     width: var(--sideBarWidth);
 }
 
-.sideBar > * {
-    margin-bottom: 10px;
-}
-
 .sideBar_sub1 {
     display: flex;
     flex-direction: column;
@@ -117,4 +113,12 @@
     padding: 5px;
     line-height: 2;
     margin-bottom: 10px;
+}
+
+.chatMemberTable {
+    width: 100%;
+    line-height: 1.2;
+    font-size: 0.8rem;
+    border: 0px;
+    border-collapse: collapse;
 }

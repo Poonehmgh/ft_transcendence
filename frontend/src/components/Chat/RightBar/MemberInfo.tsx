@@ -5,6 +5,11 @@ import { fetchGetSet } from "src/functions/utils";
 import { ParticipantListElementDTO as ChatUserDTO } from "chat-dto";
 import { UserProfileDTO } from "user-dto";
 
+// CSS
+import "src/styles/style.css";
+import "src/styles/chat.css";
+
+
 interface memberInfoProps {
     member: ChatUserDTO | null;
 }
@@ -17,7 +22,7 @@ function MemberInfo(props: memberInfoProps): React.JSX.Element {
             <div className="chatElementDiv">
                 {"--- " + props.member.userName + " ---"}
 
-                <table className="userTable">
+                <table className="chatMemberTable">
                     <thead>
                         <tr>
                             <th>Owner</th>
@@ -28,9 +33,9 @@ function MemberInfo(props: memberInfoProps): React.JSX.Element {
                     </thead>
                     <tbody>
                         <tr>
-                            <td>{props.member.owner ? "✔️" : "❌"}</td>
-                            <td>{props.member.admin ? "✔️" : "❌"}</td>
-                            <td>{props.member.online ? "✔️" : "❌"}</td>
+                            <td>{props.member.owner ? "yes" : "no"}</td>
+                            <td>{props.member.admin ? "yes" : "no"}</td>
+                            <td>{props.member.online ? "yes" : "no"}</td>
                         </tr>
                     </tbody>
                 </table>

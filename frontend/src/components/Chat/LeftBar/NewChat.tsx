@@ -116,7 +116,11 @@ function NewChat(props: newChatProps): React.JSX.Element {
         <div style={{ width: "100%" }}>
             <button
                 className="bigButton"
-                style={{ fontSize: "2rem", color: "hsl(18, 100%, 50%)" }}
+                style={{
+                    fontSize: "2rem",
+                    color: "hsl(18, 100%, 50%)",
+                    marginBottom: "10px",
+                }}
                 onClick={openModal}
             >
                 +
