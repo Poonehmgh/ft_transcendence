@@ -9,7 +9,6 @@ import { UserProfileDTO } from "user-dto";
 import "src/styles/style.css";
 import "src/styles/chat.css";
 
-
 interface memberInfoProps {
     member: ChatUserDTO | null;
 }
@@ -24,6 +23,14 @@ function MemberInfo(props: memberInfoProps): React.JSX.Element {
 
                 <table className="chatMemberTable">
                     <thead>
+                        <tr>
+                            <th
+                                colSpan={4}
+                                style={{ borderBottom: "solid 1px", textAlign: "left" }}
+                            >
+                                Chat info
+                            </th>
+                        </tr>
                         <tr>
                             <th>Owner</th>
                             <th>Admin</th>
