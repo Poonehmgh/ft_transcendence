@@ -30,7 +30,7 @@ function MatchHistory(props: matchHistoryProps): React.JSX.Element {
 
     return (
         <div style={{ marginBottom: "20px" }}>
-            <div className="h2Left" style={{ fontSize: "1.2rem" }}>
+            <div className="h2Left" style={{ fontSize: "1.4rem" }}>
                 Match History
             </div>
             <table className="matchHistoryTable">

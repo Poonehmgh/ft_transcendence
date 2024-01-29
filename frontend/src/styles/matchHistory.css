@@ -12,10 +12,9 @@
     background-color: transparent;
     font-size: 0.9rem;
     width: 100%;
-    border: none;
-    border-collapse: collapse;
-    border-bottom: 1px solid var(--text-primary);
-    padding: 5px 15px 10px 0px;
     text-align: left;
     min-width: 80px;
+    min-height: 100px;
+    border-collapse: collapse;
+    border-bottom: 1px solid var(--text-primary);
 }
