@@ -22,34 +22,36 @@ export class AuthService {
 
     async ftSignin(user): Promise<signInReturn>
     {
+        console.log("USER? ", user);
         if (!user)
             throw new BadRequestException("Unauthenticated user.");
-        const foundUser = await this.findUserByEmail(user.email);
+        let foundUser = await this.findUserByEmail(user.email);
         if (!foundUser)
-            await this.registerUser(user);
-            if (foundUser && foundUser.twoFa)
-            {
-                const {qrcode, url} = await this.generateTwoFaQRCode(foundUser, foundUser.twoFaSecret);
-                const newToken = await this.generateJwtToken(
-                    {
-                    email: foundUser.email,
-                    id: foundUser.id,
-                    name: foundUser.name,
-                    twoFa: true});
+            foundUser = await this.registerUser(user);
+
+        if (foundUser && foundUser.twoFa)
+        {
+            const {qrcode, url} = await this.generateTwoFaQRCode(foundUser, foundUser.twoFaSecret);
+            const newToken = await this.generateJwtToken(
+                {
+                email: foundUser.email,
+                id: foundUser.id,
+                name: foundUser.name,
+                twoFa: true});
                 return {
                     qrcode,
                     url,
                     newToken,
                 }
-            }
-            const newToken = await this.generateJwtToken({
+        }
+        const newToken = await this.generateJwtToken({
                 email: foundUser.email,
                 id: foundUser.id,
                 name: foundUser.name,
             })
-            return {
-                newToken,
-            };
+        return {
+            newToken,
+        };
     }
 
     async validateUser(payload){
@@ -64,7 +66,7 @@ export class AuthService {
         const {id, email, surname } = user;
         const name: string = user.name;
         try{
-            const newUser = await this.prisma.user.create({
+            const newUser = this.prisma.user.create({
                 data: {
                     id: Number(id),
                     name: name,
@@ -73,12 +75,7 @@ export class AuthService {
                    // name: name + (surname ? ` ${surname}` : '')
                 }
             })
-            return this.generateJwtToken({
-                email: newUser.email,
-                id: newUser.id,
-                name: newUser.name,
-                twoFa: false,
-            })
+            return newUser;
         }
         catch {
             throw new InternalServerErrorException("Unable to register user.");
@@ -90,7 +87,7 @@ export class AuthService {
         const {id, email} = payload;
         const foundUser = await this.findUserByEmail(email);
         if (!foundUser)
-            throw new BadRequestException("not found.");
+            throw new BadRequestException("JWT Verification: User not found.");
         return foundUser;
     }
 
@@ -108,12 +105,12 @@ export class AuthService {
         try{
             const secretKey = await this.createSecretKey();
             const foundUser = await this.findUserByEmail(user.email);
-            if (!foundUser) ///
+            if (!foundUser)
                 throw new BadRequestException("Activate2Fa: no such user found");
             const {qrcode, url} = await this.generateTwoFaQRCode(foundUser, secretKey);
             const updateUser = await this.prisma.user.update({
                 where: {id: foundUser.id},
-                data: {twoFa: true, twoFaSecret:secretKey},
+                data: {twoFa: false, twoFaSecret:secretKey},
             })
             const newToken = await this.generateJwtToken({mail: foundUser.email, id: foundUser.id, name: foundUser.name, twoFa: true});
             return {
@@ -129,7 +126,6 @@ export class AuthService {
     }
 
     async verify2Fa(twoFaDto: TwoFaCodeDto, user){
-        console.log(user);
         const code = twoFaDto.code;
 
         const foundUser = await this.findUserByEmail(user.email);
@@ -141,6 +137,10 @@ export class AuthService {
         });
         if (verified)
         {
+            const updateUser = await this.prisma.user.update({
+                where: {id: foundUser.id},
+                data: {twoFa: true},
+            })
             const newToken = await this.generateJwtToken({email: foundUser.email,
                 id: foundUser.id,
                 name: foundUser.name,

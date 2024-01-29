@@ -39,8 +39,8 @@ export class AuthController {
     if (url != undefined)
       res.cookie("url", url);
     res.cookie("token", newToken);
-    // res.json("Return");
-    res.redirect("/");
+    res.json("Return");
+    // res.redirect("/");
   }
 
   @Get("/42/test")
@@ -59,7 +59,7 @@ export class AuthController {
     res.cookie("url", url);
     res.cookie("token", newToken);
 
-    return res.json({"msg:": "the 2fa was activated successfully!", "token": newToken});
+    return res.json({"msg:": "the QR code for 2fa activation is provided. One more step to have 2fa is remained.", "token": newToken});
   }
 
   @Post("42/verify2fa")
@@ -71,7 +71,7 @@ export class AuthController {
     return res.json({"msg": "Verification successful.", "token": newToken});
   }
 
-  @Post("42/logout")
+  @Get("42/logout") //should be post, but for sake of browser test
   @UseGuards(JwtAuthGuard)
   async ft_logout(@Req() req, @Res() res: Response){
     res.clearCookie("token");
