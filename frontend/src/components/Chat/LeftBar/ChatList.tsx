@@ -20,10 +20,10 @@ function ChatList(props: chatListProps): React.JSX.Element {
     }
 
     return (
-        <div className="leftBar_1">
-            <div className="chatList">--- public chats ---</div>
+        <div className="sideBar_sub1">
+            <div className="chatElementDiv">--- public chats ---</div>
 
-            <div className="chatList">
+            <div className="chatElementDiv">
                 --- my chats ---
                 {!props.privateChats ? (
                     <p>none</p>
