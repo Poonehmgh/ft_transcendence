@@ -1,6 +1,6 @@
 import {Injectable} from "@nestjs/common";
 import {PrismaService} from "../prisma/prisma.service";
-import {ChatListDTO, ChatUserDTO, CreateNewChatDTO, SendMessageDTO} from "./chat.DTOs";
+import {ChatListDTO, ChatUserDTO, CreateNewChatDTO, InviteUserDTO, SendMessageDTO} from "./chat.DTOs";
 import {Socket} from "socket.io";
 import {userGateway} from "./userGateway";
 
@@ -21,6 +21,15 @@ export class ChatGatewayService {
         });
     }
 
+    async getChatNameFromID(chatID: number):Promise<string>{
+        const chat = await this.prisma.chat.findFirst({
+            where: {
+                id: chatID,
+            }
+        });
+        return chat.name;
+    }
+
     getUserIdFromSocket(socket: Socket) {
         const user: userGateway = this.connectedUsers.find((user) => user.socket === socket)
         return user.userID;
@@ -35,6 +44,7 @@ export class ChatGatewayService {
         this.connectedUsers.filter((userGateway) => userGateway.userID !== userIDToDelete);
         console.log(this.connectedUsers);
     }
+
 
     addUserToList(user: userGateway) {
         this.connectedUsers.push(user);
@@ -57,14 +67,14 @@ export class ChatGatewayService {
     //maybe add protection so users not in chat cant update it
     async addMessageToChat(data: SendMessageDTO) {
         try {
-            if (!await this.IsUserInChat(data.chatID, data.userID)) {
+            if (!await this.IsUserInChat(data.chatId, data.userId)) {
                 console.log('user is not in chat');
                 return -1;
             }
             const message = await this.prisma.message.create({
                 data: {
-                    chatId: Number(data.chatID),
-                    author: Number(data.userID),
+                    chatId: Number(data.chatId),
+                    author: Number(data.userId),
                     content: data.content,
                 },
             });
@@ -126,7 +136,7 @@ export class ChatGatewayService {
                 dm: true,
                 chatUsers: {
                     every: {
-                        userId: { in: [userId1, userId2] },
+                        userId: {in: [userId1, userId2]},
                     },
                 },
             },
@@ -144,18 +154,19 @@ export class ChatGatewayService {
         }
         return counter;
     }
-    async checkIsProperDM(chat: CreateNewChatDTO){
+
+    async checkIsProperDM(chat: CreateNewChatDTO) {
         if (chat.chat_users.length !== 2) {
             throw {message: "DM can have only 2 users"};
         }
         if (this.countOwners(chat.chat_users) !== 0) {
             throw {message: "DMs cant have owners"};
         }
-        const names:string[] = chat.name.split(':');
-        if(!names || names.length !== 2){
+        const names: string[] = chat.name.split(':');
+        if (!names || names.length !== 2) {
             throw {message: "Wrong DM name format"};
         }
-        if(await this.checkIfDMChatExists(chat.chat_users[0].userId, chat.chat_users[1].userId)){
+        if (await this.checkIfDMChatExists(chat.chat_users[0].userId, chat.chat_users[1].userId)) {
             throw {message: "There could be only one DM chat between 2 users"};
         }
     }
@@ -169,7 +180,6 @@ export class ChatGatewayService {
         if (chat.dm)
             await this.checkIsProperDM(chat);
     }
-
 
 
     async createNewEmptyChat(data: CreateNewChatDTO) {
@@ -200,8 +210,8 @@ export class ChatGatewayService {
         }
     }
 
-    async sendChatCreationUpdate(chat: ChatListDTO){
-        try{
+    async sendChatCreationUpdate(chat: ChatListDTO) {
+        try {
             const chatRes = await this.prisma.chat.findUnique({
                 where: {
                     id: Number(chat.chatID)
@@ -214,16 +224,35 @@ export class ChatGatewayService {
                     }
                 }
             });
-            if(chatRes){
+            if (chatRes) {
                 for (const user of chatRes.chatUsers) {
                     const socket: Socket = this.getUserSocketFromUserId(user.userId);
                     socket.emit('updateChat', chat);
                 }
             }
-        }
-        catch (error) {
+        } catch (error) {
             console.log(`error in sendChatCreationUpdate: ${error.message}`);
         }
+    }
+
+    async sendChatAdditionUpdate(inviteForm: InviteUserDTO){
+        const chatName = await this.getChatNameFromID(inviteForm.chatId);
+        const socket: Socket = this.getUserSocketFromUserId(inviteForm.userId);
+        socket.emit('updateChat', new ChatListDTO(chatName, inviteForm.userId));
+    }
+
+    async inviteUserToChat(inviteForm: InviteUserDTO) {
+        if(!await this.IsUserInChat(inviteForm.chatId, inviteForm.userId)) {
+            var chatUser = await this.prisma.chat_User.create({
+                data:{
+                    chatId: inviteForm.chatId,
+                    userId: inviteForm.userId
+                }
+            });
+            if (chatUser)
+                await this.sendChatAdditionUpdate(inviteForm);
+        }
+
     }
 
 }

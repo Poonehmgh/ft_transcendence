@@ -3,6 +3,8 @@ import {Injectable} from "@nestjs/common";
 import {Strategy, Profile, User} from "passport-42"
 import {VerifiedCallback, VerifyCallback} from "passport-jwt";
 import {AuthService} from "../auth.service";
+import {configDotenv} from "dotenv";
+import * as process from "process";
 
 @Injectable()
 export class ftStrategy extends PassportStrategy(Strategy, "42")
@@ -10,9 +12,13 @@ export class ftStrategy extends PassportStrategy(Strategy, "42")
     constructor(private authService: AuthService) {
         super(
             {
-                clientID        : "u-s4t2ud-44b53d4a9d24b54875d1747b38eeafd48138c02c2d654e48821681959a95c4ad",
-                clientSecret    : "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",
-                callbackURL     : "http://localhost:5500/auth/42/redirect",
+
+                clientID    : process.env.CLIENT_ID,
+                clientSecret    : process.env.CLIENT_SECRET,
+                callbackURL     : process.env.CALLBACK_URL,
+                // clientID        : "u-s4t2ud-44b53d4a9d24b54875d1747b38eeafd48138c02c2d654e48821681959a95c4ad",
+                // clientSecret    : "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",
+                // callbackURL     : "http://localhost:5500/auth/42/redirect",
                 // scope           : null,
             });
 
