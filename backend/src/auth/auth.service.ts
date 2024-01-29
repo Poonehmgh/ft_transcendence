@@ -22,34 +22,36 @@ export class AuthService {
 
     async ftSignin(user): Promise<signInReturn>
     {
+        console.log("USER? ", user);
         if (!user)
             throw new BadRequestException("Unauthenticated user.");
-        const foundUser = await this.findUserByEmail(user.email);
+        let foundUser = await this.findUserByEmail(user.email);
         if (!foundUser)
-            await this.registerUser(user);
-            if (foundUser && foundUser.twoFa)
-            {
-                const {qrcode, url} = await this.generateTwoFaQRCode(foundUser, foundUser.twoFaSecret);
-                const newToken = await this.generateJwtToken(
-                    {
+            foundUser = await this.registerUser(user);
+
+        if (foundUser && !foundUser.twoFa && foundUser.twoFaSecret)
+        {
+            const {qrcode, url} = await this.generateTwoFaQRCode(foundUser, foundUser.twoFaSecret);
+            const newToken = await this.generateJwtToken(
+                {
                     email: foundUser.email,
                     id: foundUser.id,
                     name: foundUser.name,
                     twoFa: true});
-                return {
-                    qrcode,
-                    url,
-                    newToken,
-                }
+            return {
+                qrcode,
+                url,
+                newToken,
             }
-            const newToken = await this.generateJwtToken({
+        }
+        const newToken = await this.generateJwtToken({
                 email: foundUser.email,
                 id: foundUser.id,
                 name: foundUser.name,
             })
-            return {
-                newToken,
-            };
+        return {
+            newToken,
+        };
     }
 
     async validateUser(payload){
@@ -64,7 +66,7 @@ export class AuthService {
         const {id, email, surname } = user;
         const name: string = user.name;
         try{
-            const newUser = await this.prisma.user.create({
+            const newUser = this.prisma.user.create({
                 data: {
                     id: Number(id),
                     name: name,
@@ -73,12 +75,7 @@ export class AuthService {
                    // name: name + (surname ? ` ${surname}` : '')
                 }
             })
-            return this.generateJwtToken({
-                email: newUser.email,
-                id: newUser.id,
-                name: newUser.name,
-                twoFa: false,
-            })
+            return newUser;
         }
         catch {
             throw new InternalServerErrorException("Unable to register user.");
@@ -90,7 +87,7 @@ export class AuthService {
         const {id, email} = payload;
         const foundUser = await this.findUserByEmail(email);
         if (!foundUser)
-            throw new BadRequestException("not found.");
+            throw new BadRequestException("JWT Verification: User not found.");
         return foundUser;
     }
 
@@ -103,17 +100,16 @@ export class AuthService {
         return token;
     }
 
-    async activate2Fa(user)
-    {
+    async activate2Fa(user) {
         try{
             const secretKey = await this.createSecretKey();
             const foundUser = await this.findUserByEmail(user.email);
-            if (!foundUser) ///
-                throw new BadRequestException("Activate2Fa: no such user found");
+            if (!foundUser)
+                throw new BadRequestException("Activate2Fa: No such user found.");
             const {qrcode, url} = await this.generateTwoFaQRCode(foundUser, secretKey);
             const updateUser = await this.prisma.user.update({
                 where: {id: foundUser.id},
-                data: {twoFa: true, twoFaSecret:secretKey},
+                data: {twoFa: false, twoFaSecret:secretKey},
             })
             const newToken = await this.generateJwtToken({mail: foundUser.email, id: foundUser.id, name: foundUser.name, twoFa: true});
             return {
@@ -128,8 +124,29 @@ export class AuthService {
         }
     }
 
+    async deactivate2fa(twoFaDto: TwoFaCodeDto, user){
+            const foundUser = await this.findUserByEmail(user.email);
+            if (!foundUser)
+                throw new BadRequestException("Deactivate2Fa: No such user found.");
+            if (authenticator.verify({
+                token: twoFaDto.code,
+                secret:foundUser.twoFaSecret }))
+            {
+            const updateUser = await this.prisma.user.update({
+                where: {id: foundUser.id},
+                data: {twoFa: false, twoFaSecret:''},
+            })
+            const newToken = await this.generateJwtToken({mail: foundUser.email, id: foundUser.id, name: foundUser.name, twoFa: false});
+            return {
+                newToken,
+            }
+            }
+            else
+                throw new BadRequestException("Deactivate2Fa: Wrong code")
+
+    }
+
     async verify2Fa(twoFaDto: TwoFaCodeDto, user){
-        console.log(user);
         const code = twoFaDto.code;
 
         const foundUser = await this.findUserByEmail(user.email);
@@ -141,6 +158,10 @@ export class AuthService {
         });
         if (verified)
         {
+            const updateUser = await this.prisma.user.update({
+                where: {id: foundUser.id},
+                data: {twoFa: true},
+            })
             const newToken = await this.generateJwtToken({email: foundUser.email,
                 id: foundUser.id,
                 name: foundUser.name,
@@ -159,62 +180,12 @@ export class AuthService {
             url,
         };
     }
-    // async signup(dto: AuthDto){
-    //     const {email, password, name, badge, intraID, status, avatar} = dto;
-    //     const foundUser = await this.prisma.user.findUnique({
-    //         where: {
-    //             email: email,
-    //         },
-    //     });
-    //     if (foundUser)
-    //         throw new BadRequestException("Email already exists")
-    //     const hashedPassword = await this.hashPassword(password);
-    //     await this.prisma.user.create({
-    //         data: {         //investigate later: why cannot skip the items that have a default value like avatar?
-    //             email: email,
-    //             passHash: hashedPassword,
-    //             intraID: intraID,
-    //             name: name,
-    //         }
-    //     })
-    //
-    //     return ({message: "sign_up was successful"})
-    // }
-    // async signin(dto: AuthDto, req: Request, res: Response){
-    //     const {email, password, name, badge, intraID, status, avatar} = dto;
-    //     const foundUser = await this.prisma.user.findUnique({
-    //         where: {
-    //             email: email,
-    //         },
-    //     });
-    //     if (!foundUser)
-    //         throw new BadRequestException("Wrong credentials.")
-    //     const isMatched = await this.comparePasswords({password,
-    //     hash: foundUser.passHash,
-    //     })
-    //
-    //     if (!isMatched)
-    //         throw new BadRequestException("Password is wrong.")
-    //     // sign jwt tokens:
-    //     const token = await this.signToken({
-    //         id: foundUser.id,
-    //         email: foundUser.email,
-    //     });
-    //     if (!token){
-    //         throw new ForbiddenException();
-    //     }
-    //     res.cookie("token", token)
-    //     // return {token}
-    //     return res.send("the login was successful!")
-    // }
-    // async signout(){
-    //     return ""
-    // }
-    //
+
     async createSecretKey(){
         const secretKey = authenticator.generateSecret();;
         return secretKey;
     }
+
     async hashKey(key: string){
         const saltOrRounds = 10;
         return await bcrypt.hash(key, saltOrRounds);
