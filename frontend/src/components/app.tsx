@@ -23,7 +23,7 @@ function App() {
             const decodedToken = JSON.parse(atob(token.split(".")[1]));
             const expirationTime = decodedToken.exp * 1000;
 
-            localStorage.setItem("userId", decodedToken.userId);
+            localStorage.setItem("userId", decodedToken.id);
             return expirationTime > Date.now();
         } catch (error) {
             console.error("Error decoding or validating token:", error);
