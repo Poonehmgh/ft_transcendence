@@ -70,7 +70,7 @@ function ManageProfile() {
 
             if (newName === null) return;
             newName = newName.trim();
-            if (newName === "" || newName == userData.name) return;
+            if (newName === "" || newName === userData.name) return;
 
             const changeNameDTO = {
                 newName: newName,
