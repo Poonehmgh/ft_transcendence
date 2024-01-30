@@ -19,6 +19,20 @@ function Leaderboard() {
         fetchGetSet<UserProfileDTO[]>(apiUrl, setUserlist);
     }, [apiUrl]);
 
+    if (!userList)
+        return (
+            <div className="mainContainerRow">
+                <div className="h2">Loading data...</div>
+            </div>
+        );
+
+    if (userList.length === 0)
+        return (
+            <div className="mainContainerRow">
+                <div className="h2">No games played.</div>
+            </div>
+        );
+
     return (
         <div className="mainContainerRow">
             <div>
