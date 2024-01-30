@@ -12,9 +12,9 @@ export function getCalendarDay(date: Date) {
     return `${day}.${month}.${year}`;
 }
 
-function getTokenFromCookie() {
+export function getTokenFromCookie() {
     const cookies = document.cookie.split(";");
-    let tokenValue = "";
+    let tokenValue = null;
 
     cookies.forEach((cookie) => {
         const [name, value] = cookie.trim().split("=");

@@ -129,8 +129,8 @@ function NewChat(props: newChatProps): React.JSX.Element {
                 isOpen={modalIsOpen}
                 onRequestClose={closeModal}
                 contentLabel="New Chat"
-                className="modal2"
-                overlayClassName="modalOverlay"
+                className="chatModal"
+                overlayClassName="chatModalOverlay"
             >
                 <SelectUsersTable setSelectedUsers={setSelectedUsersCallBack} />
 

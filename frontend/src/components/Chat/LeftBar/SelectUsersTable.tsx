@@ -35,7 +35,7 @@ function SelectUsersTable(props: selectUsersTableProps): React.JSX.Element {
             : [...prevSelectedUsers, userId];
     }
 
-    if (!users) return <div> Loading data...</div>;
+    if (!users) return <div>Loading data...</div>;
 
     const filteredUsers = users.filter(
         (user) =>

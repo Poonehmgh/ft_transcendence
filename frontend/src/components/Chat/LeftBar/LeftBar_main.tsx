@@ -1,4 +1,6 @@
 import React from "react";
+import NewChat from "./NewChat";
+import ChatList from "./ChatList";
 
 // DTO
 import { ChatListDTO } from "src/dto/chat-dto";
@@ -6,8 +8,6 @@ import { ChatListDTO } from "src/dto/chat-dto";
 // CSS
 import "src/styles/chat.css";
 import "src/styles/style.css";
-import NewChat from "./NewChat";
-import ChatList from "./ChatList";
 
 interface leftBarProps {
     selectedChat: ChatListDTO | null;
