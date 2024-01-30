@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Header from "src/components/Header/Header_main";
 import Leaderboard from "src/components/LeaderBoard/Leaderboard_main";
 import AllUsers from "src/components/AllUsers/AllUsers_main";
@@ -16,6 +16,7 @@ function App() {
     function isTokenValid(token: string) {
         try {
             if (!token) {
+                console.error("No token in cookies.");
                 return false;
             }
 
