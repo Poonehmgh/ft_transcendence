@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import UserProfileModal from "../UserProfileModal/UserProfileModal_main";
 
 // DTO
-import { UserProfileDTO } from "user-dto";
+import { UserProfileDTO } from "src/dto/user-dto";
 
 // CSS
 import "src/styles/buttons.css";

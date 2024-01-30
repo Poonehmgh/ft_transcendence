@@ -12,6 +12,10 @@ clean: down
 
 re: clean all
 
+rebuild:
+	docker compose down -v
+	docker-compose up --force-recreate
+
 mgit:
 	git add .
 	@read -p "Enter the commit message: " msg;\

@@ -7,7 +7,7 @@ import {
 } from "../../../functions/userActions";
 
 // DTO
-import { UserProfileDTO, UserRelation } from "../../shared/DTO";
+import { UserProfileDTO, UserRelation } from "src/dto/user-dto";
 
 // CSS
 import "src/styles/buttons.css";

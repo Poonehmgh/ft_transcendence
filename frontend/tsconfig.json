@@ -19,10 +19,11 @@
         "forceConsistentCasingInFileNames": false,
         "noFallthroughCasesInSwitch": false,
         "paths": {
-            "user-dto": ["../backend/src/user/user-dto"],
-            "chat-dto": ["../backend/src/chat/chat.DTOs"],
-            "match-dto": ["../backend/src/match/match-dto"],
-            "functions": ["src/functions/"]
+            "user-dto": ["src/dto/user-dto"],
+            "chat-dto": ["src/dto/chat-dto"],
+            "match-dto": ["src/dto/match-dto"],
+            "utils": ["src/functions/utils"],
+            "user-actions": ["src/functions/userActions"]
         },
         "jsx": "react"
     }

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import UserTable from "../shared/UserTable";
 import { fetchGetSet } from "src/functions/utils";
 
-import { UserProfileDTO } from "user-dto";
+import { UserProfileDTO } from "src/dto/user-dto";
 
 // CSS
 import "src/styles/style.css";

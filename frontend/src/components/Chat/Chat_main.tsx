@@ -4,7 +4,7 @@ import LeftBar from "src/components/Chat/LeftBar/LeftBar_main";
 import RightBar from "src/components/Chat/RightBar/RightBar_main";
 
 // DTO
-import { ChatListDTO, ParticipantListElementDTO as ChatUserDTO } from "chat-dto";
+import { ChatListDTO, ParticipantListElementDTO as ChatUserDTO } from "src/dto/chat-dto";
 
 // CSS
 import "../../styles/chat.css";
