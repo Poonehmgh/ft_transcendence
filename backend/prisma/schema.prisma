@@ -8,26 +8,26 @@ datasource db {
 }
 
 model User {
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-  // registration
-  id            Int         @id @unique // this is the intraID
-  name          String      @unique
-  email         String      @unique
-  twoFa         Boolean     @default(false)
-  twoFaSecret   String?
-  // scorecard
-  mmr           Int         @default(1000)
-  rank          String      @default("noob")
-  matches       Int[]
-  winrate       Float?
-  // chat
-  online        Boolean     @default(false)
-  friends       Int[]
-  friendReq_out Int[]
-  friendReq_in  Int[]
-  blocked       Int[]
-  userChats     Chat_User[]
+    createdAt     DateTime    @default(now())
+    updatedAt     DateTime    @updatedAt
+    // registration
+    id            Int         @id @unique // this is the intraID
+    name          String      @unique
+    email         String      @unique
+    twoFa         Boolean     @default(false)
+    twoFaSecret   String?
+    // scorecard
+    mmr           Int         @default(1000)
+    rank          String      @default("noob")
+    matches       Int[]
+    winrate       Float?
+    // chat
+    online        Boolean     @default(false)
+    friends       Int[]
+    friendReq_out Int[]
+    friendReq_in  Int[]
+    blocked       Int[]
+    userChats     Chat_User[]
 }
 
 model Match {
@@ -64,9 +64,9 @@ model Chat {
     createdAt    DateTime    @default(now())
     updatedAt    DateTime    @updatedAt
     id           Int         @id @unique @default(autoincrement())
-    name         String      @default("Unnamed Chat")
+    name         String
     dm           Boolean     @default(false)
-    // privat       Boolean     @default(false)
+    private      Boolean     @default(false)
     pw_protected Boolean     @default(false)
     password     String? // hash this?
     messages     Message[]
@@ -76,18 +76,18 @@ model Chat {
 // junction tables
 
 model Chat_User {
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  id        Int      @id @unique @default(autoincrement())
-  user      User     @relation(fields: [userId], references: [id])
-  userId    Int
-  chat      Chat     @relation(fields: [chatId], references: [id])
-  chatId    Int
-  owner     Boolean  @default(false)
-  admin     Boolean  @default(false)
-  blocked   Boolean  @default(false)
-  muted     Boolean  @default(false)
-  invited   Boolean  @default(false)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    id        Int      @id @unique @default(autoincrement())
+    user      User     @relation(fields: [userId], references: [id])
+    userId    Int
+    chat      Chat     @relation(fields: [chatId], references: [id])
+    chatId    Int
+    owner     Boolean  @default(false)
+    admin     Boolean  @default(false)
+    blocked   Boolean  @default(false)
+    muted     Boolean  @default(false)
+    invited   Boolean  @default(false)
 
-  @@index([userId, chatId])
+    @@index([userId, chatId])
 }

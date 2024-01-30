@@ -89,6 +89,11 @@ export class UserController {
         return this.userService.getAllUsers();
     }
 
+    @Get("other_users")
+    async getOtherUsers(@Req() req: AuthenticatedRequest) {
+        return this.userService.getOtherUsers(req.user.id);
+    }
+
     @Get("friends")
     async getFriends(@Req() req: AuthenticatedRequest): Promise<IdAndNameDTO[]> {
         return this.userService.getFriends(req.user.id);

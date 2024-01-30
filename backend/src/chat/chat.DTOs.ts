@@ -1,4 +1,4 @@
-import {findIndex} from "rxjs";
+import { findIndex } from "rxjs";
 
 export class ChatListDTO {
     chatName: string;
@@ -23,15 +23,20 @@ export class MessageListElementDTO {
 }
 
 export class ParticipantListElementDTO {
-    userName: string
-    userId: number
-    owner: boolean
-    admin: boolean
-    online: boolean
-    pictureUrl: string
+    userName: string;
+    userId: number;
+    owner: boolean;
+    admin: boolean;
+    online: boolean;
+    pictureUrl: string;
 
-
-    constructor(userName: string, userId: number, owner: boolean, admin: boolean, online: boolean) {
+    constructor(
+        userName: string,
+        userId: number,
+        owner: boolean,
+        admin: boolean,
+        online: boolean
+    ) {
         this.userName = userName;
         this.userId = userId;
         this.owner = owner;
@@ -64,7 +69,14 @@ export class ChatUserDTO {
     muted: boolean = false;
     invited: boolean = false;
 
-    constructor(userId: number, owner: boolean, admin: boolean, blocked: boolean, muted: boolean, invited: boolean) {
+    constructor(
+        userId: number,
+        owner: boolean,
+        admin: boolean,
+        blocked: boolean,
+        muted: boolean,
+        invited: boolean
+    ) {
         this.userId = userId;
         this.owner = owner;
         this.admin = admin;
@@ -72,26 +84,15 @@ export class ChatUserDTO {
         this.muted = muted;
         this.invited = invited;
     }
-
-
 }
 
-export class CreateNewChatDTO {
-
-    name: string;
+export class NewChatDTO {
+    name?: string = null;
     dm: boolean;
+    private: boolean;
     pw_protected: boolean;
-    password: string;
-    chat_users: ChatUserDTO[] = [];
-
-    constructor(name: string, dm: boolean, pw_protected: boolean, password: string, chat_users: ChatUserDTO[]) {
-        this.name = name;
-        this.dm = dm;
-        this.pw_protected = pw_protected;
-        this.password = password;
-        this.chat_users = chat_users;
-    }
-
+    password?: string = null;
+    userIds: number[];
 }
 //Its json for tests
 // {
@@ -119,11 +120,9 @@ export class CreateNewChatDTO {
 // ]
 // }
 
-
-export class InviteUserDTO{
-    chatId: number
-    userId: number
-
+export class InviteUserDTO {
+    chatId: number;
+    userId: number;
 
     constructor(chatID: number, userId: number) {
         this.chatId = chatID;

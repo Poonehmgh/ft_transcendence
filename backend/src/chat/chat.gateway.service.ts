@@ -1,6 +1,6 @@
 import {Injectable} from "@nestjs/common";
 import {PrismaService} from "../prisma/prisma.service";
-import {ChatListDTO, ChatUserDTO, CreateNewChatDTO, InviteUserDTO, SendMessageDTO} from "./chat.DTOs";
+import {ChatListDTO, ChatUserDTO, InviteUserDTO, NewChatDTO, SendMessageDTO} from "./chat.DTOs";
 import {Socket} from "socket.io";
 import {userGateway} from "./userGateway";
 
@@ -155,34 +155,35 @@ export class ChatGatewayService {
         return counter;
     }
 
-    async checkIsProperDM(chat: CreateNewChatDTO) {
-        if (chat.chat_users.length !== 2) {
+    async checkIsProperDM(chat: NewChatDTO) {
+        if (chat.userIds.length !== 2) {
             throw {message: "DM can have only 2 users"};
-        }
-        if (this.countOwners(chat.chat_users) !== 0) {
-            throw {message: "DMs cant have owners"};
         }
         const names: string[] = chat.name.split(':');
         if (!names || names.length !== 2) {
             throw {message: "Wrong DM name format"};
         }
-        if (await this.checkIfDMChatExists(chat.chat_users[0].userId, chat.chat_users[1].userId)) {
-            throw {message: "There could be only one DM chat between 2 users"};
+        if (await this.checkIfDMChatExists(chat.userIds[0], chat.userIds[1])) {
+            throw {message: "There can be only one DM chat between 2 users"};
         }
     }
 
-    async checkIsProperChat(chat: CreateNewChatDTO) {
-        if (chat.chat_users.length < 2)
+    async checkIsProperChat(chat: NewChatDTO) {
+        if (chat.userIds.length < 2)
             throw {message: "Not enough users"};
-        const ownerCount: number = this.countOwners(chat.chat_users);
+        /* const ownerCount: number = this.countOwners(chat.userIds);
         if (ownerCount > 1)
-            throw {message: "Too much owners"};
+            throw {message: "Too much owners"}; */
         if (chat.dm)
             await this.checkIsProperDM(chat);
     }
 
 
-    async createNewEmptyChat(data: CreateNewChatDTO) {
+    async createChat(data: NewChatDTO) {
+
+    }
+
+    async createNewEmptyChat(data: NewChatDTO) {
         try {
             await this.checkIsProperChat(data);
             const newChat = await this.prisma.chat.create({
@@ -193,9 +194,9 @@ export class ChatGatewayService {
                     password: data.password,
                     chatUsers: {
                         createMany: {
-                            data: data.chat_users.map((chatUser) => ({
-                                userId: chatUser.userId,
-                                owner: chatUser.owner
+                            data: data.userIds.map((chatUser) => ({
+                                userId: chatUser,
+                                //owner: chatUser.owner
                             })),
                         },
                     },

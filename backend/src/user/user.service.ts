@@ -328,13 +328,25 @@ export class UserService {
         });
     }
 
-    async getOtherUsers(thisId: number) {
-        return await this.prisma.user.findMany({
+    async getOtherUsers(thisId: number): Promise<UserProfileDTO[]> {
+        const otherUsers: User[] = await this.prisma.user.findMany({
             where: {
                 NOT: {
                     id: thisId,
                 },
             },
+        });
+
+        return otherUsers.map(({ id, name, mmr, rank, matches, winrate, online }) => {
+            return new UserProfileDTO(
+                id,
+                name,
+                mmr,
+                rank,
+                matches.length,
+                winrate,
+                online
+            );
         });
     }
 

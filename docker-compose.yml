@@ -36,8 +36,9 @@ services:
   #    command: ['./start.sh' ]
 
   db:
-    image: postgres:15
+    build: ./db
     container_name: db
+    image: db
     ports:
       - 5432:5432
     volumes:

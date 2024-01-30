@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { fetchGetSet } from "src/functions/utils";
+import { fetchGet, fetchGetSet } from "src/functions/utils";
 
 // DTO
 import { UserProfileDTO } from "src/dto/user-dto";
@@ -16,10 +16,10 @@ function SelectUsersTable(props: selectUsersTableProps): React.JSX.Element {
     const [users, setUsers] = useState<UserProfileDTO[]>(null);
     const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
     const [searchQuery, setSearchQuery] = useState<string>("");
-    // to do: update the backend when user auth is done to exclude the calling user
-    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/all_users";
+    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/other_users";
 
     useEffect(() => {
+        let data = fetchGet(apiUrl);
         fetchGetSet<UserProfileDTO[]>(apiUrl, setUsers);
     }, [apiUrl]);
 
