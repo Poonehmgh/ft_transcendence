@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
-import { authContentHeader } from "src/functions/utils";
+import { authContentHeader, fetchGetSet } from "src/functions/utils";
 import PlayerCardTable from "../shared/PlayerCardTable";
 import SocialActionBar from "./SocialActionBar/SocialActionBar_main";
-import { fetchGetSet } from "src/functions/utils";
 import MatchHistory from "./MatchHistory";
 
 // DTO
-import { UserProfileDTO } from "user-dto";
+import { UserProfileDTO } from "src/dto/user-dto";
 
 // CSS
 import "src/styles/style.css";

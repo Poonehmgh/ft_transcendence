@@ -3,7 +3,7 @@ import Modal from "react-modal";
 import SelectUsersTable from "./SelectUsersTable";
 
 // DTO
-import { ChatListDTO } from "chat-dto";
+import { ChatListDTO } from "src/dto/chat-dto";
 
 // CSS
 import "src/styles/modals.css";

@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { fetchGetSet } from "src/functions/utils";
 
 // DTO
-import { ChatListDTO, ParticipantListElementDTO as ChatUserDTO } from "chat-dto";
-import { UserProfileDTO } from "user-dto";
+import { ChatListDTO, ParticipantListElementDTO as ChatUserDTO } from "src/dto/chat-dto";
+import { UserProfileDTO } from "src/dto/user-dto";
 
 interface membersProps {
     selectedChat: ChatListDTO | null;

@@ -4,7 +4,7 @@ import RankNumberColumn from "./RankNumberColumn";
 import { fetchGetSet } from "src/functions/utils";
 
 // DTO
-import { UserProfileDTO } from "user-dto";
+import { UserProfileDTO } from "src/dto/user-dto";
 
 // CSS
 import "src/styles/userTable.css";

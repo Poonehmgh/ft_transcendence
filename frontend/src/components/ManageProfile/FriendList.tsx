@@ -3,7 +3,7 @@ import { fetchGetSet } from "src/functions/utils";
 import { handleBlockUser, handleRemoveFriend } from "src/functions/userActions";
 
 // DTO
-import { IdAndNameDTO } from "user-dto";
+import { IdAndNameDTO } from "src/dto/user-dto";
 
 // CSS
 import "src/styles/style.css";
@@ -32,8 +32,7 @@ function FriendList() {
     }
 
     if (!group) return <div className="p">Loading data...</div>;
-    if (group.length === 0)
-        return <div className="p">No friends.</div>;
+    if (group.length === 0) return <div className="p">No friends.</div>;
 
     return (
         <table className="modalUserList">

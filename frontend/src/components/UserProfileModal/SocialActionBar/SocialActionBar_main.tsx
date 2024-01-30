@@ -4,7 +4,7 @@ import BlockButton from "./BlockButton";
 import { fetchGetSet } from "src/functions/utils";
 
 // DTO
-import { UserRelation, UserProfileDTO } from "../../shared/DTO";
+import { UserRelation, UserProfileDTO } from "src/dto/user-dto";
 
 // CSS
 import "src/styles/socialActionBar.css";

@@ -3,7 +3,7 @@ import { fetchGetSet } from "src/functions/utils";
 import { handleCancelRequest } from "src/functions/userActions";
 
 // DTO
-import { IdAndNameDTO } from "user-dto";
+import { IdAndNameDTO } from "src/dto/user-dto";
 
 // CSS
 import "src/styles/style.css";

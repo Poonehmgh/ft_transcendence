@@ -2,8 +2,8 @@ import React from "react";
 import MemberList from "./MemberList";
 
 // DTO
-import { ChatListDTO, ParticipantListElementDTO as ChatUserDTO } from "chat-dto";
-import { UserProfileDTO } from "user-dto";
+import { ChatListDTO, ParticipantListElementDTO as ChatUserDTO } from "src/dto/chat-dto";
+import { UserProfileDTO } from "src/dto/user-dto";
 
 // CSS
 import "src/styles/chat.css";

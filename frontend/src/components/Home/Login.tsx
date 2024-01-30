@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { fetchGetSet } from "src/functions/utils";
 
 // DTO
-import { UserProfileDTO } from "user-dto";
+import { UserProfileDTO } from "src/dto/user-dto";
 
 // CSS
 import "src/styles/style.css";
@@ -18,9 +18,14 @@ function Login() {
         fetchGetSet(apiUrl, setUserData);
     }, [apiUrl]);
 
-    return userData ? (
-        "Welcome, " + userData.name + "!"
-    ) : (
+    if (userData)
+        return (
+            <div className="loginContainer">
+                <div className="h2">{`Welcome, ${userData.name}!`}</div>
+            </div>
+        );
+
+    return (
         <div className="loginContainer">
             <div className="h2">Pls log in!</div>
             <button

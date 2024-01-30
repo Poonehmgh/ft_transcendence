@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import UserProfileModal from "../UserProfileModal/UserProfileModal_main";
-import { fetchGetSet } from "src/functions/fetchers";
+import { fetchGetSet } from "utils";
 
 // DTO
-import { UserProfileDTO } from "user-dto";
+import { UserProfileDTO } from "src/dto/user-dto";
 
 // CSS
 import "src/styles/style.css";

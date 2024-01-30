@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { fetchGetSet, getCalendarDay } from "src/functions/utils";
 
 // DTO
-import { MatchDTO } from "match-dto";
-import { UserProfileDTO } from "../shared/DTO";
+import { MatchDTO } from "src/dto/match-dto";
+import { UserProfileDTO } from "src/dto/user-dto";
 
 // CSS
 import "src/styles/style.css";

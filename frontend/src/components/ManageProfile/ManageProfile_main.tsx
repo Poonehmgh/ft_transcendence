@@ -5,7 +5,7 @@ import PlayerCardTable from "../shared/PlayerCardTable";
 import { fetchGetSet } from "src/functions/utils";
 
 // DTO
-import { UserProfileDTO } from "user-dto";
+import { UserProfileDTO } from "src/dto/user-dto";
 
 // CSS
 import "src/styles/buttons.css";
