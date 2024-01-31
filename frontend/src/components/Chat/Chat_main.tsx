@@ -36,7 +36,7 @@ function Chat() {
         fetchGetSet<ChatListDTO[]>(apiUrl_publicChats, setPublicChats);
     }, [apiUrl_privateChats, apiUrl_publicChats]);
 
-    if (!privateChats) <Loading_h2 elementName={"Chat"} />;
+    if (!privateChats) return <Loading_h2 elementName={"Chat"} />;
 
     return (
         <div className="mainContainerColumn">

@@ -130,6 +130,7 @@ export class ChatGatewayService {
         }
     }
 
+    // moved to chatService and renamed
     async checkIfDMChatExists(userId1: number, userId2: number): Promise<boolean> {
         const existingChat = await this.prisma.chat.findFirst({
             where: {
@@ -155,6 +156,7 @@ export class ChatGatewayService {
         return counter;
     }
 
+    // moved to chatService and renamed and updated
     async checkIsProperDM(chat: NewChatDTO) {
         if (chat.userIds.length !== 2) {
             throw {message: "DM can have only 2 users"};
@@ -168,6 +170,7 @@ export class ChatGatewayService {
         }
     }
 
+    // moved to chatService and renamed to validateChat
     async checkIsProperChat(chat: NewChatDTO) {
         if (chat.userIds.length < 2)
             throw {message: "Not enough users"};
@@ -178,11 +181,7 @@ export class ChatGatewayService {
             await this.checkIsProperDM(chat);
     }
 
-
-    async createChat(data: NewChatDTO) {
-
-    }
-
+    // moved to chatService
     async createNewEmptyChat(data: NewChatDTO) {
         try {
             await this.checkIsProperChat(data);

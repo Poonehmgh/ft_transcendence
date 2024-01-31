@@ -20,7 +20,7 @@ function Leaderboard() {
         fetchGetSet<UserProfileDTO[]>(apiUrl, setUserlist);
     }, [apiUrl]);
 
-    if (!userList) <Loading_h2 elementName={"Leaderboard"} />;
+    if (!userList) return <Loading_h2 elementName={"Leaderboard"} />;
 
     if (userList.length === 0)
         return (

@@ -15,13 +15,6 @@ function Home() {
         fetchGetSet(apiUrl, setUserData);
     }, [apiUrl]);
 
-    if (userData)
-        return (
-            <div className="mainContainerRow">
-                <div className="h2">{`Welcome, ${userData.name}!`}</div>
-            </div>
-        );
-
     return (
         <div className="mainContainerRow">
             <div>

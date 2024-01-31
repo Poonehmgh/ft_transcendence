@@ -43,9 +43,9 @@ export class ChatController {
     @Post("create")
     async createChat(
         @Req() req: AuthenticatedRequest,
-        @Body() newChatDTO: NewChatDTO,
+        @Body() newChat: NewChatDTO,
         @Res() res: Response
     ) {
-        return this.chatService.createChat(req.user.id);
+        return this.chatService.createChat(req.user.id, newChat);
     }
 }
