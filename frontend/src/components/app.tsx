@@ -8,29 +8,10 @@ import Chat from "src/components/Chat/Chat_main";
 import ErrorPage from "src/components/ErrorPage";
 import ManageProfile from "src/components/ManageProfile/ManageProfile_main";
 import Home from "./Home/Home_main";
-import { getTokenFromCookie } from "src/functions/utils";
+import { getTokenFromCookie, isTokenValid } from "src/functions/utils";
 
 function App() {
     const token = getTokenFromCookie();
-
-    function isTokenValid(token: string) {
-        try {
-            if (!token) {
-                console.error("No token in cookies.");
-                return false;
-            }
-
-            const decodedToken = JSON.parse(atob(token.split(".")[1]));
-            const expirationTime = decodedToken.exp * 1000;
-
-            localStorage.setItem("userId", decodedToken.id);
-            return expirationTime > Date.now();
-        } catch (error) {
-            console.error("Error decoding or validating token:", error);
-            return false;
-        }
-    }
-
     const validToken = isTokenValid(token);
 
     return (

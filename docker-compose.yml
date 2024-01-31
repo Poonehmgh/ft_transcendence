@@ -36,9 +36,8 @@ services:
   #    command: ['./start.sh' ]
 
   db:
-    build: ./db
+    image: postgres:15
     container_name: db
-    image: db
     ports:
       - 5432:5432
     volumes:
@@ -59,5 +58,3 @@ networks:
     driver: bridge
   webapp:
     driver: bridge
-
-

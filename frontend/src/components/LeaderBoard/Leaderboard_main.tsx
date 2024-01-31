@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import UserTable from "../shared/UserTable";
 import RankNumberColumn from "./RankNumberColumn";
 import { fetchGetSet } from "src/functions/utils";
+import Loading_h2 from "src/components/shared/Loading_h2";
 
 // DTO
 import { UserProfileDTO } from "src/dto/user-dto";
@@ -19,12 +20,7 @@ function Leaderboard() {
         fetchGetSet<UserProfileDTO[]>(apiUrl, setUserlist);
     }, [apiUrl]);
 
-    if (!userList)
-        return (
-            <div className="mainContainerRow">
-                <div className="h2">Loading data...</div>
-            </div>
-        );
+    if (!userList) <Loading_h2 elementName={"Leaderboard"} />;
 
     if (userList.length === 0)
         return (

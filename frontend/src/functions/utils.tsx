@@ -3,8 +3,7 @@ import React from "react";
 // getters
 
 export function getCalendarDay(date: Date) {
-    if (!date)
-        return ("invalid date");
+    if (!date) return "invalid date";
     const day = date.getDate().toString().padStart(2, "0");
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
     const year = date.getFullYear();
@@ -24,6 +23,27 @@ export function getTokenFromCookie() {
         }
     });
     return tokenValue;
+}
+
+// checkers
+
+export function isTokenValid(token: string) {
+    try {
+        if (!token) {
+            console.error("No token in cookies.");
+            return false;
+        }
+
+        const decodedToken = JSON.parse(atob(token.split(".")[1]));
+        const expirationTime = decodedToken.exp * 1000;
+
+        localStorage.setItem("userId", decodedToken.id);
+
+        return expirationTime > Date.now();
+    } catch (error) {
+        console.error("Error decoding or validating token:", error);
+        return false;
+    }
 }
 
 // headers

@@ -19,18 +19,8 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
 import * as path from "path";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
-import { MatchDTO, MatchInfoDTO } from "src/match/match-dto";
-
-interface reqUser {
-    id: number;
-    name: string;
-    iat: number;
-    exp: number;
-}
-
-interface AuthenticatedRequest extends Request {
-    user: reqUser;
-}
+import { MatchDTO } from "src/match/match-dto";
+import { reqUser, AuthenticatedRequest} from "src/shared/dto"
 
 @Controller("user")
 @UseGuards(JwtAuthGuard)

@@ -3,6 +3,7 @@ import UserTable from "../shared/UserTable";
 import { fetchGetSet } from "src/functions/utils";
 
 import { UserProfileDTO } from "src/dto/user-dto";
+import Loading_h2 from "../shared/Loading_h2";
 
 // CSS
 import "src/styles/style.css";
@@ -17,15 +18,7 @@ function AllUsers() {
         fetchGetSet(apiUrl, setUsers);
     }, [apiUrl]);
 
-    if (!users)
-        return (
-            <div className="mainContainerRow">
-                <div>
-                    <div className="h2">All Users</div>
-                    <p>Loading data...</p>
-                </div>
-            </div>
-        );
+    if (!users) return <Loading_h2 elementName={"All Users"} />;
 
     const filteredUsers = users
         ? users.filter((user) =>

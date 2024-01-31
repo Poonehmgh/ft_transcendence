@@ -1,4 +1,5 @@
 import { findIndex } from "rxjs";
+import { ArrayUnique, ArrayMinSize } from "class-validator";
 
 export class ChatListDTO {
     chatName: string;
@@ -92,8 +93,12 @@ export class NewChatDTO {
     private: boolean;
     pw_protected: boolean;
     password?: string = null;
+
+    @ArrayMinSize(1, { message: "At least 1 user id required" })
+    @ArrayUnique({ message: "User ids must be unique" })
     userIds: number[];
 }
+
 //Its json for tests
 // {
 //     "name": "name??",

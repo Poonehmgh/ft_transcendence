@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { fetchGetSet } from "src/functions/utils";
+import Loading_h2 from "src/components/shared/Loading_h2";
 
 // DTO
 import { UserProfileDTO } from "src/dto/user-dto";
@@ -10,20 +11,7 @@ import "src/styles/home.css";
 import "src/styles/buttons.css";
 
 function Login() {
-    const [userData, setUserData] = useState<UserProfileDTO>(null);
     const loginRedirUrl = process.env.REACT_APP_BACKEND_URL + "/auth/42/login";
-    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/my_profile";
-
-    useEffect(() => {
-        fetchGetSet(apiUrl, setUserData);
-    }, [apiUrl]);
-
-    if (userData)
-        return (
-            <div className="loginContainer">
-                <div className="h2">{`Welcome, ${userData.name}!`}</div>
-            </div>
-        );
 
     return (
         <div className="loginContainer">

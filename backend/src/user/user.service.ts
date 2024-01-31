@@ -24,7 +24,7 @@ import {
     INFO_UNBLOCK,
     ERR_NAMETAKEN,
     ERR_NAMECHANGE,
-} from "../constants/constants.user.service";
+} from "../shared/constants.user.service";
 import * as fs from "fs";
 import * as path from "path";
 import { MatchDTO, MatchInfoDTO } from "src/match/match-dto";

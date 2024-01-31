@@ -1,11 +1,4 @@
-import {
-    IsNotEmpty,
-    IsString,
-    Matches,
-    Length,
-    ArrayUnique,
-    ArrayMinSize,
-} from "class-validator";
+import { IsNotEmpty, IsString, Matches, Length } from "class-validator";
 
 // User
 
@@ -68,18 +61,4 @@ export class ChangeNameDTO {
             "first three characters must be alphabetic, the rest can be alphanumerical",
     })
     newName: string;
-}
-
-// Chat
-
-export class NewChatDTO {
-    name?: string = null;
-    dm: boolean;
-    privateChat: boolean;
-    pw_protected: boolean;
-    password?: string = null;
-   
-    @ArrayUnique({ message: "User ids must be unique" })
-    @ArrayMinSize(2, { message: "At least 2 user ids required" })
-    userIds: number[];
 }
