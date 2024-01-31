@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Header from "src/components/Header/Header_main";
 import Leaderboard from "src/components/LeaderBoard/Leaderboard_main";
