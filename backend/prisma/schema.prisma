@@ -67,8 +67,7 @@ model Chat {
     name         String
     dm           Boolean     @default(false)
     private      Boolean     @default(false)
-    pw_protected Boolean     @default(false)
-    password     String? // hash this?
+    password     String?
     messages     Message[]
     chatUsers    Chat_User[]
 }

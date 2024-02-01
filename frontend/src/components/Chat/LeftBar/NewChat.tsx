@@ -15,19 +15,14 @@ interface newChatProps {
 
 function NewChat(props: newChatProps): React.JSX.Element {
     const [modalIsOpen, setModalIsOpen] = useState(false);
-    const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
-    const [usePassword, setUsePassword] = React.useState(false);
-    const [makePublic, setMakePublic] = React.useState(false);
+    const [showPasswordInput, setshowPasswordInput] = useState(false);
     const passwordRef = useRef(null);
-    const [chatDto, setChatDto] = useState<NewChatDTO>({
+    const [newChatDTO, setChatDto] = useState<NewChatDTO>({
         dm: false,
-        private: false,
+        private: true,
         password: null,
         userIds: [],
     });
-    
-    
-    
     const apiUrl = process.env.REACT_APP_BACKEND_URL + "/chat/create";
 
     function openModal() {
@@ -35,36 +30,43 @@ function NewChat(props: newChatProps): React.JSX.Element {
     }
 
     function closeModal() {
-        setSelectedUsers([]);
         setModalIsOpen(false);
-        setUsePassword(false);
-        setMakePublic(false);
+        setshowPasswordInput(false);
+        setChatDto({
+            dm: false,
+            private: true,
+            password: null,
+            userIds: [],
+        });
     }
 
-    /* export class NewChatDTO {
-    dm: boolean;
-    private: boolean;
-    password?: string = null;
+    function setPrivate() {
+        setChatDto((prevChatDto) => ({
+            ...prevChatDto,
+            private: !prevChatDto.private,
+        }));
+    }
 
-    userIds: number[];
-} */
+    function setSelectedUsers(selectedUsers: number[]) {
+        setChatDto((prevChatDto) => ({
+            ...prevChatDto,
+            userIds: selectedUsers,
+        }));
+    }
 
     function createChat() {
-        let chatDto: NewChatDTO;
-        chatDto.dm = selectedUsers.length === 1;
-        chatDto.userIds = selectedUsers;
-        chatDto.private = !makePublic;
-        chatDto.password = passwordRef.current;
-        const chatId: ChatListDTO = { chatName: "knudel", chatID: 0 };
+        newChatDTO.dm = newChatDTO.userIds.length === 1;
+        newChatDTO.password = passwordRef.current;
+        const newChat: ChatListDTO = { chatName: "knudel", chatID: 0 };
         //receive chat id and set to selected chat
-        props.selectChat(chatId);
+        props.selectChat(newChat);
 
-        console.log("createChat: ", chatDto);
+        console.log("createChat: ", newChatDTO);
         closeModal();
     }
 
     function renderCreateChatButton() {
-        if (selectedUsers.length === 1) {
+        if (newChatDTO.userIds.length === 1) {
             return (
                 <button
                     className="bigButton"
@@ -74,7 +76,7 @@ function NewChat(props: newChatProps): React.JSX.Element {
                     Create DM Chat
                 </button>
             );
-        } else if (selectedUsers.length > 1) {
+        } else if (newChatDTO.userIds.length > 1) {
             return (
                 <div>
                     <button
@@ -90,10 +92,10 @@ function NewChat(props: newChatProps): React.JSX.Element {
                             <input
                                 type="checkbox"
                                 className="checkbox"
-                                onClick={() => setUsePassword(!usePassword)}
+                                onClick={() => setshowPasswordInput(!showPasswordInput)}
                             />
                             Use Password
-                            {usePassword && (
+                            {showPasswordInput && (
                                 <div>
                                     <input
                                         type="text"
@@ -109,7 +111,7 @@ function NewChat(props: newChatProps): React.JSX.Element {
                             <input
                                 type="checkbox"
                                 className="checkbox"
-                                onClick={() => setMakePublic(!makePublic)}
+                                onClick={setPrivate}
                             />
                             Make Public
                         </div>

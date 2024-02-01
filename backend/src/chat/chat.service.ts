@@ -154,7 +154,6 @@ export class ChatService {
                 data: {
                     name: null,
                     dm: true,
-                    pw_protected: false,
                     password: null,
                 },
             });
@@ -177,29 +176,29 @@ export class ChatService {
         }
     }
 
-    async createChat(creatorId: number, newChatDto: NewChatDTO) {
-        newChatDto.userIds.push(creatorId);
+    async createChat(creatorId: number, newChatDTO: NewChatDTO) {
+        newChatDTO.userIds.push(creatorId);
         try {
-            if (newChatDto.dm) {
-                return await this.createDm(newChatDto);
+            if (newChatDTO.dm) {
+                return await this.createDm(newChatDTO);
             }
 
-            await this.validateChat(newChatDto);
+            await this.validateChat(newChatDTO);
 
             const newChat = await this.prisma.chat.create({
                 data: {
-                    name: newChatDto.name,
-                    dm: Boolean(newChatDto.dm),
-                    pw_protected: Boolean(newChatDto.pw_protected),
-                    password: newChatDto.password,
+                    name: "newchat",
+                    dm: Boolean(newChatDTO.dm),
+                    password: newChatDTO.password,
                     chatUsers: {
                         createMany: {
-                            data: newChatDto.userIds.map((chatUser) => ({
+                            data: newChatDTO.userIds.map((chatUser) => ({
                                 userId: chatUser,
                                 //owner: chatUser.owner
                             })),
                         },
                     },
+
                 },
                 include: {
                     chatUsers: true,

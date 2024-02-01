@@ -1,17 +1,20 @@
-import {Injectable} from "@nestjs/common";
-import {PrismaService} from "../prisma/prisma.service";
-import {ChatListDTO, ChatUserDTO, InviteUserDTO, NewChatDTO, SendMessageDTO} from "./chat.DTOs";
-import {Socket} from "socket.io";
-import {userGateway} from "./userGateway";
-
+import { Injectable } from "@nestjs/common";
+import { PrismaService } from "../prisma/prisma.service";
+import {
+    ChatListDTO,
+    ChatUserDTO,
+    InviteUserDTO,
+    NewChatDTO,
+    SendMessageDTO,
+} from "./chat.DTOs";
+import { Socket } from "socket.io";
+import { userGateway } from "./userGateway";
 
 @Injectable()
 export class ChatGatewayService {
-
     connectedUsers: userGateway[] = [];
 
-    constructor(private readonly prisma: PrismaService) {
-    }
+    constructor(private readonly prisma: PrismaService) {}
 
     async setAllUsersOffline(): Promise<void> {
         await this.prisma.user.updateMany({
@@ -21,30 +24,35 @@ export class ChatGatewayService {
         });
     }
 
-    async getChatNameFromID(chatID: number):Promise<string>{
+    async getChatNameFromID(chatID: number): Promise<string> {
         const chat = await this.prisma.chat.findFirst({
             where: {
                 id: chatID,
-            }
+            },
         });
         return chat.name;
     }
 
     getUserIdFromSocket(socket: Socket) {
-        const user: userGateway = this.connectedUsers.find((user) => user.socket === socket)
+        const user: userGateway = this.connectedUsers.find(
+            (user) => user.socket === socket
+        );
         return user.userID;
     }
 
     getUserSocketFromUserId(userId: number) {
-        const user: userGateway = this.connectedUsers.find((user) => user.userID === userId)
+        const user: userGateway = this.connectedUsers.find(
+            (user) => user.userID === userId
+        );
         return user.socket;
     }
 
     deleteUserFromList(userIDToDelete: number) {
-        this.connectedUsers.filter((userGateway) => userGateway.userID !== userIDToDelete);
+        this.connectedUsers.filter(
+            (userGateway) => userGateway.userID !== userIDToDelete
+        );
         console.log(this.connectedUsers);
     }
-
 
     addUserToList(user: userGateway) {
         this.connectedUsers.push(user);
@@ -67,8 +75,8 @@ export class ChatGatewayService {
     //maybe add protection so users not in chat cant update it
     async addMessageToChat(data: SendMessageDTO) {
         try {
-            if (!await this.IsUserInChat(data.chatId, data.userId)) {
-                console.log('user is not in chat');
+            if (!(await this.IsUserInChat(data.chatId, data.userId))) {
+                console.log("user is not in chat");
                 return -1;
             }
             const message = await this.prisma.message.create({
@@ -99,7 +107,11 @@ export class ChatGatewayService {
         }
     }
 
-    sendMessageToIDList(userIdList: number[], message: SendMessageDTO, messageDestination: string) {
+    sendMessageToIDList(
+        userIdList: number[],
+        message: SendMessageDTO,
+        messageDestination: string
+    ) {
         for (const id of userIdList) {
             const socket: Socket = this.getUserSocketFromUserId(id);
             socket.emit(messageDestination, message);
@@ -113,18 +125,19 @@ export class ChatGatewayService {
             }
             const messageDB = await this.prisma.message.findUnique({
                 where: {
-                    id: Number(messageID)
+                    id: Number(messageID),
                 },
                 include: {
                     chat: {
                         include: {
-                            chatUsers: true
-                        }
-                    }
-                }
+                            chatUsers: true,
+                        },
+                    },
+                },
             });
-            const userIdsWithAccess = messageDB.chat.chatUsers.map((chatUser) => chatUser.userId) || [];
-            this.sendMessageToIDList(userIdsWithAccess, message, 'updateMessage');
+            const userIdsWithAccess =
+                messageDB.chat.chatUsers.map((chatUser) => chatUser.userId) || [];
+            this.sendMessageToIDList(userIdsWithAccess, message, "updateMessage");
         } catch (error) {
             console.log(`error in sendUpdateMessage: ${error.message}`);
         }
@@ -137,7 +150,7 @@ export class ChatGatewayService {
                 dm: true,
                 chatUsers: {
                     every: {
-                        userId: {in: [userId1, userId2]},
+                        userId: { in: [userId1, userId2] },
                     },
                 },
             },
@@ -146,15 +159,15 @@ export class ChatGatewayService {
         return !!existingChat; // Returns true if an existing chat is found, false otherwise.
     }
 
-
     countOwners(chat_users: ChatUserDTO[]): number {
         let counter: number = 0;
         for (const user of chat_users) {
-            if (user.owner == true)
-                counter++;
+            if (user.owner == true) counter++;
         }
         return counter;
     }
+
+    /*
 
     // moved to chatService and renamed and updated
     async checkIsProperDM(chat: NewChatDTO) {
@@ -171,15 +184,16 @@ export class ChatGatewayService {
     }
 
     // moved to chatService and renamed to validateChat
-    async checkIsProperChat(chat: NewChatDTO) {
+     async checkIsProperChat(chat: NewChatDTO) {
         if (chat.userIds.length < 2)
             throw {message: "Not enough users"};
         /* const ownerCount: number = this.countOwners(chat.userIds);
         if (ownerCount > 1)
-            throw {message: "Too much owners"}; */
+            throw {message: "Too much owners"};
         if (chat.dm)
             await this.checkIsProperDM(chat);
-    }
+    } 
+    
 
     // moved to chatService
     async createNewEmptyChat(data: NewChatDTO) {
@@ -209,25 +223,27 @@ export class ChatGatewayService {
             console.log(`error in createNewEmptyChat: ${error.message}`);
         }
     }
+    
+    */
 
     async sendChatCreationUpdate(chat: ChatListDTO) {
         try {
             const chatRes = await this.prisma.chat.findUnique({
                 where: {
-                    id: Number(chat.chatID)
+                    id: Number(chat.chatID),
                 },
                 include: {
                     chatUsers: {
                         select: {
-                            userId: true
-                        }
-                    }
-                }
+                            userId: true,
+                        },
+                    },
+                },
             });
             if (chatRes) {
                 for (const user of chatRes.chatUsers) {
                     const socket: Socket = this.getUserSocketFromUserId(user.userId);
-                    socket.emit('updateChat', chat);
+                    socket.emit("updateChat", chat);
                 }
             }
         } catch (error) {
@@ -235,24 +251,21 @@ export class ChatGatewayService {
         }
     }
 
-    async sendChatAdditionUpdate(inviteForm: InviteUserDTO){
+    async sendChatAdditionUpdate(inviteForm: InviteUserDTO) {
         const chatName = await this.getChatNameFromID(inviteForm.chatId);
         const socket: Socket = this.getUserSocketFromUserId(inviteForm.userId);
-        socket.emit('updateChat', new ChatListDTO(chatName, inviteForm.userId));
+        socket.emit("updateChat", new ChatListDTO(chatName, inviteForm.userId));
     }
 
     async inviteUserToChat(inviteForm: InviteUserDTO) {
-        if(!await this.IsUserInChat(inviteForm.chatId, inviteForm.userId)) {
+        if (!(await this.IsUserInChat(inviteForm.chatId, inviteForm.userId))) {
             var chatUser = await this.prisma.chat_User.create({
-                data:{
+                data: {
                     chatId: inviteForm.chatId,
-                    userId: inviteForm.userId
-                }
+                    userId: inviteForm.userId,
+                },
             });
-            if (chatUser)
-                await this.sendChatAdditionUpdate(inviteForm);
+            if (chatUser) await this.sendChatAdditionUpdate(inviteForm);
         }
-
     }
-
 }
