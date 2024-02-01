@@ -20,7 +20,7 @@ function LeftBar(props: leftBarProps): React.JSX.Element {
     const newChat = null;
     return (
         <div className="sideBar">
-            <NewChat onCreateChat={(newChat) => props.selectChat(newChat)} />
+            <NewChat selectChat={(newChat) => props.selectChat(newChat)} />
 
             <ChatList
                 selectedChat={props.selectedChat}

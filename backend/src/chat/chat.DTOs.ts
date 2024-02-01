@@ -88,10 +88,8 @@ export class ChatUserDTO {
 }
 
 export class NewChatDTO {
-    name?: string = null;
     dm: boolean;
     private: boolean;
-    pw_protected: boolean;
     password?: string = null;
 
     @ArrayMinSize(1, { message: "At least 1 user id required" })

@@ -10,7 +10,7 @@ import "src/styles/modals.css";
 import "src/styles/buttons.css";
 
 interface newChatProps {
-    onCreateChat: (chat: ChatListDTO) => void;
+    selectChat: (chat: ChatListDTO) => void;
 }
 
 function NewChat(props: newChatProps): React.JSX.Element {
@@ -18,10 +18,17 @@ function NewChat(props: newChatProps): React.JSX.Element {
     const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
     const [usePassword, setUsePassword] = React.useState(false);
     const [makePublic, setMakePublic] = React.useState(false);
-
     const passwordRef = useRef(null);
+    const [chatDto, setChatDto] = useState<NewChatDTO>({
+        dm: false,
+        private: false,
+        password: null,
+        userIds: [],
+    });
+    
+    
+    
     const apiUrl = process.env.REACT_APP_BACKEND_URL + "/chat/create";
-
 
     function openModal() {
         setModalIsOpen(true);
@@ -31,18 +38,12 @@ function NewChat(props: newChatProps): React.JSX.Element {
         setSelectedUsers([]);
         setModalIsOpen(false);
         setUsePassword(false);
+        setMakePublic(false);
     }
 
-    // should prolly take the setter from the parent
-    function selectChat(chatId: ChatListDTO) {
-        props.onCreateChat(chatId);
-    }
-
-/* export class NewChatDTO {
-    name?: string = null;
+    /* export class NewChatDTO {
     dm: boolean;
     private: boolean;
-    pw_protected: boolean;
     password?: string = null;
 
     userIds: number[];
@@ -50,33 +51,19 @@ function NewChat(props: newChatProps): React.JSX.Element {
 
     function createChat() {
         let chatDto: NewChatDTO;
-		if (selectedUsers.length === 1) {
-			chatDto.dm = true;
-			chatDto.userIds = selectedUsers;
-		}
-		else {
-			chatDto.name = null;
-			chatDto.dm = false;
-			chatDto.private = false;
+        chatDto.dm = selectedUsers.length === 1;
+        chatDto.userIds = selectedUsers;
+        chatDto.private = !makePublic;
+        chatDto.password = passwordRef.current;
+        const chatId: ChatListDTO = { chatName: "knudel", chatID: 0 };
+        //receive chat id and set to selected chat
+        props.selectChat(chatId);
 
-
-		}
-		
-		//receive chat id and set to selected chat
-		
-		console.log("createChat: ", chatDto);
+        console.log("createChat: ", chatDto);
         closeModal();
     }
 
-    function setSelectedUsersCallBack(users: number[]) {
-        setSelectedUsers(users);
-    }
-
     function renderCreateChatButton() {
-        function toggleInputBox() {
-            setUsePassword(!usePassword);
-        }
-
         if (selectedUsers.length === 1) {
             return (
                 <button
@@ -99,15 +86,12 @@ function NewChat(props: newChatProps): React.JSX.Element {
                     </button>
                     <div style={{ display: "flex", flexDirection: "column" }}>
                         <br />
-                        <div className="checkboxContainer" 
-						
-						
-						>
+                        <div className="checkboxContainer">
                             <input
-							onClick={toggleInputBox}
                                 type="checkbox"
                                 className="checkbox"
-								/>
+                                onClick={() => setUsePassword(!usePassword)}
+                            />
                             Use Password
                             {usePassword && (
                                 <div>
@@ -122,7 +106,12 @@ function NewChat(props: newChatProps): React.JSX.Element {
                             )}
                         </div>
                         <div className="checkboxContainer">
-                            <input type="checkbox" className="checkbox" /> Make Public
+                            <input
+                                type="checkbox"
+                                className="checkbox"
+                                onClick={() => setMakePublic(!makePublic)}
+                            />
+                            Make Public
                         </div>
                     </div>
                 </div>
@@ -152,7 +141,7 @@ function NewChat(props: newChatProps): React.JSX.Element {
                 className="chatModal"
                 overlayClassName="chatModalOverlay"
             >
-                <SelectUsersTable setSelectedUsers={setSelectedUsersCallBack} />
+                <SelectUsersTable setSelectedUsers={setSelectedUsers} />
 
                 {renderCreateChatButton()}
 

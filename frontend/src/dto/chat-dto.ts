@@ -75,10 +75,8 @@ export class ChatUserDTO {
 }
 
 export class NewChatDTO {
-    name?: string = null;
     dm: boolean;
     private: boolean;
-    pw_protected: boolean;
     password?: string = null;
     userIds: number[];
 }
