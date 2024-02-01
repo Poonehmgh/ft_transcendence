@@ -2,6 +2,7 @@
     --color1: hsl(0, 0%, 12%); /* is 30 30 30 rgb */
     --color2: 60, 60, 60;
     --text-primary: hsl(26, 18%, 43%);
+    --psl: hsl(18, 100%, 50%);
     --backgroundHue1: 0;
 }
 
@@ -85,12 +86,13 @@
     }
 }
 
-.checkboxContainer {
-    display: flex;
+.checkboxContainer {    
+	display: flex;
     align-items: center;
-    height: 25px;
+    height: 30px;
     line-height: 8;
     padding-bottom: 10px;
+
 }
 
 .textInput {

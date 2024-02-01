@@ -3,7 +3,7 @@ import Modal from "react-modal";
 import SelectUsersTable from "./SelectUsersTable";
 
 // DTO
-import { ChatListDTO } from "src/dto/chat-dto";
+import { ChatListDTO, NewChatDTO } from "src/dto/chat-dto";
 
 // CSS
 import "src/styles/modals.css";
@@ -13,23 +13,15 @@ interface newChatProps {
     onCreateChat: (chat: ChatListDTO) => void;
 }
 
-/*
-newChatDTO
-name: string;
-    dm: boolean;
-    pw_protected: boolean;
-    password: string;
-    chat_users: ChatUserDTO[] = [];
-
-*/
-
 function NewChat(props: newChatProps): React.JSX.Element {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
     const [usePassword, setUsePassword] = React.useState(false);
+    const [makePublic, setMakePublic] = React.useState(false);
+
     const passwordRef = useRef(null);
-    // update this when actual API is known
-    //const apiUrl = process.env.REACT_APP_BACKEND_URL + "/chat/new";
+    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/chat/create";
+
 
     function openModal() {
         setModalIsOpen(true);
@@ -46,8 +38,33 @@ function NewChat(props: newChatProps): React.JSX.Element {
         props.onCreateChat(chatId);
     }
 
+/* export class NewChatDTO {
+    name?: string = null;
+    dm: boolean;
+    private: boolean;
+    pw_protected: boolean;
+    password?: string = null;
+
+    userIds: number[];
+} */
+
     function createChat() {
-        console.log("createChat");
+        let chatDto: NewChatDTO;
+		if (selectedUsers.length === 1) {
+			chatDto.dm = true;
+			chatDto.userIds = selectedUsers;
+		}
+		else {
+			chatDto.name = null;
+			chatDto.dm = false;
+			chatDto.private = false;
+
+
+		}
+		
+		//receive chat id and set to selected chat
+		
+		console.log("createChat: ", chatDto);
         closeModal();
     }
 
@@ -82,12 +99,15 @@ function NewChat(props: newChatProps): React.JSX.Element {
                     </button>
                     <div style={{ display: "flex", flexDirection: "column" }}>
                         <br />
-                        <label className="checkboxContainer">
+                        <div className="checkboxContainer" 
+						
+						
+						>
                             <input
+							onClick={toggleInputBox}
                                 type="checkbox"
                                 className="checkbox"
-                                onChange={toggleInputBox}
-                            />
+								/>
                             Use Password
                             {usePassword && (
                                 <div>
@@ -100,10 +120,10 @@ function NewChat(props: newChatProps): React.JSX.Element {
                                     />
                                 </div>
                             )}
-                        </label>
-                        <label className="checkboxContainer">
+                        </div>
+                        <div className="checkboxContainer">
                             <input type="checkbox" className="checkbox" /> Make Public
-                        </label>
+                        </div>
                     </div>
                 </div>
             );

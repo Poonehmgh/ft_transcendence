@@ -74,49 +74,14 @@ export class ChatUserDTO {
 
 }
 
-export class CreateNewChatDTO {
-
-    name: string;
+export class NewChatDTO {
+    name?: string = null;
     dm: boolean;
+    private: boolean;
     pw_protected: boolean;
-    password: string;
-    chat_users: ChatUserDTO[] = [];
-
-    constructor(name: string, dm: boolean, pw_protected: boolean, password: string, chat_users: ChatUserDTO[]) {
-        this.name = name;
-        this.dm = dm;
-        this.pw_protected = pw_protected;
-        this.password = password;
-        this.chat_users = chat_users;
-    }
-
+    password?: string = null;
+    userIds: number[];
 }
-//Its json for tests
-// {
-//     "name": "name??",
-//     "dm": false,
-//     "pw_protected": false,
-//     "password": false,
-//     "chat_users": [
-//     {
-//         "userId" : 1,
-//         "owner": false,
-//         "admin": false,
-//         "blocked": false,
-//         "muted": false,
-//         "invited": false
-//     },
-//     {
-//         "userId" : 2,
-//         "owner": false,
-//         "admin": false,
-//         "blocked": false,
-//         "muted": false,
-//         "invited": false
-//     }
-// ]
-// }
-
 
 export class InviteUserDTO{
     chatId: number

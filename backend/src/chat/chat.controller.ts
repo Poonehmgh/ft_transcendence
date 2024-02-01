@@ -19,10 +19,10 @@ import { AuthenticatedRequest } from "src/shared/dto";
 export class ChatController {
     constructor(private readonly chatService: ChatService) {}
 
-    @Get(":userID")
-    async getChatList(@Param("userID") userID: number) {
-        // console.log(userID);
-        return this.chatService.getChatList(userID);
+
+    @Get("my_chats")
+    async getMyChats(@Req() req: AuthenticatedRequest)  {
+        return this.chatService.getChatList(req.user.id);
     }
 
     //Give 0,0 for first 50 messages

@@ -12,7 +12,7 @@ export class ChatService {
     constructor(private readonly prisma: PrismaService) {}
 
     async getChatList(userIDtoFind: number): Promise<any> {
-        try {
+		try {
             const chatsWithUser = await this.prisma.chat.findMany({
                 where: {
                     chatUsers: {
@@ -23,6 +23,7 @@ export class ChatService {
                 },
             });
             return chatsWithUser.map((chat) => {
+
                 return new ChatListDTO(chat.name, chat.id);
             });
         } catch {
@@ -158,7 +159,7 @@ export class ChatService {
                 },
             });
 
-            const createdChatUsers = await this.prisma.chat_User.createMany({
+            await this.prisma.chat_User.createMany({
                 data: newChatRequest.userIds.map((userId) => ({
                     userId: userId,
                     chatId: newChat.id,
@@ -172,7 +173,7 @@ export class ChatService {
 
             return new ChatListDTO(newChat.name, newChat.id);
         } catch (error) {
-            console.log(`error in createNewEmptyChat: ${error.message}`);
+            console.log(`error in createDm: ${error.message}`);
         }
     }
 

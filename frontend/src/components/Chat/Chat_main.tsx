@@ -18,13 +18,12 @@ function Chat() {
     // to do: move this to a central position after successful auth
     //const socket = io(process.env.REACT_APP_CHAT_URL);
     // to do temp
-    const userId = 0;
 
     const [privateChats, setPrivateChats] = useState<ChatListDTO[]>(null);
     const [publicChats, setPublicChats] = useState<ChatListDTO[]>(null);
 
-    const apiUrl_privateChats = process.env.REACT_APP_BACKEND_URL + "/chat/" + userId;
-    const apiUrl_publicChats = process.env.REACT_APP_BACKEND_URL + "/public_chat";
+    const apiUrl_privateChats = process.env.REACT_APP_BACKEND_URL + "/chat/my_chats";
+    //const apiUrl_publicChats = process.env.REACT_APP_BACKEND_URL + "/public_chat";
 
     function selectChat(newChat: ChatListDTO) {
         setSelectedChat(newChat);
@@ -33,8 +32,8 @@ function Chat() {
 
     useEffect(() => {
         fetchGetSet<ChatListDTO[]>(apiUrl_privateChats, setPrivateChats);
-        fetchGetSet<ChatListDTO[]>(apiUrl_publicChats, setPublicChats);
-    }, [apiUrl_privateChats, apiUrl_publicChats]);
+        //fetchGetSet<ChatListDTO[]>(apiUrl_publicChats, setPublicChats);
+    }, [apiUrl_privateChats, /* apiUrl_publicChats */]);
 
     if (!privateChats) return <Loading_h2 elementName={"Chat"} />;
 
