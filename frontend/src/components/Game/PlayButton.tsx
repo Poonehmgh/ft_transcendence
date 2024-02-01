@@ -1,22 +1,44 @@
 import React from "react";
 import '../../styles/game.css';
 import { io } from 'socket.io-client';
+import { useEffect, useState } from "react";
+// import { JoinGameDTO } from '/backend/src/game/game.DTOs.ts';
 
-export const socket = io('http://172.20.10.3:5500');
 
-function confirm() {
-    socket.emit('joinQueue', {'userID': 2});
-    // console.log("Clicked");
-}
+const socket = io('localhost:5500');
 
 const PlayButton = () => {
-    return(
-        <div>
-            <button onClick = {confirm} className ="playbutton">
-                Play
-            </button>
-        </div>
-    );
-}
+    const [receivedMessage, setReceivedMessage] = useState('');
+
+    useEffect(() => {
+      // Listen for custom events from the server
+      socket.on('queueConfirm', (data: string) => {
+        if (data === 'Confirmed') {
+          // Handle confirmation of entering the queue
+          setReceivedMessage('Queue confirmed')
+        } else if (data === 'InvalidID') {
+          // Handle invalid ID confirmation
+          setReceivedMessage('Invalid ID');
+        }
+      });
+  
+      return () => {
+        // Clean up event listeners when the component unmounts
+        socket.off('queueConfirm');
+      };
+    }, []);
+  
+    const sendMessageToServer = () => {
+      socket.emit('joinQueue', {'userID': 2});
+    };
+
+
+  return (
+    <div>
+      <button className="playbutton" onClick={sendMessageToServer}>Join Queue</button>
+      <p classname="queueconfirm">{receivedMessage}</p>
+    </div>
+  );
+};
 
 export default PlayButton;

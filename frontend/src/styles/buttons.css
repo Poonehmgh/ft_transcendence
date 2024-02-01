@@ -1,0 +1,72 @@
+:root {
+    --color1: hsl(0, 0%, 12%); /* is 30 30 30 rgb */
+    --color2: 60, 60, 60;
+    --text-primary: hsl(26, 18%, 43%);
+    --backgroundHue1: 0;
+}
+
+.bigButton {
+    --lightnessOffset: 0%;
+
+    display: inline-block;
+    font-size: 1rem;
+    min-height: 40px;
+    color: var(--text-primary);
+    background-color: hsl(var(--backgroundHue1), 0%, calc(5% + var(--lightnessOffset)));
+    border-radius: 9px;
+    transition: background-color 0.1s ease;
+    box-sizing: border-box;
+    transition: all 0.25s ease;
+    border: 0px solid rgb(var(--color2));
+    cursor: pointer;
+    width: 100%;
+
+    &:hover {
+        --lightnessOffset: +3%;
+    }
+}
+
+.textButton {
+    display: inline;
+    font-size: 0.9rem;
+    color: inherit;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.checkbox {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+
+    &:checked {
+        background-color: #4caf50;
+        border: solid 3px;
+        border-color: #4caf50;
+        color: #fff;
+    }
+}
+
+.checkboxContainer {
+    display: flex;
+    align-items: center;
+    height: 25px;
+    line-height: 8;
+    padding-bottom: 10px;
+}
+
+.textInput {
+    color: var(--text-primary);
+    background-color: rgb(var(--color1));
+    border: 1px solid var(--text-primary);
+    border-radius: 5px;
+    width: 100%;
+    height: 30px;
+    font-size: 1rem;
+}

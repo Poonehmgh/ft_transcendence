@@ -1,7 +1,7 @@
 :root {
     font-size: 16px;
-    font-family: 'system-ui', sans-serif;
-    --text-primary: hsl(26, 18%, 43%);;
+    font-family: "system-ui", sans-serif;
+    --text-primary: hsl(26, 18%, 43%);
     --text-secondary: black;
     --bg--primary: black;
     --bg--catalogue: white;
@@ -14,17 +14,61 @@
     color: var(--text-primary);
 }
 
+body {
+    margin: 23vh 0 0 0; /* Adjust the margin to match the height of the fixed header */
+}
+
 .sections-container {
     height: 100vh;
     width: 100vw;
-    display: inline-grid;
-    grid-template: 0.5fr 1fr 1fr 1fr 0.5fr / 1fr 1fr 1fr 1fr 1fr 1fr;
 }
 
-.section {
-    border: 1px solid;
+.mainContainerRow,
+.mainContainerColumn {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    text-align: center;
+}
+
+.mainContainerColumn {
+	flex-direction: column;
+}
+
+.h2,
+.h2Left {
+    font-weight: 600;
+    font-size: 2rem;
+    margin: 2rem 0rem 1.2rem 0rem;
     text-align: center;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
+}
+
+.h2Left {
+    text-align: left;
+    align-items: start;
+}
+
+.p,
+.pCenter {
+    font-size: 1rem;
+    color: var(--text-primary);
+    width: 100%;
+}
+
+.pCenter {
+    text-align: center;
+}
+
+.bigCenterEmoji {
+    font-size: 5rem;
+    text-align: center;
+}
+
+.leftAligner {
+    width: 100%;
+    flex-direction: row;
+    justify-content: start;
 }

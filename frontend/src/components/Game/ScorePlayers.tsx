@@ -5,10 +5,10 @@ interface IUserScore {
     scorePlayerTwo: number;
 }
 
-const Score = () => { //have to add props
+const Score = (props: IUserScore) => { //have to add props
     return(
         <span className="baza">
-            <div className="score-player">3    :    0</div>
+            <div className="score-player">{props.scorePlayerOne}    :    {props.scorePlayerTwo}</div>
         </span>
     );
 }

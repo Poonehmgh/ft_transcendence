@@ -1,12 +1,15 @@
 version: "3.8"
+
 services:
   frontend:
     build: ./frontend
     container_name: frontend
+    image: frontend
     ports:
      - 3000:3000
     volumes:
       - ./frontend/src:/frontend/src
+      - ./frontend/public:/frontend/public
     networks:
       - webapp
     env_file:
@@ -14,6 +17,8 @@ services:
 
   backend:
     build: ./backend
+    container_name: backend
+    image: backend
     ports:
       - 5500:5500
       - 5555:5555
@@ -47,6 +52,7 @@ services:
 volumes:
   db_volume:
   front_volume:
+
 networks:
   database:
     driver: bridge

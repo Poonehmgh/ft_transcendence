@@ -1,0 +1,25 @@
+:root {
+    --color1: 30 30 30;
+    --color2: 60 60 60;
+    --text-primary: hsl(26, 18%, 43%);
+}
+
+.big-table {
+    font-size: 0.9rem;
+    border: none;
+    border-collapse: collapse;
+    color: #ddd;
+    padding: 10px;
+    width: 80%;
+    line-height: 2.2;
+}
+
+.big-table th,
+.big-table tr,
+.big-table td {
+    text-align: center;
+    border: none;
+    white-space: nowrap;
+    min-width: 100px;
+    border-bottom: 1px solid #ddd;
+}

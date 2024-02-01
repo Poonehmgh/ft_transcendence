@@ -1,12 +1,17 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import Modal from "react-modal";
+import App from "src/components/app";
 
-import Router from "./components/Router";
-import "./styles/style.css";
 
+const root = document.getElementById("root");
+Modal.setAppElement("#root");
 
-ReactDOM.createRoot(document.getElementById("root")).render(
-	<React.StrictMode>
-    <Router />
-  </React.StrictMode>
-);
+if (root) {
+    const appRoot = ReactDOM.createRoot(root);
+    appRoot.render(
+        <React.StrictMode>
+            <App />
+        </React.StrictMode>
+    );
+}

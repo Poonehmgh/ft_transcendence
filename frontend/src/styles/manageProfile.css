@@ -1,0 +1,136 @@
+:root {
+    --color1: rgb(30, 30, 30);
+    --color2: rgb(3, 3, 3);
+    --text-primary: hsl(26, 18%, 43%);
+}
+
+.manageProfile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 400px;
+    height: 647px;
+    padding: 1rem 3rem;
+    background-color: var(--color2);
+    border-radius: 20px;
+    box-shadow: 0 5px 30px 0 rgba(100, 100, 100, 0.4);
+}
+
+.logOutContainer {
+    position:fixed;
+    top: 100px;
+    left: 100px;
+}
+
+.playerCard {
+    display: flex;
+    align-items: center;
+}
+
+.expanderHorizontal {
+    min-width: 30px;
+    color: transparent;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    margin: 0px 35px 0px -35px;
+}
+
+/* images */
+
+.avatar {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    object-position: center center;
+    border-radius: 17px;
+    cursor: pointer;
+}
+
+/* tabs */
+
+.tabsContainer {
+    width: 100%;
+    margin: 35px 0 0 0;
+}
+
+.tabButtonsContainer {
+    padding: 0px 0px 0px 0px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.tabButton_active,
+.tabButton_inactive {
+    flex: 1;
+    border-radius: 13px 13px 0px 0px;
+    border: none;
+    height: 55px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: black;
+    background: var(--color1);
+    padding: 0px 10px 5px;
+    margin: 0px 0px -10px 0px;
+}
+
+.tabButton_inactive {
+    background: transparent;
+}
+
+.tabContent {
+    border-radius: 13px 13px 13px 13px;
+    height: 200px;
+    font-size: 1rem;
+    color: black;
+    background: var(--color1);
+    margin: 0px;
+    padding: 20px;
+    border: none;
+    overflow-y: auto;
+}
+
+.editName {
+    border: none;
+    cursor: pointer;
+    color: #9a9a9a;
+    font-size: 1.3rem;
+    border-radius: 50%;
+    background: transparent;
+
+    &:hover {
+        transform: scale(1.1);
+    }
+}
+
+
+.modalUserListContainer {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.modalUserList,
+.modalUserList tbody,
+.modalUserList th,
+.modalUserList tr,
+.modalUserList td {
+    width: 100%;
+    table-layout: fixed;
+    font-size: 0.9rem;
+    border: 0px solid;
+    border-collapse: collapse;
+    color: var(--text-primary);
+    padding: 0px;
+    border-spacing: 5px;
+    border-bottom: 1px solid var(--text-primary);
+    text-align: left;
+    line-height: 1.2;
+}
+.modalUserList td {
+    padding: 5px;
+    height: 30px;
+}
+
+.modalUserList td:nth-child(2) {
+    text-align: right;
+}

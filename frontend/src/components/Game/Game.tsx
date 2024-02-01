@@ -1,12 +1,12 @@
-import Header from "../Header";
+import Header from "../Header/Header_main";
 import React from "react";
 import '../../styles/game.css'
-import MoveBall from "./MoveBall";
+// import MoveBall from "./MoveBall";
 import LeftBar from "./LeftBar";
 import RightBar from "./RightBar";
 import Score from "./ScorePlayers";
 import PlayButton from "./PlayButton";
-import PlayerCardTable from "../PlayerCardTable";
+import PlayerCardTable from "../shared/PlayerCardTable";
 
 const playerData1 = {
     mmr: 4000,
@@ -22,10 +22,14 @@ const playerData1 = {
     winrate: 0.9,
   };
 
+  const one = 1; //change
+  const two = 0; // change
+
 function Game() {
     return (
         <div className="game-sections-container">
-          <PlayButton />
+          {/* <PlayButton /> */}
+          <PlayButton/>
           <div className="player-left-info">
             <PlayerCardTable mmr={playerData1.mmr} rank={playerData1.rank} matches={playerData1.matches} winrate={playerData1.winrate}/>
           </div>
@@ -40,13 +44,13 @@ function Game() {
             <div className="leftBarField">
             </div>
             <div className="ball"></div>
-            <MoveBall />
+            {/* <MoveBall /> */}
             </div>
             <RightBar />
             <div className="section game-right-bar">
             </div>
             <div className="section game-score">
-                <Score />
+                <Score scorePlayerOne={one} scorePlayerTwo={two}/>
             </div>
         </div>
     );

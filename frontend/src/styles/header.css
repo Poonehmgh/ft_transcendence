@@ -1,14 +1,68 @@
-#header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-    grid-column: 1 / 7;
-    grid-row: 1 / 2;
+:root {
+    --color1: hsl(0, 0%, 12%); /* is 30 30 30 rgb */
+    --color2: 60, 60, 60;
+    --color3: 19, 100%, 99%;
+    --text-primary: hsl(26, 18%, 43%);
+    --backgroundHue1: 0;
 }
 
-.upper-links {
+.headerMainContainer {
+    position: fixed;
+	top: 0;
+    left: 0;
+    right: 0;
+	margin: 10px;
+	background-color: black;
+    border: 1px solid;
+    text-align: center;
     display: flex;
-    list-style-type: none;
-    gap: 1rem;
+    flex-direction: column;
+    justify-content: end;
+    align-items: center;
+    height: 23vh;
+    z-index: 10;
+}
+
+.pongersLogo {
+    position: fixed;
+    top: 12%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-height: 30vh;
+    max-width: auto;
+    z-index: 11;
+}
+
+.headerTabsContainer {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    max-height: 200px;
+    z-index: 12;
+}
+
+.headerTabLink {
+    --lightnessOffset: 0%;
+
+    display: inline-block;
+    font-size: 1.6rem;
+    text-decoration: none;
+    color: var(--text-primary);
+    background-color: hsl(var(--backgroundHue1), 0%, calc(6% + var(--lightnessOffset)));
+    padding: 5px 0px;
+    margin-left: 1%;
+    margin-right: 1%;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    transition: background-color 0.1s ease;
+    box-sizing: border-box;
+    transition: all 0.25s ease;
+    border: 0px;
+    cursor: pointer;
+    min-width: 70px;
+    z-index: 12;
+
+    &:hover {
+        --lightnessOffset: 5%;
+    }
 }

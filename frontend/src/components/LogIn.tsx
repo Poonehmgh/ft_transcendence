@@ -1,30 +1,30 @@
 import React from "react";
-import Header from "./Header";
-import '../styles/log-in.css'
 
-function LogIn() {
+// CSS
+import "src/styles/style.css";
+import "src/styles/login.css";
+
+function Login() {
     return (
-        <div className="sections-container">
-            <Header />
-            <div className="section left-bar">Left Bar</div>
-            <div className="section center">
-                {/*<AuthComponent />*/}
-                <div>
-                    <button onClick={AuthComponent}>Authenticate</button>
-                </div>
+        <div className="mainContainerRow">
+            <div className="loginContainer">
+                <button
+                    className="bigButton"
+                    style={{ fontSize: "3rem", padding:"20px"}}
+                    onClick={AuthComponent}
+                >
+                    🔑
+                </button>
             </div>
-            <div className="section right-bar">Right Bar</div>
-            <div className="section footer">Footer</div>
         </div>
     );
 }
 
 const apiUrl = "http://localhost:5500/auth/42/login";
 function AuthComponent() {
-    try{
+    try {
         window.location.assign(apiUrl);
-    }
-    catch (e) {
+    } catch (e) {
         alert(e);
     }
     // fetch(apiUrl, {
@@ -45,5 +45,4 @@ function AuthComponent() {
     // });
 }
 
-
-export default LogIn;
+export default Login;

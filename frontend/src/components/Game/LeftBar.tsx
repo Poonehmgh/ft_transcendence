@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import '../../styles/game.css';
 
 const LeftBar = () => {
-    const [topPosition, setTopPosition] = useState(50); // Initial top position
+    const [topPosition, setTopPosition] = useState(80); // Initial top position
 
     useEffect(() => {
         const handleKeyDown = (e: any) => {
