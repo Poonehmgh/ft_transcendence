@@ -1,9 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { fetchGetSet } from "src/functions/utils";
-import Loading_h2 from "src/components/shared/Loading_h2";
+import React from "react";
 
 // DTO
-import { UserProfileDTO } from "src/dto/user-dto";
 
 // CSS
 import "src/styles/style.css";

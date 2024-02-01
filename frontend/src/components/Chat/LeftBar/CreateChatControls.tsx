@@ -10,27 +10,21 @@ import "src/styles/modals.css";
 import "src/styles/buttons.css";
 
 interface CreateChatControlsProps {
+    newChatDTO: NewChatDTO;
     createChat: () => void;
     //passwordref
-    //function createchat
-    setPrivate: () => void;
-    //newchatdto
+    setIsPrivate: () => void;
 }
 
 function CreateChatControls(props: CreateChatControlsProps): React.JSX.Element {
-    const [showPasswordInput, setshowPasswordInput] = useState(false);
+    const [showPasswordInput, setShowPasswordInput] = useState(false);
     const passwordRef = useRef(null);
-    const [newChatDTO, setChatDto] = useState<NewChatDTO>({
-        dm: false,
-        private: true,
-        password: null,
-        userIds: [],
-    });
+   
     const apiUrl = process.env.REACT_APP_BACKEND_URL + "/chat/create";
 
-    if (newChatDTO.userIds.length === 0) return null;
+    if (props.newChatDTO.userIds.length === 0) return null;
 
-    if (newChatDTO.userIds.length === 1) {
+    if (props.newChatDTO.userIds.length === 1) {
         return (
             <button
                 className="bigButton"
@@ -42,7 +36,7 @@ function CreateChatControls(props: CreateChatControlsProps): React.JSX.Element {
         );
     }
 
-    if (newChatDTO.userIds.length > 1) {
+    if (props.newChatDTO.userIds.length > 1) {
         return (
             <div>
                 <button
@@ -58,24 +52,24 @@ function CreateChatControls(props: CreateChatControlsProps): React.JSX.Element {
                         <input
                             type="checkbox"
                             className="checkbox"
-                            onClick={() => setshowPasswordInput(!showPasswordInput)}
+                            onClick={() => setShowPasswordInput(!showPasswordInput)}
                         />
                         Use Password
                         {showPasswordInput && (
-                                <input
-                                    type="text"
-                                    className="textInput"
-                                    style={{ marginLeft: "15px" }}
-                                    placeholder="Enter your knooldepassword"
-                                    ref={passwordRef}
-                                />
+                            <input
+                                type="text"
+                                className="textInput"
+                                style={{ marginLeft: "15px" }}
+                                placeholder="Enter your password"
+                                ref={passwordRef}
+                            />
                         )}
                     </div>
                     <div className="checkboxContainer">
                         <input
                             type="checkbox"
                             className="checkbox"
-                            onClick={props.setPrivate}
+                            onClick={props.setIsPrivate}
                         />
                         Make Public
                     </div>

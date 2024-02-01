@@ -9,7 +9,7 @@ import "src/styles/modals.css";
 import "src/styles/buttons.css";
 
 interface selectUsersTableProps {
-    setSelectedUsers: (users: number[]) => void;
+    onSelectedUsersChange: (users: number[]) => void;
 }
 
 function SelectUsersTable(props: selectUsersTableProps): React.JSX.Element {
@@ -26,7 +26,7 @@ function SelectUsersTable(props: selectUsersTableProps): React.JSX.Element {
     function handleUserSelection(userId: number) {
         const newSelectedUsers = updateSelectedUsers(selectedUsers, userId);
         setSelectedUsers(newSelectedUsers);
-        props.setSelectedUsers(newSelectedUsers);
+        props.onSelectedUsersChange(newSelectedUsers);
     }
 
     function updateSelectedUsers(prevSelectedUsers: number[], userId: number) {

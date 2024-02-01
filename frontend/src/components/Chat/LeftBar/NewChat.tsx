@@ -8,6 +8,7 @@ import { ChatListDTO, NewChatDTO } from "src/dto/chat-dto";
 // CSS
 import "src/styles/modals.css";
 import "src/styles/buttons.css";
+import CreateChatControls from "./CreateChatControls";
 
 interface newChatProps {
     selectChat: (chat: ChatListDTO) => void;
@@ -40,10 +41,17 @@ function NewChat(props: newChatProps): React.JSX.Element {
         });
     }
 
-    function setPrivate() {
+    function setIsPrivate() {
         setChatDto((prevChatDto) => ({
             ...prevChatDto,
             private: !prevChatDto.private,
+        }));
+    }
+
+    function setIsDm(selectedUsers: number[]) {
+        setChatDto((prevChatDto) => ({
+            ...prevChatDto,
+            dm: selectedUsers.length === 1,
         }));
     }
 
@@ -52,6 +60,11 @@ function NewChat(props: newChatProps): React.JSX.Element {
             ...prevChatDto,
             userIds: selectedUsers,
         }));
+    }
+
+    function onSelectedUsersChange(selectedUsers: number[]) {
+        setSelectedUsers(selectedUsers);
+        setIsDm(selectedUsers);
     }
 
     function createChat() {
@@ -63,64 +76,6 @@ function NewChat(props: newChatProps): React.JSX.Element {
 
         console.log("createChat: ", newChatDTO);
         closeModal();
-    }
-
-    function renderCreateChatButton() {
-        if (newChatDTO.userIds.length === 1) {
-            return (
-                <button
-                    className="bigButton"
-                    style={{ width: "100%" }}
-                    onClick={createChat}
-                >
-                    Create DM Chat
-                </button>
-            );
-        } else if (newChatDTO.userIds.length > 1) {
-            return (
-                <div>
-                    <button
-                        className="bigButton"
-                        style={{ width: "100%" }}
-                        onClick={createChat}
-                    >
-                        Create Group Chat
-                    </button>
-                    <div style={{ display: "flex", flexDirection: "column" }}>
-                        <br />
-                        <div className="checkboxContainer">
-                            <input
-                                type="checkbox"
-                                className="checkbox"
-                                onClick={() => setshowPasswordInput(!showPasswordInput)}
-                            />
-                            Use Password
-                            {showPasswordInput && (
-                                <div>
-                                    <input
-                                        type="text"
-                                        className="textInput"
-                                        style={{ marginLeft: "15px" }}
-                                        placeholder="Enter your password"
-                                        ref={passwordRef}
-                                    />
-                                </div>
-                            )}
-                        </div>
-                        <div className="checkboxContainer">
-                            <input
-                                type="checkbox"
-                                className="checkbox"
-                                onClick={setPrivate}
-                            />
-                            Make Public
-                        </div>
-                    </div>
-                </div>
-            );
-        } else {
-            return null;
-        }
     }
 
     return (
@@ -143,9 +98,13 @@ function NewChat(props: newChatProps): React.JSX.Element {
                 className="chatModal"
                 overlayClassName="chatModalOverlay"
             >
-                <SelectUsersTable setSelectedUsers={setSelectedUsers} />
+                <SelectUsersTable onSelectedUsersChange={onSelectedUsersChange} />
 
-                {renderCreateChatButton()}
+                <CreateChatControls
+                    newChatDTO={newChatDTO}
+                    createChat={createChat}
+                    setIsPrivate={setIsPrivate}
+                />
 
                 <button className="closeX" onClick={closeModal}>
                     ❌

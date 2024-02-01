@@ -77,13 +77,6 @@
     width: 20px;
     height: 20px;
     cursor: pointer;
-
-    &:checked {
-        background-color: #4caf50;
-        border: solid 3px;
-        border-color: #4caf50;
-        color: #fff;
-    }
 }
 
 .checkboxContainer {    
@@ -91,8 +84,8 @@
     flex-direction: row;
     align-items: center;
     height: 30px;
-    line-height: 8;
     padding-bottom: 10px;
+    white-space: nowrap;
 
 }
 
