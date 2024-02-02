@@ -34,7 +34,7 @@ function CreateChatControls(props: CreateChatControlsProps): React.JSX.Element {
         console.log("isPasswordStateValid:", isPasswordStateValid);
         console.log("usePassword:", usePassword);
         console.log("password length:", props.passwordRef.current?.value.length);
-    }, [usePassword, props.passwordRef.current?.value]);
+    }, [usePassword]);
 
     if (props.newChatDTO.userIds.length === 0) return null;
 
@@ -65,8 +65,9 @@ function CreateChatControls(props: CreateChatControlsProps): React.JSX.Element {
                                 type="text"
                                 className="textInput"
                                 style={{ marginLeft: "15px" }}
-                                placeholder="Enter your password"
+                                placeholder="Your password. Min. 3 characters."
                                 ref={props.passwordRef}
+                                onChange={validatePassword}
                             />
                         )}
                     </div>
