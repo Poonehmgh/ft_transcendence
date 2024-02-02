@@ -71,11 +71,38 @@ export class ChatGatewayService {
 		}
 	}
 
+	async isUserMuted(chatId: number, userId: number): Promise<Boolean>{
+		const chatUser = await this.prisma.chat_User.findFirst({
+			where: {
+				userId: userId,
+				chatId: chatId,
+			},
+		});
+		if (chatUser.muted && chatUser.muted_until > new Date()) {
+			return true;
+		} else if(chatUser.muted && chatUser.muted_until < new Date()) {
+			await this.prisma.chat_User.updateMany({
+				where: {
+					userId: userId,
+					chatId: chatId
+				},
+				data: {
+					muted: false
+				}
+			});
+		}
+		return false;
+	}
+
 	//maybe add protection so users not in chat cant update it
 	async addMessageToChat(data: SendMessageDTO) {
 		try {
 			if (!await this.IsUserInChat(data.chatId, data.userId)) {
 				console.log('user is not in chat');
+				return -1;
+			}
+			if (await this.isUserMuted(data.chatId, data.userId)) {
+				console.log('user is muted');
 				return -1;
 			}
 			const message = await this.prisma.message.create({
@@ -392,7 +419,7 @@ export class ChatGatewayService {
 				blocked: changeForm.banned
 			}
 		});
-		this.sendChatUpdate(changeForm.chatId);
+		this.kickChatUser(changeForm);
 	}
 
 
