@@ -94,6 +94,20 @@ export class ChatGatewayService {
 		return false;
 	}
 
+	async isUserBanned(chatId: number, userId: number): Promise<Boolean>{
+		const chatUser = await this.prisma.chat_User.findFirst({
+			where: {
+				userId: userId,
+				chatId: chatId,
+			},
+		});
+		if (chatUser.blocked) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	//maybe add protection so users not in chat cant update it
 	async addMessageToChat(data: SendMessageDTO) {
 		try {
@@ -302,7 +316,7 @@ export class ChatGatewayService {
 	}
 
 	async inviteUserToChat(inviteForm: InviteUserDTO) {
-		if (!await this.IsUserInChat(inviteForm.chatId, inviteForm.userId)) {
+		if (!await this.IsUserInChat(inviteForm.chatId, inviteForm.userId) && !await this.isUserBanned(inviteForm.chatId, inviteForm.userId)) {
 			var chatUser = await this.prisma.chat_User.create({
 				data: {
 					chatId: inviteForm.chatId,
