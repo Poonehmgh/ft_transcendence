@@ -42,7 +42,7 @@ export class AuthController {
     //   res.redirect("http://localhost:3000/2fa")
     // else
     //   res.redirect("http://localhost:3000/")
-    res.redirect("/");
+    res.redirect("http://localhost:3000");
   }
 
   @Get("/42/test")
