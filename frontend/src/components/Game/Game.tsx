@@ -5,7 +5,7 @@ import '../../styles/game.css'
 import LeftBar from "./LeftBar";
 import RightBar from "./RightBar";
 import Score from "./ScorePlayers";
-import PlayButton from "./PlayButton";
+// import PlayButton from "./PlayButton";
 import PlayerCardTable from "../shared/PlayerCardTable";
 
 const playerData1 = {
@@ -29,7 +29,7 @@ function Game() {
     return (
         <div className="game-sections-container">
           {/* <PlayButton /> */}
-          <PlayButton/>
+          {/* <PlayButton/> */}
           <div className="player-left-info">
             <PlayerCardTable mmr={playerData1.mmr} rank={playerData1.rank} matches={playerData1.matches} winrate={playerData1.winrate}/>
           </div>
