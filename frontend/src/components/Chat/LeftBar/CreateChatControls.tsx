@@ -1,6 +1,4 @@
-import React, { useRef, useState } from "react";
-import Modal from "react-modal";
-import SelectUsersTable from "./SelectUsersTable";
+import React, { useEffect, useRef, useState } from "react";
 
 // DTO
 import { ChatListDTO, NewChatDTO } from "src/dto/chat-dto";
@@ -12,56 +10,63 @@ import "src/styles/buttons.css";
 interface CreateChatControlsProps {
     newChatDTO: NewChatDTO;
     createChat: () => void;
-    //passwordref
     setIsPrivate: () => void;
+    passwordRef: React.MutableRefObject<HTMLInputElement | null>;
 }
 
 function CreateChatControls(props: CreateChatControlsProps): React.JSX.Element {
-    const [showPasswordInput, setShowPasswordInput] = useState(false);
-    const passwordRef = useRef(null);
-   
+    const [usePassword, setUsePassword] = useState(false);
+    const [isPasswordStateValid, setIsPasswordStateValid] = useState(true);
+
     const apiUrl = process.env.REACT_APP_BACKEND_URL + "/chat/create";
+
+    function validatePassword() {
+        if (!usePassword || !props.passwordRef.current) {
+            setIsPasswordStateValid(true);
+            return;
+        }
+        const minLength = 3;
+        setIsPasswordStateValid(props.passwordRef.current.value.length >= minLength);
+    }
+
+    useEffect(() => {
+        validatePassword();
+        console.log("isPasswordStateValid:", isPasswordStateValid);
+        console.log("usePassword:", usePassword);
+        console.log("password length:", props.passwordRef.current?.value.length);
+    }, [usePassword, props.passwordRef.current?.value]);
 
     if (props.newChatDTO.userIds.length === 0) return null;
 
-    if (props.newChatDTO.userIds.length === 1) {
-        return (
+    return (
+        <div>
             <button
                 className="bigButton"
                 style={{ width: "100%" }}
                 onClick={props.createChat}
+                disabled={!isPasswordStateValid}
             >
-                Create DM Chat
+                {props.newChatDTO.userIds.length === 1
+                    ? "Create DM Chat"
+                    : "Create Group Chat"}
             </button>
-        );
-    }
-
-    if (props.newChatDTO.userIds.length > 1) {
-        return (
-            <div>
-                <button
-                    className="bigButton"
-                    style={{ width: "100%" }}
-                    onClick={props.createChat}
-                >
-                    Create Group Chat
-                </button>
+            {props.newChatDTO.userIds.length > 1 && (
                 <div style={{ display: "flex", flexDirection: "column" }}>
                     <br />
                     <div className="checkboxContainer">
                         <input
                             type="checkbox"
                             className="checkbox"
-                            onClick={() => setShowPasswordInput(!showPasswordInput)}
+                            onClick={() => setUsePassword(!usePassword)}
                         />
                         Use Password
-                        {showPasswordInput && (
+                        {usePassword && (
                             <input
                                 type="text"
                                 className="textInput"
                                 style={{ marginLeft: "15px" }}
                                 placeholder="Enter your password"
-                                ref={passwordRef}
+                                ref={props.passwordRef}
                             />
                         )}
                     </div>
@@ -74,9 +79,9 @@ function CreateChatControls(props: CreateChatControlsProps): React.JSX.Element {
                         Make Public
                     </div>
                 </div>
-            </div>
-        );
-    }
+            )}
+        </div>
+    );
 }
 
 export default CreateChatControls;

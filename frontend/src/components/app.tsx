@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import Header from "src/components/Header/Header_main";
 import Leaderboard from "src/components/LeaderBoard/Leaderboard_main";
 import AllUsers from "src/components/AllUsers/AllUsers_main";
@@ -19,10 +19,10 @@ function App() {
             <div>
                 <Header />
                 <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/home" element={<Home />} />
                     {validToken ? (
                         <>
-                            <Route path="/" element={<Home />} />
-                            <Route path="/home" element={<Home />} />
                             <Route path="/leaderboard" element={<Leaderboard />} />
                             <Route path="/allusers" element={<AllUsers />} />
                             <Route path="/game" element={<Game />} />
@@ -31,7 +31,7 @@ function App() {
                             <Route path="*" element={<ErrorPage />} />
                         </>
                     ) : (
-                        <Route path="*" element={<Home />} />
+                        <Route path="*" element={<Navigate to="/home" />} />
                     )}
                 </Routes>
             </div>

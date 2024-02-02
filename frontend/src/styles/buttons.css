@@ -15,7 +15,7 @@
     color: var(--text-primary);
     background-color: hsl(var(--backgroundHue1), 0%, calc(5% + var(--lightnessOffset)));
     border-radius: 9px;
-    transition: background-color 0.1s ease;
+    transition: background-color 0.1s ease, --lightnessOffset 0.1s ease; /* Combine transitions */
     box-sizing: border-box;
     transition: all 0.25s ease;
     border: 0px solid rgb(var(--color2));
@@ -24,6 +24,15 @@
 
     &:hover {
         --lightnessOffset: +3%;
+    }
+}
+
+.bigButton:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+
+    &:hover {
+        --lightnessOffset: 0%;
     }
 }
 
@@ -58,7 +67,6 @@
     }
 }
 
-
 .textButton {
     display: inline;
     font-size: 0.9rem;
@@ -79,14 +87,13 @@
     cursor: pointer;
 }
 
-.checkboxContainer {    
-	display: flex;
+.checkboxContainer {
+    display: flex;
     flex-direction: row;
     align-items: center;
     height: 30px;
     padding-bottom: 10px;
     white-space: nowrap;
-
 }
 
 .textInput {

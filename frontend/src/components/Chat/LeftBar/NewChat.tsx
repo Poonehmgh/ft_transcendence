@@ -68,8 +68,9 @@ function NewChat(props: newChatProps): React.JSX.Element {
     }
 
     function createChat() {
-        newChatDTO.dm = newChatDTO.userIds.length === 1;
-        newChatDTO.password = passwordRef.current;
+        if (passwordRef.current) {
+            newChatDTO.password = passwordRef.current.value;
+        }
         const newChat: ChatListDTO = { chatName: "knudel", chatID: 0 };
         //receive chat id and set to selected chat
         props.selectChat(newChat);
@@ -104,6 +105,7 @@ function NewChat(props: newChatProps): React.JSX.Element {
                     newChatDTO={newChatDTO}
                     createChat={createChat}
                     setIsPrivate={setIsPrivate}
+                    passwordRef={passwordRef}
                 />
 
                 <button className="closeX" onClick={closeModal}>
