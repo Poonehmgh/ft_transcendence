@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 // DTO
-import { ChatListDTO, NewChatDTO } from "src/dto/chat-dto";
+import { NewChatDTO } from "src/dto/chat-dto";
 
 // CSS
 import "src/styles/modals.css";
@@ -31,9 +31,6 @@ function CreateChatControls(props: CreateChatControlsProps): React.JSX.Element {
 
     useEffect(() => {
         validatePassword();
-        console.log("isPasswordStateValid:", isPasswordStateValid);
-        console.log("usePassword:", usePassword);
-        console.log("password length:", props.passwordRef.current?.value.length);
     }, [usePassword]);
 
     if (props.newChatDTO.userIds.length === 0) return null;

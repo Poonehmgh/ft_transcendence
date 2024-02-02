@@ -1,22 +1,22 @@
 import React, { useRef, useState } from "react";
 import Modal from "react-modal";
 import SelectUsersTable from "./SelectUsersTable";
+import CreateChatControls from "./CreateChatControls";
+import { fetchX } from "src/functions/utils";
 
 // DTO
-import { ChatListDTO, NewChatDTO } from "src/dto/chat-dto";
+import { ChatInfoDTO, NewChatDTO } from "src/dto/chat-dto";
 
 // CSS
 import "src/styles/modals.css";
 import "src/styles/buttons.css";
-import CreateChatControls from "./CreateChatControls";
 
 interface newChatProps {
-    selectChat: (chat: ChatListDTO) => void;
+    selectChat: (chat: ChatInfoDTO) => void;
 }
 
 function NewChat(props: newChatProps): React.JSX.Element {
     const [modalIsOpen, setModalIsOpen] = useState(false);
-    const [showPasswordInput, setshowPasswordInput] = useState(false);
     const passwordRef = useRef(null);
     const [newChatDTO, setChatDto] = useState<NewChatDTO>({
         dm: false,
@@ -32,7 +32,6 @@ function NewChat(props: newChatProps): React.JSX.Element {
 
     function closeModal() {
         setModalIsOpen(false);
-        setshowPasswordInput(false);
         setChatDto({
             dm: false,
             private: true,
@@ -67,12 +66,12 @@ function NewChat(props: newChatProps): React.JSX.Element {
         setIsDm(selectedUsers);
     }
 
-    function createChat() {
+    async function createChat() {
+        console.log("createChat called");
         if (passwordRef.current) {
             newChatDTO.password = passwordRef.current.value;
         }
-        const newChat: ChatListDTO = { chatName: "knudel", chatID: 0 };
-        //receive chat id and set to selected chat
+        const newChat: ChatInfoDTO = await fetchX("POST", apiUrl, newChatDTO);
         props.selectChat(newChat);
 
         console.log("createChat: ", newChatDTO);

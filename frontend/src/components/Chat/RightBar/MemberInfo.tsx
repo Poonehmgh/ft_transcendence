@@ -1,25 +1,33 @@
 import React, { useEffect, useState } from "react";
-import { fetchGetSet } from "src/functions/utils";
 
 // DTO
-import { ParticipantListElementDTO as ChatUserDTO } from "src/dto/chat-dto";
-import { UserProfileDTO } from "src/dto/user-dto";
+import { ChatUserDTO } from "src/dto/chat-dto";
 
 // CSS
 import "src/styles/style.css";
 import "src/styles/chat.css";
+import { fetchGetSet } from "utils";
+import { application } from "express";
 
 interface memberInfoProps {
     member: ChatUserDTO | null;
 }
 
 function MemberInfo(props: memberInfoProps): React.JSX.Element {
+    const [name, setName] = useState<string[]>([]);
+    const apiUrl =
+        process.env.REACT_APP_BACKEND_URL + "/user/name/" + props.member.userId;
+
+    useEffect(() => {
+        fetchGetSet(apiUrl, setName);
+    }, [apiUrl]);
+
     if (!props.member) return <div className="p">Loading data...</div>;
 
     return (
         <div className="sideBar_sub1">
             <div className="chatElementDiv">
-                {"--- " + props.member.userName + " ---"}
+                {"--- " + name + " ---"}
 
                 <table className="chatMemberTable">
                     <thead>
@@ -42,7 +50,6 @@ function MemberInfo(props: memberInfoProps): React.JSX.Element {
                         <tr>
                             <td>{props.member.owner ? "yes" : "no"}</td>
                             <td>{props.member.admin ? "yes" : "no"}</td>
-                            <td>{props.member.online ? "yes" : "no"}</td>
                         </tr>
                     </tbody>
                 </table>

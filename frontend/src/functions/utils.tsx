@@ -66,6 +66,30 @@ export function authContentHeader() {
 
 // fetchers
 
+export async function fetchX<T>(
+    method: string,
+    apiUrl: string,
+    data: Record<string, any> | null
+): Promise<T | null> {
+    try {
+        const response: Response = await fetch(apiUrl, {
+            method: method,
+            headers: authContentHeader(),
+            body: data ? JSON.stringify(data) : null,
+        });
+
+        if (!response.ok) {
+            console.error(`${apiUrl}: ${response.status}`);
+            throw new Error(`Not OK response in fetchX`);
+        }
+        console.log("fetchX returning");
+        return await response.json();
+    } catch (error) {
+        console.error(error);
+        throw new Error("Error in fetchX");
+    }
+}
+
 export async function fetchGet<T>(apiUrl: string): Promise<T> {
     try {
         const response: Response = await fetch(apiUrl, {

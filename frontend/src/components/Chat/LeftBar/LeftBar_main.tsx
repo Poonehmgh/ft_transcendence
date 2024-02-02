@@ -3,17 +3,17 @@ import NewChat from "./NewChat";
 import ChatList from "./ChatList";
 
 // DTO
-import { ChatListDTO } from "src/dto/chat-dto";
+import { ChatInfoDTO } from "src/dto/chat-dto";
 
 // CSS
 import "src/styles/chat.css";
 import "src/styles/style.css";
 
 interface leftBarProps {
-    selectedChat: ChatListDTO | null;
-    selectChat: React.Dispatch<React.SetStateAction<ChatListDTO | null>>;
-    privateChats: ChatListDTO[];
-    publicChats: ChatListDTO[];
+    selectedChat: ChatInfoDTO | null;
+    selectChat: React.Dispatch<React.SetStateAction<ChatInfoDTO | null>>;
+    privateChats: ChatInfoDTO[];
+    publicChats: ChatInfoDTO[];
 }
 
 function LeftBar(props: leftBarProps): React.JSX.Element {

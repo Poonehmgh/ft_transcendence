@@ -1,7 +1,9 @@
 import { HttpStatus, Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import {
+    ChatInfoDTO,
     ChatListDTO,
+    ChatUserDTO,
     MessageListElementDTO,
     NewChatDTO,
     ParticipantListElementDTO,
@@ -12,7 +14,7 @@ export class ChatService {
     constructor(private readonly prisma: PrismaService) {}
 
     async getChatList(userIDtoFind: number): Promise<any> {
-		try {
+        try {
             const chatsWithUser = await this.prisma.chat.findMany({
                 where: {
                     chatUsers: {
@@ -23,7 +25,6 @@ export class ChatService {
                 },
             });
             return chatsWithUser.map((chat) => {
-
                 return new ChatListDTO(chat.name, chat.id);
             });
         } catch {
@@ -79,37 +80,16 @@ export class ChatService {
         }
     }
 
-    async getParticipantsByChatID(chatID: number) {
+    async getChatUsers(chatId: number): Promise<ChatUserDTO[]> {
         try {
-            const chatUsers = await this.prisma.chat_User.findMany({
+            return await this.prisma.chat_User.findMany({
                 where: {
-                    chatId: Number(chatID),
-                },
-                include: {
-                    user: true,
+                    chatId: Number(chatId),
                 },
             });
-
-            const participants: ParticipantListElementDTO[] = chatUsers.map(
-                (chatUser) => {
-                    const user = chatUser.user;
-
-                    return new ParticipantListElementDTO(
-                        user ? user.name : "",
-                        user ? user.id : 0,
-                        chatUser.owner,
-                        chatUser.admin,
-                        user ? user.online : false
-                    );
-                }
-            );
-
-            return participants;
-        } catch {
-            return {
-                StatusCode: HttpStatus.BAD_REQUEST,
-                message: "Error with DB",
-            };
+        } catch (error) {
+            console.log(`error in getChatUsers: ${error.message}`);
+            throw error;
         }
     }
 
@@ -146,7 +126,7 @@ export class ChatService {
         }
     }
 
-    async createDm(newChatRequest: NewChatDTO) {
+    async createDm(newChatRequest: NewChatDTO): Promise<ChatInfoDTO | null> {
         try {
             await this.validateDm(newChatRequest);
 
@@ -158,21 +138,44 @@ export class ChatService {
                 },
             });
 
-            await this.prisma.chat_User.createMany({
-                data: newChatRequest.userIds.map((userId) => ({
-                    userId: userId,
-                    chatId: newChat.id,
-                    owner: false,
-                    admin: false,
-                    blocked: false,
-                    muted: false,
-                    invited: false,
-                })),
-            });
+            const chatUsers: ChatUserDTO[] = [];
+            for (const userId of newChatRequest.userIds) {
+                const createdChatUser = await this.prisma.chat_User.create({
+                    data: {
+                        userId,
+                        chatId: newChat.id,
+                        owner: false,
+                        admin: false,
+                        blocked: false,
+                        muted: false,
+                        invited: false,
+                    },
+                });
 
-            return new ChatListDTO(newChat.name, newChat.id);
+                chatUsers.push({
+                    userId: createdChatUser.userId,
+                    chatId: createdChatUser.chatId,
+                    owner: createdChatUser.owner,
+                    admin: createdChatUser.admin,
+                    blocked: createdChatUser.blocked,
+                    muted: createdChatUser.muted,
+                    invited: createdChatUser.invited,
+                });
+            }
+
+            const newChatInfo: ChatInfoDTO = new ChatInfoDTO(
+                newChat.id,
+                newChat.name,
+                newChat.dm,
+                false, // private
+                false, // pw not required
+                chatUsers
+            );
+
+            return newChatInfo;
         } catch (error) {
-            console.log(`error in createDm: ${error.message}`);
+            console.log(`Error in createDm: ${error.message}`);
+            return null;
         }
     }
 
@@ -198,7 +201,6 @@ export class ChatService {
                             })),
                         },
                     },
-
                 },
                 include: {
                     chatUsers: true,

@@ -37,6 +37,12 @@ export class UserController {
         return this.userService.getProfileById(id);
     }
 
+    @Get("name/:id")
+    async getName(@Param("id") id: number): Promise<string> {
+        return this.userService.getNameById(id);
+    }
+
+
     @Get("my_avatar")
     async getMyAvatar(@Req() req: AuthenticatedRequest, @Res() res: Response) {
         const filePath = this.userService.getAvatarPath(req.user.id);

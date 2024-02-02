@@ -64,27 +64,12 @@ export class EstablishConnectDTO {
 
 export class ChatUserDTO {
     userId: number;
-    owner: boolean = false;
-    admin: boolean = false;
-    blocked: boolean = false;
-    muted: boolean = false;
-    invited: boolean = false;
-
-    constructor(
-        userId: number,
-        owner: boolean,
-        admin: boolean,
-        blocked: boolean,
-        muted: boolean,
-        invited: boolean
-    ) {
-        this.userId = userId;
-        this.owner = owner;
-        this.admin = admin;
-        this.blocked = blocked;
-        this.muted = muted;
-        this.invited = invited;
-    }
+    chatId: number;
+    owner: boolean;
+    admin: boolean;
+    blocked: boolean;
+    muted: boolean;
+    invited: boolean;
 }
 
 export class NewChatDTO {
@@ -95,6 +80,31 @@ export class NewChatDTO {
     @ArrayMinSize(1, { message: "At least 1 user id required" })
     @ArrayUnique({ message: "User ids must be unique" })
     userIds: number[];
+}
+
+export class ChatInfoDTO {
+    id: number;
+    name: string;
+    dm: boolean;
+    private: boolean;
+    password_required: boolean;
+    chatUsers: ChatUserDTO[];
+
+    constructor(
+        id: number,
+        name: string,
+        dm: boolean,
+        privateChat: boolean,
+        passwordRequired: boolean,
+        chatUsers: ChatUserDTO[]
+    ) {
+        this.id = id;
+        this.name = name;
+        this.dm = dm;
+        this.private = privateChat;
+        this.password_required = passwordRequired;
+        this.chatUsers = chatUsers;
+    }
 }
 
 //Its json for tests

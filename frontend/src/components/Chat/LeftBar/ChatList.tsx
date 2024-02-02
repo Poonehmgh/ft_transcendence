@@ -1,22 +1,50 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 // DTO
-import { ChatListDTO } from "src/dto/chat-dto";
+import { ChatInfoDTO } from "src/dto/chat-dto";
 
 // CSS
 import "src/styles/chat.css";
 import "src/styles/style.css";
+import { fetchGet } from "utils";
 
 interface chatListProps {
-    selectedChat: ChatListDTO;
-    onSelectChat: (chat: ChatListDTO) => void;
-    privateChats: ChatListDTO[];
-    publicChats: ChatListDTO[];
+    selectedChat: ChatInfoDTO;
+    onSelectChat: (chat: ChatInfoDTO) => void;
+    privateChats: ChatInfoDTO[];
+    publicChats: ChatInfoDTO[];
 }
 
 function ChatList(props: chatListProps): React.JSX.Element {
-    function selectChat(chat: ChatListDTO) {
+    const [chatNames, setChatNames] = useState<string[]>([]);
+
+    const fetchChatNames = async () => {
+        const names: string[] = await Promise.all(
+            props.privateChats.map((chat) => renderChatName(chat))
+        );
+        setChatNames(names);
+    };
+
+    useEffect(() => {
+        fetchChatNames();
+    }, [props.privateChats]);
+
+    function selectChat(chat: ChatInfoDTO) {
         props.onSelectChat(chat);
+    }
+
+    async function renderChatName(chat: ChatInfoDTO): Promise<string> {
+        const loggedInUserId = parseInt(localStorage.getItem("userId"));
+        if (chat.dm) {
+            const otherUser = chat.chatUsers.find(
+                (user) => user.userId !== loggedInUserId
+            );
+            const apiUrl =
+                process.env.REACT_APP_BACKEND_URL + "/user/name/" + otherUser.userId;
+            const otherName = await fetchGet<string>(apiUrl);
+            return otherName;
+        }
+        return "groupchat";
     }
 
     return (
@@ -28,21 +56,19 @@ function ChatList(props: chatListProps): React.JSX.Element {
                 {!props.privateChats ? (
                     <p>none</p>
                 ) : (
-                    props.privateChats.map(
-                        (chat: { chatID: number; chatName: string }) => (
-                            <button
-                                key={chat.chatID}
-                                className={
-                                    props.selectedChat === chat
-                                        ? "chatButtonSelected"
-                                        : "chatButton"
-                                }
-                                onClick={() => selectChat(chat)}
-                            >
-                                {chat.chatName}
-                            </button>
-                        )
-                    )
+                    props.privateChats.map((element) => (
+                        <button
+                            key={element.id}
+                            className={
+                                props.selectedChat === element
+                                    ? "chatButtonSelected"
+                                    : "chatButton"
+                            }
+                            onClick={() => selectChat(element)}
+                        >
+                            {renderChatName(element)}
+                        </button>
+                    ))
                 )}
             </div>
         </div>

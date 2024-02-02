@@ -3,11 +3,11 @@ import React from "react";
 // CSS
 import "src/styles/style.css";
 
-interface Loading_h2Props {
+interface LoadingH2Props {
     elementName: string;
 }
 
-function Loading_h2(props: Loading_h2Props) {
+function LoadingH2(props: LoadingH2Props) {
     return (
         <div className="mainContainerRow">
             <div>
@@ -18,4 +18,4 @@ function Loading_h2(props: Loading_h2Props) {
     );
 }
 
-export default Loading_h2;
+export default LoadingH2;

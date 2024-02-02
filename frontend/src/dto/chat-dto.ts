@@ -21,15 +21,20 @@ export class MessageListElementDTO {
 }
 
 export class ParticipantListElementDTO {
-    userName: string
-    userId: number
-    owner: boolean
-    admin: boolean
-    online: boolean
-    pictureUrl: string
+    userName: string;
+    userId: number;
+    owner: boolean;
+    admin: boolean;
+    online: boolean;
+    pictureUrl: string;
 
-
-    constructor(userName: string, userId: number, owner: boolean, admin: boolean, online: boolean) {
+    constructor(
+        userName: string,
+        userId: number,
+        owner: boolean,
+        admin: boolean,
+        online: boolean
+    ) {
         this.userName = userName;
         this.userId = userId;
         this.owner = owner;
@@ -56,22 +61,12 @@ export class EstablishConnectDTO {
 
 export class ChatUserDTO {
     userId: number;
-    owner: boolean = false;
-    admin: boolean = false;
-    blocked: boolean = false;
-    muted: boolean = false;
-    invited: boolean = false;
-
-    constructor(userId: number, owner: boolean, admin: boolean, blocked: boolean, muted: boolean, invited: boolean) {
-        this.userId = userId;
-        this.owner = owner;
-        this.admin = admin;
-        this.blocked = blocked;
-        this.muted = muted;
-        this.invited = invited;
-    }
-
-
+    chatId: number;
+    owner: boolean;
+    admin: boolean;
+    blocked: boolean;
+    muted: boolean;
+    invited: boolean;
 }
 
 export class NewChatDTO {
@@ -81,13 +76,21 @@ export class NewChatDTO {
     userIds: number[];
 }
 
-export class InviteUserDTO{
-    chatId: number
-    userId: number
-
+export class InviteUserDTO {
+    chatId: number;
+    userId: number;
 
     constructor(chatID: number, userId: number) {
         this.chatId = chatID;
         this.userId = userId;
     }
+}
+
+export class ChatInfoDTO {
+    id: number;
+    name: string;
+    dm: boolean;
+    private: boolean;
+    password_required: boolean;
+    chatUsers: ChatUserDTO[];
 }

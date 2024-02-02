@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { fetchGetSet } from "src/functions/utils";
+import { fetchGet, fetchGetSet } from "src/functions/utils";
 
 // DTO
-import { ChatListDTO, ParticipantListElementDTO as ChatUserDTO } from "src/dto/chat-dto";
-import { UserProfileDTO } from "src/dto/user-dto";
+import { ChatInfoDTO, ChatUserDTO } from "src/dto/chat-dto";
 
 interface membersProps {
-    selectedChat: ChatListDTO | null;
+    selectedChat: ChatInfoDTO | null;
     onSelectMember: (member: ChatUserDTO) => void;
 }
 
@@ -14,16 +13,42 @@ function MemberList(props: membersProps): React.JSX.Element {
     const [chatUsers, setChatUsers] = useState<ChatUserDTO[]>(null);
     const [selectedChatUser, setSelectedChatUser] = useState<ChatUserDTO>(null);
 
-    // temp to do
     const apiUrl =
-        process.env.REACT_APP_BACKEND_URL +
-        "/chat/" +
-        props.selectedChat.chatID +
-        "/participants";
+        process.env.REACT_APP_BACKEND_URL + "/chat_users/" + props.selectedChat.id;
 
     useEffect(() => {
         fetchGetSet<ChatUserDTO[]>(apiUrl, setChatUsers);
     }, [props.selectedChat, apiUrl]);
+
+    useEffect(() => {
+        if (chatUsers) {
+            // Fetch names using user IDs one at a time
+            const apiNamesUrl = process.env.REACT_APP_BACKEND_URL + "/user/name/";
+
+            const fetchName = async (userId) => {
+                try {
+                    const response = await fetchGet<string>(apiNamesUrl + userId);
+                    const name = response || "Unknown Name";
+
+                    // Update the user with the fetched name
+                    setChatUsers((prevUsers) => {
+                        const updatedUsers = prevUsers.map((user) => {
+                            if (user.userId === userId) {
+                                return { ...user, userName: name };
+                            }
+                            return user;
+                        });
+                        return updatedUsers;
+                    });
+                } catch (error) {
+                    console.error(`Error fetching name for user ${userId}:`, error);
+                }
+            };
+
+            // Iterate through each user and fetch their name
+            chatUsers.forEach((user) => fetchName(user.userId));
+        }
+    }, [chatUsers]);
 
     function selectMember(chatUser) {
         setSelectedChatUser(chatUser);

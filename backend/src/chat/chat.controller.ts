@@ -35,9 +35,9 @@ export class ChatController {
         return this.chatService.getMessagesByRange(chatID, from, to);
     }
 
-    @Get(":chatID/participants")
-    async getParticipants(@Param("chatID") chatID: number) {
-        return this.chatService.getParticipantsByChatID(chatID);
+    @Get("chat_users/:chatId")
+    async getChatUsers(@Param("chatId") chatId: number) {
+        return this.chatService.getChatUsers(chatId);
     }
 
     @Post("create")

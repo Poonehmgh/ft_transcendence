@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import UserTable from "../shared/UserTable";
 import RankNumberColumn from "./RankNumberColumn";
 import { fetchGetSet } from "src/functions/utils";
-import LoadingH2 from "src/components/shared/Loading_h2";
+import LoadingH2 from "src/components/shared/LoadingH2";
 
 // DTO
 import { UserProfileDTO } from "src/dto/user-dto";

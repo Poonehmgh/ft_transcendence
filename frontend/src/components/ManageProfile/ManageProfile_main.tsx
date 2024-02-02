@@ -4,7 +4,7 @@ import ManageContactsTabs from "./ManageContactsTabs";
 import PlayerCardTable from "../shared/PlayerCardTable";
 import { fetchGetSet } from "src/functions/utils";
 import { authHeader } from "../../functions/utils";
-import Loading_h2 from "src/components/shared/Loading_h2";
+import LoadingH2 from "src/components/shared/LoadingH2";
 
 // DTO
 import { UserProfileDTO } from "src/dto/user-dto";
@@ -95,7 +95,7 @@ function ManageProfile() {
         }
     }
 
-    if (!userData) return <Loading_h2 elementName={"Manage your profile"} />;
+    if (!userData) return <LoadingH2 elementName={"Manage your profile"} />;
 
     return (
         <div className="mainContainerColumn" style={{ alignItems: "center" }}>
