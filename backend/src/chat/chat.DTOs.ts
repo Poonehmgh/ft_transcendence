@@ -130,3 +130,33 @@ export class InviteUserDTO{
         this.userId = userId;
     }
 }
+
+export class ChangeChatUserStatusDTO {
+    operatorId: number
+    chatId: number
+    userId: number
+    owner: boolean
+    muted: boolean
+    banned: boolean
+    admin: boolean
+    kick: boolean
+    constructor(operatorId: number, chatId: number, userId: number, owner: boolean, muted: boolean, banned: boolean, admin: boolean){
+        this.operatorId = operatorId;
+        this.chatId = chatId;
+        this.userId = userId;
+        this.owner = owner;
+        this.muted = muted;
+        this.banned = banned;
+        this.admin = admin;
+    }
+}
+
+// {
+//     "operatorId": 1,
+//     "chatId": 2,
+//     "userId": 2,
+//     "owner": "true",
+//     "muted": "false",
+//     "banned": "false",
+//     "admin": "false"
+// }

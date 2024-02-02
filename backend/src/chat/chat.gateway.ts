@@ -7,7 +7,13 @@ import {
   WebSocketServer
 } from '@nestjs/websockets';
 import {Server, Socket} from "socket.io";
-import {CreateNewChatDTO, EstablishConnectDTO, InviteUserDTO, SendMessageDTO} from "./chat.DTOs";
+import {
+  ChangeChatUserStatusDTO,
+  CreateNewChatDTO,
+  EstablishConnectDTO,
+  InviteUserDTO,
+  SendMessageDTO
+} from "./chat.DTOs";
 import {ChatGatewayService} from "./chat.gateway.service";
 import {userGateway} from "./userGateway";
 import {OnModuleInit} from "@nestjs/common";
@@ -33,6 +39,7 @@ export class ChatGateway implements OnModuleInit, OnGatewayDisconnect{
     await this.chatGatewayService.setUserOnlineStatus(userID, false)
     this.chatGatewayService.deleteUserFromList(userID);
   }
+
   @SubscribeMessage('connectMessage')
   async establishConnect(@ConnectedSocket() client: Socket, @MessageBody()data: EstablishConnectDTO){
     console.log(data);
@@ -56,6 +63,12 @@ export class ChatGateway implements OnModuleInit, OnGatewayDisconnect{
   @SubscribeMessage('inviteUser')
   async InviteUserToChat(@ConnectedSocket() client: Socket, @MessageBody()message: InviteUserDTO){
     await this.chatGatewayService.inviteUserToChat(message);
+  }
+
+  @SubscribeMessage('changeChatUserStatus')
+  async changeUsersInChatStatus(@ConnectedSocket() client: Socket, @MessageBody()message: ChangeChatUserStatusDTO){
+    console.log(message);
+    await this.chatGatewayService.changeUsersInChatStatus(message);
   }
 
 }
