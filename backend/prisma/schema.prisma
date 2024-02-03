@@ -61,15 +61,15 @@ model Message {
 }
 
 model Chat {
-    createdAt    DateTime    @default(now())
-    updatedAt    DateTime    @updatedAt
-    id           Int         @id @unique @default(autoincrement())
-    name         String
-    dm           Boolean     @default(false)
-    private      Boolean     @default(false)
-    password     String?
-    messages     Message[]
-    chatUsers    Chat_User[]
+    createdAt DateTime    @default(now())
+    updatedAt DateTime    @updatedAt
+    id        Int         @id @unique @default(autoincrement())
+    name      String
+    dm        Boolean     @default(false)
+    private   Boolean     @default(false)
+    password  String?
+    messages  Message[]
+    chatUsers Chat_User[]
 }
 
 // junction tables

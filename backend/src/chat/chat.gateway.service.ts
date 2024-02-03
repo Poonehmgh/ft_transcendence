@@ -4,7 +4,6 @@ import {
     ChatListDTO,
     ChatUserDTO,
     InviteUserDTO,
-    NewChatDTO,
     SendMessageDTO,
 } from "./chat.DTOs";
 import { Socket } from "socket.io";

@@ -67,10 +67,10 @@ function NewChat(props: newChatProps): React.JSX.Element {
     }
 
     async function createChat() {
-        console.log("createChat called");
         if (passwordRef.current) {
             newChatDTO.password = passwordRef.current.value;
         }
+        console.log("createChat called: ", newChatDTO);
         const newChat: ChatInfoDTO = await fetchX("POST", apiUrl, newChatDTO);
         props.selectChat(newChat);
 

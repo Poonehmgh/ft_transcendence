@@ -19,10 +19,9 @@ import { AuthenticatedRequest } from "src/shared/dto";
 export class ChatController {
     constructor(private readonly chatService: ChatService) {}
 
-
     @Get("my_chats")
-    async getMyChats(@Req() req: AuthenticatedRequest)  {
-        return this.chatService.getChatList(req.user.id);
+    async getMyChats(@Req() req: AuthenticatedRequest) {
+        return this.chatService.getUserChats(req.user.id);
     }
 
     //Give 0,0 for first 50 messages
@@ -38,6 +37,21 @@ export class ChatController {
     @Get("chat_users/:chatId")
     async getChatUsers(@Param("chatId") chatId: number) {
         return this.chatService.getChatUsers(chatId);
+    }
+
+    @Get("name/:chatId")
+    async getChatName(
+        @Param("chatId") chatId: number,
+        @Req() req: AuthenticatedRequest,
+        @Res() res
+    ) {
+        try {
+            const chatName = await this.chatService.getChatName(chatId, req.user.id);
+            res.json({ name: chatName });
+        } catch (error) {
+            console.error("Error fetching chat name:", error);
+            res.status(500).json({ error: "Internal Server Error" });
+        }
     }
 
     @Post("create")

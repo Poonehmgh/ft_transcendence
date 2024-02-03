@@ -1,8 +1,8 @@
 import { HttpStatus, Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
+
 import {
     ChatInfoDTO,
-    ChatListDTO,
     ChatUserDTO,
     MessageListElementDTO,
     NewChatDTO,
@@ -13,7 +13,86 @@ import {
 export class ChatService {
     constructor(private readonly prisma: PrismaService) {}
 
-    async getChatList(userIDtoFind: number): Promise<any> {
+    async getChatName(chatId: number, userId: number): Promise<string> {
+        try {
+            const chat = await this.prisma.chat.findUnique({
+                where: {
+                    id: Number(chatId),
+                },
+                include: {
+                    chatUsers: true,
+                },
+            });
+
+            if (chat.dm) {
+                const otherUserId = chat.chatUsers.find(
+                    (e) => e.userId !== userId
+                ).userId;
+
+                const otherUser = await this.prisma.user.findUnique({
+                    where: {
+                        id: otherUserId,
+                    },
+                });
+
+                return otherUser.name;
+            }
+            if (chat.name) return chat.name;
+            return "Unnamed Chat";
+        } catch (error) {
+            console.error("Error in getChatName:", error);
+            throw error;
+        }
+    }
+
+    async getUserChats(userId): Promise<ChatInfoDTO[]> {
+        try {
+            const userChats = await this.prisma.chat.findMany({
+                where: {
+                    chatUsers: {
+                        some: {
+                            userId: userId,
+                        },
+                    },
+                },
+                include: {
+                    chatUsers: true,
+                    messages: {
+                        orderBy: {
+                            createdAt: "desc",
+                        },
+                        take: 1, // Change this according to your requirements
+                    },
+                },
+            });
+
+            return userChats.map((chat) => {
+                return {
+                    id: chat.id,
+                    name: chat.name || "Unnamed Chat",
+                    dm: chat.dm,
+                    private: chat.private,
+                    password_required: !!chat.password, // Assuming password_required is true if password is present
+                    chatUsers: chat.chatUsers.map((chatUser) => {
+                        return {
+                            userId: chatUser.userId,
+                            chatId: chatUser.chatId,
+                            owner: chatUser.owner,
+                            admin: chatUser.admin,
+                            blocked: chatUser.blocked,
+                            muted: chatUser.muted,
+                            invited: chatUser.invited,
+                        };
+                    }),
+                };
+            });
+        } catch (error) {
+            console.log(`Error in getUserChats: ${error.message}`);
+            throw error;
+        }
+    }
+
+    /*     async getChatList(userIDtoFind: number): Promise<any> {
         try {
             const chatsWithUser = await this.prisma.chat.findMany({
                 where: {
@@ -33,7 +112,7 @@ export class ChatService {
                 message: "Error with DB",
             };
         }
-    }
+    } */
 
     async getMessagesByRange(chatID: number, from: number, to: number) {
         try {
@@ -134,6 +213,7 @@ export class ChatService {
                 data: {
                     name: null,
                     dm: true,
+                    private: true,
                     password: null,
                 },
             });
@@ -180,6 +260,7 @@ export class ChatService {
     }
 
     async createChat(creatorId: number, newChatDTO: NewChatDTO) {
+        console.log("backend createCHat: ", newChatDTO );
         newChatDTO.userIds.push(creatorId);
         try {
             if (newChatDTO.dm) {
@@ -206,7 +287,9 @@ export class ChatService {
                     chatUsers: true,
                 },
             });
-            return new ChatListDTO(newChat.name, newChat.id);
+
+            return null;
+            //return new ChatInfoDTO(newChat.name, newChat.id);
         } catch (error) {
             console.log(`error in createChat: ${error.message}`);
         }

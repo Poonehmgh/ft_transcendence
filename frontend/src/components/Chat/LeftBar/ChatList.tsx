@@ -2,50 +2,45 @@ import React, { useEffect, useState } from "react";
 
 // DTO
 import { ChatInfoDTO } from "src/dto/chat-dto";
+import { fetchGet } from "src/functions/utils";
 
 // CSS
 import "src/styles/chat.css";
 import "src/styles/style.css";
-import { fetchGet } from "utils";
 
 interface chatListProps {
     selectedChat: ChatInfoDTO;
     onSelectChat: (chat: ChatInfoDTO) => void;
-    privateChats: ChatInfoDTO[];
-    publicChats: ChatInfoDTO[];
+    chats: ChatInfoDTO[];
 }
 
 function ChatList(props: chatListProps): React.JSX.Element {
-    const [chatNames, setChatNames] = useState<string[]>([]);
+    const [chatNames, setChatNames] = useState<string[]>(null);
 
-    const fetchChatNames = async () => {
-        const names: string[] = await Promise.all(
-            props.privateChats.map((chat) => renderChatName(chat))
-        );
-        setChatNames(names);
-    };
+    async function fetchChatNames() {
+        try {
+            const names = await Promise.all(
+                props.chats.map(async (chat) => {
+                    const apiUrl = `${process.env.REACT_APP_BACKEND_URL}/chat/name/${chat.id}`;
+                    const response = await fetchGet<{ name: string }>(apiUrl);
+                    return response.name;
+                })
+            );
+            setChatNames(names);
+        } catch (error) {
+            console.error("Error fetching chat names:", error);
+        }
+    }
 
     useEffect(() => {
         fetchChatNames();
-    }, [props.privateChats]);
+    }, [props.chats]);
 
     function selectChat(chat: ChatInfoDTO) {
         props.onSelectChat(chat);
     }
 
-    async function renderChatName(chat: ChatInfoDTO): Promise<string> {
-        const loggedInUserId = parseInt(localStorage.getItem("userId"));
-        if (chat.dm) {
-            const otherUser = chat.chatUsers.find(
-                (user) => user.userId !== loggedInUserId
-            );
-            const apiUrl =
-                process.env.REACT_APP_BACKEND_URL + "/user/name/" + otherUser.userId;
-            const otherName = await fetchGet<string>(apiUrl);
-            return otherName;
-        }
-        return "groupchat";
-    }
+    if (!chatNames) return <p>Loading...</p>;
 
     return (
         <div className="sideBar_sub1">
@@ -53,10 +48,10 @@ function ChatList(props: chatListProps): React.JSX.Element {
 
             <div className="chatElementDiv">
                 --- my chats ---
-                {!props.privateChats ? (
+                {!props.chats ? (
                     <p>none</p>
                 ) : (
-                    props.privateChats.map((element) => (
+                    props.chats.map((element, index) => (
                         <button
                             key={element.id}
                             className={
@@ -66,7 +61,7 @@ function ChatList(props: chatListProps): React.JSX.Element {
                             }
                             onClick={() => selectChat(element)}
                         >
-                            {renderChatName(element)}
+                            {chatNames[index]}
                         </button>
                     ))
                 )}

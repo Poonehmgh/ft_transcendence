@@ -77,7 +77,7 @@ function MemberList(props: membersProps): React.JSX.Element {
                         }
                         onClick={() => selectMember(element)}
                     >
-                        {element.userName}
+                        {element.userId}
                     </button>
                 ))}
             </div>

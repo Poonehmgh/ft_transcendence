@@ -2,12 +2,11 @@ import React, { useEffect, useState } from "react";
 
 // DTO
 import { ChatUserDTO } from "src/dto/chat-dto";
+import { fetchGetSet } from "src/functions/utils";
 
 // CSS
 import "src/styles/style.css";
 import "src/styles/chat.css";
-import { fetchGetSet } from "utils";
-import { application } from "express";
 
 interface memberInfoProps {
     member: ChatUserDTO | null;

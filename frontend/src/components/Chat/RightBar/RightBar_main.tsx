@@ -1,5 +1,6 @@
 import React from "react";
 import MemberList from "./MemberList";
+import MemberInfo from "./MemberInfo";
 
 // DTO
 import { ChatInfoDTO, ChatUserDTO } from "src/dto/chat-dto";
@@ -7,7 +8,6 @@ import { ChatInfoDTO, ChatUserDTO } from "src/dto/chat-dto";
 // CSS
 import "src/styles/chat.css";
 import "src/styles/style.css";
-import MemberInfo from "./MemberInfo";
 
 interface rightBarProps {
     selectedChat: ChatInfoDTO | null;

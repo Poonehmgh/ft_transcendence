@@ -19,11 +19,8 @@ function Chat() {
     //const socket = io(process.env.REACT_APP_CHAT_URL);
     // to do temp
 
-    const [privateChats, setPrivateChats] = useState<ChatInfoDTO[]>(null);
-    const [publicChats, setPublicChats] = useState<ChatInfoDTO[]>(null);
-
-    const apiUrl_privateChats = process.env.REACT_APP_BACKEND_URL + "/chat/my_chats";
-    //const apiUrl_publicChats = process.env.REACT_APP_BACKEND_URL + "/public_chat";
+    const [chats, setChats] = useState<ChatInfoDTO[]>(null);
+    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/chat/my_chats";
 
     function selectChat(newChat: ChatInfoDTO) {
         setSelectedChat(newChat);
@@ -31,11 +28,10 @@ function Chat() {
     }
 
     useEffect(() => {
-        fetchGetSet<ChatInfoDTO[]>(apiUrl_privateChats, setPrivateChats);
-        //fetchGetSet<ChatListDTO[]>(apiUrl_publicChats, setPublicChats);
-    }, [apiUrl_privateChats /* apiUrl_publicChats */]);
+        fetchGetSet<ChatInfoDTO[]>(apiUrl, setChats);
+    }, [apiUrl]);
 
-    if (!privateChats) return <LoadingH2 elementName={"Chat"} />;
+    if (!chats) return <LoadingH2 elementName={"Chat"} />;
 
     return (
         <div className="mainContainerColumn">
@@ -44,8 +40,7 @@ function Chat() {
                 <LeftBar
                     selectedChat={selectedChat}
                     selectChat={selectChat}
-                    privateChats={privateChats}
-                    publicChats={publicChats}
+                    chats={chats}
                 />
 
                 <div className="middleBar_0"></div>

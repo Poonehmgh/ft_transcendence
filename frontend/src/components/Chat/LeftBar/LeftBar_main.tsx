@@ -12,8 +12,7 @@ import "src/styles/style.css";
 interface leftBarProps {
     selectedChat: ChatInfoDTO | null;
     selectChat: React.Dispatch<React.SetStateAction<ChatInfoDTO | null>>;
-    privateChats: ChatInfoDTO[];
-    publicChats: ChatInfoDTO[];
+    chats: ChatInfoDTO[];
 }
 
 function LeftBar(props: leftBarProps): React.JSX.Element {
@@ -25,8 +24,7 @@ function LeftBar(props: leftBarProps): React.JSX.Element {
             <ChatList
                 selectedChat={props.selectedChat}
                 onSelectChat={(chat) => props.selectChat(chat)}
-                privateChats={props.privateChats}
-                publicChats={props.publicChats}
+                chats={props.chats}
             />
         </div>
     );
