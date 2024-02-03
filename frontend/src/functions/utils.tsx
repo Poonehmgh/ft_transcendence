@@ -72,6 +72,8 @@ export async function fetchX<T>(
     data: Record<string, any> | null
 ): Promise<T | null> {
     try {
+        console.log("fetchX starting");
+       
         const response: Response = await fetch(apiUrl, {
             method: method,
             headers: authContentHeader(),
@@ -85,7 +87,15 @@ export async function fetchX<T>(
         console.log("fetchX returning");
         return await response.json();
     } catch (error) {
-        console.error(error);
+        console.error("Error in fetchX:", error);
+
+        if (error instanceof Response) {
+            // Log response status and body for more details
+            console.error(`Response status: ${error.status}`);
+            const responseBody = await error.text();
+            console.error(`Response body: ${responseBody}`);
+        }
+
         throw new Error("Error in fetchX");
     }
 }

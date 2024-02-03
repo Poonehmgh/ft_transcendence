@@ -1,5 +1,12 @@
 import { findIndex } from "rxjs";
-import { ArrayUnique, ArrayMinSize } from "class-validator";
+import {
+    ArrayUnique,
+    ArrayMinSize,
+    IsBoolean,
+    IsOptional,
+    IsString,
+} from "class-validator";
+import { Chat } from "@prisma/client";
 
 export class ChatListDTO {
     chatName: string;
@@ -73,9 +80,16 @@ export class ChatUserDTO {
 }
 
 export class NewChatDTO {
+    @IsBoolean()
     dm: boolean;
-    private: boolean;
-    password?: string = null;
+
+    @IsBoolean()
+    @IsOptional()
+    private?: boolean;
+
+    @IsString()
+    @IsOptional()
+    password?: string;
 
     @ArrayMinSize(1, { message: "At least 1 user id required" })
     @ArrayUnique({ message: "User ids must be unique" })
@@ -104,6 +118,17 @@ export class ChatInfoDTO {
         this.private = privateChat;
         this.password_required = passwordRequired;
         this.chatUsers = chatUsers;
+    }
+
+    static fromChat(chat: Chat): ChatInfoDTO {
+        return new ChatInfoDTO(
+            chat.id,
+            chat.name,
+            chat.dm,
+            chat.private,
+            chat.password ? true : false,
+            chat.chatUsers
+        );
     }
 }
 

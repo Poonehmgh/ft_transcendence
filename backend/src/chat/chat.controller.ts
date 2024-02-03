@@ -58,8 +58,21 @@ export class ChatController {
     async createChat(
         @Req() req: AuthenticatedRequest,
         @Body() newChat: NewChatDTO,
-        @Res() res: Response
+        @Res() res
     ) {
-        return this.chatService.createChat(req.user.id, newChat);
+        try {
+            const result = await this.chatService.createChat(req.user.id, newChat);
+
+            if (result instanceof Error) {
+                res.status(500).json({ error: result.message });
+            } else if ("error" in result) {
+                res.status(500).json({ error: result.error });
+            } else {
+                res.status(200).json(result);
+            }
+        } catch (error) {
+            console.error("Error creating chat:", error);
+            res.status(500).json({ error: "Internal Server Error" });
+        }
     }
 }
