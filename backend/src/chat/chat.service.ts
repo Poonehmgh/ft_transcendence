@@ -3,6 +3,7 @@ import { PrismaService } from "../prisma/prisma.service";
 import { Chat, Chat_User } from "@prisma/client";
 
 import {
+	AckchualChat,
     ChatInfoDTO,
     ChatUserDTO,
     MessageListElementDTO,
@@ -20,6 +21,7 @@ export class ChatService {
                 where: {
                     id: Number(chatId),
                 },
+				
                 include: {
                     chatUsers: true,
                 },
@@ -67,12 +69,12 @@ export class ChatService {
                 },
             });
 
-            return userChats.map((chat) => {
+            return userChats.map((chat: AckchualChat) => {
                 return {
                     id: chat.id,
                     name: chat.name || "Unnamed Chat",
                     dm: chat.dm,
-                    private: chat.private,
+                    isPrivate: chat.isPrivate,
                     password_required: !!chat.password, // Assuming password_required is true if password is present
                     chatUsers: chat.chatUsers.map((chatUser) => {
                         return {
@@ -160,7 +162,7 @@ export class ChatService {
         }
     }
 
-    async dmChatExists(userId1: number, userId2: number): Promise<Chat | null> {
+    async dmChatExists(userId1: number, userId2: number): Promise<AckchualChat | null> {
         const existingChat = await this.prisma.chat.findFirst({
             where: {
                 dm: true,
@@ -175,7 +177,7 @@ export class ChatService {
             },
         });
 
-        return existingChat as Chat | null;
+        return existingChat;
     }
 
     async validateDm(newChat: NewChatDTO) {
@@ -195,14 +197,13 @@ export class ChatService {
                 throw { message: "DM must have exactly 2 users" };
             }
 
-            const existingChat: Chat = await this.dmChatExists(
+            const existingChat: AckchualChat = await this.dmChatExists(
                 newChatRequest.userIds[0],
                 newChatRequest.userIds[1]
             );
 
             if (existingChat) {
                 const existingChatInfo: ChatInfoDTO = ChatInfoDTO.fromChat(existingChat);
-
                 return existingChatInfo;
             }
 
@@ -210,7 +211,7 @@ export class ChatService {
                 data: {
                     name: "dm-chat",
                     dm: true,
-                    private: true,
+                    isPrivate: true,
                     password: null,
                 },
             });
@@ -257,7 +258,8 @@ export class ChatService {
     }
 
     async getChatUsers(chatId: number): Promise<ChatUserDTO[]> {
-        const chatUsers = await this.prisma.chat_User.findMany({
+        const number_chatId
+		const chatUsers = await this.prisma.chat_User.findMany({
             where: {
                 chatId,
             },

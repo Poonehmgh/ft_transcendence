@@ -6,7 +6,11 @@ import {
     IsOptional,
     IsString,
 } from "class-validator";
-import { Chat } from "@prisma/client";
+import { Chat, Chat_User } from "@prisma/client";
+
+export interface AckchualChat extends Chat {
+	chatUsers: Chat_User[];
+  }
 
 export class ChatListDTO {
     chatName: string;
@@ -100,7 +104,7 @@ export class ChatInfoDTO {
     id: number;
     name: string;
     dm: boolean;
-    private: boolean;
+    isPrivate: boolean;
     password_required: boolean;
     chatUsers: ChatUserDTO[];
 
@@ -108,26 +112,36 @@ export class ChatInfoDTO {
         id: number,
         name: string,
         dm: boolean,
-        privateChat: boolean,
+        isPrivate: boolean,
         passwordRequired: boolean,
         chatUsers: ChatUserDTO[]
     ) {
         this.id = id;
         this.name = name;
         this.dm = dm;
-        this.private = privateChat;
+        this.isPrivate = isPrivate;
         this.password_required = passwordRequired;
         this.chatUsers = chatUsers;
     }
 
-    static fromChat(chat: Chat): ChatInfoDTO {
+    static fromChat(chat: AckchualChat): ChatInfoDTO {
         return new ChatInfoDTO(
             chat.id,
             chat.name,
             chat.dm,
-            chat.private,
+            chat.isPrivate,
             chat.password ? true : false,
-            chat.chatUsers
+			chat.chatUsers.map((chatUser) => ({
+				userId: chatUser.userId,
+				chatId: chatUser.chatId,
+				owner: chatUser.owner,
+				admin: chatUser.admin,
+				blocked: chatUser.blocked,
+				muted: chatUser.muted,
+				invited: chatUser.invited,
+			}))
+
+
         );
     }
 }

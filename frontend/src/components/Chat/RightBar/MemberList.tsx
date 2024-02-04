@@ -14,7 +14,7 @@ function MemberList(props: membersProps): React.JSX.Element {
     const [selectedChatUser, setSelectedChatUser] = useState<ChatUserDTO>(null);
 
     const apiUrl =
-        process.env.REACT_APP_BACKEND_URL + "/chat_users/" + props.selectedChat.id;
+        process.env.REACT_APP_BACKEND_URL + "/chat/chat_users/" + props.selectedChat.id;
 
     useEffect(() => {
         fetchGetSet<ChatUserDTO[]>(apiUrl, setChatUsers);
