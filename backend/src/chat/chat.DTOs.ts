@@ -8,6 +8,25 @@ import {
 } from "class-validator";
 import { Chat, Chat_User } from "@prisma/client";
 
+export class CreateNewChatDTO {
+
+    name: string;
+    dm: boolean;
+    pw_protected: boolean;
+    password: string;
+    chat_users: ChatUserDTO[] = [];
+
+    constructor(name: string, dm: boolean, pw_protected: boolean, password: string, chat_users: ChatUserDTO[]) {
+        this.name = name;
+        this.dm = dm;
+        this.pw_protected = pw_protected;
+        this.password = password;
+        this.chat_users = chat_users;
+    }
+
+}
+
+
 export interface AckchualChat extends Chat {
     chatUsers: Chat_User[];
 }
@@ -179,3 +198,33 @@ export class InviteUserDTO {
         this.userId = userId;
     }
 }
+
+export class ChangeChatUserStatusDTO {
+    operatorId: number
+    chatId: number
+    userId: number
+    owner: boolean
+    muted: boolean
+    banned: boolean
+    admin: boolean
+    kick: boolean
+    constructor(operatorId: number, chatId: number, userId: number, owner: boolean, muted: boolean, banned: boolean, admin: boolean){
+        this.operatorId = operatorId;
+        this.chatId = chatId;
+        this.userId = userId;
+        this.owner = owner;
+        this.muted = muted;
+        this.banned = banned;
+        this.admin = admin;
+    }
+}
+
+// {
+//     "operatorId": 1,
+//     "chatId": 2,
+//     "userId": 2,
+//     "owner": "true",
+//     "muted": "false",
+//     "banned": "false",
+//     "admin": "false"
+// }

@@ -1,6 +1,5 @@
 import { HttpStatus, Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
-import { Chat, Chat_User } from "@prisma/client";
 
 import {
     AckchualChat,
