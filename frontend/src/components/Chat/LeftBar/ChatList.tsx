@@ -17,22 +17,21 @@ interface chatListProps {
 function ChatList(props: chatListProps): React.JSX.Element {
     const [chatNames, setChatNames] = useState<string[]>(null);
 
-    async function fetchChatNames() {
-        try {
-            const names = await Promise.all(
-                props.chats.map(async (chat) => {
-                    const apiUrl = `${process.env.REACT_APP_BACKEND_URL}/chat/name/${chat.id}`;
-                    const response = await fetchGet<{ name: string }>(apiUrl);
-                    return response.name;
-                })
-            );
-            setChatNames(names);
-        } catch (error) {
-            console.error("Error fetching chat names:", error);
-        }
-    }
-
     useEffect(() => {
+        async function fetchChatNames() {
+            try {
+                const names = await Promise.all(
+                    props.chats.map(async (chat) => {
+                        const apiUrl = `${process.env.REACT_APP_BACKEND_URL}/chat/name/${chat.id}`;
+                        const response = await fetchGet<{ name: string }>(apiUrl);
+                        return response.name;
+                    })
+                );
+                setChatNames(names);
+            } catch (error) {
+                console.error("Error fetching chat names:", error);
+            }
+        }
         fetchChatNames();
     }, [props.chats]);
 
@@ -48,7 +47,7 @@ function ChatList(props: chatListProps): React.JSX.Element {
 
             <div className="chatElementDiv">
                 --- my chats ---
-                {!props.chats ? (
+                {props.chats.length === 0 ? (
                     <p>none</p>
                 ) : (
                     props.chats.map((element, index) => (

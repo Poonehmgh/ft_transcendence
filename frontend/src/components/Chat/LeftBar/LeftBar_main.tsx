@@ -16,10 +16,9 @@ interface leftBarProps {
 }
 
 function LeftBar(props: leftBarProps): React.JSX.Element {
-    const newChat = null;
     return (
         <div className="sideBar">
-            <NewChat selectChat={(newChat) => props.selectChat(newChat)} />
+            <NewChat selectChat={(chat) => props.selectChat(chat)} />
 
             <ChatList
                 selectedChat={props.selectedChat}

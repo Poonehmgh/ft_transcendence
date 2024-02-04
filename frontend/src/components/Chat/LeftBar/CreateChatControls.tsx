@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 // DTO
 import { NewChatDTO } from "src/dto/chat-dto";
@@ -18,20 +18,18 @@ function CreateChatControls(props: CreateChatControlsProps): React.JSX.Element {
     const [usePassword, setUsePassword] = useState(false);
     const [isPasswordStateValid, setIsPasswordStateValid] = useState(true);
 
-    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/chat/create";
-
-    function validatePassword() {
+    const validatePassword = useCallback(() => {
         if (!usePassword || !props.passwordRef.current) {
             setIsPasswordStateValid(true);
             return;
         }
         const minLength = 3;
         setIsPasswordStateValid(props.passwordRef.current.value.length >= minLength);
-    }
+    }, [usePassword, props.passwordRef]);
 
     useEffect(() => {
         validatePassword();
-    }, [usePassword]);
+    }, [usePassword, validatePassword]);
 
     if (props.newChatDTO.userIds.length === 0) return null;
 

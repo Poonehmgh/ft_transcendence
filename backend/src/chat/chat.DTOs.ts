@@ -9,8 +9,8 @@ import {
 import { Chat, Chat_User } from "@prisma/client";
 
 export interface AckchualChat extends Chat {
-	chatUsers: Chat_User[];
-  }
+    chatUsers: Chat_User[];
+}
 
 export class ChatListDTO {
     chatName: string;
@@ -73,16 +73,6 @@ export class EstablishConnectDTO {
     userID: number;
 }
 
-export class ChatUserDTO {
-    userId: number;
-    chatId: number;
-    owner: boolean;
-    admin: boolean;
-    blocked: boolean;
-    muted: boolean;
-    invited: boolean;
-}
-
 export class NewChatDTO {
     @IsBoolean()
     dm: boolean;
@@ -100,12 +90,22 @@ export class NewChatDTO {
     userIds: number[];
 }
 
+export class ChatUserDTO {
+    userId: number;
+    chatId: number;
+    owner: boolean;
+    admin: boolean;
+    blocked: boolean;
+    muted: boolean;
+    invited: boolean;
+}
+
 export class ChatInfoDTO {
     id: number;
     name: string;
     dm: boolean;
     isPrivate: boolean;
-    password_required: boolean;
+    passwordRequired: boolean;
     chatUsers: ChatUserDTO[];
 
     constructor(
@@ -120,7 +120,7 @@ export class ChatInfoDTO {
         this.name = name;
         this.dm = dm;
         this.isPrivate = isPrivate;
-        this.password_required = passwordRequired;
+        this.passwordRequired = passwordRequired;
         this.chatUsers = chatUsers;
     }
 
@@ -131,17 +131,15 @@ export class ChatInfoDTO {
             chat.dm,
             chat.isPrivate,
             chat.password ? true : false,
-			chat.chatUsers.map((chatUser) => ({
-				userId: chatUser.userId,
-				chatId: chatUser.chatId,
-				owner: chatUser.owner,
-				admin: chatUser.admin,
-				blocked: chatUser.blocked,
-				muted: chatUser.muted,
-				invited: chatUser.invited,
-			}))
-
-
+            chat.chatUsers.map((chatUser) => ({
+                userId: chatUser.userId,
+                chatId: chatUser.chatId,
+                owner: chatUser.owner,
+                admin: chatUser.admin,
+                blocked: chatUser.blocked,
+                muted: chatUser.muted,
+                invited: chatUser.invited,
+            }))
         );
     }
 }

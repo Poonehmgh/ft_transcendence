@@ -70,21 +70,14 @@ function NewChat(props: newChatProps): React.JSX.Element {
         if (passwordRef.current) {
             newChatDTO.password = passwordRef.current.value;
         }
-        console.log("createChat called: ", newChatDTO);
-
         try {
             const newChat: ChatInfoDTO = await fetchX("POST", apiUrl, newChatDTO);
             console.log("New chat created: ", newChat);
 
             props.selectChat(newChat);
-            console.log("Chat selected: ", newChat);
-
             closeModal();
         } catch (error) {
             console.error("Error creating chat:", error);
-            // Handle error appropriately
-        } finally {
-            console.log("Finally block executed");
         }
     }
 

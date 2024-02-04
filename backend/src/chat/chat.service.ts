@@ -3,7 +3,7 @@ import { PrismaService } from "../prisma/prisma.service";
 import { Chat, Chat_User } from "@prisma/client";
 
 import {
-	AckchualChat,
+    AckchualChat,
     ChatInfoDTO,
     ChatUserDTO,
     MessageListElementDTO,
@@ -21,7 +21,7 @@ export class ChatService {
                 where: {
                     id: Number(chatId),
                 },
-				
+
                 include: {
                     chatUsers: true,
                 },
@@ -75,7 +75,7 @@ export class ChatService {
                     name: chat.name || "Unnamed Chat",
                     dm: chat.dm,
                     isPrivate: chat.isPrivate,
-                    password_required: !!chat.password, // Assuming password_required is true if password is present
+                    passwordRequired: !!chat.password, // Assuming password_required is true if password is present
                     chatUsers: chat.chatUsers.map((chatUser) => {
                         return {
                             userId: chatUser.userId,
@@ -258,8 +258,7 @@ export class ChatService {
     }
 
     async getChatUsers(chatId: number): Promise<ChatUserDTO[]> {
-        const number_chatId
-		const chatUsers = await this.prisma.chat_User.findMany({
+        const chatUsers = await this.prisma.chat_User.findMany({
             where: {
                 chatId,
             },
@@ -321,7 +320,7 @@ export class ChatService {
             const password_required = newChat.password !== null;
             return {
                 ...newChat,
-                password_required,
+                passwordRequired: password_required,
             };
         } catch (error) {
             console.error(`Error in createChat: ${error.message}`);
