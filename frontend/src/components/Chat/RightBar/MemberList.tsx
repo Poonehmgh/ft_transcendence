@@ -12,6 +12,7 @@ interface membersProps {
 function MemberList(props: membersProps): React.JSX.Element {
     const [chatUsers, setChatUsers] = useState<ChatUserDTO[]>(null);
     const [selectedChatUser, setSelectedChatUser] = useState<ChatUserDTO>(null);
+	const [userNames, setUserNames] = useState<string[]>([]);
 
     const apiUrl =
         process.env.REACT_APP_BACKEND_URL + "/chat/chat_users/" + props.selectedChat.id;
@@ -22,32 +23,30 @@ function MemberList(props: membersProps): React.JSX.Element {
     }, [props.selectedChat, apiUrl]);
 
     useEffect(() => {
-		if (chatUsers) {
-			// Fetch names using user IDs one at a time
-			const apiNamesUrl = process.env.REACT_APP_BACKEND_URL + "/user/name/";
-	
-			const fetchName = async (userId) => {
-				try {
-					const response = await fetchGet<{name: string }>(apiNamesUrl + userId);
-					const name = response.name || "Unknown Name";
-	
-					// Collect updated users
-					setChatUsers((prevUsers) => {
-						return prevUsers.map((user) => {
-							return user.userId === userId
-								? { ...user, userName: name }
-								: user;
-						});
-					});
-				} catch (error) {
-					console.error(`Error fetching name for user ${userId}:`, error);
-				}
-			};
-	
-			// Iterate through each user and fetch their name
-			chatUsers.forEach((user) => fetchName(user.userId));
-		}
-	}, [chatUsers]);
+        if (chatUsers) {
+            // Fetch names using user IDs one at a time
+            const apiNamesUrl = process.env.REACT_APP_BACKEND_URL + "/user/name/";
+
+            const fetchName = async (userId, index) => {
+                try {
+                    const response = await fetchGet<string>(apiNamesUrl + userId);
+                    const name = response || "Unknown Name";
+
+                    // Update the user with the fetched name
+                    setUserNames((prevNames) => {
+                        const updatedNames = [...prevNames];
+                        updatedNames[index] = name;
+                        return updatedNames;
+                    });
+                } catch (error) {
+                    console.error(`Error fetching name for user ${userId}:`, error);
+                }
+            };
+
+            // Iterate through each user and fetch their name
+            chatUsers.forEach((user, index) => fetchName(user.userId, index));
+        }
+    }, [chatUsers]);
 
     function selectMember(chatUser) {
         setSelectedChatUser(chatUser);
@@ -66,7 +65,7 @@ function MemberList(props: membersProps): React.JSX.Element {
         <div className="sideBar_sub1">
             <div className="chatElementDiv">
                 --- chat members ---
-                {chatUsers.map((element) => (
+                {chatUsers.map((element, i) => (
                     <button
                         key={element.userId}
                         className={
@@ -76,7 +75,7 @@ function MemberList(props: membersProps): React.JSX.Element {
                         }
                         onClick={() => selectMember(element)}
                     >
-                        {element.userId}
+                        {userNames[i]}
                     </button>
                 ))}
             </div>
