@@ -48,9 +48,9 @@ export class ChatService {
         }
     }
 
-    async getUserChats(userId): Promise<ChatInfoDTO[]> {
+    async getUsersChats(userId): Promise<ChatInfoDTO[]> {
         try {
-            const userChats = await this.prisma.chat.findMany({
+            const chats = await this.prisma.chat.findMany({
                 where: {
                     chatUsers: {
                         some: {
@@ -60,16 +60,10 @@ export class ChatService {
                 },
                 include: {
                     chatUsers: true,
-                    messages: {
-                        orderBy: {
-                            createdAt: "desc",
-                        },
-                        take: 1, // Change this according to your requirements
-                    },
                 },
             });
 
-            return userChats.map((chat: AckchualChat) => {
+            return chats.map((chat: AckchualChat) => {
                 return {
                     id: chat.id,
                     name: chat.name || "Unnamed Chat",
@@ -260,7 +254,7 @@ export class ChatService {
     async getChatUsers(chatId: number): Promise<ChatUserDTO[]> {
         const chatUsers = await this.prisma.chat_User.findMany({
             where: {
-                chatId,
+                chatId: Number(chatId),
             },
         });
 

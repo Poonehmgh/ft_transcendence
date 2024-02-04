@@ -14,7 +14,8 @@ re: clean all
 
 rebuild:
 	docker compose down -v
-	docker-compose up --force-recreate
+	docker-compose build --no-cache
+	docker-compose up --force-recreate -d
 
 mgit:
 	git add .

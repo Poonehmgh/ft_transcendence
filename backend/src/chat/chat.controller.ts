@@ -11,7 +11,7 @@ import {
 } from "@nestjs/common";
 import { ChatService } from "./chat.service";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
-import { NewChatDTO } from "./chat.DTOs";
+import { ChatUserDTO, NewChatDTO } from "./chat.DTOs";
 import { AuthenticatedRequest } from "src/shared/dto";
 
 @Controller("chat")
@@ -21,7 +21,7 @@ export class ChatController {
 
     @Get("my_chats")
     async getMyChats(@Req() req: AuthenticatedRequest) {
-        return this.chatService.getUserChats(req.user.id);
+        return this.chatService.getUsersChats(req.user.id);
     }
 
     //Give 0,0 for first 50 messages
@@ -35,8 +35,14 @@ export class ChatController {
     }
 
     @Get("chat_users/:chatId")
-    async getChatUsers(@Param("chatId") chatId: number) {
-        return this.chatService.getChatUsers(chatId);
+    async getChatUsers(@Param("chatId") chatId: number, @Res() res) {
+        try {
+            const chatUsers: ChatUserDTO[] = await this.chatService.getChatUsers(chatId);
+            res.json(chatUsers);
+        } catch (error) {
+            console.error("Error getChatUsers:", error);
+            res.status(500).json({ error: "Internal Server Error" });
+        }
     }
 
     @Get("name/:chatId")
@@ -49,7 +55,7 @@ export class ChatController {
             const chatName = await this.chatService.getChatName(chatId, req.user.id);
             res.json({ name: chatName });
         } catch (error) {
-            console.error("Error fetching chat name:", error);
+            console.error("Error getChatName:", error);
             res.status(500).json({ error: "Internal Server Error" });
         }
     }

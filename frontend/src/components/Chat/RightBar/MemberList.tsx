@@ -18,6 +18,7 @@ function MemberList(props: membersProps): React.JSX.Element {
 
     useEffect(() => {
         fetchGetSet<ChatUserDTO[]>(apiUrl, setChatUsers);
+        console.log("ChatUsers: ", chatUsers);
     }, [props.selectedChat, apiUrl]);
 
     useEffect(() => {

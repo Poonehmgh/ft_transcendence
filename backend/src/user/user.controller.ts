@@ -20,7 +20,7 @@ import { diskStorage } from "multer";
 import * as path from "path";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
 import { MatchDTO } from "src/match/match-dto";
-import { reqUser, AuthenticatedRequest} from "src/shared/dto"
+import { reqUser, AuthenticatedRequest } from "src/shared/dto";
 
 @Controller("user")
 @UseGuards(JwtAuthGuard)
@@ -38,10 +38,15 @@ export class UserController {
     }
 
     @Get("name/:id")
-    async getName(@Param("id") id: number): Promise<string> {
-        return this.userService.getNameById(id);
+    async getName(@Param("id") id: number, @Res() res) {
+        try {
+            const name = await this.userService.getNameById(id);
+            res.json(name);
+        } catch (error) {
+            console.error("Error getName:", error);
+            res.status(500).json({ error: "Internal Server Error" });
+        }
     }
-
 
     @Get("my_avatar")
     async getMyAvatar(@Req() req: AuthenticatedRequest, @Res() res: Response) {

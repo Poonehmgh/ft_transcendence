@@ -28,11 +28,18 @@ async function main() {
         data: {
             id: 1337,
             email: "shmang@pongers.io",
-            name: "shmishmangsm",
+            name: "shmang",
         },
     });
 
-    console.log({ knudel, knang });
+/*     const pongers = await prisma.chat.create({
+        data: {
+            id: 0,
+            name: "pongers public channel",
+            dm: false,
+            password: null,
+        },
+    }); */
 }
 
 main()
