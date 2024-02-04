@@ -24,7 +24,7 @@ import {
     INFO_UNBLOCK,
     ERR_NAMETAKEN,
     ERR_NAMECHANGE,
-} from "../constants/constants.user.service";
+} from "../shared/constants.user.service";
 import * as fs from "fs";
 import * as path from "path";
 import { MatchDTO, MatchInfoDTO } from "src/match/match-dto";
@@ -72,6 +72,18 @@ export class UserService {
             console.error("Error retrieving match DTOs:", error);
             throw error;
         }
+    }
+
+    async getNameById(userId: number): Promise<string> {
+        const profile = await this.prisma.user.findUnique({
+            where: { id: Number(userId) },
+            select: {
+                name: true,
+            },
+        });
+        if (!profile) throw new Error("getNameById: User not found");
+
+        return profile.name;
     }
 
     async getProfileById(userId: number): Promise<UserProfileDTO> {
@@ -328,13 +340,25 @@ export class UserService {
         });
     }
 
-    async getOtherUsers(thisId: number) {
-        return await this.prisma.user.findMany({
+    async getOtherUsers(thisId: number): Promise<UserProfileDTO[]> {
+        const otherUsers: User[] = await this.prisma.user.findMany({
             where: {
                 NOT: {
                     id: thisId,
                 },
             },
+        });
+
+        return otherUsers.map(({ id, name, mmr, rank, matches, winrate, online }) => {
+            return new UserProfileDTO(
+                id,
+                name,
+                mmr,
+                rank,
+                matches.length,
+                winrate,
+                online
+            );
         });
     }
 

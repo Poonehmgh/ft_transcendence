@@ -19,18 +19,8 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
 import * as path from "path";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
-import { MatchDTO, MatchInfoDTO } from "src/match/match-dto";
-
-interface reqUser {
-    id: number;
-    name: string;
-    iat: number;
-    exp: number;
-}
-
-interface AuthenticatedRequest extends Request {
-    user: reqUser;
-}
+import { MatchDTO } from "src/match/match-dto";
+import { reqUser, AuthenticatedRequest } from "src/shared/dto";
 
 @Controller("user")
 @UseGuards(JwtAuthGuard)
@@ -45,6 +35,17 @@ export class UserController {
     @Get("profile/:id")
     async getProfile(@Param("id") id: number): Promise<UserProfileDTO> {
         return this.userService.getProfileById(id);
+    }
+
+    @Get("name/:id")
+    async getName(@Param("id") id: number, @Res() res) {
+        try {
+            const name = await this.userService.getNameById(id);
+            res.json(name);
+        } catch (error) {
+            console.error("Error getName:", error);
+            res.status(500).json({ error: "Internal Server Error" });
+        }
     }
 
     @Get("my_avatar")
@@ -87,6 +88,11 @@ export class UserController {
     @Get("all_users")
     async getAllUsers() {
         return this.userService.getAllUsers();
+    }
+
+    @Get("other_users")
+    async getOtherUsers(@Req() req: AuthenticatedRequest) {
+        return this.userService.getOtherUsers(req.user.id);
     }
 
     @Get("friends")

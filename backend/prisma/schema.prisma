@@ -8,26 +8,26 @@ datasource db {
 }
 
 model User {
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-  // registration
-  id            Int         @id @unique // this is the intraID
-  name          String      @unique
-  email         String      @unique
-  twoFa         Boolean     @default(false)
-  twoFaSecret   String?
-  // scorecard
-  mmr           Int         @default(1000)
-  rank          String      @default("noob")
-  matches       Int[]
-  winrate       Float?
-  // chat
-  online        Boolean     @default(false)
-  friends       Int[]
-  friendReq_out Int[]
-  friendReq_in  Int[]
-  blocked       Int[]
-  userChats     Chat_User[]
+    createdAt     DateTime    @default(now())
+    updatedAt     DateTime    @updatedAt
+    // registration
+    id            Int         @id @unique // this is the intraID
+    name          String      @unique
+    email         String      @unique
+    twoFa         Boolean     @default(false)
+    twoFaSecret   String?
+    // scorecard
+    mmr           Int         @default(1000)
+    rank          String      @default("noob")
+    matches       Int[]
+    winrate       Float?
+    // chat
+    online        Boolean     @default(false)
+    friends       Int[]
+    friendReq_out Int[]
+    friendReq_in  Int[]
+    blocked       Int[]
+    userChats     Chat_User[]
 }
 
 model Match {
@@ -61,16 +61,15 @@ model Message {
 }
 
 model Chat {
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-  id           Int         @id @unique @default(autoincrement())
-  name         String      @default("Unnamed Chat")
-  dm           Boolean     @default(false)
-  // privat       Boolean     @default(false)
-  pw_protected Boolean     @default(false)
-  password     String? // hash this?
-  messages     Message[]
-  chatUsers    Chat_User[]
+    createdAt DateTime    @default(now())
+    updatedAt DateTime    @updatedAt
+    id        Int         @id @unique @default(autoincrement())
+    name      String
+    dm        Boolean     @default(false)
+    isPrivate Boolean     @default(false)
+    password  String?
+    messages  Message[]
+    chatUsers Chat_User[]
 }
 
 // junction tables
@@ -90,5 +89,5 @@ model Chat_User {
   muted_until DateTime @default(now())
   invited     Boolean  @default(false)
 
-  @@index([userId, chatId])
+    @@index([userId, chatId])
 }

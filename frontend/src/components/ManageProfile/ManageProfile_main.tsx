@@ -3,6 +3,8 @@ import { authContentHeader } from "src/functions/utils";
 import ManageContactsTabs from "./ManageContactsTabs";
 import PlayerCardTable from "../shared/PlayerCardTable";
 import { fetchGetSet } from "src/functions/utils";
+import { authHeader } from "../../functions/utils";
+import LoadingH2 from "src/components/shared/LoadingH2";
 
 // DTO
 import { UserProfileDTO } from "src/dto/user-dto";
@@ -11,7 +13,6 @@ import { UserProfileDTO } from "src/dto/user-dto";
 import "src/styles/buttons.css";
 import "src/styles/style.css";
 import "src/styles/manageProfile.css";
-import { authHeader } from "../../functions/utils";
 
 function ManageProfile() {
     const [userData, setUserData] = useState<UserProfileDTO | null>(null);
@@ -70,7 +71,7 @@ function ManageProfile() {
 
             if (newName === null) return;
             newName = newName.trim();
-            if (newName === "" || newName == userData.name) return;
+            if (newName === "" || newName === userData.name) return;
 
             const changeNameDTO = {
                 newName: newName,
@@ -94,56 +95,54 @@ function ManageProfile() {
         }
     }
 
+    if (!userData) return <LoadingH2 elementName={"Manage your profile"} />;
+
     return (
         <div className="mainContainerColumn" style={{ alignItems: "center" }}>
-            <div className="h2">Manage your profile:</div>
-            {userData ? (
-                <div className="manageProfile">
-                    <div className="leftAligner">
-                        <div
-                            className="h2Left"
-                            style={{
-                                flexDirection: "row",
-                                justifyContent: "start",
-                                alignItems: "flex-end",
-                            }}
-                        >
-                            {userData.name}
-                            <button className="editName" onClick={handleNameChange}>
-                                ✎
-                            </button>
-                        </div>
+            <div className="h2">Manage your profile</div>
+            <div className="manageProfile">
+                <div className="leftAligner">
+                    <div
+                        className="h2Left"
+                        style={{
+                            flexDirection: "row",
+                            justifyContent: "start",
+                            alignItems: "flex-end",
+                        }}
+                    >
+                        {userData.name}
+                        <button className="editName" onClick={handleNameChange}>
+                            ✎
+                        </button>
                     </div>
+                </div>
 
-                    <div className="playerCard">
-                        <img
-                            src={avatarURL}
-                            className="avatar"
-                            alt="User Avatar"
-                            onClick={handleChooseFileClick}
-                        />
-                        <div className="expanderHorizontal" />
-                        <PlayerCardTable
-                            mmr={userData.mmr}
-                            rank={userData.rank}
-                            matches={userData.matches}
-                            winrate={userData.winrate}
-                        />
-                    </div>
-
-                    <ManageContactsTabs />
-
-                    <input
-                        type="file"
-                        accept="image/*"
-                        ref={fileInputRef}
-                        style={{ display: "none" }}
-                        onChange={handleAvatarChange}
+                <div className="playerCard">
+                    <img
+                        src={avatarURL}
+                        className="avatar"
+                        alt="User Avatar"
+                        onClick={handleChooseFileClick}
+                    />
+                    <div className="expanderHorizontal" />
+                    <PlayerCardTable
+                        mmr={userData.mmr}
+                        rank={userData.rank}
+                        matches={userData.matches}
+                        winrate={userData.winrate}
                     />
                 </div>
-            ) : (
-                <p>Loading data...</p>
-            )}
+
+                <ManageContactsTabs />
+
+                <input
+                    type="file"
+                    accept="image/*"
+                    ref={fileInputRef}
+                    style={{ display: "none" }}
+                    onChange={handleAvatarChange}
+                />
+            </div>
         </div>
     );
 }

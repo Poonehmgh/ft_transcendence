@@ -1,4 +1,35 @@
-import {findIndex} from "rxjs";
+import { findIndex } from "rxjs";
+import {
+    ArrayUnique,
+    ArrayMinSize,
+    IsBoolean,
+    IsOptional,
+    IsString,
+} from "class-validator";
+import { Chat, Chat_User } from "@prisma/client";
+
+export class CreateNewChatDTO {
+
+    name: string;
+    dm: boolean;
+    pw_protected: boolean;
+    password: string;
+    chat_users: ChatUserDTO[] = [];
+
+    constructor(name: string, dm: boolean, pw_protected: boolean, password: string, chat_users: ChatUserDTO[]) {
+        this.name = name;
+        this.dm = dm;
+        this.pw_protected = pw_protected;
+        this.password = password;
+        this.chat_users = chat_users;
+    }
+
+}
+
+
+export interface AckchualChat extends Chat {
+    chatUsers: Chat_User[];
+}
 
 export class ChatListDTO {
     chatName: string;
@@ -23,15 +54,20 @@ export class MessageListElementDTO {
 }
 
 export class ParticipantListElementDTO {
-    userName: string
-    userId: number
-    owner: boolean
-    admin: boolean
-    online: boolean
-    pictureUrl: string
+    userName: string;
+    userId: number;
+    owner: boolean;
+    admin: boolean;
+    online: boolean;
+    pictureUrl: string;
 
-
-    constructor(userName: string, userId: number, owner: boolean, admin: boolean, online: boolean) {
+    constructor(
+        userName: string,
+        userId: number,
+        owner: boolean,
+        admin: boolean,
+        online: boolean
+    ) {
         this.userName = userName;
         this.userId = userId;
         this.owner = owner;
@@ -56,43 +92,77 @@ export class EstablishConnectDTO {
     userID: number;
 }
 
+export class NewChatDTO {
+    @IsBoolean()
+    dm: boolean;
+
+    @IsBoolean()
+    @IsOptional()
+    private?: boolean;
+
+    @IsString()
+    @IsOptional()
+    password?: string;
+
+    @ArrayMinSize(1, { message: "At least 1 user id required" })
+    @ArrayUnique({ message: "User ids must be unique" })
+    userIds: number[];
+}
+
 export class ChatUserDTO {
     userId: number;
-    owner: boolean = false;
-    admin: boolean = false;
-    blocked: boolean = false;
-    muted: boolean = false;
-    invited: boolean = false;
-
-    constructor(userId: number, owner: boolean, admin: boolean, blocked: boolean, muted: boolean, invited: boolean) {
-        this.userId = userId;
-        this.owner = owner;
-        this.admin = admin;
-        this.blocked = blocked;
-        this.muted = muted;
-        this.invited = invited;
-    }
-
-
+    chatId: number;
+    owner: boolean;
+    admin: boolean;
+    blocked: boolean;
+    muted: boolean;
+    invited: boolean;
 }
 
-export class CreateNewChatDTO {
-
+export class ChatInfoDTO {
+    id: number;
     name: string;
     dm: boolean;
-    pw_protected: boolean;
-    password: string;
-    chat_users: ChatUserDTO[] = [];
+    isPrivate: boolean;
+    passwordRequired: boolean;
+    chatUsers: ChatUserDTO[];
 
-    constructor(name: string, dm: boolean, pw_protected: boolean, password: string, chat_users: ChatUserDTO[]) {
+    constructor(
+        id: number,
+        name: string,
+        dm: boolean,
+        isPrivate: boolean,
+        passwordRequired: boolean,
+        chatUsers: ChatUserDTO[]
+    ) {
+        this.id = id;
         this.name = name;
         this.dm = dm;
-        this.pw_protected = pw_protected;
-        this.password = password;
-        this.chat_users = chat_users;
+        this.isPrivate = isPrivate;
+        this.passwordRequired = passwordRequired;
+        this.chatUsers = chatUsers;
     }
 
+    static fromChat(chat: AckchualChat): ChatInfoDTO {
+        return new ChatInfoDTO(
+            chat.id,
+            chat.name,
+            chat.dm,
+            chat.isPrivate,
+            chat.password ? true : false,
+            chat.chatUsers.map((chatUser) => ({
+                userId: chatUser.userId,
+                chatId: chatUser.chatId,
+                owner: chatUser.owner,
+                admin: chatUser.admin,
+                blocked: chatUser.blocked,
+                muted: chatUser.muted,
+                invited: chatUser.invited,
+            }))
+        );
+    }
 }
+
 //Its json for tests
 // {
 //     "name": "name??",
@@ -119,11 +189,9 @@ export class CreateNewChatDTO {
 // ]
 // }
 
-
-export class InviteUserDTO{
-    chatId: number
-    userId: number
-
+export class InviteUserDTO {
+    chatId: number;
+    userId: number;
 
     constructor(chatID: number, userId: number) {
         this.chatId = chatID;

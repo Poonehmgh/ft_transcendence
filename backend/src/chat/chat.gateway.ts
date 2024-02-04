@@ -10,6 +10,7 @@ import {Server, Socket} from "socket.io";
 import {
   ChangeChatUserStatusDTO,
   CreateNewChatDTO,
+  NewChatDTO,
   EstablishConnectDTO,
   InviteUserDTO,
   SendMessageDTO
@@ -53,12 +54,13 @@ export class ChatGateway implements OnModuleInit, OnGatewayDisconnect{
     await this.chatGatewayService.sendUpdateMessages(messageID, message);
   }
 
-  @SubscribeMessage('createChat')
-  async newChatMessage(@ConnectedSocket() client: Socket, @MessageBody()message: CreateNewChatDTO){
+// moved to API
+/*   @SubscribeMessage('createChat')
+  async newChatMessage(@ConnectedSocket() client: Socket, @MessageBody()message: NewChatDTO){
     const chat = await this.chatGatewayService.createNewEmptyChat(message);
     if(chat)
       await this.chatGatewayService.sendChatCreationUpdate(chat);
-  }
+  } */
 
   @SubscribeMessage('inviteUser')
   async InviteUserToChat(@ConnectedSocket() client: Socket, @MessageBody()message: InviteUserDTO){

@@ -83,7 +83,11 @@ function UserProfileModal(props: userProfileModalProps) {
                                 winrate={userProfile.winrate}
                             />
                         </div>
-                        <SocialActionBar otherProfile={userProfile} />
+                        {props.id.toString() === localStorage.getItem("userId") ? (
+                            <div className="p" style={{margin:"20px 0px"}}>This is your profile.</div>
+                        ) : (
+                            <SocialActionBar otherProfile={userProfile} />
+                        )}
                         <MatchHistory id={props.id} />
                     </div>
                 )}

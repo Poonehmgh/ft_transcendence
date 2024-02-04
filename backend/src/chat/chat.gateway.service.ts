@@ -237,7 +237,6 @@ export class ChatGatewayService {
 				data: {
 					name: data.name,
 					dm: Boolean(data.dm),
-					pw_protected: Boolean(data.pw_protected),
 					password: data.password,
 					chatUsers: {
 						createMany: {
