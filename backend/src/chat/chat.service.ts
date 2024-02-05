@@ -104,7 +104,7 @@ export class ChatService {
             console.log(`error in getChatUsers: ${error.message}`);
             throw error;
         }
-    }
+    } */
 
     async getMessagesByRange(chatID: number, from: number, to: number) {
         try {

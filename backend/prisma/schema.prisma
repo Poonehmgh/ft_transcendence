@@ -1,10 +1,10 @@
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DB_URL")
+  provider = "postgresql"
+  url      = env("DB_URL")
 }
 
 model User {
@@ -31,33 +31,33 @@ model User {
 }
 
 model Match {
-    // match
-    createdAt   DateTime  @default(now())
-    updatedAt   DateTime  @updatedAt
-    id          Int       @id @unique @default(autoincrement())
-    begin       DateTime?
-    end         DateTime?
-    length_sec  Int       @default(0)
-    // players
-    player1     Int
-    player2     Int
-    // outcome
-    score_p1    Int       @default(0)
-    score_p2    Int       @default(0)
-    winner_id   Int?
-    winner_name String?
+  // match
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  id          Int       @id @unique @default(autoincrement())
+  begin       DateTime?
+  end         DateTime?
+  length_sec  Int       @default(0)
+  // players
+  player1     Int
+  player2     Int
+  // outcome
+  score_p1    Int       @default(0)
+  score_p2    Int       @default(0)
+  winner_id   Int?
+  winner_name String?
 
-    @@unique([player1, player2])
+  @@unique([player1, player2])
 }
 
 model Message {
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    id        Int      @id @unique @default(autoincrement())
-    content   String
-    author    Int
-    chat      Chat     @relation(fields: [chatId], references: [id])
-    chatId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  id        Int      @id @unique @default(autoincrement())
+  content   String
+  author    Int
+  chat      Chat     @relation(fields: [chatId], references: [id])
+  chatId    Int
 }
 
 model Chat {

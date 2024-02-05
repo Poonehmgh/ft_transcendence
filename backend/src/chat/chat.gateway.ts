@@ -34,21 +34,18 @@ export class ChatGateway implements OnModuleInit, OnGatewayDisconnect {
         });
     }
 
-    async handleDisconnect(client: Socket) {
-        const userID = this.chatGatewayService.getUserIdFromSocket(client);
-        await this.chatGatewayService.setUserOnlineStatus(userID, false);
-        this.chatGatewayService.deleteUserFromList(userID);
-    }
+  async handleDisconnect(client: Socket) {
+    const userID = this.chatGatewayService.getUserIdFromSocket(client);
+    await this.chatGatewayService.setUserOnlineStatus(userID, false)
+    this.chatGatewayService.deleteUserFromList(userID);
+  }
 
-    @SubscribeMessage("connectMessage")
-    async establishConnect(
-        @ConnectedSocket() client: Socket,
-        @MessageBody() data: EstablishConnectDTO
-    ) {
-        console.log(data);
-        this.chatGatewayService.addUserToList(new userGateway(data.userID, client));
-        await this.chatGatewayService.setUserOnlineStatus(data.userID, true);
-    }
+  @SubscribeMessage('connectMessage')
+  async establishConnect(@ConnectedSocket() client: Socket, @MessageBody()data: EstablishConnectDTO){
+    console.log(data);
+    this.chatGatewayService.addUserToList(new userGateway(data.userID, client));
+    await this.chatGatewayService.setUserOnlineStatus(data.userID, true);
+  }
 
     @SubscribeMessage("sendMessage")
     async receivingMessage(
@@ -59,14 +56,13 @@ export class ChatGateway implements OnModuleInit, OnGatewayDisconnect {
         await this.chatGatewayService.sendUpdateMessages(messageID, message);
     }
 
-    @SubscribeMessage("createChat")
-    async newChatMessage(
-        @ConnectedSocket() client: Socket,
-        @MessageBody() message: CreateNewChatDTO
-    ) {
-        const chat = await this.chatGatewayService.createNewEmptyChat(message);
-        if (chat) await this.chatGatewayService.sendChatCreationUpdate(chat);
-    }
+// moved to API
+/*   @SubscribeMessage('createChat')
+  async newChatMessage(@ConnectedSocket() client: Socket, @MessageBody()message: NewChatDTO){
+    const chat = await this.chatGatewayService.createNewEmptyChat(message);
+    if(chat)
+      await this.chatGatewayService.sendChatCreationUpdate(chat);
+  } */
 
     @SubscribeMessage("inviteUser")
     async InviteUserToChat(
@@ -76,12 +72,10 @@ export class ChatGateway implements OnModuleInit, OnGatewayDisconnect {
         await this.chatGatewayService.inviteUserToChat(message);
     }
 
-    @SubscribeMessage("changeChatUserStatus")
-    async changeUsersInChatStatus(
-        @ConnectedSocket() client: Socket,
-        @MessageBody() message: ChangeChatUserStatusDTO
-    ) {
-        console.log(message);
-        await this.chatGatewayService.changeUsersInChatStatus(message);
-    }
+  @SubscribeMessage('changeChatUserStatus')
+  async changeUsersInChatStatus(@ConnectedSocket() client: Socket, @MessageBody()message: ChangeChatUserStatusDTO){
+    console.log(message);
+    await this.chatGatewayService.changeUsersInChatStatus(message);
+  }
+
 }
