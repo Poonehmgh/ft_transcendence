@@ -44,7 +44,7 @@ export class AuthController {
     if (req.user.twoFa)
       res.redirect("http://localhost:3000/2fa")
     else
-      res.redirect("http://localhost:3000");
+      res.redirect("http://localhost:3000/home");
   }
 
   @Get("/42/test")
