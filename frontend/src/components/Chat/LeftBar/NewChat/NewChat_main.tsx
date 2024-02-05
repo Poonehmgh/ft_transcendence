@@ -20,7 +20,7 @@ function NewChat(props: newChatProps): React.JSX.Element {
     const passwordRef = useRef(null);
     const [newChatDTO, setChatDto] = useState<NewChatDTO>({
         dm: false,
-        private: true,
+        isPrivate: true,
         password: null,
         userIds: [],
     });
@@ -34,7 +34,7 @@ function NewChat(props: newChatProps): React.JSX.Element {
         setModalIsOpen(false);
         setChatDto({
             dm: false,
-            private: true,
+            isPrivate: true,
             password: null,
             userIds: [],
         });
@@ -43,7 +43,7 @@ function NewChat(props: newChatProps): React.JSX.Element {
     function setIsPrivate() {
         setChatDto((prevChatDto) => ({
             ...prevChatDto,
-            private: !prevChatDto.private,
+            isPrivate: !prevChatDto.isPrivate,
         }));
     }
 

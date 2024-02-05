@@ -88,7 +88,7 @@ export class ChatService {
                 };
             });
         } catch (error) {
-            console.log(`Error in getUsersChats: ${error.message}`);
+            console.error(`Error in getUsersChats: ${error.message}`);
             throw error;
         }
     }
@@ -101,7 +101,7 @@ export class ChatService {
                 },
             });
         } catch (error) {
-            console.log(`error in getChatUsers: ${error.message}`);
+            console.error(`error in getChatUsers: ${error.message}`);
             throw error;
         }
     }
@@ -159,11 +159,14 @@ export class ChatService {
     ): Promise<ChatInfoDTO | Error> {
         newChatDTO.userIds.push(creatorId);
 
+        let chatInfo: ChatInfoDTO;
+
         try {
             if (newChatDTO.dm) {
-                return await this.createDmChat(creatorId, newChatDTO);
+                chatInfo = await this.createDmChat(creatorId, newChatDTO);
+            } else {
+                chatInfo = await this.createGroupChat(creatorId, newChatDTO);
             }
-            const chatInfo: ChatInfoDTO = await this.createGroupChat(creatorId, newChatDTO);
             this.chatGatewayService.sendChatUpdate(chatInfo.id);
             return chatInfo;
         } catch (error) {
@@ -216,7 +219,7 @@ export class ChatService {
 
             return ChatInfoDTO.fromChat(newChat);
         } catch (error) {
-            console.log(`Error in createDm: ${error.message}`);
+            console.error(`Error in createDm: ${error.message}`);
             throw error;
         }
     }

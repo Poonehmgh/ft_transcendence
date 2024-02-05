@@ -15,6 +15,7 @@
 }
 
 .sideBar {
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -34,13 +35,11 @@
 
 .chatElementDiv {
     box-sizing: border-box;
-    border: 1px solid var(--text-primary);
     width: 100%;
     min-height: 60px;
     max-height: 500px;
     overflow-y: auto;
-    padding: 10px;
-    line-height: 2;
+    line-height: 1;
     border-radius: 8px;
     margin-bottom: 10px;
 }
@@ -70,15 +69,15 @@
 
 .chatButton,
 .chatButtonSelected {
-    --lightnessOffset: 0%;
+    --lightnessOffset: -100%;
 
     font-size: medium;
     color: var(--text-primary);
     background-color: hsl(var(--backgroundHue1), 0%, calc(5% + var(--lightnessOffset)));
-    padding: 5px;
-    width: 90%;
+    padding: 10px 5px;
+    width: 100%;
     border: none;
-    border-radius: 8px;
+    border-radius: 5px;
     cursor: pointer;
     text-align: left;
     transition: all 0.25s ease;
@@ -90,6 +89,7 @@
 
 .chatButtonSelected {
     color: var(--psl);
+    --lightnessOffset: +3%;
 }
 
 .chatUserListContainer {
