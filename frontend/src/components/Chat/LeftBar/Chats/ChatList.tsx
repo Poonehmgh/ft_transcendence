@@ -42,38 +42,29 @@ function ChatList(props: chatListProps): React.JSX.Element {
     if (!chatNames) return <p>Loading...</p>;
 
     return (
-        <div className="sideBar_sub1">
-            {/* <div className="chatElementDiv">--- public chats ---</div> */}
-
-            <div className="chatElementDiv">
-                --- my chats ---
-                {props.chats.length === 0 ? (
-                    <div className="p">none</div>
-                ) : (
-                    props.chats.map((e, index) => (
-                        <button
-                            key={e.id}
-                            className={
-                                props.selectedChat === e
-                                    ? "chatButtonSelected"
-                                    : "chatButton"
-                            }
-                            onClick={() => selectChat(e)}
-                        >
-                            <div className="chatButtonTextWrapper">
-                                <div>{chatNames[index]}</div>
-                                <div className="smallTextDiv">
-                                    {e.dm
-                                        ? " DM"
-                                        : e.isPrivate
-                                        ? " private Group"
-                                        : " public Group"}
-                                </div>
-                            </div>
-                        </button>
-                    ))
-                )}
-            </div>
+        <div className="chatElementDiv">
+            {props.chats.length === 0 ? (
+                <div className="p">none</div>
+            ) : (
+                props.chats.map((e, index) => (
+                    <button
+                        key={e.id}
+                        className={
+                            props.selectedChat === e ? "chatButtonSelected" : "chatButton"
+                        }
+                        onClick={() => selectChat(e)}
+                    >
+                        <span>{chatNames[index]}</span>
+                        <span className="smallTextDiv">
+                            {e.dm
+                                ? " DM"
+                                : e.isPrivate
+                                ? " private Group"
+                                : " public Group"}
+                        </span>
+                    </button>
+                ))
+            )}
         </div>
     );
 }

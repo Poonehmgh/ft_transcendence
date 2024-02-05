@@ -17,7 +17,7 @@ interface chatsMainProps {
 
 function Chats(props: chatsMainProps): React.JSX.Element {
     return (
-        <div>
+        <div style={{ width: "100%" }}>
             <ChatList
                 selectedChat={props.selectedChat}
                 onSelectChat={(chat) => props.onSelectChat(chat)}
