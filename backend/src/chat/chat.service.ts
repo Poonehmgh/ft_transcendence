@@ -157,7 +157,7 @@ export class ChatService {
 
         try {
             if (newChatDTO.dm) {
-                return await this.createDmChat(newChatDTO);
+                return await this.createDmChat(creatorId, newChatDTO);
             }
             return await this.createGroupChat(creatorId, newChatDTO);
         } catch (error) {
@@ -166,7 +166,10 @@ export class ChatService {
         }
     }
 
-    async createDmChat(newChatDto: NewChatDTO): Promise<ChatInfoDTO | null> {
+    async createDmChat(
+        creatorId: number,
+        newChatDto: NewChatDTO
+    ): Promise<ChatInfoDTO | null> {
         try {
             if (newChatDto.userIds.length !== 2) {
                 throw { message: "DM must have exactly 2 users" };
@@ -183,49 +186,29 @@ export class ChatService {
 
             const newChat = await this.prisma.chat.create({
                 data: {
-                    name: "dm-chat",
+                    name: "DM",
                     dm: true,
                     isPrivate: true,
                     password: null,
+                    chatUsers: {
+                        createMany: {
+                            data: newChatDto.userIds.map((e) => ({
+                                userId: e,
+                                owner: false,
+                                admin: false,
+                                muted: false,
+                                blocked: false,
+                                invited: e === creatorId ? false : true,
+                            })),
+                        },
+                    },
+                },
+                include: {
+                    chatUsers: true,
                 },
             });
 
-            const chatUsers: ChatUserDTO[] = [];
-            for (const userId of newChatDto.userIds) {
-                const createdChat_User = await this.prisma.chat_User.create({
-                    data: {
-                        userId,
-                        chatId: newChat.id,
-                        owner: false,
-                        admin: false,
-                        blocked: false,
-                        muted: false,
-                        muted_until: null,
-                        invited: false,
-                    },
-                });
-
-                chatUsers.push({
-                    userId: createdChat_User.userId,
-                    chatId: createdChat_User.chatId,
-                    owner: createdChat_User.owner,
-                    admin: createdChat_User.admin,
-                    blocked: createdChat_User.blocked,
-                    muted: createdChat_User.muted,
-                    invited: createdChat_User.invited,
-                });
-            }
-
-            const newChatInfo: ChatInfoDTO = new ChatInfoDTO(
-                newChat.id,
-                newChat.name,
-                newChat.dm,
-                false, // private
-                false, // pw not required
-                chatUsers
-            );
-
-            return newChatInfo;
+            return ChatInfoDTO.fromChat(newChat);
         } catch (error) {
             console.log(`Error in createDm: ${error.message}`);
             throw error;
