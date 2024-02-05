@@ -9,12 +9,12 @@ const LeftBar = () => {
             e.preventDefault();
             switch (e.key) {
                 case 'ArrowUp':
-                    if (topPosition > 46) {
+                    if (topPosition > 70) {
                         setTopPosition(topPosition - 1); // Adjust the step size as needed
                     }
                     break;
                 case 'ArrowDown':
-                    if (topPosition < 81) {
+                    if (topPosition < 101) {
                         setTopPosition(topPosition + 1); // Adjust the step size as needed
                     }
                     break;
