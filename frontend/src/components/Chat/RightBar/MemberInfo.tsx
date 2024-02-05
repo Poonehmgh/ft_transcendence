@@ -21,14 +21,6 @@ function MemberInfo(props: memberInfoProps): React.JSX.Element {
         fetchGetSet(apiUrl, setName);
     }, [apiUrl]);
 
-    const [name, setName] = useState<string[]>([]);
-    const apiUrl =
-        process.env.REACT_APP_BACKEND_URL + "/user/name/" + props.member.userId;
-
-    useEffect(() => {
-        fetchGetSet(apiUrl, setName);
-    }, [apiUrl]);
-
     if (!props.member) return <div className="p">Loading data...</div>;
 
     return (
