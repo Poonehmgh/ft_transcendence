@@ -1,6 +1,6 @@
 :root {
-    --color1: hsl(0, 0%, 12%); /* is 30 30 30 rgb */
-    --color2: 60, 60, 60;
+    --color1: hsl(0, 0%, 15%); /* is 30 30 30 rgb */
+    --colorX: hsl(0, 0%, 25%);
     --text-primary: hsl(26, 18%, 43%);
     --psl: hsl(18, 100%, 50%);
     --backgroundHue1: 0;
@@ -154,4 +154,5 @@
     font-size: small;
     font-style: italic;
     text-align: right;
+    color: var(--colorX);
 }
