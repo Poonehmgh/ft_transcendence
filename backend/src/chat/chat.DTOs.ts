@@ -9,25 +9,28 @@ import {
 import { Chat, Chat_User } from "@prisma/client";
 
 export class CreateNewChatDTO {
-
     name: string;
     dm: boolean;
     pw_protected: boolean;
     password: string;
     chat_users: ChatUserDTO[] = [];
 
-    constructor(name: string, dm: boolean, pw_protected: boolean, password: string, chat_users: ChatUserDTO[]) {
+    constructor(
+        name: string,
+        dm: boolean,
+        pw_protected: boolean,
+        password: string,
+        chat_users: ChatUserDTO[]
+    ) {
         this.name = name;
         this.dm = dm;
         this.pw_protected = pw_protected;
         this.password = password;
         this.chat_users = chat_users;
     }
-
 }
 
-
-export interface AckchualChat extends Chat {
+export interface ChatWithChatUsers extends Chat {
     chatUsers: Chat_User[];
 }
 
@@ -98,7 +101,7 @@ export class NewChatDTO {
 
     @IsBoolean()
     @IsOptional()
-    private?: boolean;
+    isPrivate?: boolean;
 
     @IsString()
     @IsOptional()
@@ -116,6 +119,7 @@ export class ChatUserDTO {
     admin: boolean;
     blocked: boolean;
     muted: boolean;
+    mutedUntil?: Date;
     invited: boolean;
 }
 
@@ -143,7 +147,7 @@ export class ChatInfoDTO {
         this.chatUsers = chatUsers;
     }
 
-    static fromChat(chat: AckchualChat): ChatInfoDTO {
+    static fromChat(chat: ChatWithChatUsers): ChatInfoDTO {
         return new ChatInfoDTO(
             chat.id,
             chat.name,
@@ -200,15 +204,23 @@ export class InviteUserDTO {
 }
 
 export class ChangeChatUserStatusDTO {
-    operatorId: number
-    chatId: number
-    userId: number
-    owner: boolean
-    muted: boolean
-    banned: boolean
-    admin: boolean
-    kick: boolean
-    constructor(operatorId: number, chatId: number, userId: number, owner: boolean, muted: boolean, banned: boolean, admin: boolean){
+    operatorId: number;
+    chatId: number;
+    userId: number;
+    owner: boolean;
+    muted: boolean;
+    banned: boolean;
+    admin: boolean;
+    kick: boolean;
+    constructor(
+        operatorId: number,
+        chatId: number,
+        userId: number,
+        owner: boolean,
+        muted: boolean,
+        banned: boolean,
+        admin: boolean
+    ) {
         this.operatorId = operatorId;
         this.chatId = chatId;
         this.userId = userId;

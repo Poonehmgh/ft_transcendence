@@ -43,24 +43,33 @@ function ChatList(props: chatListProps): React.JSX.Element {
 
     return (
         <div className="sideBar_sub1">
-            <div className="chatElementDiv">--- public chats ---</div>
+            {/* <div className="chatElementDiv">--- public chats ---</div> */}
 
             <div className="chatElementDiv">
                 --- my chats ---
                 {props.chats.length === 0 ? (
-                    <p>none</p>
+                    <div className="p">none</div>
                 ) : (
-                    props.chats.map((element, index) => (
+                    props.chats.map((e, index) => (
                         <button
-                            key={element.id}
+                            key={e.id}
                             className={
-                                props.selectedChat === element
+                                props.selectedChat === e
                                     ? "chatButtonSelected"
                                     : "chatButton"
                             }
-                            onClick={() => selectChat(element)}
+                            onClick={() => selectChat(e)}
                         >
-                            {chatNames[index]}
+                            <div className="chatButtonTextWrapper">
+                                <div>{chatNames[index]}</div>
+                                <div className="smallTextDiv">
+                                    {e.dm
+                                        ? " DM"
+                                        : e.isPrivate
+                                        ? " private Group"
+                                        : " public Group"}
+                                </div>
+                            </div>
                         </button>
                     ))
                 )}

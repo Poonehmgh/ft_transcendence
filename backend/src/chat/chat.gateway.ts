@@ -1,39 +1,38 @@
 import {
-  ConnectedSocket,
-  MessageBody,
-  OnGatewayDisconnect,
-  SubscribeMessage,
-  WebSocketGateway,
-  WebSocketServer
-} from '@nestjs/websockets';
-import {Server, Socket} from "socket.io";
+    ConnectedSocket,
+    MessageBody,
+    OnGatewayDisconnect,
+    SubscribeMessage,
+    WebSocketGateway,
+    WebSocketServer,
+} from "@nestjs/websockets";
+import { Server, Socket } from "socket.io";
 import {
-  ChangeChatUserStatusDTO,
-  CreateNewChatDTO,
-  NewChatDTO,
-  EstablishConnectDTO,
-  InviteUserDTO,
-  SendMessageDTO
+    ChangeChatUserStatusDTO,
+    CreateNewChatDTO,
+    NewChatDTO,
+    EstablishConnectDTO,
+    InviteUserDTO,
+    SendMessageDTO,
 } from "./chat.DTOs";
-import {ChatGatewayService} from "./chat.gateway.service";
-import {userGateway} from "./userGateway";
-import {OnModuleInit} from "@nestjs/common";
+import { ChatGatewayService } from "./chat.gateway.service";
+import { userGateway } from "./userGateway";
+import { OnModuleInit } from "@nestjs/common";
 
 @WebSocketGateway()
-export class ChatGateway implements OnModuleInit, OnGatewayDisconnect{
-  constructor(private readonly chatGatewayService: ChatGatewayService) {
-  }
+export class ChatGateway implements OnModuleInit, OnGatewayDisconnect {
+    constructor(private readonly chatGatewayService: ChatGatewayService) {}
 
-  @WebSocketServer()
-  server: Server
+    @WebSocketServer()
+    server: Server;
 
-  async onModuleInit() {
-    await this.chatGatewayService.setAllUsersOffline();
-    console.log('Starting chat gateway');
-    this.server.on('connection', (socket) => {
-      console.log(`Client ${socket.id} got connected to chat gateway`)
-    });
-  }
+    async onModuleInit() {
+        await this.chatGatewayService.setAllUsersOffline();
+        console.log("Starting chat gateway");
+        this.server.on("connection", (socket) => {
+            console.log(`Client ${socket.id} got connected to chat gateway`);
+        });
+    }
 
   async handleDisconnect(client: Socket) {
     const userID = this.chatGatewayService.getUserIdFromSocket(client);
@@ -48,11 +47,14 @@ export class ChatGateway implements OnModuleInit, OnGatewayDisconnect{
     await this.chatGatewayService.setUserOnlineStatus(data.userID, true);
   }
 
-  @SubscribeMessage('sendMessage')
-  async receivingMessage(@ConnectedSocket() client: Socket, @MessageBody()message: SendMessageDTO) {
-    const messageID:number = await this.chatGatewayService.addMessageToChat(message);
-    await this.chatGatewayService.sendUpdateMessages(messageID, message);
-  }
+    @SubscribeMessage("sendMessage")
+    async receivingMessage(
+        @ConnectedSocket() client: Socket,
+        @MessageBody() message: SendMessageDTO
+    ) {
+        const messageID: number = await this.chatGatewayService.addMessageToChat(message);
+        await this.chatGatewayService.sendUpdateMessages(messageID, message);
+    }
 
 // moved to API
 /*   @SubscribeMessage('createChat')
@@ -62,10 +64,13 @@ export class ChatGateway implements OnModuleInit, OnGatewayDisconnect{
       await this.chatGatewayService.sendChatCreationUpdate(chat);
   } */
 
-  @SubscribeMessage('inviteUser')
-  async InviteUserToChat(@ConnectedSocket() client: Socket, @MessageBody()message: InviteUserDTO){
-    await this.chatGatewayService.inviteUserToChat(message);
-  }
+    @SubscribeMessage("inviteUser")
+    async InviteUserToChat(
+        @ConnectedSocket() client: Socket,
+        @MessageBody() message: InviteUserDTO
+    ) {
+        await this.chatGatewayService.inviteUserToChat(message);
+    }
 
   @SubscribeMessage('changeChatUserStatus')
   async changeUsersInChatStatus(@ConnectedSocket() client: Socket, @MessageBody()message: ChangeChatUserStatusDTO){

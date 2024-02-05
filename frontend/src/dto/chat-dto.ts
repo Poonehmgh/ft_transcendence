@@ -90,7 +90,7 @@ export class ChatInfoDTO {
     id: number;
     name: string;
     dm: boolean;
-    private: boolean;
-    password_required: boolean;
+    isPrivate: boolean;
+    passwordRequired: boolean;
     chatUsers: ChatUserDTO[];
 }

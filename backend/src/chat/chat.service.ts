@@ -1,18 +1,23 @@
 import { HttpStatus, Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
+import { ChatGatewayService } from "./chat.gateway.service";
 
 import {
-    AckchualChat,
+    ChatWithChatUsers,
     ChatInfoDTO,
     ChatUserDTO,
     MessageListElementDTO,
     NewChatDTO,
-    ParticipantListElementDTO,
 } from "./chat.DTOs";
 
 @Injectable()
 export class ChatService {
-    constructor(private readonly prisma: PrismaService) {}
+    constructor(
+        private readonly prisma: PrismaService,
+        private readonly chatGatewayService: ChatGatewayService
+    ) {}
+
+    // Getters
 
     async getChatName(chatId: number, userId: number): Promise<string> {
         try {
@@ -20,7 +25,6 @@ export class ChatService {
                 where: {
                     id: Number(chatId),
                 },
-
                 include: {
                     chatUsers: true,
                 },
@@ -47,7 +51,7 @@ export class ChatService {
         }
     }
 
-    async getUsersChats(userId): Promise<ChatInfoDTO[]> {
+    async getUsersChats(userId: number): Promise<ChatInfoDTO[]> {
         try {
             const chats = await this.prisma.chat.findMany({
                 where: {
@@ -62,7 +66,7 @@ export class ChatService {
                 },
             });
 
-            return chats.map((chat: AckchualChat) => {
+            return chats.map((chat: ChatWithChatUsers) => {
                 return {
                     id: chat.id,
                     name: chat.name || "Unnamed Chat",
@@ -77,38 +81,30 @@ export class ChatService {
                             admin: chatUser.admin,
                             blocked: chatUser.blocked,
                             muted: chatUser.muted,
+                            mutedUntil: chatUser.muted_until,
                             invited: chatUser.invited,
                         };
                     }),
                 };
             });
         } catch (error) {
-            console.log(`Error in getUserChats: ${error.message}`);
+            console.log(`Error in getUsersChats: ${error.message}`);
             throw error;
         }
     }
 
-    /*     async getChatList(userIDtoFind: number): Promise<any> {
+    async getChatUsers(chatId: number): Promise<ChatUserDTO[]> {
         try {
-            const chatsWithUser = await this.prisma.chat.findMany({
+            return await this.prisma.chat_User.findMany({
                 where: {
-                    chatUsers: {
-                        some: {
-                            userId: Number(userIDtoFind),
-                        },
-                    },
+                    chatId: Number(chatId),
                 },
             });
-            return chatsWithUser.map((chat) => {
-                return new ChatListDTO(chat.name, chat.id);
-            });
-        } catch {
-            return {
-                StatusCode: HttpStatus.BAD_REQUEST,
-                message: "Error with DB",
-            };
+        } catch (error) {
+            console.log(`error in getChatUsers: ${error.message}`);
+            throw error;
         }
-    } */
+    }
 
     async getMessagesByRange(chatID: number, from: number, to: number) {
         try {
@@ -155,7 +151,80 @@ export class ChatService {
         }
     }
 
-    async dmChatExists(userId1: number, userId2: number): Promise<AckchualChat | null> {
+    // Create
+
+    async createChat(
+        creatorId: number,
+        newChatDTO: NewChatDTO
+    ): Promise<ChatInfoDTO | Error> {
+        newChatDTO.userIds.push(creatorId);
+
+        try {
+            if (newChatDTO.dm) {
+                return await this.createDmChat(creatorId, newChatDTO);
+            }
+            const chatInfo: ChatInfoDTO = await this.createGroupChat(creatorId, newChatDTO);
+            this.chatGatewayService.sendChatUpdate(chatInfo.id);
+            return chatInfo;
+        } catch (error) {
+            console.error(`Error in createChat: ${error.message}`);
+            return new Error("Internal Server Error");
+        }
+    }
+
+    async createDmChat(
+        creatorId: number,
+        newChatDto: NewChatDTO
+    ): Promise<ChatInfoDTO | null> {
+        try {
+            if (newChatDto.userIds.length !== 2) {
+                throw { message: "DM must have exactly 2 users" };
+            }
+
+            const preexistingDmChat: ChatWithChatUsers = await this.dmChatExists(
+                newChatDto.userIds[0],
+                newChatDto.userIds[1]
+            );
+
+            if (preexistingDmChat) {
+                return ChatInfoDTO.fromChat(preexistingDmChat);
+            }
+
+            const newChat = await this.prisma.chat.create({
+                data: {
+                    name: "DM",
+                    dm: true,
+                    isPrivate: true,
+                    password: null,
+                    chatUsers: {
+                        createMany: {
+                            data: newChatDto.userIds.map((e) => ({
+                                userId: e,
+                                owner: false,
+                                admin: false,
+                                muted: false,
+                                blocked: false,
+                                invited: e === creatorId ? false : true,
+                            })),
+                        },
+                    },
+                },
+                include: {
+                    chatUsers: true,
+                },
+            });
+
+            return ChatInfoDTO.fromChat(newChat);
+        } catch (error) {
+            console.log(`Error in createDm: ${error.message}`);
+            throw error;
+        }
+    }
+
+    async dmChatExists(
+        userId1: number,
+        userId2: number
+    ): Promise<ChatWithChatUsers | null> {
         const existingChat = await this.prisma.chat.findFirst({
             where: {
                 dm: true,
@@ -173,151 +242,38 @@ export class ChatService {
         return existingChat;
     }
 
-    async validateDm(newChat: NewChatDTO) {
-        if (newChat.userIds.length !== 2) {
-            throw { message: "DM must have exactly 2 users" };
-        }
-        if (await this.dmChatExists(newChat.userIds[0], newChat.userIds[1])) {
-            throw {
-                message: `DM between ${newChat.userIds[0]} and ${newChat.userIds[1]} already exists`,
-            };
-        }
-    }
-
-    async createDm(newChatRequest: NewChatDTO): Promise<ChatInfoDTO | null> {
-        try {
-            if (newChatRequest.userIds.length !== 2) {
-                throw { message: "DM must have exactly 2 users" };
-            }
-
-            const existingChat: AckchualChat = await this.dmChatExists(
-                newChatRequest.userIds[0],
-                newChatRequest.userIds[1]
-            );
-
-            if (existingChat) {
-                const existingChatInfo: ChatInfoDTO = ChatInfoDTO.fromChat(existingChat);
-                return existingChatInfo;
-            }
-
-            const newChat = await this.prisma.chat.create({
-                data: {
-                    name: "dm-chat",
-                    dm: true,
-                    isPrivate: true,
-                    password: null,
-                },
-            });
-
-            const chatUsers: ChatUserDTO[] = [];
-            for (const userId of newChatRequest.userIds) {
-                const createdChatUser = await this.prisma.chat_User.create({
-                    data: {
-                        userId,
-                        chatId: newChat.id,
-                        owner: false,
-                        admin: false,
-                        blocked: false,
-                        muted: false,
-                        invited: false,
+    async createGroupChat(
+        creatorId: number,
+        newChatDto: NewChatDTO
+    ): Promise<ChatInfoDTO | null> {
+        const newChat = await this.prisma.chat.create({
+            data: {
+                name: "newchat",
+                dm: false,
+                isPrivate: newChatDto.isPrivate,
+                password: newChatDto.password,
+                chatUsers: {
+                    createMany: {
+                        data: newChatDto.userIds.map((e) => ({
+                            userId: e,
+                            owner: e === creatorId ? true : false,
+                            admin: e === creatorId ? true : false,
+                            muted: false,
+                            blocked: false,
+                            invited: e === creatorId ? false : true,
+                        })),
                     },
-                });
-
-                chatUsers.push({
-                    userId: createdChatUser.userId,
-                    chatId: createdChatUser.chatId,
-                    owner: createdChatUser.owner,
-                    admin: createdChatUser.admin,
-                    blocked: createdChatUser.blocked,
-                    muted: createdChatUser.muted,
-                    invited: createdChatUser.invited,
-                });
-            }
-
-            const newChatInfo: ChatInfoDTO = new ChatInfoDTO(
-                newChat.id,
-                newChat.name,
-                newChat.dm,
-                false, // private
-                false, // pw not required
-                chatUsers
-            );
-
-            return newChatInfo;
-        } catch (error) {
-            console.log(`Error in createDm: ${error.message}`);
-            throw error;
-        }
-    }
-
-    async getChatUsers(chatId: number): Promise<ChatUserDTO[]> {
-        const chatUsers = await this.prisma.chat_User.findMany({
-            where: {
-                chatId: Number(chatId),
+                },
+            },
+            include: {
+                chatUsers: true,
             },
         });
 
-        return chatUsers.map((user) => ({
-            userId: user.userId,
-            chatId: user.chatId,
-            owner: user.owner,
-            admin: user.admin,
-            blocked: user.blocked,
-            muted: user.muted,
-            invited: user.invited,
-        }));
-    }
-
-    async getChatUsers_(chatId: number): Promise<ChatUserDTO[]> {
-        try {
-            return await this.prisma.chat_User.findMany({
-                where: {
-                    chatId: Number(chatId),
-                },
-            });
-        } catch (error) {
-            console.log(`error in getChatUsers: ${error.message}`);
-            throw error;
-        }
-    }
-
-    async createChat(
-        creatorId: number,
-        newChatDTO: NewChatDTO
-    ): Promise<ChatInfoDTO | Error> {
-        newChatDTO.userIds.push(creatorId);
-
-        try {
-            if (newChatDTO.dm) {
-                return await this.createDm(newChatDTO);
-            }
-
-            const newChat = await this.prisma.chat.create({
-                data: {
-                    name: "newchat",
-                    dm: false,
-                    password: newChatDTO.password,
-                    chatUsers: {
-                        createMany: {
-                            data: newChatDTO.userIds.map((chatUser) => ({
-                                userId: chatUser,
-                            })),
-                        },
-                    },
-                },
-                include: {
-                    chatUsers: true,
-                },
-            });
-
-            const password_required = newChat.password !== null;
-            return {
-                ...newChat,
-                passwordRequired: password_required,
-            };
-        } catch (error) {
-            console.error(`Error in createChat: ${error.message}`);
-            return new Error("Internal Server Error");
-        }
+        const password_required = newChat.password !== null;
+        return {
+            ...newChat,
+            passwordRequired: password_required,
+        };
     }
 }

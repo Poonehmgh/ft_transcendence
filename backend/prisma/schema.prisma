@@ -75,19 +75,19 @@ model Chat {
 // junction tables
 
 model Chat_User {
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  id          Int      @id @unique @default(autoincrement())
-  user        User     @relation(fields: [userId], references: [id])
-  userId      Int
-  chat        Chat     @relation(fields: [chatId], references: [id])
-  chatId      Int
-  owner       Boolean  @default(false)
-  admin       Boolean  @default(false)
-  blocked     Boolean  @default(false)
-  muted       Boolean  @default(false)
-  muted_until DateTime @default(now())
-  invited     Boolean  @default(false)
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+    id          Int      @id @unique @default(autoincrement())
+    user        User     @relation(fields: [userId], references: [id])
+    userId      Int
+    chat        Chat     @relation(fields: [chatId], references: [id])
+    chatId      Int
+    owner       Boolean  @default(false)
+    admin       Boolean  @default(false)
+    blocked     Boolean  @default(false)
+    muted       Boolean  @default(false)
+    muted_until DateTime @default(now())
+    invited     Boolean  @default(false)
 
     @@index([userId, chatId])
 }

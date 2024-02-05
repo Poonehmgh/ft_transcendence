@@ -3,36 +3,43 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function main() {
-    const knudel = await prisma.user.create({
+    await prisma.user.create({
         data: {
-            id: 42,
+            id: 0,
             email: "knudel@pongers.io",
-            name: "knudel",
+            name: "testUser0",
         },
     });
-    const knang = await prisma.user.create({
+    await prisma.user.create({
         data: {
-            id: 69,
+            id: 1,
             email: "knang@pongers.io",
-            name: "knang",
+            name: "testUser1",
         },
     });
-    const shmism = await prisma.user.create({
+    await prisma.user.create({
         data: {
-            id: 420,
+            id: 2,
             email: "shmism@pongers.io",
-            name: "shmism",
+            name: "testUser2",
         },
     });
-    const shmang = await prisma.user.create({
+    await prisma.user.create({
+        data: {
+            id: 3,
+            email: "shmang@pongers.io",
+            name: "testUser3",
+        },
+    });
+    await prisma.user.create({
         data: {
             id: 1337,
-            email: "shmang@pongers.io",
-            name: "shmang",
+            email: "rampushmair@pongers.io",
+            name: "shmismshmang",
         },
     });
 
-/*     const pongers = await prisma.chat.create({
+    /*     const pongers = await prisma.chat.create({
         data: {
             id: 0,
             name: "pongers public channel",

@@ -1,6 +1,5 @@
 import React, { useRef, useState } from "react";
 import Modal from "react-modal";
-import SelectUsersTable from "./SelectUsersTable";
 import CreateChatControls from "./CreateChatControls";
 import { fetchX } from "src/functions/utils";
 
@@ -10,6 +9,7 @@ import { ChatInfoDTO, NewChatDTO } from "src/dto/chat-dto";
 // CSS
 import "src/styles/modals.css";
 import "src/styles/buttons.css";
+import SelectUsersTable from "./SelectUsersTable";
 
 interface newChatProps {
     selectChat: (chat: ChatInfoDTO) => void;
@@ -72,8 +72,6 @@ function NewChat(props: newChatProps): React.JSX.Element {
         }
         try {
             const newChat: ChatInfoDTO = await fetchX("POST", apiUrl, newChatDTO);
-            console.log("New chat created: ", newChat);
-
             props.selectChat(newChat);
             closeModal();
         } catch (error) {
