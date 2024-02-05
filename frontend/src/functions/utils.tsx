@@ -3,8 +3,7 @@ import React from "react";
 // getters
 
 export function getCalendarDay(date: Date) {
-    if (!date)
-        return ("invalid date");
+    if (!date) return "invalid date";
     const day = date.getDate().toString().padStart(2, "0");
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
     const year = date.getFullYear();
@@ -12,9 +11,9 @@ export function getCalendarDay(date: Date) {
     return `${day}.${month}.${year}`;
 }
 
-function getTokenFromCookie() {
+export function getTokenFromCookie() {
     const cookies = document.cookie.split(";");
-    let tokenValue = "";
+    let tokenValue = null;
 
     cookies.forEach((cookie) => {
         const [name, value] = cookie.trim().split("=");
@@ -24,6 +23,27 @@ function getTokenFromCookie() {
         }
     });
     return tokenValue;
+}
+
+// checkers
+
+export function isTokenValid(token: string) {
+    try {
+        if (!token) {
+            console.error("No token in cookies.");
+            return false;
+        }
+
+        const decodedToken = JSON.parse(atob(token.split(".")[1]));
+        const expirationTime = decodedToken.exp * 1000;
+
+        localStorage.setItem("userId", decodedToken.id);
+
+        return expirationTime > Date.now();
+    } catch (error) {
+        console.error("Error decoding or validating token:", error);
+        return false;
+    }
 }
 
 // headers
@@ -45,6 +65,40 @@ export function authContentHeader() {
 }
 
 // fetchers
+
+export async function fetchX<T>(
+    method: string,
+    apiUrl: string,
+    data: Record<string, any> | null
+): Promise<T | null> {
+    try {
+        console.log("fetchX starting");
+       
+        const response: Response = await fetch(apiUrl, {
+            method: method,
+            headers: authContentHeader(),
+            body: data ? JSON.stringify(data) : null,
+        });
+
+        if (!response.ok) {
+            console.error(`${apiUrl}: ${response.status}`);
+            throw new Error(`Not OK response in fetchX`);
+        }
+        console.log("fetchX returning");
+        return await response.json();
+    } catch (error) {
+        console.error("Error in fetchX:", error);
+
+        if (error instanceof Response) {
+            // Log response status and body for more details
+            console.error(`Response status: ${error.status}`);
+            const responseBody = await error.text();
+            console.error(`Response body: ${responseBody}`);
+        }
+
+        throw new Error("Error in fetchX");
+    }
+}
 
 export async function fetchGet<T>(apiUrl: string): Promise<T> {
     try {

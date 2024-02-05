@@ -58,5 +58,3 @@ networks:
     driver: bridge
   webapp:
     driver: bridge
-
-

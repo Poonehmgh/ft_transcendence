@@ -4,7 +4,7 @@
     display: inline-grid;
     grid-template:  1fr 1fr 1fr 4fr 1fr /
     1fr 1fr 4fr 1fr 1fr;
-    background-color: #E1F4CB;
+    background-color: black;
 
 }
 
@@ -12,6 +12,27 @@
     background-color: #3F4739;
     grid-row: 3 / 4;
     grid-column: 3 / 4;
+}
+
+
+.playbutton {
+    width: 200px;
+    height: 40px;
+    margin-top: 70px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #3ca06c;
+    /* border: none; */
+}
+
+.queueconfirm {
+    margin-top: 90px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #3F4739;
+    /* border: none; */
 }
 
 .game-left-bar {
@@ -35,7 +56,7 @@
 .left-bar {
     width: 20px; /* Adjust the width as needed */
     height: 150px; /* Adjust the height as needed */
-    margin-left: 108px;
+    /* margin-left: 68px; */
     background-color: #BACBA9; /* Background color of the bar */
     position: absolute;
     top: 50%; /* Center the bar vertically */
@@ -46,10 +67,10 @@
 .right-bar {
     width: 20px; /* Adjust the width as needed */
     height: 150px; /* Adjust the height as needed */
-    margin-left: 1275px;
+    margin-left: 1060px;
     background-color: #BACBA9; /* Background color of the bar */
     position: absolute;
-    top: 50%; /* Center the bar vertically */
+    top: 80%; /* Center the bar vertically */
     transform: translateY(-50%);
     border-radius: 30%;
 }
@@ -68,5 +89,32 @@
 }
 
 .score-player{
+    margin-left: 400px;
     font-size: 28px;
 }
+
+.player-left-info {
+        color: black;
+        border: #3F4739;
+        background-color: #3F4739;
+        border-width: 1px;
+        grid-row: 3 / 4;
+        grid-column: 2 / 3;
+        width: 100%; /* Adjust the width as needed */
+}
+
+.player-right-info {
+    /* Position relative to header */
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+  
+    /* Adjust grid position to right side */
+    grid-row: 3 / 4;
+    grid-column: 4 / 5;
+    width: 100%; /* Adjust the width as needed */
+    color: black;
+    border: #3F4739;
+    background-color: #3F4739;
+    border-width: 1px;
+  }

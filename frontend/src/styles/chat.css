@@ -122,3 +122,30 @@
     border: 0px;
     border-collapse: collapse;
 }
+
+.chatModal {
+    position: fixed;
+    top: 200px;
+    left: 50%;
+    box-sizing: content-box;
+    transform: translateX(-50%);
+    padding: 1rem 3rem;
+    background-color: black;
+    width: 400px;
+    border-radius: 20px;
+    border: 0;
+    box-shadow: 0 5px 30px 0 rgba(255, 255, 255, 0.1);
+    animation: fadeIn 1s ease both;
+    max-height: 1000px;
+    overflow-y: auto;
+}
+
+.chatModalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 100;
+}

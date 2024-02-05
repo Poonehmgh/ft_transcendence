@@ -2,6 +2,7 @@
     --color1: hsl(0, 0%, 12%); /* is 30 30 30 rgb */
     --color2: 60, 60, 60;
     --text-primary: hsl(26, 18%, 43%);
+    --psl: hsl(18, 100%, 50%);
     --backgroundHue1: 0;
 }
 
@@ -14,7 +15,7 @@
     color: var(--text-primary);
     background-color: hsl(var(--backgroundHue1), 0%, calc(5% + var(--lightnessOffset)));
     border-radius: 9px;
-    transition: background-color 0.1s ease;
+    transition: background-color 0.1s ease, --lightnessOffset 0.1s ease; /* Combine transitions */
     box-sizing: border-box;
     transition: all 0.25s ease;
     border: 0px solid rgb(var(--color2));
@@ -23,6 +24,15 @@
 
     &:hover {
         --lightnessOffset: +3%;
+    }
+}
+
+.bigButton:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+
+    &:hover {
+        --lightnessOffset: 0%;
     }
 }
 
@@ -57,7 +67,6 @@
     }
 }
 
-
 .textButton {
     display: inline;
     font-size: 0.9rem;
@@ -74,23 +83,18 @@
 
 .checkbox {
     width: 20px;
+    min-width: 20px;
     height: 20px;
     cursor: pointer;
-
-    &:checked {
-        background-color: #4caf50;
-        border: solid 3px;
-        border-color: #4caf50;
-        color: #fff;
-    }
 }
 
 .checkboxContainer {
     display: flex;
+    flex-direction: row;
     align-items: center;
-    height: 25px;
-    line-height: 8;
+    height: 30px;
     padding-bottom: 10px;
+    white-space: nowrap;
 }
 
 .textInput {
@@ -101,4 +105,9 @@
     width: 100%;
     height: 30px;
     font-size: 1rem;
+}
+
+.textInput::placeholder {
+    color: #333333;
+    font-size: 0.9rem;
 }

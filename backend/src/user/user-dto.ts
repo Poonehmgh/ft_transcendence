@@ -1,4 +1,6 @@
-import { IsNotEmpty, IsString, Matches, IsNumber, Length } from "class-validator";
+import { IsNotEmpty, IsString, Matches, Length } from "class-validator";
+
+// User
 
 export class NewUserDTO {
     constructor(public id: number, public name: string, public email: string) {}

@@ -1,23 +1,45 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 // DTO
-import { ChatListDTO } from "src/dto/chat-dto";
+import { ChatInfoDTO } from "src/dto/chat-dto";
+import { fetchGet } from "src/functions/utils";
 
 // CSS
 import "src/styles/chat.css";
 import "src/styles/style.css";
 
 interface chatListProps {
-    selectedChat: ChatListDTO;
-    onSelectChat: (chat: ChatListDTO) => void;
-    privateChats: ChatListDTO[];
-    publicChats: ChatListDTO[];
+    selectedChat: ChatInfoDTO;
+    onSelectChat: (chat: ChatInfoDTO) => void;
+    chats: ChatInfoDTO[];
 }
 
 function ChatList(props: chatListProps): React.JSX.Element {
-    function selectChat(chat: ChatListDTO) {
+    const [chatNames, setChatNames] = useState<string[]>(null);
+
+    useEffect(() => {
+        async function fetchChatNames() {
+            try {
+                const names = await Promise.all(
+                    props.chats.map(async (chat) => {
+                        const apiUrl = `${process.env.REACT_APP_BACKEND_URL}/chat/name/${chat.id}`;
+                        const response = await fetchGet<{ name: string }>(apiUrl);
+                        return response.name;
+                    })
+                );
+                setChatNames(names);
+            } catch (error) {
+                console.error("Error fetching chat names:", error);
+            }
+        }
+        fetchChatNames();
+    }, [props.chats]);
+
+    function selectChat(chat: ChatInfoDTO) {
         props.onSelectChat(chat);
     }
+
+    if (!chatNames) return <p>Loading...</p>;
 
     return (
         <div className="sideBar_sub1">
@@ -25,24 +47,22 @@ function ChatList(props: chatListProps): React.JSX.Element {
 
             <div className="chatElementDiv">
                 --- my chats ---
-                {!props.privateChats ? (
+                {props.chats.length === 0 ? (
                     <p>none</p>
                 ) : (
-                    props.privateChats.map(
-                        (chat: { chatID: number; chatName: string }) => (
-                            <button
-                                key={chat.chatID}
-                                className={
-                                    props.selectedChat === chat
-                                        ? "chatButtonSelected"
-                                        : "chatButton"
-                                }
-                                onClick={() => selectChat(chat)}
-                            >
-                                {chat.chatName}
-                            </button>
-                        )
-                    )
+                    props.chats.map((element, index) => (
+                        <button
+                            key={element.id}
+                            className={
+                                props.selectedChat === element
+                                    ? "chatButtonSelected"
+                                    : "chatButton"
+                            }
+                            onClick={() => selectChat(element)}
+                        >
+                            {chatNames[index]}
+                        </button>
+                    ))
                 )}
             </div>
         </div>

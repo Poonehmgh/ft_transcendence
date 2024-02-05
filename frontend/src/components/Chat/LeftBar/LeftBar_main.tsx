@@ -1,32 +1,29 @@
 import React from "react";
+import NewChat from "./NewChat";
+import ChatList from "./ChatList";
 
 // DTO
-import { ChatListDTO } from "src/dto/chat-dto";
+import { ChatInfoDTO } from "src/dto/chat-dto";
 
 // CSS
 import "src/styles/chat.css";
 import "src/styles/style.css";
-import NewChat from "./NewChat";
-import ChatList from "./ChatList";
 
 interface leftBarProps {
-    selectedChat: ChatListDTO | null;
-    selectChat: React.Dispatch<React.SetStateAction<ChatListDTO | null>>;
-    privateChats: ChatListDTO[];
-    publicChats: ChatListDTO[];
+    selectedChat: ChatInfoDTO | null;
+    selectChat: React.Dispatch<React.SetStateAction<ChatInfoDTO | null>>;
+    chats: ChatInfoDTO[];
 }
 
 function LeftBar(props: leftBarProps): React.JSX.Element {
-    const newChat = null;
     return (
         <div className="sideBar">
-            <NewChat onCreateChat={(newChat) => props.selectChat(newChat)} />
+            <NewChat selectChat={(chat) => props.selectChat(chat)} />
 
             <ChatList
                 selectedChat={props.selectedChat}
                 onSelectChat={(chat) => props.selectChat(chat)}
-                privateChats={props.privateChats}
-                publicChats={props.publicChats}
+                chats={props.chats}
             />
         </div>
     );
