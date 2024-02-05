@@ -52,7 +52,8 @@
     z-index: 13;
 }
 
-.headerTabLink {
+.headerTabLink,
+.headerTabLinkSelected {
     --lightnessOffset: 0%;
 
     display: inline-block;
@@ -68,12 +69,21 @@
     transition: background-color 0.1s ease;
     box-sizing: border-box;
     transition: all 0.25s ease;
-    border: 0px;
     cursor: pointer;
     min-width: 70px;
+    border: 1px solid;
+    border-color: transparent;
     z-index: 13;
 
     &:hover {
         --lightnessOffset: 5%;
     }
+}
+
+.headerTabLinkSelected {
+    border: 1px solid;
+    border-color: var(--text-primary);
+    border-bottom: none;
+    transform: translateY(1px);
+    background-color: black;
 }
