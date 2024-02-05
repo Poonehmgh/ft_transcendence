@@ -1,6 +1,7 @@
 import React from "react";
 import NewChat from "./NewChat/NewChat_main";
-import ChatList from "./ChatList";
+import ChatList from "./Chats/ChatList";
+import Chats from "./Chats/Chats_main";
 
 // DTO
 import { ChatInfoDTO } from "src/dto/chat-dto";
@@ -20,7 +21,7 @@ function LeftBar(props: leftBarProps): React.JSX.Element {
         <div className="sideBar">
             <NewChat selectChat={(chat) => props.selectChat(chat)} />
 
-            <ChatList
+            <Chats
                 selectedChat={props.selectedChat}
                 onSelectChat={(chat) => props.selectChat(chat)}
                 chats={props.chats}

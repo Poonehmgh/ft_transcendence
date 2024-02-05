@@ -43,7 +43,7 @@ function ChatList(props: chatListProps): React.JSX.Element {
 
     return (
         <div className="sideBar_sub1">
-            <div className="chatElementDiv">--- public chats ---</div>
+            {/* <div className="chatElementDiv">--- public chats ---</div> */}
 
             <div className="chatElementDiv">
                 --- my chats ---
