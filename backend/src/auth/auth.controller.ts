@@ -37,12 +37,14 @@ export class AuthController {
 
     if (url != undefined)
       res.cookie("url", url);
-    res.cookie("token", newToken);
-    // if (req.user.twoFa)
-    //   res.redirect("http://localhost:3000/2fa")
-    // else
-    //   res.redirect("http://localhost:3000/")
-    res.redirect("/");
+    res.cookie("token", newToken, {
+      httpOnly: true,
+      sameSite: 'strict',
+    });
+    if (req.user.twoFa)
+      res.redirect("http://localhost:3000/2fa")
+    else
+      res.redirect("http://localhost:3000/home");
   }
 
   @Get("/42/test")
@@ -56,10 +58,12 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   async activate2Fa(@Req() req, @Res() res:Response)
   {
-    const { qrcode, url, newToken} = await this.authService.activate2Fa(req.user);
-    res.cookie("qrCode", qrcode);
+    const {url, newToken} = await this.authService.activate2Fa(req.user);
     res.cookie("url", url);
-    res.cookie("token", newToken);
+    res.cookie("token", newToken, {
+      httpOnly: true,
+      sameSite: 'strict',
+    });
 
     return res.json({"msg:": "the QR code for 2fa activation is provided. One more step to have 2fa is remained.", "token": newToken});
   }
@@ -69,7 +73,10 @@ export class AuthController {
   async verify2Fa(@Req() req, @Res() res: Response, @Body() twoFaDto: TwoFaCodeDto)
   {
     const newToken = await this.authService.verify2Fa(twoFaDto, req.user);
-    res.cookie("token", newToken);
+    res.cookie("token", newToken, {
+      httpOnly: true,
+      sameSite: 'strict',
+    });
     return res.json({"msg": "Verification successful.", "token": newToken});
   }
 
@@ -85,8 +92,11 @@ export class AuthController {
   async deactivate2fa(@Req() req, @Res() res: Response, @Body() twoFaDto: TwoFaCodeDto)
   {
     const newToken = await this.authService.deactivate2fa(twoFaDto, req.user);
-    res.cookie("token", newToken);
-    res.redirect("/");
+    res.cookie("token", newToken, {
+      httpOnly: true,
+      sameSite: 'strict',
+    });
+    res.redirect("http://localhost:3000");
   }
 
 }
