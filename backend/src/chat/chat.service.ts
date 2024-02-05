@@ -1,5 +1,6 @@
 import { HttpStatus, Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
+import { ChatGatewayService } from "./chat.gateway.service";
 
 import {
     ChatWithChatUsers,
@@ -11,7 +12,10 @@ import {
 
 @Injectable()
 export class ChatService {
-    constructor(private readonly prisma: PrismaService) {}
+    constructor(
+        private readonly prisma: PrismaService,
+        private readonly chatGatewayService: ChatGatewayService
+    ) {}
 
     // Getters
 
@@ -159,7 +163,9 @@ export class ChatService {
             if (newChatDTO.dm) {
                 return await this.createDmChat(creatorId, newChatDTO);
             }
-            return await this.createGroupChat(creatorId, newChatDTO);
+            const chatInfo: ChatInfoDTO = await this.createGroupChat(creatorId, newChatDTO);
+            this.chatGatewayService.sendChatUpdate(chatInfo.id);
+            return chatInfo;
         } catch (error) {
             console.error(`Error in createChat: ${error.message}`);
             return new Error("Internal Server Error");

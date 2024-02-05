@@ -72,8 +72,6 @@ function NewChat(props: newChatProps): React.JSX.Element {
         }
         try {
             const newChat: ChatInfoDTO = await fetchX("POST", apiUrl, newChatDTO);
-            console.log("New chat created: ", newChat);
-
             props.selectChat(newChat);
             closeModal();
         } catch (error) {
