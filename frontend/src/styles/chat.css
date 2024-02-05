@@ -72,7 +72,7 @@
 .chatButtonSelected {
     --lightnessOffset: 0%;
 
-    font-size: 0.8rem;
+    font-size: medium;
     color: var(--text-primary);
     background-color: hsl(var(--backgroundHue1), 0%, calc(5% + var(--lightnessOffset)));
     padding: 5px;
@@ -148,4 +148,10 @@
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.7);
     z-index: 100;
+}
+
+.smallTextDiv {
+    font-size: small;
+    font-style: italic;
+    text-align: right;
 }

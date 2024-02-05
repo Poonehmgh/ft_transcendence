@@ -101,7 +101,7 @@ export class NewChatDTO {
 
     @IsBoolean()
     @IsOptional()
-    private?: boolean;
+    isPrivate?: boolean;
 
     @IsString()
     @IsOptional()

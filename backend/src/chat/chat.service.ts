@@ -238,16 +238,17 @@ export class ChatService {
 
     async createGroupChat(
         creatorId: number,
-        newChatDTO: NewChatDTO
+        newChatDto: NewChatDTO
     ): Promise<ChatInfoDTO | null> {
         const newChat = await this.prisma.chat.create({
             data: {
                 name: "newchat",
                 dm: false,
-                password: newChatDTO.password,
+                isPrivate: newChatDto.isPrivate,
+                password: newChatDto.password,
                 chatUsers: {
                     createMany: {
-                        data: newChatDTO.userIds.map((e) => ({
+                        data: newChatDto.userIds.map((e) => ({
                             userId: e,
                             owner: e === creatorId ? true : false,
                             admin: e === creatorId ? true : false,
