@@ -73,7 +73,7 @@ export async function fetchX<T>(
 ): Promise<T | null> {
     try {
         console.log("fetchX starting");
-       
+
         const response: Response = await fetch(apiUrl, {
             method: method,
             headers: authContentHeader(),
