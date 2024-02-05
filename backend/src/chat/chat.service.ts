@@ -2,12 +2,11 @@ import { HttpStatus, Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 
 import {
-    AckchualChat,
+    ChatWithChatUsers,
     ChatInfoDTO,
     ChatUserDTO,
     MessageListElementDTO,
     NewChatDTO,
-    ParticipantListElementDTO,
 } from "./chat.DTOs";
 
 @Injectable()
@@ -20,7 +19,6 @@ export class ChatService {
                 where: {
                     id: Number(chatId),
                 },
-
                 include: {
                     chatUsers: true,
                 },
@@ -47,7 +45,7 @@ export class ChatService {
         }
     }
 
-    async getUsersChats(userId): Promise<ChatInfoDTO[]> {
+    async getUsersChats(userId: number): Promise<ChatInfoDTO[]> {
         try {
             const chats = await this.prisma.chat.findMany({
                 where: {
@@ -62,7 +60,7 @@ export class ChatService {
                 },
             });
 
-            return chats.map((chat: AckchualChat) => {
+            return chats.map((chat: ChatWithChatUsers) => {
                 return {
                     id: chat.id,
                     name: chat.name || "Unnamed Chat",
@@ -77,38 +75,17 @@ export class ChatService {
                             admin: chatUser.admin,
                             blocked: chatUser.blocked,
                             muted: chatUser.muted,
+                            mutedUntil: chatUser.muted_until,
                             invited: chatUser.invited,
                         };
                     }),
                 };
             });
         } catch (error) {
-            console.log(`Error in getUserChats: ${error.message}`);
+            console.log(`Error in getUsersChats: ${error.message}`);
             throw error;
         }
     }
-
-    /*     async getChatList(userIDtoFind: number): Promise<any> {
-        try {
-            const chatsWithUser = await this.prisma.chat.findMany({
-                where: {
-                    chatUsers: {
-                        some: {
-                            userId: Number(userIDtoFind),
-                        },
-                    },
-                },
-            });
-            return chatsWithUser.map((chat) => {
-                return new ChatListDTO(chat.name, chat.id);
-            });
-        } catch {
-            return {
-                StatusCode: HttpStatus.BAD_REQUEST,
-                message: "Error with DB",
-            };
-        }
-    } */
 
     async getMessagesByRange(chatID: number, from: number, to: number) {
         try {
@@ -155,7 +132,10 @@ export class ChatService {
         }
     }
 
-    async dmChatExists(userId1: number, userId2: number): Promise<AckchualChat | null> {
+    async dmChatExists(
+        userId1: number,
+        userId2: number
+    ): Promise<ChatWithChatUsers | null> {
         const existingChat = await this.prisma.chat.findFirst({
             where: {
                 dm: true,
@@ -179,7 +159,7 @@ export class ChatService {
                 throw { message: "DM must have exactly 2 users" };
             }
 
-            const existingChat: AckchualChat = await this.dmChatExists(
+            const existingChat: ChatWithChatUsers = await this.dmChatExists(
                 newChatRequest.userIds[0],
                 newChatRequest.userIds[1]
             );
@@ -200,7 +180,7 @@ export class ChatService {
 
             const chatUsers: ChatUserDTO[] = [];
             for (const userId of newChatRequest.userIds) {
-                const createdChatUser = await this.prisma.chat_User.create({
+                const createdChat_User = await this.prisma.chat_User.create({
                     data: {
                         userId,
                         chatId: newChat.id,
@@ -208,18 +188,19 @@ export class ChatService {
                         admin: false,
                         blocked: false,
                         muted: false,
+                        muted_until: null,
                         invited: false,
                     },
                 });
 
                 chatUsers.push({
-                    userId: createdChatUser.userId,
-                    chatId: createdChatUser.chatId,
-                    owner: createdChatUser.owner,
-                    admin: createdChatUser.admin,
-                    blocked: createdChatUser.blocked,
-                    muted: createdChatUser.muted,
-                    invited: createdChatUser.invited,
+                    userId: createdChat_User.userId,
+                    chatId: createdChat_User.chatId,
+                    owner: createdChat_User.owner,
+                    admin: createdChat_User.admin,
+                    blocked: createdChat_User.blocked,
+                    muted: createdChat_User.muted,
+                    invited: createdChat_User.invited,
                 });
             }
 
@@ -240,24 +221,6 @@ export class ChatService {
     }
 
     async getChatUsers(chatId: number): Promise<ChatUserDTO[]> {
-        const chatUsers = await this.prisma.chat_User.findMany({
-            where: {
-                chatId: Number(chatId),
-            },
-        });
-
-        return chatUsers.map((user) => ({
-            userId: user.userId,
-            chatId: user.chatId,
-            owner: user.owner,
-            admin: user.admin,
-            blocked: user.blocked,
-            muted: user.muted,
-            invited: user.invited,
-        }));
-    }
-
-    async getChatUsers_(chatId: number): Promise<ChatUserDTO[]> {
         try {
             return await this.prisma.chat_User.findMany({
                 where: {
@@ -288,8 +251,13 @@ export class ChatService {
                     password: newChatDTO.password,
                     chatUsers: {
                         createMany: {
-                            data: newChatDTO.userIds.map((chatUser) => ({
-                                userId: chatUser,
+                            data: newChatDTO.userIds.map((e) => ({
+                                userId: e,
+                                owner: e === creatorId ? true : false,
+                                admin: e === creatorId ? true : false,
+                                muted: false,
+                                blocked: false,
+                                invited: e === creatorId ? false : true,
                             })),
                         },
                     },
