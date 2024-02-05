@@ -1,5 +1,5 @@
 import React from "react";
-import NewChat from "./NewChat";
+import NewChat from "./NewChat/NewChat_main";
 import ChatList from "./ChatList";
 
 // DTO
