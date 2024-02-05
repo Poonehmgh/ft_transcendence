@@ -13,6 +13,8 @@ import {
 export class ChatService {
     constructor(private readonly prisma: PrismaService) {}
 
+    // Getters
+
     async getChatName(chatId: number, userId: number): Promise<string> {
         try {
             const chat = await this.prisma.chat.findUnique({
@@ -87,6 +89,19 @@ export class ChatService {
         }
     }
 
+    async getChatUsers(chatId: number): Promise<ChatUserDTO[]> {
+        try {
+            return await this.prisma.chat_User.findMany({
+                where: {
+                    chatId: Number(chatId),
+                },
+            });
+        } catch (error) {
+            console.log(`error in getChatUsers: ${error.message}`);
+            throw error;
+        }
+    }
+
     async getMessagesByRange(chatID: number, from: number, to: number) {
         try {
             if (from == 0 && to == 0) {
@@ -132,6 +147,8 @@ export class ChatService {
         }
     }
 
+    // Create
+
     async dmChatExists(
         userId1: number,
         userId2: number
@@ -153,15 +170,15 @@ export class ChatService {
         return existingChat;
     }
 
-    async createDm(newChatRequest: NewChatDTO): Promise<ChatInfoDTO | null> {
+    async createDmChat(newChatDTO: NewChatDTO): Promise<ChatInfoDTO | null> {
         try {
-            if (newChatRequest.userIds.length !== 2) {
+            if (newChatDTO.userIds.length !== 2) {
                 throw { message: "DM must have exactly 2 users" };
             }
 
             const existingChat: ChatWithChatUsers = await this.dmChatExists(
-                newChatRequest.userIds[0],
-                newChatRequest.userIds[1]
+                newChatDTO.userIds[0],
+                newChatDTO.userIds[1]
             );
 
             if (existingChat) {
@@ -179,7 +196,7 @@ export class ChatService {
             });
 
             const chatUsers: ChatUserDTO[] = [];
-            for (const userId of newChatRequest.userIds) {
+            for (const userId of newChatDTO.userIds) {
                 const createdChat_User = await this.prisma.chat_User.create({
                     data: {
                         userId,
@@ -220,17 +237,38 @@ export class ChatService {
         }
     }
 
-    async getChatUsers(chatId: number): Promise<ChatUserDTO[]> {
-        try {
-            return await this.prisma.chat_User.findMany({
-                where: {
-                    chatId: Number(chatId),
+    async createGroupChat(
+        creatorId: number,
+        newChatDTO: NewChatDTO
+    ): Promise<ChatInfoDTO | null> {
+        const newChat = await this.prisma.chat.create({
+            data: {
+                name: "newchat",
+                dm: false,
+                password: newChatDTO.password,
+                chatUsers: {
+                    createMany: {
+                        data: newChatDTO.userIds.map((e) => ({
+                            userId: e,
+                            owner: e === creatorId ? true : false,
+                            admin: e === creatorId ? true : false,
+                            muted: false,
+                            blocked: false,
+                            invited: e === creatorId ? false : true,
+                        })),
+                    },
                 },
-            });
-        } catch (error) {
-            console.log(`error in getChatUsers: ${error.message}`);
-            throw error;
-        }
+            },
+            include: {
+                chatUsers: true,
+            },
+        });
+
+        const password_required = newChat.password !== null;
+        return {
+            ...newChat,
+            passwordRequired: password_required,
+        };
     }
 
     async createChat(
@@ -241,37 +279,9 @@ export class ChatService {
 
         try {
             if (newChatDTO.dm) {
-                return await this.createDm(newChatDTO);
+                return await this.createDmChat(newChatDTO);
             }
-
-            const newChat = await this.prisma.chat.create({
-                data: {
-                    name: "newchat",
-                    dm: false,
-                    password: newChatDTO.password,
-                    chatUsers: {
-                        createMany: {
-                            data: newChatDTO.userIds.map((e) => ({
-                                userId: e,
-                                owner: e === creatorId ? true : false,
-                                admin: e === creatorId ? true : false,
-                                muted: false,
-                                blocked: false,
-                                invited: e === creatorId ? false : true,
-                            })),
-                        },
-                    },
-                },
-                include: {
-                    chatUsers: true,
-                },
-            });
-
-            const password_required = newChat.password !== null;
-            return {
-                ...newChat,
-                passwordRequired: password_required,
-            };
+            return await this.createGroupChat(creatorId, newChatDTO);
         } catch (error) {
             console.error(`Error in createChat: ${error.message}`);
             return new Error("Internal Server Error");
