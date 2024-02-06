@@ -27,13 +27,11 @@ function ChatOptions(props: chatOptionsProps): React.JSX.Element {
         }
     }, [props.selectedChat]);
 
-    function leaveChat() {
-        if (isOwner) {
-            alert("You must transfer ownership before leaving this chat.");
-            return;
-        }
+    async function leaveChat() {
         if (window.confirm("Leave this chat?")) {
-            // leave chat
+            const apiUrl = `${process.env.REACT_APP_BACKEND_URL}/chat/leave/${props.selectedChat?.id}`;
+            const message = await fetchGet(apiUrl);
+            alert(message);
         }
     }
 

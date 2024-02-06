@@ -107,8 +107,6 @@ export class ChatController {
         }
     }
 
-    
-
     // User actions
 
     @Get("leave/:chatId")
