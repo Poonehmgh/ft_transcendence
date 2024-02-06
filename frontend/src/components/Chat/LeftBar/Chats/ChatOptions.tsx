@@ -35,7 +35,7 @@ function ChatOptions(props: chatOptionsProps): React.JSX.Element {
         }
     }
 
-    function renameChat() {
+    async function renameChat() {
         const newName = prompt("Enter new chat name:");
         if (!newName) return;
         const sanitizedName = sanitizeInput(newName);
@@ -44,9 +44,10 @@ function ChatOptions(props: chatOptionsProps): React.JSX.Element {
             return;
         }
         const apiUrl = `${process.env.REACT_APP_BACKEND_URL}/chat/rename/${props.selectedChat?.id}`;
-        if (newName) {
-            fetchX("POST", apiUrl, { name: sanitizedName });
-        }
+        const res = await fetchX<{ message: string }>("POST", apiUrl, {
+            name: sanitizedName,
+        });
+        alert(res.message);
     }
 
     async function removePassword() {
@@ -56,9 +57,19 @@ function ChatOptions(props: chatOptionsProps): React.JSX.Element {
         alert(res.message);
     }
 
-    function changePassword() {}
-
-    function addPassword() {}
+    async function changePassword() {
+        const newPassword = prompt("Enter new password:");
+        if (!newPassword) return;
+        if (newPassword.length < 3) {
+            alert("Password must be at least 3 characters long");
+            return;
+        }
+        const apiUrl = `${process.env.REACT_APP_BACKEND_URL}/chat/change_password/${props.selectedChat?.id}`;
+        const res = await fetchX<{ message: string }>("POST", apiUrl, {
+            password: newPassword,
+        });
+        alert(res.message);
+    }
 
     if (!props.selectedChat) return null;
 
@@ -85,7 +96,7 @@ function ChatOptions(props: chatOptionsProps): React.JSX.Element {
                                 </button>
                             </>
                         ) : (
-                            <button className="chatButton" onClick={addPassword}>
+                            <button className="chatButton" onClick={changePassword}>
                                 Add Password
                             </button>
                         )}
