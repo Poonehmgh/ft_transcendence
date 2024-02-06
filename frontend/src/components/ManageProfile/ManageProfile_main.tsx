@@ -1,9 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import { authContentHeader } from "src/functions/utils";
 import ManageContactsTabs from "./ManageContactsTabs";
 import PlayerCardTable from "../shared/PlayerCardTable";
-import { fetchGetSet } from "src/functions/utils";
-import { authHeader } from "../../functions/utils";
+import {
+    fetchGetSet,
+    authHeader,
+    authContentHeader,
+    sanitizeInput,
+} from "src/functions/utils";
 import LoadingH2 from "src/components/shared/LoadingH2";
 
 // DTO
@@ -73,9 +76,7 @@ function ManageProfile() {
             newName = newName.trim();
             if (newName === "" || newName === userData.name) return;
 
-            const changeNameDTO = {
-                newName: newName,
-            };
+            const changeNameDTO = { newName: sanitizeInput(newName) };
 
             const response = await fetch(
                 process.env.REACT_APP_BACKEND_URL + "/user/change_name",

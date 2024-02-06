@@ -262,7 +262,6 @@ export class ChatService {
             omittedCount > 0 ? ` and ${omittedCount} others` : ""
         }`;
 
-        
         const newChat = await this.prisma.chat.create({
             data: {
                 name: newChatName,
@@ -293,5 +292,51 @@ export class ChatService {
             ...newChat,
             passwordRequired: password_required,
         };
+    }
+
+    // Manipulate chat
+
+    async renameChat(userId: number, chatId: number, name: string) {
+        try {
+            const chat = await this.prisma.chat.findUnique({
+                where: {
+                    id: Number(chatId),
+                },
+                include: { chatUsers: true },
+            });
+
+            if (!chat) {
+                return { error: "Chat not found" };
+            }
+
+            if (chat.chatUsers.find((e) => e.userId === userId && e.owner)) {
+                await this.prisma.chat.update({
+                    where: {
+                        id: Number(chatId),
+                    },
+                    data: {
+                        name,
+                    },
+                });
+                return { message: "Chat renamed" };
+            } else {
+                return { error: "Must be owner to rename" };
+            }
+        } catch (error) {
+            console.error(`Error in renameChat: ${error.message}`);
+            throw error;
+        }
+    }
+
+    // User actions
+
+    async leaveChat(userId: number, chatId: number) {
+        await this.prisma.chatUser.delete({
+            where: {
+                userId,
+                chatId,
+            },
+        });
+        return { message: "Left the chat" };
     }
 }

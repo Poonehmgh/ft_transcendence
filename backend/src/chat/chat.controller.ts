@@ -19,6 +19,8 @@ import { AuthenticatedRequest } from "src/shared/dto";
 export class ChatController {
     constructor(private readonly chatService: ChatService) {}
 
+    // Getters
+
     @Get("my_chats")
     async getMyChats(@Req() req: AuthenticatedRequest) {
         return this.chatService.getUsersChats(req.user.id);
@@ -60,6 +62,8 @@ export class ChatController {
         }
     }
 
+    // Manipulate chat
+
     @Post("create")
     async createChat(
         @Req() req: AuthenticatedRequest,
@@ -68,7 +72,6 @@ export class ChatController {
     ) {
         try {
             const result = await this.chatService.createChat(req.user.id, newChat);
-
             if (result instanceof Error) {
                 res.status(500).json({ error: result.message });
             } else if ("error" in result) {
@@ -78,6 +81,53 @@ export class ChatController {
             }
         } catch (error) {
             console.error("Error creating chat:", error);
+            res.status(500).json({ error: "Internal Server Error" });
+        }
+    }
+
+    @Post("rename/:chatId")
+    async renameChat(
+        @Req() req: AuthenticatedRequest,
+        @Param("chatId") chatId: number,
+        @Body("name") name: string,
+        @Res() res
+    ) {
+        try {
+            const result = await this.chatService.renameChat(req.user.id, chatId, name);
+            if (result instanceof Error) {
+                res.status(500).json({ error: result.message });
+            } else if ("error" in result) {
+                res.status(500).json({ error: result.error });
+            } else {
+                res.status(200).json(result);
+            }
+        } catch (error) {
+            console.error("Error renaming chat:", error);
+            res.status(500).json({ error: "Internal Server Error" });
+        }
+    }
+
+    
+
+    // User actions
+
+    @Get("leave/:chatId")
+    async leaveChat(
+        @Req() req: AuthenticatedRequest,
+        @Param("chatId") chatId: number,
+        @Res() res
+    ) {
+        try {
+            const result = await this.chatService.leaveChat(req.user.id, chatId);
+            if (result instanceof Error) {
+                res.status(500).json({ error: result.message });
+            } else if ("error" in result) {
+                res.status(500).json({ error: result.error });
+            } else {
+                res.status(200).json(result);
+            }
+        } catch (error) {
+            console.error("Error leaving chat:", error);
             res.status(500).json({ error: "Internal Server Error" });
         }
     }

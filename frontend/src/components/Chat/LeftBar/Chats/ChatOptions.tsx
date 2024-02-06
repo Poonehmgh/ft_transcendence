@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 // DTO
 import { ChatInfoDTO } from "src/dto/chat-dto";
-import { fetchGet } from "src/functions/utils";
+import { fetchGet, fetchX, sanitizeInput } from "src/functions/utils";
 
 // CSS
 import "src/styles/chat.css";
@@ -37,7 +37,13 @@ function ChatOptions(props: chatOptionsProps): React.JSX.Element {
         }
     }
 
-    function renameChat() {}
+    function renameChat() {
+        const newName = prompt("Enter new chat name:");
+        const apiUrl = `${process.env.REACT_APP_BACKEND_URL}/chat/rename/${props.selectedChat?.id}`;
+        if (newName) {
+            fetchX("POST", apiUrl, { name: sanitizeInput(newName) });
+        }
+    }
 
     function removePassword() {}
 
