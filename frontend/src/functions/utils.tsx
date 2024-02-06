@@ -121,5 +121,5 @@ export async function fetchGetSet<T>(
 // sanitizers and validators
 
 export function sanitizeInput(input: string) {
-    return input.replace(/[^a-zA-Z0-9]/g, "");
+    return input.replace(/[^a-zA-Z0-9_ ]/g, "");
 }

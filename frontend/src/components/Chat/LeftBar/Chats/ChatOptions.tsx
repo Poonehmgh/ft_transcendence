@@ -30,8 +30,8 @@ function ChatOptions(props: chatOptionsProps): React.JSX.Element {
     async function leaveChat() {
         if (window.confirm("Leave this chat?")) {
             const apiUrl = `${process.env.REACT_APP_BACKEND_URL}/chat/leave/${props.selectedChat?.id}`;
-            const message = await fetchGet(apiUrl);
-            alert(message);
+            const res = await fetchGet<{ message: string }>(apiUrl);
+            alert(res.message);
         }
     }
 
