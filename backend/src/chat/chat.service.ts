@@ -392,6 +392,36 @@ export class ChatService {
         }
     }
 
+    async changePassword(userId: number, chatId: number, password: string) {
+        try {
+            const chat = await this.prisma.chat.findUniqueOrThrow({
+                where: {
+                    id: Number(chatId),
+                },
+                include: {
+                    chatUsers: true,
+                },
+            });
+
+            if (chat.chatUsers.find((e) => e.userId === userId && e.owner)) {
+                await this.prisma.chat.update({
+                    where: {
+                        id: Number(chatId),
+                    },
+                    data: {
+                        password,
+                    },
+                });
+                return { message: "Password changed" };
+            } else {
+                return { error: "Must be owner to change password" };
+            }
+        } catch (error) {
+            console.error(`Error in changePassword: ${error.message}`);
+            throw error;
+        }
+    }
+
     // User actions
 
     async leaveChat(userId: number, chatId: number) {

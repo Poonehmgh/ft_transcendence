@@ -128,6 +128,28 @@ export class ChatController {
         }
     }
 
+    @Post("change_password/:chatId")
+    async changePassword(
+        @Req() req: AuthenticatedRequest,
+        @Param("chatId") chatId: number,
+        @Body("password") password: string,
+        @Res() res
+    ) {
+        try {
+            const result = await this.chatService.changePassword(req.user.id, chatId, password);
+            if (result instanceof Error) {
+                res.status(500).json({ error: result.message });
+            } else if ("error" in result) {
+                res.status(500).json({ error: result.error });
+            } else {
+                res.status(200).json(result);
+            }
+        } catch (error) {
+            console.error("Error changing password:", error);
+            res.status(500).json({ error: "Internal Server Error" });
+        }
+    }
+
     // User actions
 
     @Get("leave/:chatId")
