@@ -155,4 +155,15 @@
     font-style: italic;
     text-align: right;
     color: var(--colorX);
+    white-space: nowrap;
+}
+
+.sideBarDivider {
+    width: 100%;
+    color: var(--text-primary);
+    padding-bottom: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid;
+    border-color: var(--text-primary);
 }

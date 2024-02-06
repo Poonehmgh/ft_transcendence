@@ -65,7 +65,7 @@ function ChatOptions(props: chatOptionsProps): React.JSX.Element {
             alert("Password must be at least 3 characters long");
             return;
         }
-        const apiUrl =  backendUrls.chat + `change_password/${props.selectedChat?.id}`;
+        const apiUrl = backendUrls.chat + `change_password/${props.selectedChat?.id}`;
         const res = await fetchX<{ message: string }>("POST", apiUrl, {
             password: newPassword,
         });
@@ -77,7 +77,7 @@ function ChatOptions(props: chatOptionsProps): React.JSX.Element {
     return (
         <div className="sideBar_sub1">
             <div className="chatElementDiv">
-                --- chat options ---
+                <div className="sideBarDivider">chat options</div>
                 <button className="chatButton" onClick={leaveChat}>
                     Leave Chat
                 </button>
