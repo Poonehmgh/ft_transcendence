@@ -362,29 +362,62 @@ export class ChatService {
         }
     }
 
+    async removePassword(userId: number, chatId: number) {
+        try {
+            const chat = await this.prisma.chat.findUniqueOrThrow({
+                where: {
+                    id: Number(chatId),
+                },
+                include: {
+                    chatUsers: true,
+                },
+            });
+
+            if (chat.chatUsers.find((e) => e.userId === userId && e.owner)) {
+                await this.prisma.chat.update({
+                    where: {
+                        id: Number(chatId),
+                    },
+                    data: {
+                        password: null,
+                    },
+                });
+                return { message: "Password removed" };
+            } else {
+                return { error: "Must be owner to remove password" };
+            }
+        } catch (error) {
+            console.error(`Error in removePassword: ${error.message}`);
+            throw error;
+        }
+    }
+
     // User actions
 
     async leaveChat(userId: number, chatId: number) {
-        console.log("leaving chat", userId, " ", chatId);
+        try {
+            const chat_User = await this.prisma.chat_User.findFirstOrThrow({
+                where: {
+                    chatId: Number(chatId),
+                    userId: Number(userId),
+                },
+            });
 
-        const chat_User = await this.prisma.chat_User.findFirstOrThrow({
-            where: {
-                chatId: Number(chatId),
-                userId: Number(userId),
-            },
-        });
+            await this.prisma.chat_User.delete({
+                where: {
+                    id: chat_User.id,
+                },
+            });
 
-        await this.prisma.chat_User.delete({
-            where: {
-                id: chat_User.id,
-            },
-        });
-
-        const activeUserIds = await this.getActiveUserIds(chatId);
-        if (activeUserIds.length === 0) {
-            await this.deleteChat(chatId);
+            const activeUserIds = await this.getActiveUserIds(chatId);
+            if (activeUserIds.length === 0) {
+                await this.deleteChat(chatId);
+            }
+            this.chatGatewayService.sendChatUpdate(chatId);
+            return { message: "Left the chat" };
+        } catch (error) {
+            console.error(`Error in leaveChat: ${error.message}`);
+            throw error;
         }
-        this.chatGatewayService.sendChatUpdate(chatId);
-        return { message: "Left the chat" };
     }
 }

@@ -37,13 +37,24 @@ function ChatOptions(props: chatOptionsProps): React.JSX.Element {
 
     function renameChat() {
         const newName = prompt("Enter new chat name:");
+        if (!newName) return;
+        const sanitizedName = sanitizeInput(newName);
+        if (sanitizedName.length < 3) {
+            alert("Name must be at least 3 characters long");
+            return;
+        }
         const apiUrl = `${process.env.REACT_APP_BACKEND_URL}/chat/rename/${props.selectedChat?.id}`;
         if (newName) {
-            fetchX("POST", apiUrl, { name: sanitizeInput(newName) });
+            fetchX("POST", apiUrl, { name: sanitizedName });
         }
     }
 
-    function removePassword() {}
+    async function removePassword() {
+        if (!window.confirm("Are you sure you want to remove the password?")) return;
+        const apiUrl = `${process.env.REACT_APP_BACKEND_URL}/chat/remove_password/${props.selectedChat?.id}`;
+        const res = await fetchGet<{ message: string }>(apiUrl);
+        alert(res.message);
+    }
 
     function changePassword() {}
 

@@ -107,6 +107,27 @@ export class ChatController {
         }
     }
 
+    @Get("remove_password/:chatId")
+    async removePassword(
+        @Req() req: AuthenticatedRequest,
+        @Param("chatId") chatId: number,
+        @Res() res
+    ) {
+        try {
+            const result = await this.chatService.removePassword(req.user.id, chatId);
+            if (result instanceof Error) {
+                res.status(500).json({ error: result.message });
+            } else if ("error" in result) {
+                res.status(500).json({ error: result.error });
+            } else {
+                res.status(200).json(result);
+            }
+        } catch (error) {
+            console.error("Error removing password:", error);
+            res.status(500).json({ error: "Internal Server Error" });
+        }
+    }
+
     // User actions
 
     @Get("leave/:chatId")
