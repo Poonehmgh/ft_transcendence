@@ -117,3 +117,9 @@ export async function fetchGetSet<T>(
         setter(null);
     }
 }
+
+// sanitizers and validators
+
+export function sanitizeInput(input: string) {
+    return input.replace(/[^a-zA-Z0-9]/g, "");
+}

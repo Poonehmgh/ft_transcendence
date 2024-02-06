@@ -1,6 +1,7 @@
 import { HttpStatus, Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import { ChatGatewayService } from "./chat.gateway.service";
+import { UserService } from "src/user/user.service";
 
 import {
     ChatWithChatUsers,
@@ -14,7 +15,8 @@ import {
 export class ChatService {
     constructor(
         private readonly prisma: PrismaService,
-        private readonly chatGatewayService: ChatGatewayService
+        private readonly chatGatewayService: ChatGatewayService,
+        private readonly userService: UserService
     ) {}
 
     // Getters
@@ -72,7 +74,7 @@ export class ChatService {
                     name: chat.name || "Unnamed Chat",
                     dm: chat.dm,
                     isPrivate: chat.isPrivate,
-                    passwordRequired: !!chat.password, // Assuming password_required is true if password is present
+                    passwordRequired: !!chat.password,
                     chatUsers: chat.chatUsers.map((chatUser) => {
                         return {
                             userId: chatUser.userId,
@@ -249,9 +251,20 @@ export class ChatService {
         creatorId: number,
         newChatDto: NewChatDTO
     ): Promise<ChatInfoDTO | null> {
+        const userNames: string[] = await Promise.all(
+            newChatDto.userIds.map(async (e) => await this.userService.getNameById(e))
+        );
+
+        const firstThreeNames: string[] = userNames.slice(0, 3);
+        const omittedCount: number = userNames.length - 3;
+
+        const newChatName = `Chat with ${firstThreeNames.join(", ")}${
+            omittedCount > 0 ? ` and ${omittedCount} others` : ""
+        }`;
+
         const newChat = await this.prisma.chat.create({
             data: {
-                name: "newchat",
+                name: newChatName,
                 dm: false,
                 isPrivate: newChatDto.isPrivate,
                 password: newChatDto.password,
@@ -274,9 +287,56 @@ export class ChatService {
         });
 
         const password_required = newChat.password !== null;
+
         return {
             ...newChat,
             passwordRequired: password_required,
         };
+    }
+
+    // Manipulate chat
+
+    async renameChat(userId: number, chatId: number, name: string) {
+        try {
+            const chat = await this.prisma.chat.findUnique({
+                where: {
+                    id: Number(chatId),
+                },
+                include: { chatUsers: true },
+            });
+
+            if (!chat) {
+                return { error: "Chat not found" };
+            }
+
+            if (chat.chatUsers.find((e) => e.userId === userId && e.owner)) {
+                await this.prisma.chat.update({
+                    where: {
+                        id: Number(chatId),
+                    },
+                    data: {
+                        name,
+                    },
+                });
+                return { message: "Chat renamed" };
+            } else {
+                return { error: "Must be owner to rename" };
+            }
+        } catch (error) {
+            console.error(`Error in renameChat: ${error.message}`);
+            throw error;
+        }
+    }
+
+    // User actions
+
+    async leaveChat(userId: number, chatId: number) {
+        await this.prisma.chatUser.delete({
+            where: {
+                userId,
+                chatId,
+            },
+        });
+        return { message: "Left the chat" };
     }
 }
