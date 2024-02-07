@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import backendUrls from "src/constants/backendUrls";
+import backendUrl from "src/constants/backendUrl";
 
 // DTO
 import { ChatInfoDTO } from "src/dto/chat-dto";
@@ -30,7 +30,7 @@ function ChatOptions(props: chatOptionsProps): React.JSX.Element {
 
     async function leaveChat() {
         if (window.confirm("Leave this chat?")) {
-            const apiUrl = backendUrls.chat + `leave/${props.selectedChat?.id}`;
+            const apiUrl = backendUrl.chat + `leave/${props.selectedChat?.id}`;
             const res = await fetchGet<{ message: string }>(apiUrl);
             alert(res.message);
         }
@@ -44,7 +44,7 @@ function ChatOptions(props: chatOptionsProps): React.JSX.Element {
             alert("Name must be at least 3 characters long");
             return;
         }
-        const apiUrl = backendUrls.chat + `rename/${props.selectedChat?.id}`;
+        const apiUrl = backendUrl.chat + `rename/${props.selectedChat?.id}`;
         const res = await fetchX<{ message: string }>("POST", apiUrl, {
             name: sanitizedName,
         });
@@ -53,7 +53,7 @@ function ChatOptions(props: chatOptionsProps): React.JSX.Element {
 
     async function removePassword() {
         if (!window.confirm("Are you sure you want to remove the password?")) return;
-        const apiUrl = backendUrls.chat + `remove_password/${props.selectedChat?.id}`;
+        const apiUrl = backendUrl.chat + `remove_password/${props.selectedChat?.id}`;
         const res = await fetchGet<{ message: string }>(apiUrl);
         alert(res.message);
     }
@@ -65,7 +65,7 @@ function ChatOptions(props: chatOptionsProps): React.JSX.Element {
             alert("Password must be at least 3 characters long");
             return;
         }
-        const apiUrl = backendUrls.chat + `change_password/${props.selectedChat?.id}`;
+        const apiUrl = backendUrl.chat + `change_password/${props.selectedChat?.id}`;
         const res = await fetchX<{ message: string }>("POST", apiUrl, {
             password: newPassword,
         });
