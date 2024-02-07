@@ -15,9 +15,11 @@ function PongersRoutes() {
     const token = getTokenFromCookie();
     const validToken = isTokenValid(token);
 
-    const ProtectedRoute = ({ element }) => {
+    
+
+    function ProtectedRoute({ element }) {
         return validToken ? element : <Navigate to="/home" />;
-    };
+    }
 
     return (
         <div>
