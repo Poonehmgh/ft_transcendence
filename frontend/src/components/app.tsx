@@ -10,6 +10,9 @@ import ManageProfile from "src/components/ManageProfile/ManageProfile_main";
 import Home from "./Home/Home_main";
 import { getTokenFromCookie, isTokenValid } from "src/functions/utils";
 
+
+
+
 function App() {
     const token = getTokenFromCookie();
     const validToken = isTokenValid(token);

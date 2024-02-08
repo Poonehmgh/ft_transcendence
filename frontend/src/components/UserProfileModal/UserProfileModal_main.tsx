@@ -17,6 +17,7 @@ interface userProfileModalProps {
     id: number;
     isOpen: boolean;
     onClose: () => void;
+    twoFa: boolean;
 }
 
 function UserProfileModal(props: userProfileModalProps) {
@@ -81,6 +82,7 @@ function UserProfileModal(props: userProfileModalProps) {
                                 rank={userProfile.rank}
                                 matches={userProfile.matches}
                                 winrate={userProfile.winrate}
+                                twoFa={props.twoFa}
                             />
                         </div>
                         {props.id.toString() === localStorage.getItem("userId") ? (
