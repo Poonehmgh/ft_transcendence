@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 import Header from "../Header/Header_main";
 
 import { io } from "socket.io-client";
-import { authHeader } from "utils";
+import { authHeader } from "../../functions/utils";
 
 import "../../styles/game.css";
 
 function GameV2() {
-	// const [receivedMessage, setReceivedMessage] = useState("Join Queue");
+	const [receivedMessage, setReceivedMessage] = useState("Join Queue");
 
-	// const socket = io("localhost:5500");
+	const socket = io("localhost:5500");
 	const myProfileApiUrl = process.env.REACT_APP_BACKEND_URL + "/user/my_profile";
 
   const [userData, setUserData] = useState(null);
@@ -35,17 +35,36 @@ function GameV2() {
     fetchUserData();
   }, [myProfileApiUrl]);
 
-	// const sendMessageToServer = () => {
-  //   socket.emit("joinQueue", userData.id);
-  // };
+  useEffect(() => {
+    socket.on("queueConfirm", (data) => {
+      console.log(data)
+      if (data === "Confirm") {
+        setReceivedMessage("In Queue");
+      } else if (data === "InvalidID") {
+        setReceivedMessage("Invalid ID");
+      } else if (data === "Already in queue") {
+        setReceivedMessage("Already In Queue"); 
+      } else if (data === "Already in game") {
+        setReceivedMessage("Already In Game");
+      }
+    });
+
+    return () => {
+      socket.off("queueConfirm");
+    };
+  }, [socket]);
+
+	const sendMessageToServer = () => {
+    socket.emit("joinQueue", {'userID' : userData.id});
+  };
 
   return (
     <>
       <Header />
       <div className="game-sections-container">
-				{/* <button className="queue-button" onClick={sendMessageToServer}>
+				<button className="queue-button" onClick={sendMessageToServer}>
 					{receivedMessage}
-				</button> */}
+				</button>
         <div className="player-left-info">{/* <PlayerCardTableV2 /> */}</div>
         <div className="player-right-info">{/* <PlayerCardTableV2 /> */}</div>
         <div className="section game-left-bar">{/* <LeftBarV2 /> */}</div>
