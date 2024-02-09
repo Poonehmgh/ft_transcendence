@@ -8,6 +8,7 @@ import {
     UseGuards,
     Req,
     Res,
+    Patch,
 } from "@nestjs/common";
 import { ChatService } from "./chat.service";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
@@ -85,7 +86,7 @@ export class ChatController {
         }
     }
 
-    @Post("rename/:chatId")
+    @Patch("rename/:chatId")
     async renameChat(
         @Req() req: AuthenticatedRequest,
         @Param("chatId") chatId: number,
@@ -107,7 +108,7 @@ export class ChatController {
         }
     }
 
-    @Get("remove_password/:chatId")
+    @Patch("remove_password/:chatId")
     async removePassword(
         @Req() req: AuthenticatedRequest,
         @Param("chatId") chatId: number,
@@ -128,7 +129,7 @@ export class ChatController {
         }
     }
 
-    @Post("change_password/:chatId")
+    @Patch("change_password/:chatId")
     async changePassword(
         @Req() req: AuthenticatedRequest,
         @Param("chatId") chatId: number,
@@ -152,7 +153,7 @@ export class ChatController {
 
     // User actions
 
-    @Get("leave/:chatId")
+    @Patch("leave/:chatId")
     async leaveChat(
         @Req() req: AuthenticatedRequest,
         @Param("chatId") chatId: number,

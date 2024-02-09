@@ -11,6 +11,8 @@ import {
     BadRequestException,
     UploadedFile,
     UseGuards,
+    Put,
+    Patch,
 } from "@nestjs/common";
 import { Response } from "express";
 import { UserRelation, IdAndNameDTO, UserProfileDTO, ChangeNameDTO } from "./user-dto";
@@ -117,7 +119,7 @@ export class UserController {
 
     // profile management
 
-    @Post("change_name")
+    @Patch("change_name")
     async changeName(
         @Req() req: AuthenticatedRequest,
         @Body() changeNameDTO: ChangeNameDTO,
@@ -137,7 +139,7 @@ export class UserController {
         }
     }
 
-    @Post("put_avatar")
+    @Put("put_avatar")
     @UseInterceptors(
         FileInterceptor("avatar", {
             storage: diskStorage({
@@ -177,7 +179,7 @@ export class UserController {
 
     // friend management
 
-    @Post("send_friendreq")
+    @Patch("send_friendreq")
     async sendFriendRequest(
         @Req() req: AuthenticatedRequest,
         @Body() body: { otherId: number }
@@ -186,7 +188,7 @@ export class UserController {
         return this.userService.sendFriendReq(req.user.id, otherId);
     }
 
-    @Post("cancel_friendreq")
+    @Patch("cancel_friendreq")
     async cancelFriendRequest(
         @Req() req: AuthenticatedRequest,
         @Body() body: { otherId: number }
@@ -195,7 +197,7 @@ export class UserController {
         return this.userService.cancelFriendReq(req.user.id, otherId);
     }
 
-    @Post("accept_friendreq")
+    @Patch("accept_friendreq")
     async acceptFriendRequest(
         @Req() req: AuthenticatedRequest,
         @Body() body: { otherId: number }
@@ -204,7 +206,7 @@ export class UserController {
         return this.userService.acceptFriendReq(req.user.id, otherId);
     }
 
-    @Post("decline_friendreq")
+    @Patch("decline_friendreq")
     async declineFriendRequest(
         @Req() req: AuthenticatedRequest,
         @Body() body: { otherId: number }
@@ -213,7 +215,7 @@ export class UserController {
         return this.userService.declineFriendReq(req.user.id, otherId);
     }
 
-    @Post("remove_friend")
+    @Patch("remove_friend")
     async removeFriend(
         @Req() req: AuthenticatedRequest,
         @Body() body: { otherId: number }
@@ -222,13 +224,13 @@ export class UserController {
         return this.userService.removeFriend(req.user.id, otherId);
     }
 
-    @Post("block")
+    @Patch("block")
     async blockUser(@Req() req: AuthenticatedRequest, @Body() body: { otherId: number }) {
         const { otherId } = body;
         return this.userService.blockUser(req.user.id, otherId);
     }
 
-    @Post("unblock")
+    @Patch("unblock")
     async unblockUser(
         @Req() req: AuthenticatedRequest,
         @Body() body: { otherId: number }
