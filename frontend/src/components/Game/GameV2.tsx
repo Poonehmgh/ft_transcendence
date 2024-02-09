@@ -7,11 +7,41 @@ import { authHeader } from "utils";
 import "../../styles/game.css";
 
 function GameV2() {
+	// const [receivedMessage, setReceivedMessage] = useState("Join Queue");
 
+	// const socket = io("localhost:5500");
+	const myProfileApiUrl = process.env.REACT_APP_BACKEND_URL + "/user/my_profile";
+
+  const [userData, setUserData] = useState(null);
+	
+	useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch(myProfileApiUrl, {
+          method: "GET",
+          headers: authHeader(),
+        });
+
+        if (!response.ok) {
+          throw new Error(`Network response was not ok: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setUserData(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchUserData();
+  }, [myProfileApiUrl]);
+
+	// const sendMessageToServer = () => {
+  //   socket.emit("joinQueue", userData.id);
+  // };
 
   return (
     <>
-      {/* <Header /> */}
+      <Header />
       <div className="game-sections-container">
 				{/* <button className="queue-button" onClick={sendMessageToServer}>
 					{receivedMessage}
