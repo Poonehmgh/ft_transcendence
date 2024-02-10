@@ -216,7 +216,6 @@ export class ChatService {
         newChatDto: NewChatDTO
     ): Promise<ChatInfoDTO | null> {
         try {
-            console.log("creating dm chat", newChatDto);
             if (newChatDto.userIds.length !== 2) {
                 throw { message: "DM must have exactly 2 users" };
             }
