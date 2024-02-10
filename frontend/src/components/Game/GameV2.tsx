@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Header from "../Header/Header_main";
 
 import { io } from "socket.io-client";
 import { authHeader } from "../../functions/utils";
@@ -7,14 +6,14 @@ import { authHeader } from "../../functions/utils";
 import "../../styles/game.css";
 
 function GameV2() {
-	const [receivedMessage, setReceivedMessage] = useState("Join Queue");
-
-	const socket = io("localhost:5500");
-	const myProfileApiUrl = process.env.REACT_APP_BACKEND_URL + "/user/my_profile";
-
   const [userData, setUserData] = useState(null);
-	
-	useEffect(() => {
+  const [queueStatus, setQueueStatus] = useState("Join Queue");
+
+  const myProfileApiUrl =
+    process.env.REACT_APP_BACKEND_URL + "/user/my_profile";
+  const socket = io("localhost:5500");
+
+  useEffect(() => {
     const fetchUserData = async () => {
       try {
         const response = await fetch(myProfileApiUrl, {
@@ -37,15 +36,15 @@ function GameV2() {
 
   useEffect(() => {
     socket.on("queueConfirm", (data) => {
-      console.log(data)
-      if (data === "Confirm") {
-        setReceivedMessage("In Queue");
+      console.log(data);
+      if (data === "Confirmed") {
+        setQueueStatus("In Queue");
       } else if (data === "InvalidID") {
-        setReceivedMessage("Invalid ID");
+        setQueueStatus("Invalid ID");
       } else if (data === "Already in queue") {
-        setReceivedMessage("Already In Queue"); 
+        setQueueStatus("Already In Queue");
       } else if (data === "Already in game") {
-        setReceivedMessage("Already In Game");
+        setQueueStatus("Already In Game");
       }
     });
 
@@ -54,29 +53,27 @@ function GameV2() {
     };
   }, [socket]);
 
-	const sendMessageToServer = () => {
-    socket.emit("joinQueue", {'userID' : userData.id});
+  const sendMessageToServer = () => {
+    socket.emit("connectMessage", { userID: userData.id }); //Remove later
+    socket.emit("joinQueue", { userID: userData.id });
   };
 
   return (
-    <>
-      <Header />
-      <div className="game-sections-container">
-				<button className="queue-button" onClick={sendMessageToServer}>
-					{receivedMessage}
-				</button>
-        <div className="player-left-info">{/* <PlayerCardTableV2 /> */}</div>
-        <div className="player-right-info">{/* <PlayerCardTableV2 /> */}</div>
-        <div className="section game-left-bar">{/* <LeftBarV2 /> */}</div>
-        <div className="section game-center">
-          <div className="leftBarField"></div>
-          <div className="ball">{/* {<Ball/>} */}</div>
-          <div className="rightBarField"></div>
-        </div>
-        <div className="section game-right-bar">{/* <RightBarV2 /> */}</div>
-        <div className="section game-score">{/* <ScoreV2 /> */}</div>
+    <div className="game-sections-container">
+      <button className="queue-button" onClick={sendMessageToServer}>
+        {queueStatus}
+      </button>
+      <div className="player-left-info">{/* <PlayerCardTableV2 /> */}</div>
+      <div className="player-right-info">{/* <PlayerCardTableV2 /> */}</div>
+      <div className="section game-left-bar">{/* <LeftBarV2 /> */}</div>
+      <div className="section game-center">
+        <div className="leftBarField"></div>
+        <div className="ball">{/* {<Ball/>} */}</div>
+        <div className="rightBarField"></div>
       </div>
-    </>
+      <div className="section game-right-bar">{/* <RightBarV2 /> */}</div>
+      <div className="section game-score">{/* <ScoreV2 /> */}</div>
+    </div>
   );
 }
 
