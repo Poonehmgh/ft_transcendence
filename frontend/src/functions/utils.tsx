@@ -80,7 +80,6 @@ export async function fetchX<T>(
 
         if (!response.ok) {
             console.error(`${apiUrl}: ${response.status}`);
-            throw new Error(`Not OK response in fetchX`);
         }
         return await response.json();
     } catch (error) {
