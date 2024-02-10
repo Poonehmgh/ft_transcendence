@@ -39,6 +39,7 @@ export class ChatGatewayService {
 
 	getUserIdFromSocket(socket: Socket) {
 		const user: userGateway = this.connectedUsers.find((user) => user.socket === socket)
+        if (!user) return;
 		return user.userID;
 	}
 
