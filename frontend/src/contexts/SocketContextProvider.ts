@@ -1,10 +1,8 @@
-import React, { createContext, useEffect, useState, useContext } from "react";
-import PongersRoutes from "./Routes";
-import { BrowserRouter } from "react-router-dom";
+// SocketContextProvider.js
+import React, { useEffect, useState } from "react";
 import { io } from "socket.io-client";
+import SocketContext from "./SocketContext";
 import backendUrl from "src/constants/backendUrl";
-
-const SocketContext = createContext();
 
 function SocketContextProvider(props) {
     const [socket, setSocket] = useState(null);
@@ -26,16 +24,4 @@ function SocketContextProvider(props) {
     );
 }
 
-function App() {
-    return (
-        <SocketContextProvider>
-            <BrowserRouter>
-                <PongersRoutes />
-            </BrowserRouter>
-        </SocketContextProvider>
-    );
-}
-
-export default App;
-
-export { SocketContext };
+export default SocketContextProvider;
