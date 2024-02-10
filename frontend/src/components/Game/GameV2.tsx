@@ -43,7 +43,6 @@ function GameV2() {
 
   useEffect(() => {
     socket.on("queueConfirm", (data) => {
-      // console.log(data);
       if (data === "Confirmed") {
         setQueueStatus("In Queue");
       } else if (data === "InvalidID") {
@@ -59,23 +58,26 @@ function GameV2() {
       socket.off("queueConfirm");
     };
   }, [socket]);
-  
+
   useEffect(() => {
-    socket.on("newRound", (data) => {
-      setNewRound(data);
-      if (data.userID1 === userData.id) {
-        setIsPlayerOne(true);
-        setOpponentID(data.userID2);
-      } else if (data.userID2 === userData.id) {
-        setIsPlayerOne(false);
-        setOpponentID(data.userID1);
-      }
-    });
+    if (userData) {
+        socket.on("newRound", (data) => {
+            setNewRound(data);
+            if (data.userID1 === userData.id) {
+                setIsPlayerOne(true);
+                setOpponentID(data.userID2);
+            } else if (data.userID2 === userData.id) {
+                setIsPlayerOne(false);
+                setOpponentID(data.userID1);
+            }
+        });
+    }
 
     return () => {
-      socket.off("newRound");
+        socket.off("newRound");
     };
-  }, [userData.id, socket]);
+}, [userData, socket]);
+
 
   useEffect(() => {
     const fetchOpponentData = async () => {
@@ -98,7 +100,6 @@ function GameV2() {
     };
 
     fetchOpponentData();
-
   }, [opponentID]);
 
   useEffect(() => {
@@ -121,8 +122,12 @@ function GameV2() {
       <button className="queue-button" onClick={sendMessageToServer}>
         {queueStatus}
       </button>
-      <div className="player-left-info"><PlayerGameProfile user={userData} /></div>
-      <div className="player-right-info"><PlayerGameProfile user={null} /></div>
+      <div className="player-left-info">
+        <PlayerGameProfile user={userData} />
+      </div>
+      <div className="player-right-info">
+        <PlayerGameProfile user={null} />
+      </div>
       <div className="section game-left-bar">{/* <LeftPlank /> */}</div>
       <div className="section game-center">
         <div className="leftBarField"></div>
