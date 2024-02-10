@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from "react";
 
+import PlayerGameProfile from "./PlayerGameProfile";
+
 import { io } from "socket.io-client";
 import { authHeader } from "../../functions/utils";
 
 import "../../styles/game.css";
+import backendUrl from "src/constants/backendUrl";
 
 function GameV2() {
   const [userData, setUserData] = useState(null);
   const [queueStatus, setQueueStatus] = useState("Join Queue");
 
   const myProfileApiUrl =
-    process.env.REACT_APP_BACKEND_URL + "/user/my_profile";
+    backendUrl.user + "my_profile";
   const socket = io("localhost:5500");
 
   useEffect(() => {
@@ -63,8 +66,8 @@ function GameV2() {
       <button className="queue-button" onClick={sendMessageToServer}>
         {queueStatus}
       </button>
-      <div className="player-left-info">{/* <PlayerCardTableV2 /> */}</div>
-      <div className="player-right-info">{/* <PlayerCardTableV2 /> */}</div>
+      <div className="player-left-info"><PlayerGameProfile user={userData} /></div>
+      <div className="player-right-info"><PlayerGameProfile user={null} /></div>
       <div className="section game-left-bar">{/* <LeftBarV2 /> */}</div>
       <div className="section game-center">
         <div className="leftBarField"></div>
