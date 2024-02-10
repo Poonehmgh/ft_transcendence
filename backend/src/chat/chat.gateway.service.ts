@@ -72,7 +72,7 @@ export class ChatGatewayService {
 		}
 	}
 
-	async isUserMuted(chatId: number, userId: number): Promise<Boolean>{
+	async isUserMuted(chatId: number, userId: number): Promise<Boolean> {
 		const chatUser = await this.prisma.chat_User.findFirst({
 			where: {
 				userId: userId,
@@ -81,7 +81,7 @@ export class ChatGatewayService {
 		});
 		if (chatUser.muted && chatUser.muted_until > new Date()) {
 			return true;
-		} else if(chatUser.muted && chatUser.muted_until < new Date()) {
+		} else if (chatUser.muted && chatUser.muted_until < new Date()) {
 			await this.prisma.chat_User.updateMany({
 				where: {
 					userId: userId,
@@ -95,7 +95,7 @@ export class ChatGatewayService {
 		return false;
 	}
 
-	async isUserBanned(chatId: number, userId: number): Promise<Boolean>{
+	async isUserBanned(chatId: number, userId: number): Promise<Boolean> {
 		const chatUser = await this.prisma.chat_User.findFirst({
 			where: {
 				userId: userId,
@@ -145,6 +145,36 @@ export class ChatGatewayService {
 			});
 		} catch (error) {
 			console.log(`error in setUserOnlineStatus: ${error.message}`);
+		}
+	}
+
+	async setUserSockerID(userID: number, socketID: string) {
+		try {
+			await this.prisma.user.updateMany({
+				where: {
+					id: Number(userID),
+				},
+				data: {
+					socketId: String(socketID),
+				},
+			});
+		} catch (error) {
+			console.log(`error in setUserSocketID: ${error.message}`);
+		}
+	}
+
+	async deleteUserSocketID(userID: number) {
+		try {
+			await this.prisma.user.updateMany({
+				where: {
+					id: Number(userID),
+				},
+				data: {
+					socketId: "",
+				},
+			});
+		} catch (error) {
+			console.log(`error in deleteUserSocketID: ${error.message}`);
 		}
 	}
 

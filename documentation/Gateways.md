@@ -11,11 +11,11 @@ From user
 
 To user
 
-| what                                            | Message      | takes                                                                    |
-|-------------------------------------------------|--------------|--------------------------------------------------------------------------|
-| Receive the confirmation that queue was entered | queueConfirm | text 'Confirm' or 'InvalidID' or 'Already in queue' or 'Already in game' |
-| Receive the the data to render new match        | newRound     | NewRoundDTO                                                              |
-| Receive an update while rendering               | gameUpdate   | GameUpdateDTO                                                            |
+| what                                            | Message      | takes                                                                                                           |
+|-------------------------------------------------|--------------|-----------------------------------------------------------------------------------------------------------------|
+| Receive the confirmation that queue was entered | queueConfirm | text 'Confirm' or 'InvalidID' or 'Already in queue' or 'Already in game' or 'Socket is not assigned to this id' |
+| Receive the the data to render new match        | newRound     | NewRoundDTO                                                                                                     |
+| Receive an update while rendering               | gameUpdate   | GameUpdateDTO                                                                                                   |
 
 ## Chat
 
@@ -28,7 +28,7 @@ From User
 | Connect to gateway and get online status | connectMessage | EstablishConnectDTO |
 | Send message to chat room                | sendMessage    | SendMessageDTO      |
 | Create new chat room                     | createChat     | CreateNewChatDTO    |
-| Invite a specific user to chat           | inviteUser     | InviteUserDTO    |
+| Invite a specific user to chat           | inviteUser     | InviteUserDTO       |
 
 To user
 
