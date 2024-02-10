@@ -11,6 +11,9 @@ import {
     BadRequestException,
     UploadedFile,
     UseGuards,
+    Put,
+    Patch,
+    Delete,
 } from "@nestjs/common";
 import { Response } from "express";
 import { UserRelation, IdAndNameDTO, UserProfileDTO, ChangeNameDTO } from "./user-dto";
@@ -50,6 +53,8 @@ export class UserController {
 
     @Get("my_avatar")
     async getMyAvatar(@Req() req: AuthenticatedRequest, @Res() res: Response) {
+        console.log("getavatarbyid, id: ", req.user.id);
+
         const filePath = this.userService.getAvatarPath(req.user.id);
         if (!filePath) {
             return res.sendFile("default.png", { root: "./uploads" });
@@ -117,27 +122,32 @@ export class UserController {
 
     // profile management
 
-    @Post("change_name")
+    @Patch("change_name")
     async changeName(
         @Req() req: AuthenticatedRequest,
         @Body() changeNameDTO: ChangeNameDTO,
         @Res() res: Response
     ) {
-        const errorType = await this.userService.changeName(
-            req.user.id,
-            changeNameDTO.newName
-        );
-        // 0 = no error; 1 = uniqueness constraint violation; 2 = any other error
-        if (!errorType) {
-            return res.json({ message: "Name changed." });
-        } else if (errorType === 1) {
-            return res.status(400).json({ message: "Name already in use." });
-        } else {
-            return res.status(400).json({ message: "Database error." });
+        try {
+            const result = await this.userService.changeName(
+                req.user.id,
+                changeNameDTO.newName
+            );
+            if (!result.success) {
+                res.status(500).json({ message: result.message });
+            } else {
+                res.status(200).json({ message: result.message });
+            }
+        } catch (error) {
+            if (error instanceof BadRequestException) {
+                return res.status(400).json({ error: error.getResponse() });
+            }
+            console.error("Error changing name:", error);
+            return res.status(500).json({ error: "Internal Server Error" });
         }
     }
 
-    @Post("put_avatar")
+    @Put("my_avatar")
     @UseInterceptors(
         FileInterceptor("avatar", {
             storage: diskStorage({
@@ -177,7 +187,7 @@ export class UserController {
 
     // friend management
 
-    @Post("send_friendreq")
+    @Post("friendreq")
     async sendFriendRequest(
         @Req() req: AuthenticatedRequest,
         @Body() body: { otherId: number }
@@ -186,7 +196,7 @@ export class UserController {
         return this.userService.sendFriendReq(req.user.id, otherId);
     }
 
-    @Post("cancel_friendreq")
+    @Delete("friendreq")
     async cancelFriendRequest(
         @Req() req: AuthenticatedRequest,
         @Body() body: { otherId: number }
@@ -195,7 +205,7 @@ export class UserController {
         return this.userService.cancelFriendReq(req.user.id, otherId);
     }
 
-    @Post("accept_friendreq")
+    @Patch("accept_friendreq")
     async acceptFriendRequest(
         @Req() req: AuthenticatedRequest,
         @Body() body: { otherId: number }
@@ -204,7 +214,7 @@ export class UserController {
         return this.userService.acceptFriendReq(req.user.id, otherId);
     }
 
-    @Post("decline_friendreq")
+    @Patch("decline_friendreq")
     async declineFriendRequest(
         @Req() req: AuthenticatedRequest,
         @Body() body: { otherId: number }
@@ -213,7 +223,7 @@ export class UserController {
         return this.userService.declineFriendReq(req.user.id, otherId);
     }
 
-    @Post("remove_friend")
+    @Delete("friend")
     async removeFriend(
         @Req() req: AuthenticatedRequest,
         @Body() body: { otherId: number }
@@ -228,7 +238,7 @@ export class UserController {
         return this.userService.blockUser(req.user.id, otherId);
     }
 
-    @Post("unblock")
+    @Delete("block")
     async unblockUser(
         @Req() req: AuthenticatedRequest,
         @Body() body: { otherId: number }

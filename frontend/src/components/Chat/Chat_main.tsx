@@ -10,6 +10,7 @@ import { ChatInfoDTO, ChatUserDTO } from "src/dto/chat-dto";
 // CSS
 import "../../styles/chat.css";
 import "../../styles/style.css";
+import backendUrl from "src/constants/backendUrl";
 
 function Chat() {
     const [selectedChat, setSelectedChat] = useState<ChatInfoDTO | null>(null);
@@ -20,7 +21,7 @@ function Chat() {
     // to do temp
 
     const [chats, setChats] = useState<ChatInfoDTO[]>(null);
-    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/chat/my_chats";
+    const apiUrl = backendUrl.chat + "my_chats";
 
     function selectChat(newChat: ChatInfoDTO) {
         setSelectedChat(newChat);

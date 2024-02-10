@@ -8,6 +8,7 @@ import {
     UseGuards,
     Req,
     Res,
+    Patch,
 } from "@nestjs/common";
 import { ChatService } from "./chat.service";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
@@ -85,7 +86,7 @@ export class ChatController {
         }
     }
 
-    @Post("rename/:chatId")
+    @Patch("rename/:chatId")
     async renameChat(
         @Req() req: AuthenticatedRequest,
         @Param("chatId") chatId: number,
@@ -107,11 +108,52 @@ export class ChatController {
         }
     }
 
-    
+    @Patch("remove_password/:chatId")
+    async removePassword(
+        @Req() req: AuthenticatedRequest,
+        @Param("chatId") chatId: number,
+        @Res() res
+    ) {
+        try {
+            const result = await this.chatService.removePassword(req.user.id, chatId);
+            if (result instanceof Error) {
+                res.status(500).json({ error: result.message });
+            } else if ("error" in result) {
+                res.status(500).json({ error: result.error });
+            } else {
+                res.status(200).json(result);
+            }
+        } catch (error) {
+            console.error("Error removing password:", error);
+            res.status(500).json({ error: "Internal Server Error" });
+        }
+    }
+
+    @Patch("change_password/:chatId")
+    async changePassword(
+        @Req() req: AuthenticatedRequest,
+        @Param("chatId") chatId: number,
+        @Body("password") password: string,
+        @Res() res
+    ) {
+        try {
+            const result = await this.chatService.changePassword(req.user.id, chatId, password);
+            if (result instanceof Error) {
+                res.status(500).json({ error: result.message });
+            } else if ("error" in result) {
+                res.status(500).json({ error: result.error });
+            } else {
+                res.status(200).json(result);
+            }
+        } catch (error) {
+            console.error("Error changing password:", error);
+            res.status(500).json({ error: "Internal Server Error" });
+        }
+    }
 
     // User actions
 
-    @Get("leave/:chatId")
+    @Patch("leave/:chatId")
     async leaveChat(
         @Req() req: AuthenticatedRequest,
         @Param("chatId") chatId: number,

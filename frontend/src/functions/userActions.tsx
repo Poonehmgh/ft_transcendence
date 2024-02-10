@@ -1,3 +1,4 @@
+import backendUrl from "src/constants/backendUrl";
 import { authContentHeader } from "./utils";
 
 // to do: pass the strings and 2nd lvl functions into a central handler function.
@@ -6,10 +7,10 @@ import { authContentHeader } from "./utils";
 This is the main function that connects to the backend.
 The other functions just prepare the vars.
 */
-async function userAction(body: string, apiUrl: string) {
+async function userAction(method: string, apiUrl: string, body: string) {
     try {
         const response: Response = await fetch(apiUrl, {
-            method: "POST",
+            method: method,
             headers: authContentHeader(),
             body: body,
         });
@@ -36,10 +37,31 @@ export async function handleSendFriendRequest(otherId: number, otherName: string
 }
 
 async function sendFriendRequest(otherId: number) {
-    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/send_friendreq";
+    const method = "POST";
+    const apiUrl = backendUrl.user + "friendreq";
     const body: string = JSON.stringify({ otherId: otherId });
 
-    return userAction(body, apiUrl);
+    return userAction(method, apiUrl, body);
+}
+
+// Cancel friend request
+
+export async function handleCancelRequest(otherId: number, otherName: string) {
+    if (window.confirm("Cancel friend request to user " + otherName + "?")) {
+        if (cancelRequest(otherId)) {
+            alert("Friend request canceled");
+        } else {
+            alert("Error canceling friend request");
+        }
+    }
+}
+
+async function cancelRequest(otherId: number) {
+    const method = "DELETE";
+    const apiUrl = backendUrl.user + "friendreq";
+    const body: string = JSON.stringify({ otherId: otherId });
+
+    return userAction(method, apiUrl, body);
 }
 
 // Remove friend
@@ -55,10 +77,11 @@ export async function handleRemoveFriend(otherId: number, otherName: string) {
 }
 
 async function removeFriend(otherId: number) {
-    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/remove_friend";
+    const method = "DELETE";
+    const apiUrl = backendUrl.user + "friend";
     const body: string = JSON.stringify({ otherId: otherId });
 
-    return userAction(body, apiUrl);
+    return userAction(method, apiUrl, body);
 }
 
 // Unblock user
@@ -74,10 +97,11 @@ export async function handleUnBlockUser(otherId: number, otherName: string) {
 }
 
 async function unblockUser(otherId: number) {
-    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/unblock";
+    const method = "DELETE";
+    const apiUrl = backendUrl.user + "block";
     const body: string = JSON.stringify({ otherId: otherId });
 
-    return userAction(body, apiUrl);
+    return userAction(method, apiUrl, body);
 }
 
 // Block user
@@ -93,29 +117,11 @@ export async function handleBlockUser(otherId: number, otherName: string) {
 }
 
 async function blockUser(otherId: number) {
-    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/block";
+    const method = "POST";
+    const apiUrl = backendUrl.user + "block";
     const body: string = JSON.stringify({ otherId: otherId });
 
-    return userAction(body, apiUrl);
-}
-
-// Cancel Request
-
-export async function handleCancelRequest(otherId: number, otherName: string) {
-    if (window.confirm("Cancel friend request to user " + otherName + "?")) {
-        if (cancelRequest(otherId)) {
-            alert("Friend request canceled");
-        } else {
-            alert("Error canceling friend request");
-        }
-    }
-}
-
-async function cancelRequest(otherId: number) {
-    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/cancel_friendreq";
-    const body: string = JSON.stringify({ otherId: otherId });
-
-    return userAction(body, apiUrl);
+    return userAction(method, apiUrl, body);
 }
 
 // Accept / Decline Request Dispatch
@@ -153,10 +159,11 @@ export async function handleAcceptRequest(otherId: number, otherName: string) {
 }
 
 async function acceptRequest(otherId: number) {
-    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/accept_friendreq";
+    const method = "PATCH";
+    const apiUrl = backendUrl.user + "accept_friendreq";
     const body: string = JSON.stringify({ otherId: otherId });
 
-    return userAction(body, apiUrl);
+    return userAction(method, apiUrl, body);
 }
 
 // Decline Request
@@ -172,8 +179,9 @@ export async function handleDeclineRequest(otherId: number, otherName: string) {
 }
 
 async function declineRequest(otherId: number) {
-    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/decline_friendreq";
+    const method = "PATCH";
+    const apiUrl = backendUrl.user + "decline_friendreq";
     const body: string = JSON.stringify({ otherId: otherId });
 
-    return userAction(body, apiUrl);
+    return userAction(method, apiUrl, body);
 }

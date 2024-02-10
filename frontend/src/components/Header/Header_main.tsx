@@ -1,12 +1,11 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import React from "react";
 
 // CSS
 import "src/styles/header.css";
 import "src/styles/buttons.css";
 
-function Header() {
-    const location = useLocation();
+function Header({location}) {
 
     return (
         <div>
