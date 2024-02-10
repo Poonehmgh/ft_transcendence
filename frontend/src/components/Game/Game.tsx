@@ -68,7 +68,6 @@ import PlayerCardTable from "../shared/PlayerCardTable";
           <div className="player-right-info">
             <PlayerCardTable mmr={playerData2.mmr} rank={playerData2.rank} matches={playerData2.matches} winrate={playerData2.winrate} /> {/* this has to be oponents info*/}
           </div>
-          <Header />
             <div className="section game-left-bar">
                 <LeftBar />
             </div>

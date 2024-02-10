@@ -80,7 +80,6 @@ export async function fetchX<T>(
 
         if (!response.ok) {
             console.error(`${apiUrl}: ${response.status}`);
-            throw new Error(`Not OK response in fetchX`);
         }
         return await response.json();
     } catch (error) {
@@ -121,5 +120,5 @@ export async function fetchGetSet<T>(
 // sanitizers and validators
 
 export function sanitizeInput(input: string) {
-    return input.replace(/[^a-zA-Z0-9]/g, "");
+    return input.replace(/[^a-zA-Z0-9_ ]/g, "");
 }

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { fetchGet, fetchGetSet } from "src/functions/utils";
+import backendUrl from "src/constants/backendUrl";
 
 // DTO
 import { ChatInfoDTO, ChatUserDTO } from "src/dto/chat-dto";
@@ -12,20 +13,17 @@ interface membersProps {
 function MemberList(props: membersProps): React.JSX.Element {
     const [chatUsers, setChatUsers] = useState<ChatUserDTO[]>(null);
     const [selectedChatUser, setSelectedChatUser] = useState<ChatUserDTO>(null);
-	const [userNames, setUserNames] = useState<string[]>([]);
+    const [userNames, setUserNames] = useState<string[]>([]);
 
-    const apiUrl =
-        process.env.REACT_APP_BACKEND_URL + "/chat/chat_users/" + props.selectedChat.id;
+    const apiUrl = backendUrl.chat + "chat_users/" + props.selectedChat.id;
 
     useEffect(() => {
         fetchGetSet<ChatUserDTO[]>(apiUrl, setChatUsers);
-        console.log("ChatUsers: ", chatUsers);
     }, [props.selectedChat, apiUrl]);
 
     useEffect(() => {
         if (chatUsers) {
-            // Fetch names using user IDs one at a time
-            const apiNamesUrl = process.env.REACT_APP_BACKEND_URL + "/user/name/";
+            const apiNamesUrl = backendUrl.user + "name/";
 
             const fetchName = async (userId, index) => {
                 try {

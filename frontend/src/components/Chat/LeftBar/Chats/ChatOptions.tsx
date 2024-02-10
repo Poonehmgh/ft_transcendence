@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import backendUrl from "src/constants/backendUrl";
 
 // DTO
 import { ChatInfoDTO } from "src/dto/chat-dto";
@@ -27,36 +28,56 @@ function ChatOptions(props: chatOptionsProps): React.JSX.Element {
         }
     }, [props.selectedChat]);
 
-    function leaveChat() {
-        if (isOwner) {
-            alert("You must transfer ownership before leaving this chat.");
+    async function leaveChat() {
+        if (window.confirm("Leave this chat?")) {
+            const apiUrl = backendUrl.chat + `leave/${props.selectedChat?.id}`;
+            const res = await fetchX<{ message: string }>("PATCH", apiUrl, null);
+            alert(res.message);
+        }
+    }
+
+    async function renameChat() {
+        const newName = prompt("Enter new chat name:");
+        if (!newName) return;
+        const sanitizedName = sanitizeInput(newName);
+        if (sanitizedName.length < 3) {
+            alert("Name must be at least 3 characters long");
             return;
         }
-        if (window.confirm("Leave this chat?")) {
-            // leave chat
-        }
+        const apiUrl = backendUrl.chat + `rename/${props.selectedChat?.id}`;
+        const res = await fetchX<{ message: string }>("PATCH", apiUrl, {
+            name: sanitizedName,
+        });
+        alert(res.message);
     }
 
-    function renameChat() {
-        const newName = prompt("Enter new chat name:");
-        const apiUrl = `${process.env.REACT_APP_BACKEND_URL}/chat/rename/${props.selectedChat?.id}`;
-        if (newName) {
-            fetchX("POST", apiUrl, { name: sanitizeInput(newName) });
-        }
+    async function removePassword() {
+        if (!window.confirm("Are you sure you want to remove the password?")) return;
+        const apiUrl = backendUrl.chat + `remove_password/${props.selectedChat?.id}`;
+        const res = await fetchX<{ message: string }>("PATCH", apiUrl, null);
+        alert(res.message);
     }
 
-    function removePassword() {}
-
-    function changePassword() {}
-
-    function addPassword() {}
+    async function changePassword() {
+        const newPassword = prompt("Enter new password:");
+        if (!newPassword) return;
+        if (newPassword.length < 3) {
+            alert("Password must be at least 3 characters long");
+            return;
+        }
+        const apiUrl = backendUrl.chat + `change_password/${props.selectedChat?.id}`;
+        const res = await fetchX<{ message: string }>("PATCH", apiUrl, {
+            password: newPassword,
+        });
+        alert(res.message);
+    }
 
     if (!props.selectedChat) return null;
 
     return (
         <div className="sideBar_sub1">
             <div className="chatElementDiv">
-                --- chat options ---
+                <div className="sideBarDivider">chat options</div>
                 <button className="chatButton" onClick={leaveChat}>
                     Leave Chat
                 </button>
@@ -76,7 +97,7 @@ function ChatOptions(props: chatOptionsProps): React.JSX.Element {
                                 </button>
                             </>
                         ) : (
-                            <button className="chatButton" onClick={addPassword}>
+                            <button className="chatButton" onClick={changePassword}>
                                 Add Password
                             </button>
                         )}
