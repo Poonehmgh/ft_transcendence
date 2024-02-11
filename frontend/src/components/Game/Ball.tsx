@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-function Ball(newRound, updatedBallPosition) {
+function Ball(newRound, gameUpdate) {
 	const [ballPosition, setBallPosition] = useState(null);
 
 	useEffect(() => {
@@ -8,11 +8,17 @@ function Ball(newRound, updatedBallPosition) {
 	}, [newRound]);
 
 	useEffect(() => {
-		setBallPosition(updatedBallPosition);
-	}, [updatedBallPosition]);
+		setBallPosition(gameUpdate.updatedBallPosition);
+	}, [gameUpdate]);
 
 	return (
-		<div>Ball</div>
+		<>
+			{ballPosition ? (
+				<div>Ball</div>
+			):(
+				<></>
+			)}
+		</>
 	)
 }
 
