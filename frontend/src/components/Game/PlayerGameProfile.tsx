@@ -30,7 +30,7 @@ function PlayerGameProfile({user}) {
                         </tr>
                     </tbody>
                 </table>
-            ) : ( <p className="playerCardTable"></p> )
+            ) : ( <></> )
             }
         </>
     );
