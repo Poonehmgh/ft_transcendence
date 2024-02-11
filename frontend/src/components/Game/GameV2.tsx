@@ -10,11 +10,11 @@ import backendUrl from "src/constants/backendUrl";
 
 function GameV2() {
   const [userData, setUserData] = useState(null);
+  const [opponentID, setOpponentID] = useState(null);
   const [opponentData, setOpponentData] = useState(null);
   const [queueStatus, setQueueStatus] = useState("Join Queue");
   const [newRound, setNewRound] = useState(null);
-  const [isPlayerOne, setIsPlayerOne] = useState(true);
-  const [opponentID, setOpponentID] = useState(null);
+  const [isPlayerOne, setIsPlayerOne] = useState(null);
   const [gameUpdate, setGameUpdate] = useState(null);
 
   const myProfileApiUrl = backendUrl.user + "my_profile";
@@ -61,23 +61,22 @@ function GameV2() {
 
   useEffect(() => {
     if (userData) {
-        socket.on("newRound", (data) => {
-            setNewRound(data);
-            if (data.userID1 === userData.id) {
-                setIsPlayerOne(true);
-                setOpponentID(data.userID2);
-            } else if (data.userID2 === userData.id) {
-                setIsPlayerOne(false);
-                setOpponentID(data.userID1);
-            }
-        });
+      socket.on("newRound", (data) => {
+        setNewRound(data);
+        if (data.userID1 === userData.id) {
+          setIsPlayerOne(true);
+          setOpponentID(data.userID2);
+        } else if (data.userID2 === userData.id) {
+          setIsPlayerOne(false);
+          setOpponentID(data.userID1);
+        }
+      });
     }
 
     return () => {
-        socket.off("newRound");
+      socket.off("newRound");
     };
-}, [userData, socket]);
-
+  }, [userData, socket]);
 
   useEffect(() => {
     const fetchOpponentData = async () => {
@@ -124,11 +123,21 @@ function GameV2() {
       <button className="queue-button" onClick={sendMessageToServer}>
         {queueStatus}
       </button>
+      {/* <ToggleGameAppearance /> */}
       <div className="player-left-info">
+      {isPlayerOne && (opponentData !== null) ? (
         <PlayerGameProfile user={userData} />
+      ) : (
+        <PlayerGameProfile user={opponentData} />
+      )}
       </div>
+      <div className="section game-score">{/* <ScoreV2 /> */}</div>
       <div className="player-right-info">
-        <PlayerGameProfile user={null} />
+      {isPlayerOne && (opponentData !== null) ? (
+        <PlayerGameProfile user={userData} />
+      ) : (
+        <PlayerGameProfile user={opponentData} />
+      )}
       </div>
       <div className="section game-left-bar">{/* <LeftPlank /> */}</div>
       <div className="section game-center">
@@ -137,7 +146,6 @@ function GameV2() {
         <div className="rightBarField"></div>
       </div>
       <div className="section game-right-bar">{/* <RightPlank /> */}</div>
-      <div className="section game-score">{/* <ScoreV2 /> */}</div>
     </div>
   );
 }
