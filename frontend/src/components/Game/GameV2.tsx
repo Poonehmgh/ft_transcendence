@@ -11,7 +11,7 @@ import { authHeader } from "../../functions/utils";
 
 import backendUrl from "src/constants/backendUrl";
 
-import "../../styles/game.css";
+import "../../styles/gamev2.css";
 
 function GameV2() {
   const [userData, setUserData] = useState(null);
@@ -131,44 +131,53 @@ function GameV2() {
         <button className="queue-button" onClick={sendMessageToServer}>
           {queueStatus}
         </button>
-        <button className="queue-button">Change Background</button>
+        <button className="background-button">Change Background</button>
       </div>
-      <div className="game-info-container">
-        <div className="player-left-info">
+      <div className="info-container">
+        <div className="info-player-left">
           {isPlayerOne ? (
             <PlayerGameProfile user={userData} />
           ) : (
             <PlayerGameProfile user={opponentData} />
           )}
         </div>
-        <div className="section game-score">
-          {newRound ? <ScoreV2 newRound={newRound} /> : <></>}
+        <div className="game-scores">
+          <ScoreV2 newRound={newRound} />
         </div>
-        <div className="player-right-info">
+        <div className="info-player-right">
           {isPlayerOne ? (
-            <PlayerGameProfile user={userData} />
-          ) : (
             <PlayerGameProfile user={opponentData} />
+          ) : (
+            <PlayerGameProfile user={userData} />
           )}
         </div>
       </div>
       <div className="pong-container">
         <div className="left-plank">
-          {isPlayerOne ? <OpponentPlank /> : <UserPlank />}
-        </div>
-        <div className="ball">
-          {newRound !== null && gameUpdate !== null ? (
-            <Ball
-              newRound={newRound}
-              updatedBallPosition={gameUpdate.ballPosition}
-            />
+          {isPlayerOne ? (
+            <UserPlank />
           ) : (
-            <></>
+            <OpponentPlank
+              newRound={newRound}
+              gameUpdate={gameUpdate}
+              isPlayerOne={isPlayerOne}
+            />
           )}
         </div>
+        <div className="ball">
+          <Ball newRound={newRound} gameUpdate={gameUpdate} />
+        </div>
         <div className="right-plank">
-          {isPlayerOne ? <UserPlank /> : <OpponentPlank />}
-        </div>9
+          {isPlayerOne ? (
+            <OpponentPlank
+              newRound={newRound}
+              gameUpdate={gameUpdate}
+              isPlayerOne={isPlayerOne}
+            />
+          ) : (
+            <UserPlank />
+          )}
+        </div>
       </div>
     </div>
   );
