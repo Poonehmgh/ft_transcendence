@@ -7,6 +7,7 @@ import { authHeader } from "../../functions/utils";
 
 import "../../styles/game.css";
 import backendUrl from "src/constants/backendUrl";
+import ScoreV2 from "./ScoreV2";
 
 function GameV2() {
   const [userData, setUserData] = useState(null);
@@ -125,19 +126,21 @@ function GameV2() {
       </button>
       {/* <ToggleGameAppearance /> */}
       <div className="player-left-info">
-      {isPlayerOne && (opponentData !== null) ? (
-        <PlayerGameProfile user={userData} />
-      ) : (
-        <PlayerGameProfile user={opponentData} />
-      )}
+        {isPlayerOne && opponentData !== null ? (
+          <PlayerGameProfile user={userData} />
+        ) : (
+          <PlayerGameProfile user={opponentData} />
+        )}
       </div>
-      <div className="section game-score">{/* <ScoreV2 /> */}</div>
+      <div className="section game-score">
+        {newRound ? <ScoreV2 newRound={newRound} /> : <></>}
+      </div>
       <div className="player-right-info">
-      {isPlayerOne && (opponentData !== null) ? (
-        <PlayerGameProfile user={userData} />
-      ) : (
-        <PlayerGameProfile user={opponentData} />
-      )}
+        {isPlayerOne && opponentData !== null ? (
+          <PlayerGameProfile user={userData} />
+        ) : (
+          <PlayerGameProfile user={opponentData} />
+        )}
       </div>
       <div className="section game-left-bar">{/* <LeftPlank /> */}</div>
       <div className="section game-center">
