@@ -21,6 +21,9 @@ function GameV2() {
   const [newRound, setNewRound] = useState(null);
   const [isPlayerOne, setIsPlayerOne] = useState(null);
   const [gameUpdate, setGameUpdate] = useState(null);
+  const [backgroundColor, setBackgroundColor] = useState("default-color");
+  const [infoContainerClass, setInfoContainerClass] = useState("info-container");
+  const [pongContainerClass, setPongContainerClass] = useState("pong-container");
 
   const socket = io("localhost:5500");
 
@@ -111,7 +114,7 @@ function GameV2() {
   useEffect(() => {
     socket.on("gameUpdate", (data) => {
       setGameUpdate(data);
-      //When game is over - reset to hooks basal states
+      //When game is over / if(gameUpdate.isGameOver) / reset to hooks basal states
     });
 
     return () => {
@@ -125,15 +128,28 @@ function GameV2() {
     socket.emit("joinQueue", { userID: userData.id });
   };
 
+  const changeBackground = () => {
+    setBackgroundColor(
+      backgroundColor === "default-color"
+        ? "alternative-color"
+        : "default-color"
+    );
+
+    setInfoContainerClass("info-container" + backgroundColor);
+    setPongContainerClass("pong-container" + backgroundColor);
+  };
+
   return (
     <div className="game-container">
       <div className="buttons-container">
         <button className="queue-button" onClick={sendMessageToServer}>
           {queueStatus}
         </button>
-        <button className="background-button">Change Background</button>
+        <button className="background-button" onClick={changeBackground}>
+          Change Background
+        </button>
       </div>
-      <div className="info-container">
+      <div className={infoContainerClass}>
         <div className="info-player-left">
           {isPlayerOne ? (
             <PlayerGameProfile user={userData} />
@@ -152,7 +168,7 @@ function GameV2() {
           )}
         </div>
       </div>
-      <div className="pong-container">
+      <div className={pongContainerClass}>
         <div className="left-plank">
           {isPlayerOne ? (
             <UserPlank
