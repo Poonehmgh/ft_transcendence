@@ -155,7 +155,12 @@ function GameV2() {
       <div className="pong-container">
         <div className="left-plank">
           {isPlayerOne ? (
-            <UserPlank />
+            <UserPlank
+              userData={userData}
+              newRound={newRound}
+              isPlayerOne={isPlayerOne}
+              socket={socket}
+            />
           ) : (
             <OpponentPlank
               newRound={newRound}
@@ -164,7 +169,7 @@ function GameV2() {
             />
           )}
         </div>
-        <div className="ball">
+        <div className="ball-space">
           <Ball newRound={newRound} gameUpdate={gameUpdate} />
         </div>
         <div className="right-plank">
@@ -175,7 +180,12 @@ function GameV2() {
               isPlayerOne={isPlayerOne}
             />
           ) : (
-            <UserPlank />
+            <UserPlank
+              userData={userData}
+              newRound={newRound}
+              isPlayerOne={isPlayerOne}
+              socket={socket}
+            />
           )}
         </div>
       </div>
