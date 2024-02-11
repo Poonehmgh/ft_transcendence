@@ -105,6 +105,7 @@ function GameV2() {
   useEffect(() => {
     socket.on("gameUpdate", (data) => {
       setGameUpdate(data);
+      //When game is over - reset to base state
     });
 
     return () => {
@@ -113,6 +114,7 @@ function GameV2() {
   }, [socket]);
 
   const sendMessageToServer = () => {
+    //Remove later - need to connect after log-in
     socket.emit("connectMessage", { userID: userData.id }); //Remove later
     socket.emit("joinQueue", { userID: userData.id });
   };
