@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from "react";
 
 import PlayerGameProfile from "./PlayerGameProfile";
+import ScoreV2 from "./ScoreV2";
+import UserPlank from "./UserPlank";
+import OpponentPlank from "./OpponentPlank";
+import Ball from "./Ball";
 
 import { io } from "socket.io-client";
 import { authHeader } from "../../functions/utils";
 
-import "../../styles/game.css";
 import backendUrl from "src/constants/backendUrl";
-import ScoreV2 from "./ScoreV2";
+
+import "../../styles/game.css";
 
 function GameV2() {
   const [userData, setUserData] = useState(null);
@@ -18,11 +22,11 @@ function GameV2() {
   const [isPlayerOne, setIsPlayerOne] = useState(null);
   const [gameUpdate, setGameUpdate] = useState(null);
 
-  const myProfileApiUrl = backendUrl.user + "my_profile";
   const socket = io("localhost:5500");
 
   useEffect(() => {
     const fetchUserData = async () => {
+      const myProfileApiUrl = backendUrl.user + "my_profile";
       try {
         const response = await fetch(myProfileApiUrl, {
           method: "GET",
@@ -40,7 +44,7 @@ function GameV2() {
       }
     };
     fetchUserData();
-  }, [myProfileApiUrl]);
+  }, []);
 
   useEffect(() => {
     socket.on("queueConfirm", (data) => {
@@ -81,31 +85,33 @@ function GameV2() {
 
   useEffect(() => {
     const fetchOpponentData = async () => {
-      const opponentApiUrl = backendUrl.user + "profile/" + opponentID;
-      try {
-        const response = await fetch(opponentApiUrl, {
-          method: "GET",
-          headers: authHeader(),
-        });
+      if (opponentID) {
+        const opponentApiUrl = backendUrl.user + "profile/" + opponentID;
+        try {
+          const response = await fetch(opponentApiUrl, {
+            method: "GET",
+            headers: authHeader(),
+          });
 
-        if (!response.ok) {
-          throw new Error(`Network response was not ok: ${response.status}`);
+          if (!response.ok) {
+            throw new Error(`Network response was not ok: ${response.status}`);
+          }
+
+          const data = await response.json();
+          setOpponentData(data);
+        } catch (error) {
+          console.log(error);
         }
-
-        const data = await response.json();
-        setOpponentData(data);
-      } catch (error) {
-        console.log(error);
       }
-    };
 
-    fetchOpponentData();
+      fetchOpponentData();
+    };
   }, [opponentID]);
 
   useEffect(() => {
     socket.on("gameUpdate", (data) => {
       setGameUpdate(data);
-      //When game is over - reset to base state
+      //When game is over - reset to hooks basal states
     });
 
     return () => {
@@ -120,35 +126,50 @@ function GameV2() {
   };
 
   return (
-    <div className="game-sections-container">
-      <button className="queue-button" onClick={sendMessageToServer}>
-        {queueStatus}
-      </button>
-      {/* <ToggleGameAppearance /> */}
-      <div className="player-left-info">
-        {isPlayerOne && opponentData !== null ? (
-          <PlayerGameProfile user={userData} />
-        ) : (
-          <PlayerGameProfile user={opponentData} />
-        )}
+    <div className="game-container">
+      <div className="buttons-container">
+        <button className="queue-button" onClick={sendMessageToServer}>
+          {queueStatus}
+        </button>
+        <button className="queue-button">Change Background</button>
       </div>
-      <div className="section game-score">
-        {newRound ? <ScoreV2 newRound={newRound} /> : <></>}
+      <div className="game-info-container">
+        <div className="player-left-info">
+          {isPlayerOne ? (
+            <PlayerGameProfile user={userData} />
+          ) : (
+            <PlayerGameProfile user={opponentData} />
+          )}
+        </div>
+        <div className="section game-score">
+          {newRound ? <ScoreV2 newRound={newRound} /> : <></>}
+        </div>
+        <div className="player-right-info">
+          {isPlayerOne ? (
+            <PlayerGameProfile user={userData} />
+          ) : (
+            <PlayerGameProfile user={opponentData} />
+          )}
+        </div>
       </div>
-      <div className="player-right-info">
-        {isPlayerOne && opponentData !== null ? (
-          <PlayerGameProfile user={userData} />
-        ) : (
-          <PlayerGameProfile user={opponentData} />
-        )}
+      <div className="pong-container">
+        <div className="left-plank">
+          {isPlayerOne ? <OpponentPlank /> : <UserPlank />}
+        </div>
+        <div className="ball">
+          {newRound !== null && gameUpdate !== null ? (
+            <Ball
+              newRound={newRound}
+              updatedBallPosition={gameUpdate.ballPosition}
+            />
+          ) : (
+            <></>
+          )}
+        </div>
+        <div className="right-plank">
+          {isPlayerOne ? <UserPlank /> : <OpponentPlank />}
+        </div>9
       </div>
-      <div className="section game-left-bar">{/* <LeftPlank /> */}</div>
-      <div className="section game-center">
-        <div className="leftBarField"></div>
-        <div className="ball">{/* {<Ball/>} */}</div>
-        <div className="rightBarField"></div>
-      </div>
-      <div className="section game-right-bar">{/* <RightPlank /> */}</div>
     </div>
   );
 }
