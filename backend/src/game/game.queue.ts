@@ -16,15 +16,15 @@ export class GameData {
 	ScorePlayer2: number = 0;
 	PositionPlank1: number = 0;
 	PositionPlank2: number = 0;
-	PositionBall: [number, number] = [50, 50];
+	PositionBall: [number, number] = [90, 50];
 	VelocityBall: [number, number] = [10, 0];
 	GameStatus: number = 1;
 
 
 	//constants
-	fieldWidth: number = 100;
+	fieldWidth: number = 180;
 	fieldHeight: number = 100;
-	ballRadius: number = 2;
+	ballRadius: number = 2.5;
 	plankWidth: number = 10;
 	plankHeight: number = 20;
 
@@ -67,7 +67,7 @@ export class GameData {
 	resetGameData = () => {
 		this.PositionPlank1 = 0;
 		this.PositionPlank2 = 0;
-		this.PositionBall = [50, 50];
+		this.PositionBall = [90, 50];
 		this.VelocityBall = [10, 0];
 	}
 
