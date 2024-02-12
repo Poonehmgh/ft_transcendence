@@ -3,6 +3,7 @@ import React, { CSSProperties, useEffect, useState } from "react";
 function OpponentPlank(props) {
   const { newRound, gameUpdate, isPlayerOne } = props;
   const [plankPosition, setPlankPosition] = useState(null);
+  const [plankStyle, setPlankStyle] = useState(null);
 
   useEffect(() => {
     if (newRound) {
@@ -15,16 +16,23 @@ function OpponentPlank(props) {
   }, [isPlayerOne, newRound]);
 
   useEffect(() => {
-    setPlankPosition(gameUpdate.enemyPlankPosition);
+    if (gameUpdate) {
+      setPlankPosition(gameUpdate.enemyPlankPosition);
+    }
   }, [gameUpdate]);
 
-  const plankStyle: CSSProperties = {
-    position: "absolute",
-    top: `${plankPosition}px`,
-    width: `${newRound.plankWidth}px`,
-    height: `${newRound.plankHeight}px`,
-    backgroundColor: "white",
-  };
+  useEffect(() => {
+    if (newRound && plankPosition) {
+      setPlankStyle({
+        position: "absolute",
+        top: `${plankPosition}px`,
+        width: `${newRound.plankWidth}px`,
+        height: `${newRound.plankHeight}px`,
+        backgroundColor: "white",
+      })
+    }
+
+  }, [plankPosition, newRound]);
 
   return (
     <>
