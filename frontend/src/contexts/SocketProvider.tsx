@@ -46,6 +46,8 @@ export function SocketProvider(props: socketProviderProps): JSX.Element {
         return () => {
             disconnectSocket(socket, userId);
         };
+    // eslint wants socket in the dependency array, but it would trigger an infinite loop
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [validToken, userId]);
 
     return (
