@@ -152,9 +152,9 @@ function GameV2() {
       <div className={infoContainerClass}>
         <div className="info-player-left">
           {isPlayerOne ? (
-            <PlayerGameProfile user={userData} />
+            <PlayerGameProfile user={userData} secondUser={opponentData} />
           ) : (
-            <PlayerGameProfile user={opponentData} />
+            <PlayerGameProfile user={opponentData} secondUser={userData} />
           )}
         </div>
         <div className="game-scores">
@@ -162,9 +162,9 @@ function GameV2() {
         </div>
         <div className="info-player-right">
           {isPlayerOne ? (
-            <PlayerGameProfile user={opponentData} />
+            <PlayerGameProfile user={opponentData} secondUser={userData}/>
           ) : (
-            <PlayerGameProfile user={userData} />
+            <PlayerGameProfile user={userData} secondUser={opponentData} />
           )}
         </div>
       </div>

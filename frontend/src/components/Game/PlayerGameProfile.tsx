@@ -2,10 +2,12 @@ import React from "react";
 
 import "src/styles/playerCardTable.css";
 
-function PlayerGameProfile({ user }) {
+function PlayerGameProfile(props) {
+  const { user, secondUser } = props;
+
   return (
     <>
-      {user ? (
+      {user && secondUser ? (
         <table className="playerCardTable">
           <tbody>
             <tr>
