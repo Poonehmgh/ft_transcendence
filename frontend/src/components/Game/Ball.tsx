@@ -1,15 +1,21 @@
-import React, { CSSProperties, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import "../../styles/gamev2.css";
 
-function Ball(newRound, gameUpdate) {
+function Ball(props) {
+  const { newRound, gameUpdate} = props;
   const [ballPosition, setBallPosition] = useState(null);
   const [ballStyle, setBallStyle] = useState(null);
 
   useEffect(() => {
-    setBallPosition(newRound.PositionBall);
+    if (newRound) {
+      setBallPosition(newRound.PositionBall);
+    }
   }, [newRound]);
 
   useEffect(() => {
-    setBallPosition(gameUpdate.updatedBallPosition);
+    if (gameUpdate) {
+      setBallPosition(gameUpdate.updatedBallPosition);
+    }
   }, [gameUpdate]);
 
   useEffect(() => {
@@ -22,15 +28,14 @@ function Ball(newRound, gameUpdate) {
         height: `${newRound.ballRadius * 2}px`,
         borderRadius: "50%",
         backgroundColor: "white",
-      })
+      });
     }
-
   }, [ballPosition, newRound]);
 
   return (
     <>
       {newRound ? (
-        <div className="plank" style={ballStyle} >
+        <div className="ball" style={ballStyle}>
           Ball
         </div>
       ) : (
