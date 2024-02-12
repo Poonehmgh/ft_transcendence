@@ -1,6 +1,7 @@
 import React from "react";
 
 import "src/styles/playerCardTable.css";
+import "../../styles/gamev2.css";
 
 function PlayerGameProfile(props) {
   const { user, secondUser } = props;

@@ -1,6 +1,8 @@
 import React from "react";
+import "../../styles/gamev2.css";
 
-const ScoreV2 = (newRound) => {
+const ScoreV2 = (props) => {
+  const { newRound } = props;
   return (
     <>
       {newRound ? (

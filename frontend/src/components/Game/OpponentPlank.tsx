@@ -1,4 +1,5 @@
-import React, { CSSProperties, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import "../../styles/gamev2.css";
 
 function OpponentPlank(props) {
   const { newRound, gameUpdate, isPlayerOne } = props;
