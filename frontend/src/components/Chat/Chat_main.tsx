@@ -24,15 +24,24 @@ function Chat() {
     const socket = useContext(SocketContext);
 
     useEffect(() => {
+        console.log("Chat component mounted");
         if (!socket) return;
+        console.log("Chat socket not null");
+
+        const handleNewEvent = (eventName, data) => {
+            console.log("Received event:", eventName, "with data:", data);
+        };
+        socket.onAny(handleNewEvent);
+
         const handleNewChatMessage = (message: any) => {
+            console.log("new chat message:", message);
             alert(`New chat message: ${message}`);
         };
-
-        socket.on("chat message", handleNewChatMessage);
+        socket.on("updateMessage", handleNewChatMessage);
 
         return () => {
-            socket.off("chat message", handleNewChatMessage);
+            socket.off("updateMessage", handleNewChatMessage);
+            socket.offAny(handleNewEvent);
         };
     }, [socket]);
 
