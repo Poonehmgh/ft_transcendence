@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Header from "src/components/Header/Header_main";
 import Leaderboard from "src/components/LeaderBoard/Leaderboard_main";
@@ -8,12 +8,20 @@ import Chat from "src/components/Chat/Chat_main";
 import ErrorPage from "src/components/App/ErrorPage";
 import ManageProfile from "src/components/ManageProfile/ManageProfile_main";
 import Home from "../Home/Home_main";
-import { getTokenFromCookie, isTokenValid } from "src/functions/utils";
+import { gotValidToken } from "src/functions/utils";
+import { AuthContext } from "src/contexts/AuthProvider";
 
 function PongersRoutes() {
     const location = useLocation();
-    const token = getTokenFromCookie();
-    const validToken = isTokenValid(token);
+    const { validToken: auth_validToken, userId: auth_userId, updateAuth } = useContext(AuthContext);
+
+    const validToken = gotValidToken();
+    useEffect(() => {
+
+        if (auth_validToken !== validToken) {
+            updateAuth(validToken);
+        }
+    }, [validToken, auth_validToken]);
 
     function ProtectedRoute({ element }) {
         return validToken ? element : <Navigate to="/home" />;

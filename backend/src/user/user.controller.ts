@@ -53,8 +53,6 @@ export class UserController {
 
     @Get("my_avatar")
     async getMyAvatar(@Req() req: AuthenticatedRequest, @Res() res: Response) {
-        console.log("getavatarbyid, id: ", req.user.id);
-
         const filePath = this.userService.getAvatarPath(req.user.id);
         if (!filePath) {
             return res.sendFile("default.png", { root: "./uploads" });
