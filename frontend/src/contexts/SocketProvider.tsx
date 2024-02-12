@@ -16,26 +16,35 @@ export function SocketProvider(props: socketProviderProps): JSX.Element {
     const { validToken, userId } = useContext(AuthContext);
 
     useEffect(() => {
-        if (validToken) {
-            console.log("Initializing socket for userId:", userId);
-            const newSocket = io(backendUrl.base, {
-                query: {
-                    message: JSON.stringify({ userID: userId }),
-                },
-            });
-            setSocket(newSocket);
-        } else {
+        function disconnectSocket(socket: Socket | null, userId: number) {
             if (socket) {
+                console.log("Disconnecting socket for userId:", userId);
                 socket.disconnect();
                 setSocket(null);
             }
         }
 
+        if (validToken) {
+            console.log("Connecting socket for userId:", userId);
+            const newSocket = io(backendUrl.base, {
+                query: {
+                    message: JSON.stringify({ userID: userId }),
+                },
+            });
+            // shouldn't ever not be null, but nice syntax example for
+            // react's functional update pattern
+            setSocket((prevSocket) => {
+                if (prevSocket) {
+                    prevSocket.disconnect();
+                }
+                return newSocket;
+            });
+        } else {
+            disconnectSocket(socket, userId);
+        }
+
         return () => {
-            if (socket) {
-                socket.disconnect();
-                setSocket(null);
-            }
+            disconnectSocket(socket, userId);
         };
     }, [validToken, userId]);
 
