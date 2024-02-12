@@ -55,6 +55,7 @@ export class ChatGateway implements OnModuleInit, OnGatewayDisconnect {
 		@ConnectedSocket() client: Socket,
 		@MessageBody() message: SendMessageDTO
 	) {
+		console.log("sendMessage chat socket api: ", message);
 		const messageID: number = await this.chatGatewayService.addMessageToChat(message);
 		await this.chatGatewayService.sendUpdateMessages(messageID, message);
 	}

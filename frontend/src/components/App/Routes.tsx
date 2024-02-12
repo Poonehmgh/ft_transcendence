@@ -9,11 +9,14 @@ import ErrorPage from "src/components/App/ErrorPage";
 import ManageProfile from "src/components/ManageProfile/ManageProfile_main";
 import Home from "../Home/Home_main";
 import { getTokenFromCookie, isTokenValid } from "src/functions/utils";
+import { SocketContext, socket } from "src/contexts/socketContext";
 
 function PongersRoutes() {
     const location = useLocation();
     const token = getTokenFromCookie();
     const validToken = isTokenValid(token);
+
+	socket.emit('knudeling');
 
     function ProtectedRoute({ element }) {
         return validToken ? element : <Navigate to="/home" />;
