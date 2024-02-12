@@ -8,7 +8,7 @@ import {
     sanitizeInput,
 } from "src/functions/utils";
 import LoadingH2 from "src/components/shared/LoadingH2";
-
+import TwoFa from "src/components/UserProfileModal/TwoFa";
 // DTO
 import { UserProfileDTO } from "src/dto/user-dto";
 
@@ -131,9 +131,10 @@ function ManageProfile() {
                         rank={userData.rank}
                         matches={userData.matches}
                         winrate={userData.winrate}
+                        twoFa={userData.twoFa}
                     />
                 </div>
-
+                <TwoFa/>
                 <ManageContactsTabs />
 
                 <input

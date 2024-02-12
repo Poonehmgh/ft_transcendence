@@ -4,7 +4,7 @@ import { authContentHeader, fetchGetSet } from "src/functions/utils";
 import PlayerCardTable from "../shared/PlayerCardTable";
 import SocialActionBar from "./SocialActionBar/SocialActionBar_main";
 import MatchHistory from "./MatchHistory";
-
+import TwoFa from "./TwoFa";
 // DTO
 import { UserProfileDTO } from "src/dto/user-dto";
 
@@ -17,7 +17,6 @@ interface userProfileModalProps {
     id: number;
     isOpen: boolean;
     onClose: () => void;
-    twoFa: boolean;
 }
 
 function UserProfileModal(props: userProfileModalProps) {
@@ -82,15 +81,15 @@ function UserProfileModal(props: userProfileModalProps) {
                                 rank={userProfile.rank}
                                 matches={userProfile.matches}
                                 winrate={userProfile.winrate}
-                                twoFa={props.twoFa}
+                                twoFa={userProfile.twoFa}
                             />
                         </div>
                         {props.id.toString() === localStorage.getItem("userId") ? (
-                            <div className="p" style={{margin:"20px 0px"}}>This is your profile.</div>
+                            <div className="p" style={{margin: "20px 0px"}}>This is your profile.</div>
                         ) : (
-                            <SocialActionBar otherProfile={userProfile} />
+                            <SocialActionBar otherProfile={userProfile}/>
                         )}
-                        <MatchHistory id={props.id} />
+                        <MatchHistory id={props.id}/>
                     </div>
                 )}
                 <button className="closeX" onClick={closeModal}>

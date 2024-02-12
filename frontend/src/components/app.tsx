@@ -9,6 +9,7 @@ import ErrorPage from "src/components/ErrorPage";
 import ManageProfile from "src/components/ManageProfile/ManageProfile_main";
 import Home from "./Home/Home_main";
 import { getTokenFromCookie, isTokenValid } from "src/functions/utils";
+import Message from "src/components/shared/Message";
 
 
 
@@ -31,6 +32,7 @@ function App() {
                             <Route path="/game" element={<Game />} />
                             <Route path="/chat" element={<Chat />} />
                             <Route path="/userprofile" element={<ManageProfile />} />
+                            <Route path="/message/:type/:msg" element={<Message />} />
                             <Route path="*" element={<ErrorPage />} />
                         </>
                     ) : (
