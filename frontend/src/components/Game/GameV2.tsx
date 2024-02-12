@@ -22,8 +22,8 @@ function GameV2() {
   const [isPlayerOne, setIsPlayerOne] = useState(null);
   const [gameUpdate, setGameUpdate] = useState(null);
   const [backgroundColor, setBackgroundColor] = useState("default-color");
-  const [infoContainerClass, setInfoContainerClass] = useState("info-container");
-  const [pongContainerClass, setPongContainerClass] = useState("pong-container");
+  const [infoContainerClass, setInfoContainerClass] = useState("info-container default-color");
+  const [pongContainerClass, setPongContainerClass] = useState("pong-container default-color");
 
   const socket = io("localhost:5500");
 
@@ -135,17 +135,17 @@ function GameV2() {
         : "default-color"
     );
 
-    setInfoContainerClass("info-container" + backgroundColor);
-    setPongContainerClass("pong-container" + backgroundColor);
+    setInfoContainerClass("info-container " + backgroundColor);
+    setPongContainerClass("pong-container " + backgroundColor);
   };
 
   return (
     <div className="game-container">
       <div className="buttons-container">
-        <button className="queue-button" onClick={sendMessageToServer}>
+        <button className="game-button queue-button" onClick={sendMessageToServer}>
           {queueStatus}
         </button>
-        <button className="background-button" onClick={changeBackground}>
+        <button className="game-button background-button" onClick={changeBackground}>
           Change Background
         </button>
       </div>
@@ -157,7 +157,7 @@ function GameV2() {
             <PlayerGameProfile user={opponentData} secondUser={userData} />
           )}
         </div>
-        <div className="game-scores">
+        <div className="info-scores">
           <ScoreV2 newRound={newRound} />
         </div>
         <div className="info-player-right">
@@ -185,9 +185,7 @@ function GameV2() {
             />
           )}
         </div>
-        <div className="ball-space">
-          <Ball newRound={newRound} gameUpdate={gameUpdate} />
-        </div>
+        <Ball newRound={newRound} gameUpdate={gameUpdate} />
         <div className="right-plank">
           {isPlayerOne ? (
             <OpponentPlank
