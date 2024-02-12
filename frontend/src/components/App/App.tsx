@@ -1,21 +1,18 @@
 import React, { useEffect } from "react";
 import PongersRoutes from "./Routes";
 import { BrowserRouter } from "react-router-dom";
-import { SocketContext, socket } from "src/contexts/socketContext";
+import { SocketProvider } from "src/contexts/SocketProvider";
+import { AuthProvider } from "src/contexts/AuthProvider";
 
 function App() {
-    useEffect(() => {
-        return () => {
-            socket.disconnect();
-        };
-    }, []);
-
     return (
-        <SocketContext.Provider value={socket}>
-            <BrowserRouter>
-                <PongersRoutes />
-            </BrowserRouter>
-        </SocketContext.Provider>
+        <AuthProvider>
+            <SocketProvider>
+                <BrowserRouter>
+                    <PongersRoutes />
+                </BrowserRouter>
+            </SocketProvider>
+        </AuthProvider>
     );
 }
 

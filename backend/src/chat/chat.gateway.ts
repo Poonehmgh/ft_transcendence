@@ -36,6 +36,7 @@ export class ChatGateway implements OnModuleInit, OnGatewayDisconnect {
 	}
 
   async handleDisconnect(client: Socket) {
+	console.log("handleDisconnect called");
     const userID = this.chatGatewayService.getUserIdFromSocket(client);
     if (!userID) return;
 	await this.chatGatewayService.setUserOnlineStatus(userID, false)
