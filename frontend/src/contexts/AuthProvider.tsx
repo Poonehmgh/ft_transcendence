@@ -7,28 +7,6 @@ export const AuthContext = createContext({
     updateAuth: (isValid: boolean) => {},
 });
 
-/* export const AuthProvider = ({ children }) => {
-    const [validToken, setValidToken] = useState(false);
-    const [userId, setUserId] = useState<number | null>(null);
-
-    function updateAuth(isValid: boolean) {
-        setValidToken(isValid);
-        if (isValid) {
-            const userIdString = getTokenFromCookie()?.id;
-            const parsedUserId = userIdString ? parseInt(userIdString) : null;
-            setUserId(parsedUserId);
-        } else {
-            setUserId(null); // Reset userId when token is not valid
-        }
-    }
-
-    return (
-        <AuthContext.Provider value={{ validToken, userId, updateAuth }}>
-            {children}
-        </AuthContext.Provider>
-    );
-}; */
-
 export function AuthProvider({ children }) {
     const [authState, setAuthState] = useState({
         validToken: false,

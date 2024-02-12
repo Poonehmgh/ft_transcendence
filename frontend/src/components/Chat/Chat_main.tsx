@@ -4,6 +4,8 @@ import LeftBar from "src/components/Chat/LeftBar/LeftBar_main";
 import RightBar from "src/components/Chat/RightBar/RightBar_main";
 import LoadingH2 from "src/components/shared/LoadingH2";
 import backendUrl from "src/constants/backendUrl";
+
+// Contexts
 import { SocketContext } from "src/contexts/SocketProvider";
 
 // DTO
@@ -22,6 +24,7 @@ function Chat() {
     const socket = useContext(SocketContext);
 
     useEffect(() => {
+        if (!socket) return;
         const handleNewChatMessage = (message: any) => {
             alert(`New chat message: ${message}`);
         };

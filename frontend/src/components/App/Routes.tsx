@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Header from "src/components/Header/Header_main";
 import Leaderboard from "src/components/LeaderBoard/Leaderboard_main";
@@ -16,13 +16,12 @@ function PongersRoutes() {
     const { validToken: auth_validToken, userId: auth_userId, updateAuth } = useContext(AuthContext);
 
     const validToken = gotValidToken();
+    useEffect(() => {
 
-    if (auth_validToken !== validToken) {
-        console.log(" validtokentest: ", validToken);
-        updateAuth(validToken);
-        console.log("userid in auth: ", auth_userId);
-        console.log("validToken in auth: ", auth_validToken);
-    }
+        if (auth_validToken !== validToken) {
+            updateAuth(validToken);
+        }
+    }, [validToken, auth_validToken]);
 
     function ProtectedRoute({ element }) {
         return validToken ? element : <Navigate to="/home" />;

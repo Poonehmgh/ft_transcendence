@@ -1,6 +1,8 @@
 import { io, Socket } from "socket.io-client";
 import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import backendUrl from "src/constants/backendUrl";
+
+// Contexts
 import { AuthContext } from "./AuthProvider";
 
 export const SocketContext = createContext<Socket | null>(null);
@@ -15,7 +17,7 @@ export function SocketProvider(props: socketProviderProps): JSX.Element {
 
     useEffect(() => {
         if (validToken) {
-            console.log("userId: ", userId);
+            console.log("Initializing socket for userId:", userId);
             const newSocket = io(backendUrl.base, {
                 query: {
                     message: JSON.stringify({ userID: userId }),
