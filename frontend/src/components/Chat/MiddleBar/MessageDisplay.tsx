@@ -10,13 +10,12 @@ import { ChatInfoDTO, MessageListElementDTO as MessageDTO } from "src/dto/chat-d
 // CSS
 import "src/styles/chat.css";
 import "src/styles/style.css";
-import MessageDisplay from "./MessageDisplay";
 
-interface middleBarProps {
+interface messageDisplayProps {
     selectedChat: ChatInfoDTO | null;
 }
 
-function MiddleBar(props: middleBarProps): React.JSX.Element {
+function MessageDisplay(props: messageDisplayProps): React.JSX.Element {
     const [chatmessages, setChatMessages] = useState<MessageDTO[]>(null);
     const apiUrl = backendUrl.chat + `${props.selectedChat?.id}/messages?from=0&to=0`;
 
@@ -27,11 +26,8 @@ function MiddleBar(props: middleBarProps): React.JSX.Element {
     if (!chatmessages) return <LoadingH2 elementName={"Chat"} />;
 
     return (
-        <div className="middleBar">
-            <MessageDisplay selectedChat={props.selectedChat} />
-            <MessageInput selectedChat={props.selectedChat} />
-        </div>
+            <div className="messageDiv"></div>
     );
 }
 
-export default MiddleBar;
+export default MessageDisplay;

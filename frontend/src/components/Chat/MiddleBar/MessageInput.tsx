@@ -1,5 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import LoadingH2 from "src/components/shared/LoadingH2";
+import React, { useContext, useEffect, useRef } from "react";
 
 // Contexts
 import { SocketContext } from "src/contexts/SocketProvider";
@@ -21,39 +20,41 @@ function MessageInput(props: messageInputProps): React.JSX.Element {
     const socket = useContext(SocketContext);
     const { userId } = useContext(AuthContext);
 
+    const sendMessage = () => {
+        if (inputRef.current.value.length === 0) return;
+        const data = new SendMessageDTO(
+            props.selectedChat.id,
+            userId,
+            inputRef.current.value
+        );
+        socket.emit("sendMessage", data);
+        inputRef.current.value = "";
+    };
+
     useEffect(() => {
+        const input = inputRef.current;
+
+        const handleKeyPress = (event: KeyboardEvent) => {
+            if (event.key === "Enter") sendMessage();
+        };
+
         if (inputRef.current) {
             inputRef.current.addEventListener("keypress", handleKeyPress);
         }
 
         return () => {
-            if (inputRef.current) {
-                inputRef.current.removeEventListener("keypress", handleKeyPress);
+            if (input) {
+                input.removeEventListener("keypress", handleKeyPress);
             }
         };
-    }, [inputRef]);
-
-    const handleKeyPress = (event: KeyboardEvent) => {
-        if (event.key === "Enter") sendMessage();
-    };
-
-    function sendMessage() {
-        if (inputRef.current.value.length === 0) return;
-        const data = new SendMessageDTO(
-            props.selectedChat?.id,
-            userId,
-            inputRef.current.value
-        );
-        socket.emit("sendMessage", data);
-        console.log("Message sent!");
-        inputRef.current.value = "";
-    }
+        // eslint wants sendMessage but it remains const and would also trigger another es warning
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [inputRef.current]);
 
     if (!props.selectedChat) return null;
 
     return (
         <div className="inputDiv">
-            <div className="messageDiv"></div>
             <input
                 ref={inputRef}
                 type="text"
@@ -62,10 +63,14 @@ function MessageInput(props: messageInputProps): React.JSX.Element {
             />
             <button
                 className="bigButton"
-                style={{ width: "150px" }}
+                style={{ width: "40px", height: "40px", borderRadius: "0px 0px 8px 0px"}}
                 onClick={sendMessage}
             >
-                📤
+                <img
+                    src="/images/sendButton.png"
+                    alt="Send Message"
+                    style={{ height: "25px", width: "auto" }}
+                />
             </button>
         </div>
     );

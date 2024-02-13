@@ -33,7 +33,7 @@ function Chat() {
 
         const handleNewChatMessage = (message: any) => {
             console.log("new chat message:", message);
-            alert(`New chat message: ${message}`);
+            alert(`New chat message: ${message.content}`);
         };
         socket.on("updateMessage", handleNewChatMessage);
 

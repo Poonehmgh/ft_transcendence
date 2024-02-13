@@ -56,7 +56,6 @@ export class ChatGatewayService {
         console.log(this.connectedUsers);
     }
 
-    
     addUserToList(user: userGateway) {
         this.connectedUsers.push(user);
     }
@@ -151,18 +150,18 @@ export class ChatGatewayService {
         }
     }
 
-    async setUserSockerID(userID: number, socketID: string) {
+    async setUserSocketId(userId: number, socketId: string) {
         try {
             await this.prisma.user.updateMany({
                 where: {
-                    id: Number(userID),
+                    id: Number(userId),
                 },
                 data: {
-                    socketId: String(socketID),
+                    socketId: String(socketId),
                 },
             });
         } catch (error) {
-            console.log(`error in setUserSocketID: ${error.message}`);
+            console.log(`error in setUserSocketId: ${error.message}`);
         }
     }
 

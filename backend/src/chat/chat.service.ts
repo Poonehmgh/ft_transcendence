@@ -2,7 +2,6 @@ import { HttpStatus, Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import { ChatGatewayService } from "./chat.gateway.service";
 import { UserService } from "src/user/user.service";
-import { Chat_User } from "@prisma/client";
 
 import {
     ChatWithChatUsers,
@@ -165,13 +164,13 @@ export class ChatService {
                     every: {
                         userId: { in: [userId1, userId2] },
                     },
+                    some: {},
                 },
             },
             include: {
                 chatUsers: true,
             },
         });
-
         return existingChat;
     }
 
@@ -344,6 +343,12 @@ export class ChatService {
     async deleteChat(chatId: number) {
         try {
             await this.prisma.chat_User.deleteMany({
+                where: {
+                    chatId: Number(chatId),
+                },
+            });
+
+            await this.prisma.message.deleteMany({
                 where: {
                     chatId: Number(chatId),
                 },
