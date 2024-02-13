@@ -17,7 +17,6 @@
 }
 
 .buttons-container {
-	/* background-color: blue; */
 	grid-row: 1 / 2;
 	grid-column: 1 / 9;
 	display: flex;
@@ -30,44 +29,49 @@
 .game-button {
 	width: 200px;
 	height: 40px;
-	/* margin-top: 70px; */
-	/* left: 50%; */
-	/* transform: translateX(-50%); */
 	background-color: #3ca06c;
-	/* border: none; */
 }
 
 .info-container {
-	/* background-color: red; */
 	grid-row: 2 / 3;
 	grid-column: 1 / 9;
 	display: flex;
 	flex-direction: row;
+	border-bottom: 2px solid black;
 }
 
 .info-player-left {
 	height: 100%;
 	width: 35%;
-	/* background-color: white; */
-	border: 2px solid black;
-}
-
-.info-scores {
-	height: 100%;
-	width: 30%;
-	/* background-color: yellowgreen; */
-	border: 2px solid black;
 }
 
 .info-player-right {
 	height: 100%;
 	width: 35%;
-	/* background-color: gray; */
-	border: 2px solid black;
+}
+
+.info-scores {
+	height: 100%;
+	width: 30%;
+	border-right: 2px solid black;
+	border-left: 2px solid black;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.scores {
+	text-align: center;
+	font-size: 5rem;
+}
+
+.game-profile {
+	height: 100%;
+	width: 100%;
+	display: flex 2;
 }
 
 .pong-container {
-	/* background-color: green; */
 	grid-row: 3 / 8;
 	grid-column: 1 / 9;
 	display: flex;
@@ -78,13 +82,19 @@
 .left-plank {
 	height: 100%;
 	width: 2%;
-	/* background-color: gray; */
-	border: 2px solid black;
 }
 
 .right-plank {
 	height: 100%;
 	width: 2%;
-	/* background-color: gray; */
-	border: 2px solid black;
+}
+
+.plank {
+	background-color: #BACBA9;
+	position: absolute;
+}
+
+.ball {
+	background-color: #BACBA9;
+	position: absolute;
 }
