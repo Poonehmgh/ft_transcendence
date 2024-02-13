@@ -142,10 +142,10 @@ function GameV2() {
   return (
     <div className="game-container">
       <div className="buttons-container">
-        <button className="game-button queue-button" onClick={sendMessageToServer}>
+        <button className="game-button" onClick={sendMessageToServer}>
           {queueStatus}
         </button>
-        <button className="game-button background-button" onClick={changeBackground}>
+        <button className="game-button" onClick={changeBackground}>
           Change Background
         </button>
       </div>
