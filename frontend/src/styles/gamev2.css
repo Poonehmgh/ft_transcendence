@@ -82,11 +82,17 @@
 .left-plank {
 	height: 100%;
 	width: 2%;
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
 }
 
 .right-plank {
 	height: 100%;
 	width: 2%;
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
 }
 
 .plank {
