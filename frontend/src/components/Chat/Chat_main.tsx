@@ -9,24 +9,22 @@ import backendUrl from "src/constants/backendUrl";
 import { SocketContext } from "src/contexts/SocketProvider";
 
 // DTO
-import { ChatInfoDTO, ChatUserDTO, SendMessageDTO } from "src/dto/chat-dto";
+import { ChatInfoDTO, ChatUserDTO } from "src/dto/chat-dto";
 
 // CSS
 import "../../styles/chat.css";
 import "../../styles/style.css";
+import MiddleBar from "./MiddleBar/MiddleBar_main";
 
 function Chat() {
     const [selectedChat, setSelectedChat] = useState<ChatInfoDTO | null>(null);
     const [selectedMember, setSelectedMember] = useState<ChatUserDTO | null>(null);
     const [chats, setChats] = useState<ChatInfoDTO[]>(null);
     const apiUrl = backendUrl.chat + "my_chats";
-
     const socket = useContext(SocketContext);
 
     useEffect(() => {
-        console.log("Chat component mounted");
         if (!socket) return;
-        console.log("Chat socket not null");
 
         const handleNewEvent = (eventName, data) => {
             console.log("Received event:", eventName, "with data:", data);
@@ -44,24 +42,6 @@ function Chat() {
             socket.offAny(handleNewEvent);
         };
     }, [socket]);
-
-    function sendTestMsg() {
-        console.log("sending test msg");
-        const id_message = { userID: 98525 };
-        socket.emit("sendMessage", id_message);
-
-        const message = new SendMessageDTO(1, 98525, "Hello, knudelings!");
-        socket.emit("sendMessage", message);
-    }
-
-    function sendAuthMsg() {
-        console.log("sending auth msg");
-        const id_message = { userID: 98525 };
-        socket.emit("connectMessage", id_message);
-
-        const message = new SendMessageDTO(1, 98525, "Hello, knudelings!");
-        socket.emit("sendMessage", message);
-    }
 
     function selectChat(newChat: ChatInfoDTO) {
         setSelectedChat(newChat);
@@ -83,16 +63,7 @@ function Chat() {
                     selectChat={selectChat}
                     chats={chats}
                 />
-
-                <div className="middleBar_0">
-                    <button className="bigButton" onClick={sendTestMsg}>
-                        Knudeling
-                    </button>
-                    <button className="bigButton" onClick={sendAuthMsg}>
-                        send auth
-                    </button>
-                </div>
-
+                <MiddleBar selectedChat={selectedChat} />
                 <RightBar
                     selectedChat={selectedChat}
                     selectedMember={selectedMember}

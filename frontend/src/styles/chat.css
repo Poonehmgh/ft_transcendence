@@ -44,7 +44,7 @@
     margin-bottom: 10px;
 }
 
-.middleBar_0 {
+.middleBar {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -59,12 +59,38 @@
     overflow: auto;
 }
 
-.middleBar_1 {
+.messageDiv {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    background-color: rgb(18, 64, 104);
+    background-color: rgb(0, 0, 0);
+    height: auto;
+    min-height: 100px;
     width: 100%;
+}
+
+.inputDiv {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    background-color: transparent;
+    height: 40px;
+    width: 100%;
+
+}
+
+.textInput {
+    height: 100%;
+    width: 100%;
+    min-width: 100%px;
+    border: 1px solid var(--text-primary);
+    font-size: medium;
+    background-color: transparent;
+}
+
+.textInput::placeholder {
+    color: var(--text-primary);
+    font-style: italic;
 }
 
 .chatButton,

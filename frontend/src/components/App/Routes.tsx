@@ -13,7 +13,7 @@ import { AuthContext } from "src/contexts/AuthProvider";
 
 function PongersRoutes() {
     const location = useLocation();
-    const { validToken: auth_validToken, userId: auth_userId, updateAuth } = useContext(AuthContext);
+    const { validToken: auth_validToken, updateAuth } = useContext(AuthContext);
 
     const validToken = gotValidToken();
     useEffect(() => {
@@ -21,7 +21,7 @@ function PongersRoutes() {
         if (auth_validToken !== validToken) {
             updateAuth(validToken);
         }
-    }, [validToken, auth_validToken]);
+    }, [validToken, auth_validToken, updateAuth]);
 
     function ProtectedRoute({ element }) {
         return validToken ? element : <Navigate to="/home" />;

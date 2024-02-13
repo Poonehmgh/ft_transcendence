@@ -28,13 +28,13 @@ export class ChatController {
     }
 
     //Give 0,0 for first 50 messages
-    @Get(":chatID/messages")
+    @Get(":chatId/messages")
     async getMessageList(
-        @Param("chatID") chatID: number,
+        @Param("chatId") chatId: number,
         @Query("from") from: number,
         @Query("to") to: number
     ) {
-        return this.chatService.getMessagesByRange(chatID, from, to);
+        return this.chatService.getMessagesByRange(chatId, from, to);
     }
 
     @Get("chat_users/:chatId")
@@ -81,7 +81,7 @@ export class ChatController {
                 res.status(200).json(result);
             }
         } catch (error) {
-            console.error("Error creating chat:", error);
+            console.error("Error createChat:", error);
             res.status(500).json({ error: "Internal Server Error" });
         }
     }
@@ -103,7 +103,7 @@ export class ChatController {
                 res.status(200).json(result);
             }
         } catch (error) {
-            console.error("Error renaming chat:", error);
+            console.error("Error renameChat:", error);
             res.status(500).json({ error: "Internal Server Error" });
         }
     }
@@ -124,7 +124,7 @@ export class ChatController {
                 res.status(200).json(result);
             }
         } catch (error) {
-            console.error("Error removing password:", error);
+            console.error("Error removePassword:", error);
             res.status(500).json({ error: "Internal Server Error" });
         }
     }
@@ -146,7 +146,7 @@ export class ChatController {
                 res.status(200).json(result);
             }
         } catch (error) {
-            console.error("Error changing password:", error);
+            console.error("Error changePassword:", error);
             res.status(500).json({ error: "Internal Server Error" });
         }
     }
@@ -169,7 +169,7 @@ export class ChatController {
                 res.status(200).json(result);
             }
         } catch (error) {
-            console.error("Error leaving chat:", error);
+            console.error("Error leaveChat:", error);
             res.status(500).json({ error: "Internal Server Error" });
         }
     }
