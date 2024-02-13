@@ -5,7 +5,7 @@ import "../../styles/gamev2.css";
 //topY ==
 function UserPlank(props) {
   const { userData, newRound, isPlayerOne, socket } = props;
-  const [plankPosition, setPlankPosition] = useState(80); //BE
+  const [plankPosition, setPlankPosition] = useState(82); //BE
 
   useEffect(() => {
     if (newRound) {
@@ -30,7 +30,7 @@ function UserPlank(props) {
             break;
           case "ArrowDown":
             //BE
-            if (plankPosition < 85) {
+            if (plankPosition < 82) {
               setPlankPosition(plankPosition + 1);
             }
             break;
@@ -52,10 +52,9 @@ function UserPlank(props) {
   }, [newRound, plankPosition, socket, userData]);
 
   const plankStyle = {
-    left: "98.5%",
     top: `${plankPosition}%`, //BE
     height: "15%", //BE
-    width: "20px", //BE
+    width: "1.5%", //BE
   };
 
   return (

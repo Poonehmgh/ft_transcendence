@@ -3,7 +3,7 @@ import "../../styles/gamev2.css";
 
 function OpponentPlank(props) {
   const { newRound, gameUpdate, isPlayerOne } = props;
-  const [plankPosition, setPlankPosition] = useState(80); //BE
+  const [plankPosition, setPlankPosition] = useState(82); //BE
 
   useEffect(() => {
     if (newRound) {
@@ -23,8 +23,8 @@ function OpponentPlank(props) {
 
   const plankStyle = {
     top: `${plankPosition}%`, //BE
-    height: "150px", //BE
-    width: "20px", //BE
+    height: "15%", //BE
+    width: "1.5%", //BE
   };
 
   return (
