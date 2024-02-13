@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import "../../styles/gamev2.css";
 
+// leftX == 
+// rightX == 
+// lowY == 
+// topY == 
 function Ball(props) {
-  const { newRound, gameUpdate} = props;
-  const [ballPosition, setBallPosition] = useState(null);
-  const [ballStyle, setBallStyle] = useState(null);
+  const { newRound, gameUpdate } = props;
+  const [ballPosition, setBallPosition] = useState([75, 75]); //BE
 
   useEffect(() => {
     if (newRound) {
@@ -18,28 +21,20 @@ function Ball(props) {
     }
   }, [gameUpdate]);
 
-  useEffect(() => {
-    if (newRound && ballPosition) {
-      setBallStyle({
-        position: "absolute",
-        left: `${ballPosition[0]}px`,
-        top: `${ballPosition[1]}px`,
-        width: `${newRound.ballRadius * 2}px`,
-        height: `${newRound.ballRadius * 2}px`,
-        borderRadius: "50%",
-        backgroundColor: "white",
-      });
-    }
-  }, [ballPosition, newRound]);
+  const ballStyle = {
+    left: `${ballPosition[0]}%`,//BE
+    top: `${ballPosition[1]}%`,//BE
+    width: `5px`,//BE
+    height: `5px`,//BE
+    borderRadius: "50%",
+  };
 
   return (
     <>
       {newRound ? (
-        <div className="ball" style={ballStyle}>
-          Ball
-        </div>
+        <div className="ball" style={ballStyle} />
       ) : (
-        <></>
+        <div className="ball" style={ballStyle} />
       )}
     </>
   );

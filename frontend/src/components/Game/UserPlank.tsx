@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import "../../styles/gamev2.css";
 
+//lowY ==
+//topY ==
 function UserPlank(props) {
   const { userData, newRound, isPlayerOne, socket } = props;
-  const [plankPosition, setPlankPosition] = useState(null);
-  const [plankStyle, setPlankStyle] = useState(null);
+  const [plankPosition, setPlankPosition] = useState(80); //BE
 
   useEffect(() => {
     if (newRound) {
@@ -22,13 +23,15 @@ function UserPlank(props) {
         e.preventDefault();
         switch (e.key) {
           case "ArrowUp":
-            if (plankPosition < newRound.fieldHeight - newRound.plankHeight) {
-              setPlankPosition(plankPosition + 1);
+            //BE
+            if (plankPosition > 53) {
+              setPlankPosition(plankPosition - 1);
             }
             break;
           case "ArrowDown":
-            if (plankPosition > 0) {
-              setPlankPosition(plankPosition - 1);
+            //BE
+            if (plankPosition < 85) {
+              setPlankPosition(plankPosition + 1);
             }
             break;
           default:
@@ -39,36 +42,28 @@ function UserPlank(props) {
           plankPosition: plankPosition,
         });
       };
-  
+
       window.addEventListener("keydown", handleKeyDown);
-  
+
       return () => {
         window.removeEventListener("keydown", handleKeyDown);
       };
     }
   }, [newRound, plankPosition, socket, userData]);
 
-  useEffect(() => {
-    if (newRound && plankPosition) {
-      setPlankStyle({
-        position: "absolute",
-        top: `${plankPosition}px`,
-        width: `${newRound.plankWidth}px`,
-        height: `${newRound.plankHeight}px`,
-        backgroundColor: "white",
-      })
-    }
-
-  }, [plankPosition, newRound]);
+  const plankStyle = {
+    left: "98.5%",
+    top: `${plankPosition}%`, //BE
+    height: "15%", //BE
+    width: "20px", //BE
+  };
 
   return (
     <>
       {newRound ? (
-        <div className="plank" style={plankStyle}>
-          UserPlank
-        </div>
+        <div className="plank" style={plankStyle} />
       ) : (
-        <></>
+        <div className="plank" style={plankStyle} />
       )}
     </>
   );
