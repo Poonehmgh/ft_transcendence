@@ -22,32 +22,31 @@ function MessageInput(props: messageInputProps): React.JSX.Element {
     const { userId } = useContext(AuthContext);
 
     useEffect(() => {
-        const input = inputRef.current;
-
-        const handleKeyPress = (event: KeyboardEvent) => {
-            if (event.key === "Enter") {
-                if (input.value.length > 0) {
-                    sendMessage(input.value);
-                    inputRef.current.value = "";
-                }
-            }
-        };
-
-        if (input) {
-            input.addEventListener("keypress", handleKeyPress);
+        if (inputRef.current) {
+            inputRef.current.addEventListener("keypress", handleKeyPress);
         }
 
         return () => {
-            if (input) {
-                input.removeEventListener("keypress", handleKeyPress);
+            if (inputRef.current) {
+                inputRef.current.removeEventListener("keypress", handleKeyPress);
             }
         };
     }, [inputRef]);
 
-    function sendMessage(messageText: string) {
-        const data = new SendMessageDTO(props.selectedChat?.id, userId, messageText);
+    const handleKeyPress = (event: KeyboardEvent) => {
+        if (event.key === "Enter") sendMessage();
+    };
+
+    function sendMessage() {
+        if (inputRef.current.value.length === 0) return;
+        const data = new SendMessageDTO(
+            props.selectedChat?.id,
+            userId,
+            inputRef.current.value
+        );
         socket.emit("sendMessage", data);
         console.log("Message sent!");
+        inputRef.current.value = "";
     }
 
     if (!props.selectedChat) return null;
@@ -61,7 +60,11 @@ function MessageInput(props: messageInputProps): React.JSX.Element {
                 className="textInput"
                 placeholder="Type a message..."
             />
-            <button className="bigButton" style={{ width: "150px" }}>
+            <button
+                className="bigButton"
+                style={{ width: "150px" }}
+                onClick={sendMessage}
+            >
                 📤
             </button>
         </div>
