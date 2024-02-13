@@ -10,7 +10,7 @@ const ScoreV2 = (props) => {
           {newRound.ScorePlayer1} : {newRound.ScorePlayer2}
         </div>
       ) : (
-        <></>
+        <div className="scores">5 : 5</div>
       )}
     </>
   );
