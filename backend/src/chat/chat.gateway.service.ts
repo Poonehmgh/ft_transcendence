@@ -188,6 +188,7 @@ export class ChatGatewayService {
         for (const id of userIdList) {
             console.log("sending message to user", id);
             const socket: Socket = this.getUserSocketFromUserId(id);
+            console.log("socket:", socket?.id);
             if (socket) socket.emit(messageDestination, message);
         }
     }

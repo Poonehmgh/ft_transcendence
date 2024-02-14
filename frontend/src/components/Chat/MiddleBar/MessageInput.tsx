@@ -47,8 +47,8 @@ function MessageInput(props: messageInputProps): React.JSX.Element {
                 input.removeEventListener("keypress", handleKeyPress);
             }
         };
-        // eslint-disable-next-line
         // sendMessage is missing, but is const and would trigger another eslint warning
+        // eslint-disable-next-line
     }, [props.selectedChat]);
 
     if (!props.selectedChat) return null;
