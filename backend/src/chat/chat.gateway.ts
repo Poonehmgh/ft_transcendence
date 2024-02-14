@@ -75,7 +75,7 @@ export class ChatGateway implements OnModuleInit, OnGatewayDisconnect {
         @ConnectedSocket() client: Socket,
         @MessageBody() message: InviteUserDTO
     ) {
-        await this.chatGatewayService.inviteUserToChat(message);
+        await this.chatGatewayService.inviteUserToChat(message, client);
     }
 
     @SubscribeMessage("changeChatUserStatus")

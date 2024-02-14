@@ -231,10 +231,12 @@ export class ChatDTO {
 export class InviteUserDTO {
     chatId: number;
     userId: number;
+    password: string;
 
-    constructor(chatID: number, userId: number) {
+    constructor(chatID: number, userId: number, password: string) {
         this.chatId = chatID;
         this.userId = userId;
+        this.password = password;
     }
 }
 

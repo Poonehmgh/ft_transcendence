@@ -3,6 +3,8 @@ import { PrismaService } from "../prisma/prisma.service";
 import { ChatGatewayService } from "./chat.gateway.service";
 import { UserService } from "src/user/user.service";
 
+import { hashSync } from 'bcryptjs';
+
 import {
     Chat_ChatUser,
     ChatInfoDTO,
@@ -337,6 +339,8 @@ export class ChatService {
 
         const firstThreeNames: string[] = userNames.slice(0, 3);
         const omittedCount: number = userNames.length - 3;
+
+        newChatDto.password = hashSync(newChatDto.password, "salt");
 
         const newChatName = `Chat with ${firstThreeNames.join(", ")}${
             omittedCount > 0 ? ` and ${omittedCount} others` : ""
