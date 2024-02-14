@@ -65,10 +65,6 @@ export class ChatService {
                         },
                     },
                 },
-                include: {
-                    chatUsers: true,
-                    messages: true,
-                },
             });
 
             return chats.map((chat: Chat_ChatUser) => {
@@ -78,18 +74,6 @@ export class ChatService {
                     dm: chat.dm,
                     isPrivate: chat.isPrivate,
                     passwordRequired: !!chat.password,
-                    chatUsers: chat.chatUsers.map((chatUser) => {
-                        return {
-                            userId: chatUser.userId,
-                            chatId: chatUser.chatId,
-                            owner: chatUser.owner,
-                            admin: chatUser.admin,
-                            blocked: chatUser.blocked,
-                            muted: chatUser.muted,
-                            mutedUntil: chatUser.muted_until,
-                            invited: chatUser.invited,
-                        };
-                    }),
                 };
             });
         } catch (error) {

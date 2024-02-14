@@ -76,7 +76,7 @@ export class Chat_ChatUsersDTO {
     chatUsers: ChatUserDTO[];
 }
 
-export class Chat_Complete {
+export class Chat_CompleteDTO {
     id: number;
     name: string;
     dm: boolean;

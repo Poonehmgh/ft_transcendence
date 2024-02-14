@@ -148,22 +148,19 @@ export class ChatInfoDTO {
     dm: boolean;
     isPrivate: boolean;
     passwordRequired: boolean;
-    chatUsers: ChatUserDTO[];
-
+    
     constructor(
         id: number,
         name: string,
         dm: boolean,
         isPrivate: boolean,
         passwordRequired: boolean,
-        chatUsers: ChatUserDTO[]
     ) {
         this.id = id;
         this.name = name;
         this.dm = dm;
         this.isPrivate = isPrivate;
         this.passwordRequired = passwordRequired;
-        this.chatUsers = chatUsers;
     }
 
     static fromChat(chat: Chat_ChatUser): ChatInfoDTO {
@@ -173,15 +170,6 @@ export class ChatInfoDTO {
             chat.dm,
             chat.isPrivate,
             chat.password ? true : false,
-            chat.chatUsers.map((chatUser) => ({
-                userId: chatUser.userId,
-                chatId: chatUser.chatId,
-                owner: chatUser.owner,
-                admin: chatUser.admin,
-                blocked: chatUser.blocked,
-                muted: chatUser.muted,
-                invited: chatUser.invited,
-            }))
         );
     }
 }

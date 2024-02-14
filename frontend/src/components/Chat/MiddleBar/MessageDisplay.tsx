@@ -1,14 +1,14 @@
 import React from "react";
 
 // DTO
-import { Chat_Complete } from "src/dto/chat-dto";
+import { Chat_CompleteDTO } from "src/dto/chat-dto";
 
 // CSS
 import "src/styles/chat.css";
 import "src/styles/style.css";
 
 interface messageDisplayProps {
-    activeChat: Chat_Complete | null;
+    activeChat: Chat_CompleteDTO | null;
 }
 
 function MessageDisplay(props: messageDisplayProps): React.JSX.Element {
@@ -21,7 +21,7 @@ function MessageDisplay(props: messageDisplayProps): React.JSX.Element {
         });
     };
 
-    if (!props.activeChat.messages) return null;
+    if (!props.activeChat) return null;
 
     return (
         <div className="messagesArea">

@@ -10,7 +10,7 @@ import MiddleBar from "./MiddleBar/MiddleBar_main";
 import { SocketContext } from "src/contexts/SocketProvider";
 
 // DTO
-import { Chat_ChatUsersDTO, Chat_Complete, ChatUserDTO } from "src/dto/chat-dto";
+import { Chat_ChatUsersDTO, Chat_CompleteDTO, ChatUserDTO } from "src/dto/chat-dto";
 
 // CSS
 import "../../styles/chat.css";
@@ -19,7 +19,7 @@ import "../../styles/style.css";
 function Chat() {
     const [selectedChat, setSelectedChat] = useState<Chat_ChatUsersDTO | null>(null);
     const [selectedMember, setSelectedMember] = useState<ChatUserDTO | null>(null);
-    const [activeChat, setActiveChat] = useState<Chat_Complete | null>(null);
+    const [activeChat, setActiveChat] = useState<Chat_CompleteDTO | null>(null);
     const [chats, setChats] = useState<Chat_ChatUsersDTO[]>(null);
     const socket = useContext(SocketContext);
 
@@ -50,7 +50,7 @@ function Chat() {
     useEffect(() => {
         if (!selectedChat) return;
         const apiUrl = backendUrl.chat + `complete_chat/${selectedChat.id}`;
-        fetchGetSet<Chat_Complete>(apiUrl, setActiveChat);
+        fetchGetSet<Chat_CompleteDTO>(apiUrl, setActiveChat);
     }, [selectedChat]);
 
     if (!chats) return <LoadingH2 elementName={"Chat"} />;
@@ -59,11 +59,7 @@ function Chat() {
         <div className="mainContainerColumn">
             <div className="h2">{selectedChat ? selectedChat.name : "Chat"}</div>
             <div className="chatMain">
-                <LeftBar
-                    selectedChat={selectedChat}
-                    selectChat={selectChat}
-                    chats={chats}
-                />
+                <LeftBar activeChat={activeChat} selectChat={selectChat} chats={chats} />
                 <MiddleBar activeChat={activeChat} />
                 <RightBar
                     selectedChat={selectedChat}
