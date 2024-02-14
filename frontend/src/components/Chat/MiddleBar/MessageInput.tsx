@@ -38,8 +38,8 @@ function MessageInput(props: messageInputProps): React.JSX.Element {
             if (event.key === "Enter") sendMessage();
         };
 
-        if (inputRef.current) {
-            inputRef.current.addEventListener("keypress", handleKeyPress);
+        if (input) {
+            input.addEventListener("keypress", handleKeyPress);
         }
 
         return () => {
@@ -47,9 +47,9 @@ function MessageInput(props: messageInputProps): React.JSX.Element {
                 input.removeEventListener("keypress", handleKeyPress);
             }
         };
-        // eslint wants sendMessage but it remains const and would also trigger another es warning
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [inputRef.current]);
+        // eslint-disable-next-line
+        // sendMessage is missing, but is const and would trigger another eslint warning
+    }, [props.selectedChat]);
 
     if (!props.selectedChat) return null;
 
@@ -63,7 +63,7 @@ function MessageInput(props: messageInputProps): React.JSX.Element {
             />
             <button
                 className="bigButton"
-                style={{ width: "40px", height: "40px", borderRadius: "0px 0px 8px 0px"}}
+                style={{ width: "40px", height: "40px", borderRadius: "0px 0px 8px 0px" }}
                 onClick={sendMessage}
             >
                 <img

@@ -33,14 +33,13 @@ function MessageDisplay(props: messageDisplayProps): React.JSX.Element {
     };
 
     if (!chatMessages) return <LoadingH2 elementName={"Messages"} />;
-    console.log("chatMessages", chatMessages);
 
     return (
         <div className="messagesArea">
             {chatMessages.map((message, index) => (
-                <div key={index} className="message">
-                    <span className="timeStamp">{formatTime(message.timeStamp)} - </span>
-                    <span className="author">{message.authorId}:</span>
+                <div key={index} className="messageFlexStart">
+                    <span className="timeStamp">{formatTime(message.timeStamp)}</span>
+                    <span className="author">{message.authorId}</span>
                     <div className="content">{message.content}</div>
                 </div>
             ))}
