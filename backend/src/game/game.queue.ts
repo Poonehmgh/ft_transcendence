@@ -25,7 +25,7 @@ export class GameData {
 	fieldWidth: number = 180;
 	fieldHeight: number = 100;
 	ballRadius: number = 2;
-	plankWidth: number = 2;
+	plankWidth: number = 2.75;
 	plankHeight: number = 35;
 
 	interval: NodeJS.Timer;
