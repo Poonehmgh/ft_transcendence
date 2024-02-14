@@ -21,14 +21,20 @@ function Chat() {
     const [selectedMember, setSelectedMember] = useState<ChatUserDTO | null>(null);
     const [activeChat, setActiveChat] = useState<Chat_CompleteDTO | null>(null);
     const [chats, setChats] = useState<Chat_ChatUsersDTO[]>(null);
-    const socket = useContext(SocketContext);
+    const [updateTrigger, setUpdateTrigger] = useState(false);
+	const socket = useContext(SocketContext);
+
+	// remove selectedCHat. actually prolly only good in combo with provider
+	// update activechat if updatemessage.id === activechat.id
+	// maybe chat provider
+	// add names here to complete chat
 
     useEffect(() => {
         if (!socket) return;
 
         const handleNewChatMessage = (message: any) => {
-            console.log("new chat message:", message);
             alert(`New chat message: ${message.content}`);
+			setUpdateTrigger(prev => !prev);
         };
         socket.on("updateMessage", handleNewChatMessage);
 
@@ -45,13 +51,13 @@ function Chat() {
     useEffect(() => {
         const apiUrl = backendUrl.chat + "my_chats";
         fetchGetSet<Chat_ChatUsersDTO[]>(apiUrl, setChats);
-    }, []);
+    }, [updateTrigger]);
 
     useEffect(() => {
         if (!selectedChat) return;
         const apiUrl = backendUrl.chat + `complete_chat/${selectedChat.id}`;
         fetchGetSet<Chat_CompleteDTO>(apiUrl, setActiveChat);
-    }, [selectedChat]);
+    }, [selectedChat, updateTrigger]);
 
     if (!chats) return <LoadingH2 elementName={"Chat"} />;
 
