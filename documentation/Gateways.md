@@ -16,6 +16,7 @@ To user
 | Receive the confirmation that queue was entered | queueConfirm | text 'Confirm' or 'InvalidID' or 'Already in queue' or 'Already in game' or 'Socket is not assigned to this id' |
 | Receive the the data to render new match        | newRound     | NewRoundDTO                                                                                                     |
 | Receive an update while rendering               | gameUpdate   | GameUpdateDTO                                                                                                   |
+| Receive the the data to render new match        | gameResult   | "Won" or "Lost"                                                                                                 |
 
 ## Chat
 

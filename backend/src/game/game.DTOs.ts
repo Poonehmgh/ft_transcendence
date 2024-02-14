@@ -72,7 +72,6 @@ export class NewRoundDTO{
 	PositionPlank2: number;
 	PositionBall: [number, number];
 
-
 	//constants
 	fieldWidth: number;
 	fieldHeight: number;
@@ -93,7 +92,6 @@ export class NewRoundDTO{
 		this.PositionPlank1 = data.PositionPlank1;
 		this.PositionPlank2 = data.PositionPlank2;
 		this.PositionBall = data.PositionBall;
-
 
 		this.fieldWidth = data.fieldWidth;
 		this.fieldHeight = data.fieldHeight;
