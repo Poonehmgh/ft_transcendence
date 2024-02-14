@@ -1,18 +1,27 @@
 import React, { useEffect, useState } from "react";
 import "../../styles/gamev2.css";
 
-//lowY ==
-//topY ==
+// height == 15
+// width == 1.5
+
+// totalHeight == 43
+// totalWidth == 98
+
+// range == 28
+
+//BE - 43 is the full height
+//BE - 98 is the full width
+
 function UserPlank(props) {
   const { userData, newRound, isPlayerOne, socket } = props;
-  const [plankPosition, setPlankPosition] = useState(82); //BE
+  const [plankPosition, setPlankPosition] = useState(81);
 
   useEffect(() => {
     if (newRound) {
       if (isPlayerOne) {
-        setPlankPosition(newRound.PositionPlank1);
+        setPlankPosition(-0.21 * newRound.PoPositionPlank2 + 81);
       } else {
-        setPlankPosition(newRound.PositionPlank2);
+        setPlankPosition(-0.21 * newRound.PoPositionPlank1 + 81);
       }
     }
   }, [isPlayerOne, newRound]);
@@ -23,14 +32,12 @@ function UserPlank(props) {
         e.preventDefault();
         switch (e.key) {
           case "ArrowUp":
-            //BE
             if (plankPosition > 53) {
               setPlankPosition(plankPosition - 1);
             }
             break;
           case "ArrowDown":
-            //BE
-            if (plankPosition < 82) {
+            if (plankPosition < 81) {
               setPlankPosition(plankPosition + 1);
             }
             break;
@@ -39,7 +46,7 @@ function UserPlank(props) {
         }
         socket.emit("updatePLank", {
           userID: userData.id,
-          plankPosition: plankPosition,
+          plankPosition: (plankPosition - 81) / -0.21,
         });
       };
 
@@ -52,9 +59,9 @@ function UserPlank(props) {
   }, [newRound, plankPosition, socket, userData]);
 
   const plankStyle = {
-    top: `${plankPosition}%`, //BE
-    height: "15%", //BE
-    width: "1.5%", //BE
+    top: `${plankPosition}%`,
+    height: "15%", 
+    width: "1.5%",
   };
 
   return (
