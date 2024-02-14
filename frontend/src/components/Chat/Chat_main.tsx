@@ -4,73 +4,60 @@ import LeftBar from "src/components/Chat/LeftBar/LeftBar_main";
 import RightBar from "src/components/Chat/RightBar/RightBar_main";
 import LoadingH2 from "src/components/shared/LoadingH2";
 import backendUrl from "src/constants/backendUrl";
+import MiddleBar from "./MiddleBar/MiddleBar_main";
 
 // Contexts
 import { SocketContext } from "src/contexts/SocketProvider";
 
 // DTO
-import { ChatInfoDTO, ChatUserDTO, SendMessageDTO } from "src/dto/chat-dto";
+import { Chat_ChatUsersDTO, Chat_CompleteDTO, ChatUserDTO } from "src/dto/chat-dto";
 
 // CSS
 import "../../styles/chat.css";
 import "../../styles/style.css";
 
 function Chat() {
-    const [selectedChat, setSelectedChat] = useState<ChatInfoDTO | null>(null);
+    const [selectedChat, setSelectedChat] = useState<Chat_ChatUsersDTO | null>(null);
     const [selectedMember, setSelectedMember] = useState<ChatUserDTO | null>(null);
-    const [chats, setChats] = useState<ChatInfoDTO[]>(null);
-    const apiUrl = backendUrl.chat + "my_chats";
+    const [activeChat, setActiveChat] = useState<Chat_CompleteDTO | null>(null);
+    const [chats, setChats] = useState<Chat_ChatUsersDTO[]>(null);
+    const [updateTrigger, setUpdateTrigger] = useState(false);
+	const socket = useContext(SocketContext);
 
-    const socket = useContext(SocketContext);
+	// remove selectedCHat. actually prolly only good in combo with provider
+	// update activechat if updatemessage.id === activechat.id
+	// maybe chat provider
+	// add names here to complete chat
 
     useEffect(() => {
-        console.log("Chat component mounted");
         if (!socket) return;
-        console.log("Chat socket not null");
-
-        const handleNewEvent = (eventName, data) => {
-            console.log("Received event:", eventName, "with data:", data);
-        };
-        socket.onAny(handleNewEvent);
 
         const handleNewChatMessage = (message: any) => {
-            console.log("new chat message:", message);
-            alert(`New chat message: ${message}`);
+            alert(`New chat message: ${message.content}`);
+			setUpdateTrigger(prev => !prev);
         };
         socket.on("updateMessage", handleNewChatMessage);
 
         return () => {
             socket.off("updateMessage", handleNewChatMessage);
-            socket.offAny(handleNewEvent);
         };
     }, [socket]);
 
-    function sendTestMsg() {
-        console.log("sending test msg");
-        const id_message = { userID: 98525 };
-        socket.emit("sendMessage", id_message);
-
-        const message = new SendMessageDTO(1, 98525, "Hello, knudelings!");
-        socket.emit("sendMessage", message);
-    }
-
-    function sendAuthMsg() {
-        console.log("sending auth msg");
-        const id_message = { userID: 98525 };
-        socket.emit("connectMessage", id_message);
-
-        const message = new SendMessageDTO(1, 98525, "Hello, knudelings!");
-        socket.emit("sendMessage", message);
-    }
-
-    function selectChat(newChat: ChatInfoDTO) {
+    function selectChat(newChat: Chat_ChatUsersDTO) {
         setSelectedChat(newChat);
         setSelectedMember(null);
     }
 
     useEffect(() => {
-        fetchGetSet<ChatInfoDTO[]>(apiUrl, setChats);
-    }, [apiUrl]);
+        const apiUrl = backendUrl.chat + "my_chats";
+        fetchGetSet<Chat_ChatUsersDTO[]>(apiUrl, setChats);
+    }, [updateTrigger]);
+
+    useEffect(() => {
+        if (!selectedChat) return;
+        const apiUrl = backendUrl.chat + `complete_chat/${selectedChat.id}`;
+        fetchGetSet<Chat_CompleteDTO>(apiUrl, setActiveChat);
+    }, [selectedChat, updateTrigger]);
 
     if (!chats) return <LoadingH2 elementName={"Chat"} />;
 
@@ -78,21 +65,8 @@ function Chat() {
         <div className="mainContainerColumn">
             <div className="h2">{selectedChat ? selectedChat.name : "Chat"}</div>
             <div className="chatMain">
-                <LeftBar
-                    selectedChat={selectedChat}
-                    selectChat={selectChat}
-                    chats={chats}
-                />
-
-                <div className="middleBar_0">
-                    <button className="bigButton" onClick={sendTestMsg}>
-                        Knudeling
-                    </button>
-                    <button className="bigButton" onClick={sendAuthMsg}>
-                        send auth
-                    </button>
-                </div>
-
+                <LeftBar activeChat={activeChat} selectChat={selectChat} chats={chats} />
+                <MiddleBar activeChat={activeChat} />
                 <RightBar
                     selectedChat={selectedChat}
                     selectedMember={selectedMember}

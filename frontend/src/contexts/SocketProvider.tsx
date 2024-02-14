@@ -26,11 +26,9 @@ export function SocketProvider(props: socketProviderProps): JSX.Element {
 
         if (validToken) {
             console.log("Connecting socket for userId:", userId);
-            const newSocket = io(backendUrl.base, {
-                query: {
-                    message: JSON.stringify({ userID: userId }),
-                },
-            });
+            const newSocket = io(backendUrl.base, {});
+            newSocket.emit("connectMessage", { userID: userId });
+            
             // shouldn't ever not be null, but nice syntax example for
             // react's functional update pattern
             setSocket((prevSocket) => {
@@ -46,8 +44,8 @@ export function SocketProvider(props: socketProviderProps): JSX.Element {
         return () => {
             disconnectSocket(socket, userId);
         };
-    // eslint wants socket in the dependency array, but it would trigger an infinite loop
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint wants socket in the dependency array, but it would trigger an infinite loop
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [validToken, userId]);
 
     return (

@@ -14,6 +14,7 @@ import { ChatService } from "./chat.service";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
 import { ChatUserDTO, NewChatDTO } from "./chat.DTOs";
 import { AuthenticatedRequest } from "src/shared/dto";
+import { get } from "http";
 
 @Controller("chat")
 @UseGuards(JwtAuthGuard)
@@ -23,18 +24,47 @@ export class ChatController {
     // Getters
 
     @Get("my_chats")
-    async getMyChats(@Req() req: AuthenticatedRequest) {
-        return this.chatService.getUsersChats(req.user.id);
+    async getMyChats(@Req() req: AuthenticatedRequest, @Res() res) {
+        try {
+            const result = await this.chatService.getUsersChats(req.user.id);
+            if (result instanceof Error) {
+                res.status(500).json({ error: result.message });
+            } else if ("error" in result) {
+                res.status(500).json({ error: result.error });
+            } else {
+                res.status(200).json(result);
+            }
+        } catch (error) {
+            console.error("Error getLatestMessages:", error);
+            res.status(500).json({ error: "Internal Server Error" });
+        }
     }
 
     //Give 0,0 for first 50 messages
-    @Get(":chatID/messages")
+    @Get(":chatId/messages")
     async getMessageList(
-        @Param("chatID") chatID: number,
+        @Param("chatId") chatId: number,
         @Query("from") from: number,
         @Query("to") to: number
     ) {
-        return this.chatService.getMessagesByRange(chatID, from, to);
+        return this.chatService.getMessagesByRange(chatId, from, to);
+    }
+
+    @Get("latest_messages/:chatId")
+    async getLatestMessages(@Param("chatId") chatId: number, @Res() res) {
+        try {
+            const result = await this.chatService.getLatestMessages(chatId);
+            if (result instanceof Error) {
+                res.status(500).json({ error: result.message });
+            } else if ("error" in result) {
+                res.status(500).json({ error: result.error });
+            } else {
+                res.status(200).json(result);
+            }
+        } catch (error) {
+            console.error("Error getLatestMessages:", error);
+            res.status(500).json({ error: "Internal Server Error" });
+        }
     }
 
     @Get("chat_users/:chatId")
@@ -63,6 +93,27 @@ export class ChatController {
         }
     }
 
+    @Get("complete_chat/:chatId")
+    async getCompleteChat(
+        @Param("chatId") chatId: number,
+        @Req() req: AuthenticatedRequest,
+        @Res() res
+    ) {
+        try {
+            const result = await this.chatService.getCompleteChat(chatId);
+            if (result instanceof Error) {
+                res.status(500).json({ error: result.message });
+            } else if ("error" in result) {
+                res.status(500).json({ error: result.error });
+            } else {
+                res.status(200).json(result);
+            }
+        } catch (error) {
+            console.error("Error getCompleteChat:", error);
+            res.status(500).json({ error: "Internal Server Error" });
+        }
+    }
+
     // Manipulate chat
 
     @Post("create")
@@ -81,7 +132,7 @@ export class ChatController {
                 res.status(200).json(result);
             }
         } catch (error) {
-            console.error("Error creating chat:", error);
+            console.error("Error createChat:", error);
             res.status(500).json({ error: "Internal Server Error" });
         }
     }
@@ -103,7 +154,7 @@ export class ChatController {
                 res.status(200).json(result);
             }
         } catch (error) {
-            console.error("Error renaming chat:", error);
+            console.error("Error renameChat:", error);
             res.status(500).json({ error: "Internal Server Error" });
         }
     }
@@ -124,7 +175,7 @@ export class ChatController {
                 res.status(200).json(result);
             }
         } catch (error) {
-            console.error("Error removing password:", error);
+            console.error("Error removePassword:", error);
             res.status(500).json({ error: "Internal Server Error" });
         }
     }
@@ -137,7 +188,11 @@ export class ChatController {
         @Res() res
     ) {
         try {
-            const result = await this.chatService.changePassword(req.user.id, chatId, password);
+            const result = await this.chatService.changePassword(
+                req.user.id,
+                chatId,
+                password
+            );
             if (result instanceof Error) {
                 res.status(500).json({ error: result.message });
             } else if ("error" in result) {
@@ -146,7 +201,7 @@ export class ChatController {
                 res.status(200).json(result);
             }
         } catch (error) {
-            console.error("Error changing password:", error);
+            console.error("Error changePassword:", error);
             res.status(500).json({ error: "Internal Server Error" });
         }
     }
@@ -169,7 +224,7 @@ export class ChatController {
                 res.status(200).json(result);
             }
         } catch (error) {
-            console.error("Error leaving chat:", error);
+            console.error("Error leaveChat:", error);
             res.status(500).json({ error: "Internal Server Error" });
         }
     }

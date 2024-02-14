@@ -2,7 +2,7 @@ import React from "react";
 import ChatList from "./ChatList";
 
 // DTO
-import { ChatInfoDTO } from "src/dto/chat-dto";
+import { Chat_ChatUsersDTO, Chat_CompleteDTO } from "src/dto/chat-dto";
 
 // CSS
 import "src/styles/chat.css";
@@ -10,20 +10,20 @@ import "src/styles/style.css";
 import ChatOptions from "./ChatOptions";
 
 interface chatsMainProps {
-    selectedChat: ChatInfoDTO;
-    onSelectChat: (chat: ChatInfoDTO) => void;
-    chats: ChatInfoDTO[];
+    activeChat: Chat_CompleteDTO | null;
+    onSelectChat: (chat: Chat_ChatUsersDTO) => void;
+    chats: Chat_ChatUsersDTO[];
 }
 
 function Chats(props: chatsMainProps): React.JSX.Element {
     return (
         <div style={{ width: "100%" }}>
             <ChatList
-                selectedChat={props.selectedChat}
+                activeChat={props.activeChat}
                 onSelectChat={(chat) => props.onSelectChat(chat)}
                 chats={props.chats}
             />
-            <ChatOptions selectedChat={props.selectedChat} />
+            <ChatOptions activeChat={props.activeChat} />
         </div>
     );
 }

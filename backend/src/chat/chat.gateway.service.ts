@@ -53,10 +53,9 @@ export class ChatGatewayService {
         this.connectedUsers.filter(
             (userGateway) => userGateway.userID !== userIDToDelete
         );
-        console.log(this.connectedUsers);
+        //console.log("deleteUserFromList:", this.connectedUsers);
     }
 
-    
     addUserToList(user: userGateway) {
         this.connectedUsers.push(user);
     }
@@ -151,18 +150,18 @@ export class ChatGatewayService {
         }
     }
 
-    async setUserSockerID(userID: number, socketID: string) {
+    async setUserSocketId(userId: number, socketId: string) {
         try {
             await this.prisma.user.updateMany({
                 where: {
-                    id: Number(userID),
+                    id: Number(userId),
                 },
                 data: {
-                    socketId: String(socketID),
+                    socketId: String(socketId),
                 },
             });
         } catch (error) {
-            console.log(`error in setUserSocketID: ${error.message}`);
+            console.log(`error in setUserSocketId: ${error.message}`);
         }
     }
 
@@ -189,6 +188,7 @@ export class ChatGatewayService {
         for (const id of userIdList) {
             console.log("sending message to user", id);
             const socket: Socket = this.getUserSocketFromUserId(id);
+            console.log("socket:", socket?.id);
             if (socket) socket.emit(messageDestination, message);
         }
     }

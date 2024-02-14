@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 // DTO
-import { ChatInfoDTO } from "src/dto/chat-dto";
+import { Chat_ChatUsersDTO, Chat_CompleteDTO } from "src/dto/chat-dto";
 import { fetchGet } from "src/functions/utils";
 
 // CSS
@@ -9,15 +9,16 @@ import "src/styles/chat.css";
 import "src/styles/style.css";
 
 interface chatListProps {
-    selectedChat: ChatInfoDTO;
-    onSelectChat: (chat: ChatInfoDTO) => void;
-    chats: ChatInfoDTO[];
+    activeChat: Chat_CompleteDTO | null;
+    onSelectChat: (chat: Chat_ChatUsersDTO) => void;
+    chats: Chat_ChatUsersDTO[];
 }
 
 function ChatList(props: chatListProps): React.JSX.Element {
     const [chatNames, setChatNames] = useState<string[]>(null);
 
     useEffect(() => {
+        if (!props.chats) return;
         async function fetchChatNames() {
             try {
                 const names = await Promise.all(
@@ -35,11 +36,11 @@ function ChatList(props: chatListProps): React.JSX.Element {
         fetchChatNames();
     }, [props.chats]);
 
-    function selectChat(chat: ChatInfoDTO) {
+    function selectChat(chat: Chat_ChatUsersDTO) {
         props.onSelectChat(chat);
     }
 
-    if (!chatNames) return <p>Loading...</p>;
+    if (!chatNames || !props.chats) return <p>Loading...</p>;
 
     return (
         <div className="chatElementDiv">
@@ -50,7 +51,9 @@ function ChatList(props: chatListProps): React.JSX.Element {
                     <button
                         key={e.id}
                         className={
-                            props.selectedChat === e ? "chatButtonSelected" : "chatButton"
+                            props.activeChat?.id === e.id
+                                ? "chatButtonSelected"
+                                : "chatButton"
                         }
                         onClick={() => selectChat(e)}
                     >

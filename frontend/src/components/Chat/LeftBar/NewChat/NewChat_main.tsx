@@ -4,7 +4,7 @@ import CreateChatControls from "./CreateChatControls";
 import { fetchX } from "src/functions/utils";
 
 // DTO
-import { ChatInfoDTO, NewChatDTO } from "src/dto/chat-dto";
+import { Chat_ChatUsersDTO, NewChatDTO } from "src/dto/chat-dto";
 
 // CSS
 import "src/styles/modals.css";
@@ -12,7 +12,7 @@ import "src/styles/buttons.css";
 import SelectUsersTable from "./SelectUsersTable";
 
 interface newChatProps {
-    selectChat: (chat: ChatInfoDTO) => void;
+    selectChat: (chat: Chat_ChatUsersDTO) => void;
 }
 
 function NewChat(props: newChatProps): React.JSX.Element {
@@ -71,7 +71,7 @@ function NewChat(props: newChatProps): React.JSX.Element {
             newChatDTO.password = passwordRef.current.value;
         }
         try {
-            const newChat: ChatInfoDTO = await fetchX("POST", apiUrl, newChatDTO);
+            const newChat: Chat_ChatUsersDTO = await fetchX("POST", apiUrl, newChatDTO);
             props.selectChat(newChat);
             closeModal();
         } catch (error) {

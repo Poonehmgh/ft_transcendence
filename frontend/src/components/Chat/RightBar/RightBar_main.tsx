@@ -3,14 +3,14 @@ import MemberList from "./MemberList";
 import MemberInfo from "./MemberInfo";
 
 // DTO
-import { ChatInfoDTO, ChatUserDTO } from "src/dto/chat-dto";
+import { Chat_ChatUsersDTO, ChatUserDTO } from "src/dto/chat-dto";
 
 // CSS
 import "src/styles/chat.css";
 import "src/styles/style.css";
 
 interface rightBarProps {
-    selectedChat: ChatInfoDTO | null;
+    selectedChat: Chat_ChatUsersDTO | null;
     selectedMember: ChatUserDTO | null;
     setSelectedMember: React.Dispatch<React.SetStateAction<ChatUserDTO | null>>;
 }
