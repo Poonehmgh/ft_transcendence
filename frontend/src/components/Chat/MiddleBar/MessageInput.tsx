@@ -63,7 +63,12 @@ function MessageInput(props: messageInputProps): React.JSX.Element {
             />
             <button
                 className="bigButton"
-                style={{ width: "40px", height: "40px", borderRadius: "0px 0px 8px 0px" }}
+                style={{
+                    width: "50px",
+                    height: "100%",
+                    borderRadius: "0px 0px 8px 0px",
+                    boxSizing: "content-box",
+                }}
                 onClick={sendMessage}
             >
                 <img

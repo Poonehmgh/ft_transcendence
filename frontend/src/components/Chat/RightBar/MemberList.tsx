@@ -14,7 +14,6 @@ function MemberList(props: membersProps): React.JSX.Element {
     const [chatUsers, setChatUsers] = useState<ChatUserDTO[]>(null);
     const [selectedChatUser, setSelectedChatUser] = useState<ChatUserDTO>(null);
     const [userNames, setUserNames] = useState<string[]>([]);
-
     const apiUrl = backendUrl.chat + "chat_users/" + props.selectedChat.id;
 
     useEffect(() => {
@@ -25,12 +24,11 @@ function MemberList(props: membersProps): React.JSX.Element {
         if (chatUsers) {
             const apiNamesUrl = backendUrl.user + "name/";
 
-            const fetchName = async (userId, index) => {
+            const fetchName = async (userId: number, index: number) => {
                 try {
                     const response = await fetchGet<string>(apiNamesUrl + userId);
                     const name = response || "Unknown Name";
 
-                    // Update the user with the fetched name
                     setUserNames((prevNames) => {
                         const updatedNames = [...prevNames];
                         updatedNames[index] = name;
@@ -40,8 +38,6 @@ function MemberList(props: membersProps): React.JSX.Element {
                     console.error(`Error fetching name for user ${userId}:`, error);
                 }
             };
-
-            // Iterate through each user and fetch their name
             chatUsers.forEach((user, index) => fetchName(user.userId, index));
         }
     }, [chatUsers]);
