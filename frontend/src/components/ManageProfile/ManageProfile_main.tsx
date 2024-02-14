@@ -88,12 +88,21 @@ function ManageProfile() {
         }
     }
 
+	async function handleLogout() {
+		const apiUrl = backendUrl.auth + "42/logout"
+		const res = await fetchX<{message: string}>("POST", apiUrl, null);
+		document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
+		alert(res.message);
+	}
+
     if (!userData) return <LoadingH2 elementName={"Manage your profile"} />;
 
     return (
         <div className="mainContainerColumn" style={{ alignItems: "center" }}>
             <div className="h2">Manage your profile</div>
             <div className="manageProfile">
+			<button className="bigButton" onClick={handleLogout}>Logout 🚪</button>
+
                 <div className="leftAligner">
                     <div
                         className="h2Left"

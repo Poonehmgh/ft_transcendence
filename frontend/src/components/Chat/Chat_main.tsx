@@ -24,6 +24,7 @@ function Chat() {
     const [updateTrigger, setUpdateTrigger] = useState(false);
 	const socket = useContext(SocketContext);
 
+	
 	// remove selectedCHat. actually prolly only good in combo with provider
 	// update activechat if updatemessage.id === activechat.id
 	// maybe chat provider
@@ -35,6 +36,7 @@ function Chat() {
         const handleNewChatMessage = (message: any) => {
             alert(`New chat message: ${message.content}`);
 			setUpdateTrigger(prev => !prev);
+			//better: add the message to the messages
         };
         socket.on("updateMessage", handleNewChatMessage);
 
