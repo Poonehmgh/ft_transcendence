@@ -3,6 +3,7 @@
     font-family: "system-ui", sans-serif;
     --text-primary: hsl(26, 18%, 43%);
     --text-secondary: black;
+    --text-annotation: rgb(50, 50, 50);
     --bg--primary: black;
     --bg--catalogue: white;
 

@@ -10,6 +10,20 @@ export class MessageListElementDTO {
     }
 }
 
+export class MessageDTO {
+    id: number;
+    timeStamp: Date;
+    content: string;
+    authorId: number;
+
+    constructor(id: number, timeStamp: Date, content: string, authorId: number) {
+        this.id = id;
+        this.timeStamp = timeStamp;
+        this.content = content;
+        this.authorId = authorId;
+    }
+}
+
 export class SendMessageDTO {
     chatId: number;
     userId: number;
@@ -53,11 +67,21 @@ export class InviteUserDTO {
     }
 }
 
-export class ChatInfoDTO {
+export class Chat_ChatUsersDTO {
     id: number;
     name: string;
     dm: boolean;
     isPrivate: boolean;
     passwordRequired: boolean;
+    chatUsers: ChatUserDTO[];
+}
+
+export class Chat_CompleteDTO {
+    id: number;
+    name: string;
+    dm: boolean;
+    isPrivate: boolean;
+    passwordRequired: boolean;
+    messages: MessageDTO[];
     chatUsers: ChatUserDTO[];
 }

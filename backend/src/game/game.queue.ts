@@ -18,6 +18,8 @@ export class GameData {
 	PositionPlank2: number = 0;
 	PositionBall: [number, number] = [90, 50];
 	VelocityBall: [number, number] = [10, 0];
+
+	//1 is active, 0 is inactive
 	GameStatus: number = 1;
 
 
@@ -84,8 +86,8 @@ export class GameData {
 			})
 			this.infoUser1.socket.emit('gameResult', 'Won');
 			this.infoUser2.socket.emit('gameResult', 'Lost');
-			this.GameStatus = 0;
 			clearInterval(this.interval);
+			this.GameStatus = 0;
 			return;
 		}
 		if (this.ScorePlayer2 >= 3) {

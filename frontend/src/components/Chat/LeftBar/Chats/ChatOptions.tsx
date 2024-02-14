@@ -2,15 +2,15 @@ import React, { useEffect, useState } from "react";
 import backendUrl from "src/constants/backendUrl";
 
 // DTO
-import { ChatInfoDTO } from "src/dto/chat-dto";
-import { fetchGet, fetchX, sanitizeInput } from "src/functions/utils";
+import { Chat_CompleteDTO } from "src/dto/chat-dto";
+import { fetchX, sanitizeInput } from "src/functions/utils";
 
 // CSS
 import "src/styles/chat.css";
 import "src/styles/style.css";
 
 interface chatOptionsProps {
-    selectedChat: ChatInfoDTO | null;
+    activeChat: Chat_CompleteDTO | null;
 }
 
 function ChatOptions(props: chatOptionsProps): React.JSX.Element {
@@ -18,19 +18,17 @@ function ChatOptions(props: chatOptionsProps): React.JSX.Element {
     const [hasPassword, setHasPassword] = useState<boolean>(false);
 
     useEffect(() => {
-        if (props.selectedChat) {
+        if (props.activeChat) {
             const userId = parseInt(localStorage.getItem("userId"));
-            const thisUser = props.selectedChat.chatUsers.find(
-                (e) => e.userId === userId
-            );
+            const thisUser = props.activeChat.chatUsers.find((e) => e.userId === userId);
             setIsOwner(thisUser?.owner || false);
-            setHasPassword(props.selectedChat.passwordRequired);
+            setHasPassword(props.activeChat.passwordRequired);
         }
-    }, [props.selectedChat]);
+    }, [props.activeChat]);
 
     async function leaveChat() {
         if (window.confirm("Leave this chat?")) {
-            const apiUrl = backendUrl.chat + `leave/${props.selectedChat?.id}`;
+            const apiUrl = backendUrl.chat + `leave/${props.activeChat?.id}`;
             const res = await fetchX<{ message: string }>("PATCH", apiUrl, null);
             alert(res.message);
         }
@@ -44,7 +42,7 @@ function ChatOptions(props: chatOptionsProps): React.JSX.Element {
             alert("Name must be at least 3 characters long");
             return;
         }
-        const apiUrl = backendUrl.chat + `rename/${props.selectedChat?.id}`;
+        const apiUrl = backendUrl.chat + `rename/${props.activeChat?.id}`;
         const res = await fetchX<{ message: string }>("PATCH", apiUrl, {
             name: sanitizedName,
         });
@@ -53,7 +51,7 @@ function ChatOptions(props: chatOptionsProps): React.JSX.Element {
 
     async function removePassword() {
         if (!window.confirm("Are you sure you want to remove the password?")) return;
-        const apiUrl = backendUrl.chat + `remove_password/${props.selectedChat?.id}`;
+        const apiUrl = backendUrl.chat + `remove_password/${props.activeChat?.id}`;
         const res = await fetchX<{ message: string }>("PATCH", apiUrl, null);
         alert(res.message);
     }
@@ -65,14 +63,14 @@ function ChatOptions(props: chatOptionsProps): React.JSX.Element {
             alert("Password must be at least 3 characters long");
             return;
         }
-        const apiUrl = backendUrl.chat + `change_password/${props.selectedChat?.id}`;
+        const apiUrl = backendUrl.chat + `change_password/${props.activeChat?.id}`;
         const res = await fetchX<{ message: string }>("PATCH", apiUrl, {
             password: newPassword,
         });
         alert(res.message);
     }
 
-    if (!props.selectedChat) return null;
+    if (!props.activeChat) return null;
 
     return (
         <div className="sideBar_sub1">

@@ -1,36 +1,63 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { fetchGetSet } from "src/functions/utils";
 import LeftBar from "src/components/Chat/LeftBar/LeftBar_main";
 import RightBar from "src/components/Chat/RightBar/RightBar_main";
 import LoadingH2 from "src/components/shared/LoadingH2";
+import backendUrl from "src/constants/backendUrl";
+import MiddleBar from "./MiddleBar/MiddleBar_main";
+
+// Contexts
+import { SocketContext } from "src/contexts/SocketProvider";
 
 // DTO
-import { ChatInfoDTO, ChatUserDTO } from "src/dto/chat-dto";
+import { Chat_ChatUsersDTO, Chat_CompleteDTO, ChatUserDTO } from "src/dto/chat-dto";
 
 // CSS
 import "../../styles/chat.css";
 import "../../styles/style.css";
-import backendUrl from "src/constants/backendUrl";
 
 function Chat() {
-    const [selectedChat, setSelectedChat] = useState<ChatInfoDTO | null>(null);
+    const [selectedChat, setSelectedChat] = useState<Chat_ChatUsersDTO | null>(null);
     const [selectedMember, setSelectedMember] = useState<ChatUserDTO | null>(null);
+    const [activeChat, setActiveChat] = useState<Chat_CompleteDTO | null>(null);
+    const [chats, setChats] = useState<Chat_ChatUsersDTO[]>(null);
+    const [updateTrigger, setUpdateTrigger] = useState(false);
+	const socket = useContext(SocketContext);
 
-    // to do: move this to a central position after successful auth
-    //const socket = io(process.env.REACT_APP_CHAT_URL);
-    // to do temp
+	// remove selectedCHat. actually prolly only good in combo with provider
+	// update activechat if updatemessage.id === activechat.id
+	// maybe chat provider
+	// add names here to complete chat
 
-    const [chats, setChats] = useState<ChatInfoDTO[]>(null);
-    const apiUrl = backendUrl.chat + "my_chats";
+    useEffect(() => {
+        if (!socket) return;
 
-    function selectChat(newChat: ChatInfoDTO) {
+        const handleNewChatMessage = (message: any) => {
+            alert(`New chat message: ${message.content}`);
+			setUpdateTrigger(prev => !prev);
+        };
+        socket.on("updateMessage", handleNewChatMessage);
+
+        return () => {
+            socket.off("updateMessage", handleNewChatMessage);
+        };
+    }, [socket]);
+
+    function selectChat(newChat: Chat_ChatUsersDTO) {
         setSelectedChat(newChat);
         setSelectedMember(null);
     }
 
     useEffect(() => {
-        fetchGetSet<ChatInfoDTO[]>(apiUrl, setChats);
-    }, [apiUrl]);
+        const apiUrl = backendUrl.chat + "my_chats";
+        fetchGetSet<Chat_ChatUsersDTO[]>(apiUrl, setChats);
+    }, [updateTrigger]);
+
+    useEffect(() => {
+        if (!selectedChat) return;
+        const apiUrl = backendUrl.chat + `complete_chat/${selectedChat.id}`;
+        fetchGetSet<Chat_CompleteDTO>(apiUrl, setActiveChat);
+    }, [selectedChat, updateTrigger]);
 
     if (!chats) return <LoadingH2 elementName={"Chat"} />;
 
@@ -38,14 +65,8 @@ function Chat() {
         <div className="mainContainerColumn">
             <div className="h2">{selectedChat ? selectedChat.name : "Chat"}</div>
             <div className="chatMain">
-                <LeftBar
-                    selectedChat={selectedChat}
-                    selectChat={selectChat}
-                    chats={chats}
-                />
-
-                <div className="middleBar_0"></div>
-
+                <LeftBar activeChat={activeChat} selectChat={selectChat} chats={chats} />
+                <MiddleBar activeChat={activeChat} />
                 <RightBar
                     selectedChat={selectedChat}
                     selectedMember={selectedMember}

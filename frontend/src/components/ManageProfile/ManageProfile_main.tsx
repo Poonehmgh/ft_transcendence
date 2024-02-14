@@ -23,14 +23,14 @@ function ManageProfile() {
     const [userData, setUserData] = useState<UserProfileDTO | null>(null);
     const [avatarURL, setAvatarURL] = useState(null);
     const fileInputRef = useRef(null);
-    const apiUrl_profile = process.env.REACT_APP_BACKEND_URL + "/user/my_profile";
+    const apiUrl_profile = backendUrl.user + "my_profile";
 
     function handleChooseFileClick() {
         fileInputRef.current.click();
     }
 
     async function fetchAvatar() {
-        const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/my_avatar";
+        const apiUrl = backendUrl.user + "my_avatar";
         try {
             const response = await fetch(apiUrl, {
                 method: "GET",

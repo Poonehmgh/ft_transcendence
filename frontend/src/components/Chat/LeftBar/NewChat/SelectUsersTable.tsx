@@ -68,6 +68,7 @@ function SelectUsersTable(props: selectUsersTableProps): React.JSX.Element {
                                 <tr
                                     key={index}
                                     onClick={() => handleUserSelection(user.id)}
+                                    style={{ cursor: "default" }}
                                 >
                                     <td style={{ width: "30px", textAlign: "center" }}>
                                         {user.online ? "🟢" : "🔴"}
