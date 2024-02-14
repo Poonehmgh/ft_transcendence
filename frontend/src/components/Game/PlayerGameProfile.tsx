@@ -8,7 +8,7 @@ function PlayerGameProfile(props) {
 
   return (
     <>
-      {user ? (
+      {user && secondUser ? (
         <table className="PlayerGameProfile game-profile">
           <tbody>
             <tr>

@@ -32,7 +32,7 @@ function OpponentPlank(props) {
       {newRound ? (
         <div className="plank" style={plankStyle} />
       ) : (
-        <div className="plank" style={plankStyle} />
+        <></>
       )}
     </>
   );

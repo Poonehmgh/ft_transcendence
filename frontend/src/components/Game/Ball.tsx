@@ -20,7 +20,7 @@ function Ball(props) {
       
       setBallPosition([
         0.54 * x + 95.5,
-        0.54 * y + 1.5
+        0.54 * y + 1.5,
       ]);
 
     }
@@ -33,7 +33,7 @@ function Ball(props) {
 
       setBallPosition([
         0.54 * x2 + 95.5,
-        0.54 * y2 + 1.5
+        0.54 * y2 + 1.5,
       ]);
     }
   }, [gameUpdate]);
@@ -51,7 +51,7 @@ function Ball(props) {
       {newRound ? (
         <div className="ball" style={ballStyle} />
       ) : (
-        <div className="ball" style={ballStyle} />
+        <></>
       )}
     </>
   );
