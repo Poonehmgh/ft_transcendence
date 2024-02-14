@@ -53,7 +53,7 @@ export class ChatGatewayService {
         this.connectedUsers.filter(
             (userGateway) => userGateway.userID !== userIDToDelete
         );
-        console.log("deleteUserFromList:", this.connectedUsers);
+        //console.log("deleteUserFromList:", this.connectedUsers);
     }
 
     addUserToList(user: userGateway) {
