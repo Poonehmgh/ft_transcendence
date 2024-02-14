@@ -5,14 +5,14 @@ import { SocketContext } from "src/contexts/SocketProvider";
 import { AuthContext } from "src/contexts/AuthProvider";
 
 // DTO
-import { ChatInfoDTO, SendMessageDTO } from "src/dto/chat-dto";
+import { Chat_ChatUsersDTO, SendMessageDTO } from "src/dto/chat-dto";
 
 // CSS
 import "src/styles/chat.css";
 import "src/styles/style.css";
 
 interface messageInputProps {
-    selectedChat: ChatInfoDTO | null;
+    selectedChat: Chat_ChatUsersDTO | null;
 }
 
 function MessageInput(props: messageInputProps): React.JSX.Element {

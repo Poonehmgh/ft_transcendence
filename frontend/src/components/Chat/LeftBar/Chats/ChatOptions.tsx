@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import backendUrl from "src/constants/backendUrl";
 
 // DTO
-import { ChatInfoDTO } from "src/dto/chat-dto";
+import { Chat_ChatUsersDTO } from "src/dto/chat-dto";
 import { fetchGet, fetchX, sanitizeInput } from "src/functions/utils";
 
 // CSS
@@ -10,7 +10,7 @@ import "src/styles/chat.css";
 import "src/styles/style.css";
 
 interface chatOptionsProps {
-    selectedChat: ChatInfoDTO | null;
+    selectedChat: Chat_ChatUsersDTO | null;
 }
 
 function ChatOptions(props: chatOptionsProps): React.JSX.Element {

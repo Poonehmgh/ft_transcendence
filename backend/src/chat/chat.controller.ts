@@ -24,8 +24,20 @@ export class ChatController {
     // Getters
 
     @Get("my_chats")
-    async getMyChats(@Req() req: AuthenticatedRequest) {
-        return this.chatService.getUsersChats(req.user.id);
+    async getMyChats(@Req() req: AuthenticatedRequest, @Res() res) {
+        try {
+            const result = await this.chatService.getUsersChats(req.user.id);
+            if (result instanceof Error) {
+                res.status(500).json({ error: result.message });
+            } else if ("error" in result) {
+                res.status(500).json({ error: result.error });
+            } else {
+                res.status(200).json(result);
+            }
+        } catch (error) {
+            console.error("Error getLatestMessages:", error);
+            res.status(500).json({ error: "Internal Server Error" });
+        }
     }
 
     //Give 0,0 for first 50 messages
@@ -77,6 +89,27 @@ export class ChatController {
             res.json({ name: chatName });
         } catch (error) {
             console.error("Error getChatName:", error);
+            res.status(500).json({ error: "Internal Server Error" });
+        }
+    }
+
+    @Get("complete_chat/:chatId")
+    async getCompleteChat(
+        @Param("chatId") chatId: number,
+        @Req() req: AuthenticatedRequest,
+        @Res() res
+    ) {
+        try {
+            const result = await this.chatService.getCompleteChat(chatId);
+            if (result instanceof Error) {
+                res.status(500).json({ error: result.message });
+            } else if ("error" in result) {
+                res.status(500).json({ error: result.error });
+            } else {
+                res.status(200).json(result);
+            }
+        } catch (error) {
+            console.error("Error getCompleteChat:", error);
             res.status(500).json({ error: "Internal Server Error" });
         }
     }

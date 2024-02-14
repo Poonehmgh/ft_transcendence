@@ -4,12 +4,13 @@ import { ChatGatewayService } from "./chat.gateway.service";
 import { UserService } from "src/user/user.service";
 
 import {
-    ChatWithChatUsers,
+    Chat_ChatUser,
     ChatInfoDTO,
     ChatUserDTO,
     MessageListElementDTO,
     NewChatDTO,
     MessageDTO,
+    ChatDTO,
 } from "./chat.DTOs";
 
 @Injectable()
@@ -66,10 +67,11 @@ export class ChatService {
                 },
                 include: {
                     chatUsers: true,
+                    messages: true,
                 },
             });
 
-            return chats.map((chat: ChatWithChatUsers) => {
+            return chats.map((chat: Chat_ChatUser) => {
                 return {
                     id: chat.id,
                     name: chat.name || "Unnamed Chat",
@@ -103,7 +105,7 @@ export class ChatService {
                     chatId: Number(chatId),
                 },
                 orderBy: {
-                    createdAt: "asc",
+                    createdAt: "desc",
                 },
                 take: 50,
             });
@@ -184,7 +186,7 @@ export class ChatService {
     async getPreexistingDmChat(
         userId1: number,
         userId2: number
-    ): Promise<ChatWithChatUsers | null> {
+    ): Promise<Chat_ChatUser | null> {
         const existingChat = await this.prisma.chat.findFirst({
             where: {
                 dm: true,
@@ -212,6 +214,60 @@ export class ChatService {
         });
 
         return chatUsers.map((e) => e.userId);
+    }
+
+    async getCompleteChat(chatId: number): Promise<ChatDTO | Error> {
+        try {
+            const chat = await this.prisma.chat.findUnique({
+                where: {
+                    id: Number(chatId),
+                },
+                include: {
+                    chatUsers: true,
+                    messages: {
+                        orderBy: {
+                            createdAt: "desc",
+                        },
+                        take: 50,
+                    },
+                },
+            });
+
+            if (!chat) {
+                return new Error("Chat not found");
+            }
+
+            return {
+                id: chat.id,
+                name: chat.name || "Unnamed Chat",
+                dm: chat.dm,
+                isPrivate: chat.isPrivate,
+                passwordRequired: !!chat.password,
+                chatUsers: chat.chatUsers.map((chatUser) => {
+                    return {
+                        userId: chatUser.userId,
+                        chatId: chatUser.chatId,
+                        owner: chatUser.owner,
+                        admin: chatUser.admin,
+                        blocked: chatUser.blocked,
+                        muted: chatUser.muted,
+                        mutedUntil: chatUser.muted_until,
+                        invited: chatUser.invited,
+                    };
+                }),
+                messages: chat.messages.reverse().map((message) => {
+                    return {
+                        id: message.id,
+                        timeStamp: message.createdAt,
+                        content: message.content,
+                        authorId: message.author,
+                    };
+                }),
+            };
+        } catch (error) {
+            console.error(`Error in getCompleteChat: ${error.message}`);
+            return new Error("Internal Server Error");
+        }
     }
 
     // Create
@@ -247,7 +303,7 @@ export class ChatService {
                 throw { message: "DM must have exactly 2 users" };
             }
 
-            const preexistingDmChat: ChatWithChatUsers = await this.getPreexistingDmChat(
+            const preexistingDmChat: Chat_ChatUser = await this.getPreexistingDmChat(
                 newChatDto.userIds[0],
                 newChatDto.userIds[1]
             );

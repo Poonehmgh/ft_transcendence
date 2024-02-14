@@ -3,23 +3,21 @@ import MessageInput from "./MessageInput";
 import MessageDisplay from "./MessageDisplay";
 
 // DTO
-import { ChatInfoDTO } from "src/dto/chat-dto";
+import { Chat_ChatUsersDTO, Chat_Complete } from "src/dto/chat-dto";
 
 // CSS
 import "src/styles/chat.css";
 import "src/styles/style.css";
 
 interface middleBarProps {
-    selectedChat: ChatInfoDTO | null;
+    activeChat: Chat_Complete | null;
 }
 
 function MiddleBar(props: middleBarProps): React.JSX.Element {
     return (
         <div className="middleBar">
-            <MessageDisplay
-                selectedChat={props.selectedChat}
-            />
-            <MessageInput selectedChat={props.selectedChat} />
+            <MessageDisplay activeChat={props.activeChat} />
+            <MessageInput selectedChat={props.activeChat} />
         </div>
     );
 }

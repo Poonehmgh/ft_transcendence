@@ -6,7 +6,7 @@ import {
     IsOptional,
     IsString,
 } from "class-validator";
-import { Chat, Chat_User } from "@prisma/client";
+import { Chat, Chat_User, Message } from "@prisma/client";
 
 export class CreateNewChatDTO {
     name: string;
@@ -30,8 +30,13 @@ export class CreateNewChatDTO {
     }
 }
 
-export interface ChatWithChatUsers extends Chat {
+export interface Chat_ChatUser extends Chat {
     chatUsers: Chat_User[];
+}
+
+export interface Chat_complete extends Chat {
+    chatUsers: Chat_User[];
+    messages: Message[];
 }
 
 export class ChatListDTO {
@@ -161,7 +166,7 @@ export class ChatInfoDTO {
         this.chatUsers = chatUsers;
     }
 
-    static fromChat(chat: ChatWithChatUsers): ChatInfoDTO {
+    static fromChat(chat: Chat_ChatUser): ChatInfoDTO {
         return new ChatInfoDTO(
             chat.id,
             chat.name,
@@ -178,6 +183,34 @@ export class ChatInfoDTO {
                 invited: chatUser.invited,
             }))
         );
+    }
+}
+
+export class ChatDTO {
+    id: number;
+    name: string;
+    dm: boolean;
+    isPrivate: boolean;
+    passwordRequired: boolean;
+    chatUsers: ChatUserDTO[];
+    messages: MessageDTO[];
+
+    constructor(
+        id: number,
+        name: string,
+        dm: boolean,
+        isPrivate: boolean,
+        passwordRequired: boolean,
+        chatUsers: ChatUserDTO[],
+        messages: MessageDTO[]
+    ) {
+        this.id = id;
+        this.name = name;
+        this.dm = dm;
+        this.isPrivate = isPrivate;
+        this.passwordRequired = passwordRequired;
+        this.chatUsers = chatUsers;
+        this.messages = messages;
     }
 }
 

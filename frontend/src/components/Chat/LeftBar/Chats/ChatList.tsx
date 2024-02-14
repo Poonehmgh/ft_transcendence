@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 // DTO
-import { ChatInfoDTO } from "src/dto/chat-dto";
+import { Chat_ChatUsersDTO } from "src/dto/chat-dto";
 import { fetchGet } from "src/functions/utils";
 
 // CSS
@@ -9,9 +9,9 @@ import "src/styles/chat.css";
 import "src/styles/style.css";
 
 interface chatListProps {
-    selectedChat: ChatInfoDTO;
-    onSelectChat: (chat: ChatInfoDTO) => void;
-    chats: ChatInfoDTO[];
+    selectedChat: Chat_ChatUsersDTO;
+    onSelectChat: (chat: Chat_ChatUsersDTO) => void;
+    chats: Chat_ChatUsersDTO[];
 }
 
 function ChatList(props: chatListProps): React.JSX.Element {
@@ -35,7 +35,7 @@ function ChatList(props: chatListProps): React.JSX.Element {
         fetchChatNames();
     }, [props.chats]);
 
-    function selectChat(chat: ChatInfoDTO) {
+    function selectChat(chat: Chat_ChatUsersDTO) {
         props.onSelectChat(chat);
     }
 

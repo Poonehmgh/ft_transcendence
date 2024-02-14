@@ -1,28 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { fetchGetSet } from "src/functions/utils";
-import LoadingH2 from "src/components/shared/LoadingH2";
-import backendUrl from "src/constants/backendUrl";
+import React from "react";
 
 // DTO
-import { ChatInfoDTO, MessageDTO } from "src/dto/chat-dto";
+import { Chat_ChatUsersDTO, Chat_Complete, MessageDTO } from "src/dto/chat-dto";
 
 // CSS
 import "src/styles/chat.css";
 import "src/styles/style.css";
 
 interface messageDisplayProps {
-    selectedChat: ChatInfoDTO | null;
+    activeChat: Chat_Complete | null;
 }
 
 function MessageDisplay(props: messageDisplayProps): React.JSX.Element {
-    const [chatMessages, setChatMessages] = useState<MessageDTO[]>(null);
-    const apiUrl = backendUrl.chat + `latest_messages/${props.selectedChat?.id}`;
-
-    useEffect(() => {
-        if (!props.selectedChat) return;
-        fetchGetSet<MessageDTO[]>(apiUrl, setChatMessages);
-    }, [props.selectedChat, apiUrl]);
-
     const formatTime = (timeStamp: Date): string => {
         const date = new Date(timeStamp);
         return date.toLocaleTimeString([], {
@@ -32,11 +21,11 @@ function MessageDisplay(props: messageDisplayProps): React.JSX.Element {
         });
     };
 
-    if (!chatMessages) return <LoadingH2 elementName={"Messages"} />;
+    if (!props.activeChat.messages) return null;
 
     return (
         <div className="messagesArea">
-            {chatMessages.map((message, index) => (
+            {props.activeChat.messages.map((message, index) => (
                 <div key={index} className="messageFlexStart">
                     <span className="timeStamp">{formatTime(message.timeStamp)}</span>
                     <span className="author">{message.authorId}</span>

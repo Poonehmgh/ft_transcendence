@@ -3,10 +3,10 @@ import { fetchGet, fetchGetSet } from "src/functions/utils";
 import backendUrl from "src/constants/backendUrl";
 
 // DTO
-import { ChatInfoDTO, ChatUserDTO } from "src/dto/chat-dto";
+import { Chat_ChatUsersDTO, ChatUserDTO } from "src/dto/chat-dto";
 
 interface membersProps {
-    selectedChat: ChatInfoDTO | null;
+    selectedChat: Chat_ChatUsersDTO | null;
     onSelectMember: (member: ChatUserDTO) => void;
 }
 

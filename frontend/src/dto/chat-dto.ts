@@ -67,11 +67,21 @@ export class InviteUserDTO {
     }
 }
 
-export class ChatInfoDTO {
+export class Chat_ChatUsersDTO {
     id: number;
     name: string;
     dm: boolean;
     isPrivate: boolean;
     passwordRequired: boolean;
+    chatUsers: ChatUserDTO[];
+}
+
+export class Chat_Complete {
+    id: number;
+    name: string;
+    dm: boolean;
+    isPrivate: boolean;
+    passwordRequired: boolean;
+    messages: MessageDTO[];
     chatUsers: ChatUserDTO[];
 }
