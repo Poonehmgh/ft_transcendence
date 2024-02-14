@@ -3,11 +3,14 @@ import {PrismaService} from "../prisma/prisma.service";
 import {AuthDto} from "./dto/auth.dto";
 import * as bcrypt from "bcrypt";
 import {JwtService} from "@nestjs/jwt";
-import {jwtSecret} from "../utils/constants"
+import {jwtSecret, jwtExpire} from "../utils/constants"
 import {Request, Response} from "express"
 import {TwoFaCodeDto, TwoFaDto} from "./dto/2fa.dto";
 import {authenticator} from "otplib"; //chek
 import * as QRCode from "qrcode"
+import {User_42} from "./interfaces/user_42.interface";
+import { User } from '@prisma/client';
+
 
 export type signInReturn = {
     qrcode?: any,
@@ -19,9 +22,40 @@ export type signInReturn = {
 export class AuthService {
     constructor(private prisma: PrismaService, private jwt: JwtService) {}
 
+    //registers and/or finds the user in db and returns it.
+    async signin(user: User_42): Promise<User>{
+
+        if (!user)
+            throw new BadRequestException("Unauthenticated user.");
+
+        let foundUser = await this.findUserByEmail(user.email);
+
+        if (!foundUser)
+            foundUser = await this.registerUser(user);
+
+        return foundUser;
+    }
+
+    async signin_token(response: Response, user: User){
+
+        const newToken = await this.generateJwtToken({
+            email: user.email,
+            id: user.id,
+            name: user.name,
+            twoFa: false,
+        });
+
+        response.cookie("token", newToken);
+        //302: Found, temporary redirect.
+        response.status(302).redirect("http://localhost:3000/home");
+        return response;
+    }
+
+
+
+
     async ftSignin(user): Promise<signInReturn>
     {
-        console.log("USER? ", user);
         if (!user)
             throw new BadRequestException("Unauthenticated user.");
         let foundUser = await this.findUserByEmail(user.email);
@@ -47,6 +81,7 @@ export class AuthService {
                 email: foundUser.email,
                 id: foundUser.id,
                 name: foundUser.name,
+                twoFa: false,
             })
         return {
             newToken,
@@ -92,13 +127,16 @@ export class AuthService {
         return foundUser;
     }
 
-    async generateJwtToken(payload) {
-        const token = await this.jwt.signAsync(payload, { secret: jwtSecret });
+    async generateJwtToken(payload: {id: number, email: string, name: string, twoFa: boolean}) {
+        const token = await this.jwt.signAsync(payload,
+            {
+                secret: jwtSecret,
+                // expiresIn: jwtExpire
+            });
         if (!token) {
             throw new ForbiddenException();
         }
 
-        // added this, pls give blessing, Pooneh
         await this.prisma.user.update({
             where: { id: payload.id },
             data: { online: true },
@@ -119,7 +157,7 @@ export class AuthService {
                 where: {id: foundUser.id},
                 data: {twoFa: false, twoFaSecret:secretKey},
             })
-            const newToken = await this.generateJwtToken({mail: foundUser.email, id: foundUser.id, name: foundUser.name, twoFa: true});
+            const newToken = await this.generateJwtToken({email: foundUser.email, id: foundUser.id, name: foundUser.name, twoFa: true});
             return {
                 qrcode,
                 url,
@@ -144,7 +182,7 @@ export class AuthService {
                 where: {id: foundUser.id},
                 data: {twoFa: false, twoFaSecret:''},
             })
-            const newToken = await this.generateJwtToken({mail: foundUser.email, id: foundUser.id, name: foundUser.name, twoFa: false});
+            const newToken = await this.generateJwtToken({email: foundUser.email, id: foundUser.id, name: foundUser.name, twoFa: false});
             return {
                 newToken,
             }
@@ -182,7 +220,7 @@ export class AuthService {
     async generateTwoFaQRCode(user, secret){
         const url = await this.otpAuthUrl(user.email, secret);
         const qrcode = await this.generateQRCode(url);
-        console.log("QR url", qrcode );
+
         return {
             qrcode,
             url,

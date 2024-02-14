@@ -1,4 +1,4 @@
-import {Controller, Post, Get, Body, Req, Res, UseGuards} from '@nestjs/common';
+import {Controller, Post, Get, Body, Req, Res, UseGuards, Logger} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {AuthDto} from "./dto/auth.dto";
 import {ftAuthGuard} from "./guards/intra_42.guard";
@@ -8,44 +8,52 @@ import {TwoFaDto} from "./dto/2fa.dto";
 import {TwoFaCodeDto} from "./dto/2fa.dto";
 import * as cookieParser from "cookie-parser"; // for testing the cookies in the request object
 import {signInReturn} from "./auth.service";
+import {Public} from "./decorator/public.decorator";
+import {User_42} from "./interfaces/user_42.interface"
+import { User } from '@prisma/client';
+import {TwoFactorService} from './twofa/twofa.service';
+
+
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
-  // @Post("signup")
-  // signup(@Body() dto: AuthDto){
-  //   return this.authService.signup(dto);
-  // }
+  constructor(
+      private readonly authService: AuthService,
+      private readonly twofaService: TwoFactorService) {}
 
-  // @Post("signin")
-  // signin(@Body() dto: AuthDto, @Req() req, @Res() res){
-  //   return this.authService.signin(dto, req, res);
-  // }
-  // @Get("signout")
-  // signout(){
-  //   return this.authService.signout();
-  // }
+
+  @Public()
   @Get("/42/login")
   @UseGuards(ftAuthGuard)
   ftOAuth(){
-    return {"msg": "this is returned when something is wrong with the guards.;"}
   }
 
+  @Public()
   @Get("/42/redirect")
   @UseGuards(ftAuthGuard)
-  async ftRedirect(@Req() req, @Res() res: Response){
-    const {url, newToken}: signInReturn = await this.authService.ftSignin(req.user);
+  async ftRedirect(@Req() req: Request, @Res() res: Response) {
 
-    if (url != undefined)
-      res.cookie("url", url);
-    res.cookie("token", newToken, {
-      // httpOnly: true,
-      // sameSite: 'strict',
-    });
-    if (req.user.twoFa)
-      res.redirect("http://localhost:3000/2fa")
-    else
-      res.redirect("http://localhost:3000/home");
+    const user: User = await this.authService.signin(req.user as User_42);
+
+    const {email, twoFa} = user;
+
+    return twoFa ? this.twofaService.signin2Fa(res, user)
+        : this.authService.signin_token(res, user);
   }
+
+
+
+
+    //   if (url != undefined)
+  //     res.cookie("url", url);
+  //   res.cookie("token", newToken, {
+  //     // httpOnly: true,
+  //     // sameSite: 'strict',
+  //   });
+  //   if (req.user.twoFa)
+  //     res.redirect("http://localhost:3000/2fa")
+  //   else
+  //     res.redirect("http://localhost:3000/home");
+  // }
 
   @Get("/42/test")
   @UseGuards(JwtAuthGuard)
