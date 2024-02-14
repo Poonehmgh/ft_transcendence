@@ -1,7 +1,7 @@
 import React from "react";
 
 // DTO
-import { Chat_ChatUsersDTO, Chat_Complete, MessageDTO } from "src/dto/chat-dto";
+import { Chat_Complete } from "src/dto/chat-dto";
 
 // CSS
 import "src/styles/chat.css";
