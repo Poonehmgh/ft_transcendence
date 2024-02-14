@@ -10,12 +10,6 @@ import {Public} from "../decorator/public.decorator";
 export class TwoFaController{
     constructor(private twoFAservice: TwoFactorService){}
 
-    @Post("activate")
-    @UseGuards(ftAuthGuard)
-    async activate2fa(@Body() twoFaDto: TwoFaCodeDto){
-        const {code, email} = twoFaDto;
-        return this.twoFAservice.activate2Fa(code, email);
-    }
 
     /*generates & saves secret code and sends back the qrUrl*/
     @Post("/generate")
@@ -25,6 +19,13 @@ export class TwoFaController{
         response.status(200).json({qrUrl});
     }
 
+    /*activates 2fa in db*/
+    @Post("activate")
+    @UseGuards(ftAuthGuard)
+    async activate2fa(@Body() twoFaDto: TwoFaCodeDto){
+        const {code, email} = twoFaDto;
+        return this.twoFAservice.activate2Fa(code, email);
+    }
 
     /*signing in with 2fa*/
     @Public()
@@ -32,6 +33,13 @@ export class TwoFaController{
     async authenticate2fa(@Req() request: Request, @Res() response: Response, @Body() twoFaCodeDto: TwoFaCodeDto){
         const {code, email} = twoFaCodeDto;
         return this.twoFAservice.authenticate2Fa(code, email);
+    }
+
+    /*deactivate 2fa*/
+    @Post("/deactivate")
+    async deactivate2fa(@Body() twoFaDto: TwoFaCodeDto){
+        const {code, email} = twoFaDto;
+        return this.twoFAservice.deactivate2Fa(code, email);
     }
 
 

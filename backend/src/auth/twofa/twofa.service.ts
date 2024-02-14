@@ -97,5 +97,28 @@ export class TwoFactorService {
         }
 
 
+        async deactivate2Fa(code: string, email: string) {
+            const foundUser = await this.authservice.findUserByEmail(email);
+            if (!foundUser)
+                throw new BadRequestException("Deactivate2Fa: No such user found.");
+            if (authenticator.verify({
+                token: code,
+                secret:foundUser.twoFaSecret }))
+            {
+                const updateUser = await this.prisma.user.update({
+                    where: {id: foundUser.id},
+                    data: {twoFa: false, twoFaSecret:''},
+                })
+                const newToken = await this.authservice.generateJwtToken({email: foundUser.email, id: foundUser.id, name: foundUser.name, twoFa: false});
+                return {
+                    newToken,
+                }
+            }
+            else
+                throw new BadRequestException("Deactivate2Fa: Code not valid")
+
+        }
+
+
 
 }
