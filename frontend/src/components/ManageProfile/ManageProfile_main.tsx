@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import ManageContactsTabs from "./ManageContactsTabs";
 import PlayerCardTable from "../shared/PlayerCardTable";
+import { useNavigate } from "react-router-dom";
 import {
     fetchGetSet,
     authHeader,
@@ -88,12 +89,13 @@ function ManageProfile() {
         }
     }
 
-	async function handleLogout() {
-		const apiUrl = backendUrl.auth + "42/logout"
-		const res = await fetchX<{message: string}>("POST", apiUrl, null);
-		document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
-		alert(res.message);
-	}
+    async function handleLogout() {
+        const apiUrl = backendUrl.user + "logout";
+        const res = await fetchX<{ message: string }>("PATCH", apiUrl, null);
+        document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
+        alert(res.message);
+        window.location.href = "/home";
+    }
 
     if (!userData) return <LoadingH2 elementName={"Manage your profile"} />;
 
@@ -101,8 +103,6 @@ function ManageProfile() {
         <div className="mainContainerColumn" style={{ alignItems: "center" }}>
             <div className="h2">Manage your profile</div>
             <div className="manageProfile">
-			<button className="bigButton" onClick={handleLogout}>Logout 🚪</button>
-
                 <div className="leftAligner">
                     <div
                         className="h2Left"
@@ -115,6 +115,10 @@ function ManageProfile() {
                         {userData.name}
                         <button className="editName" onClick={handleNameChange}>
                             ✎
+                        </button>
+                        <div style={{ width: "100%" }}></div>
+                        <button className="logoutButton" onClick={handleLogout}>
+                            <img src="images/logout.png" alt="Logout" height={"30px"} />
                         </button>
                     </div>
                 </div>

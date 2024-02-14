@@ -120,6 +120,23 @@ export class UserController {
 
     // profile management
 
+    @Patch("logout")
+    async logout(@Req() req: AuthenticatedRequest, @Res() res: Response) {
+        try {
+            const result = await this.userService.logout(req.user.id);
+            if (result instanceof Error) {
+                res.status(500).json({ error: result.message });
+            } else if ("error" in result) {
+                res.status(500).json({ error: result.error });
+            } else {
+                res.status(200).json(result);
+            }
+        } catch (error) {
+            console.error("Error getCompleteChat:", error);
+            res.status(500).json({ error: "Internal Server Error" });
+        }
+    }
+
     @Patch("change_name")
     async changeName(
         @Req() req: AuthenticatedRequest,

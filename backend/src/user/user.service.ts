@@ -345,6 +345,21 @@ export class UserService {
         }
     }
 
+    async logout(thisId: number) {
+        try {
+            await this.prisma.user.update({
+                where: { id: thisId },
+                data: {
+                    online: false,
+                },
+            });
+            return { success: true, message: "Logged out" };
+        } catch (error) {
+            console.error(`Error in logout: ${error.message}`);
+            throw error;
+        }
+    }
+
     // friend management
 
     async sendFriendReq(thisId: number, otherId: number) {
