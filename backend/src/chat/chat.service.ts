@@ -9,6 +9,7 @@ import {
     ChatUserDTO,
     MessageListElementDTO,
     NewChatDTO,
+    MessageDTO,
 } from "./chat.DTOs";
 
 @Injectable()
@@ -95,6 +96,32 @@ export class ChatService {
         }
     }
 
+    async getLatestMessages(chatId: number) {
+        try {
+            const messages = await this.prisma.message.findMany({
+                where: {
+                    chatId: Number(chatId),
+                },
+                orderBy: {
+                    createdAt: "asc",
+                },
+                take: 50,
+            });
+
+            return messages.map((message) => {
+                return new MessageDTO(
+                    message.id,
+                    message.createdAt,
+                    message.content,
+                    message.author
+                );
+            });
+        } catch (error) {
+            console.error(`Error in getLatestMessages: ${error.message}`);
+            return new Error("Internal Server Error");
+        }
+    }
+
     async getChatUsers(chatId: number): Promise<ChatUserDTO[]> {
         try {
             return await this.prisma.chat_User.findMany({
@@ -146,6 +173,7 @@ export class ChatService {
                 });
             }
         } catch {
+            console.log("Error in getMessagesbyRange:", Error);
             return {
                 StatusCode: HttpStatus.BAD_REQUEST,
                 message: "Error with DB",

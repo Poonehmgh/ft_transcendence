@@ -1,11 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { fetchGetSet } from "src/functions/utils";
 import LoadingH2 from "src/components/shared/LoadingH2";
 import backendUrl from "src/constants/backendUrl";
-import MessageInput from "./MessageInput";
 
 // DTO
-import { ChatInfoDTO, MessageListElementDTO as MessageDTO } from "src/dto/chat-dto";
+import { ChatInfoDTO, MessageDTO } from "src/dto/chat-dto";
 
 // CSS
 import "src/styles/chat.css";
@@ -16,17 +15,36 @@ interface messageDisplayProps {
 }
 
 function MessageDisplay(props: messageDisplayProps): React.JSX.Element {
-    const [chatmessages, setChatMessages] = useState<MessageDTO[]>(null);
-    const apiUrl = backendUrl.chat + `${props.selectedChat?.id}/messages?from=0&to=0`;
+    const [chatMessages, setChatMessages] = useState<MessageDTO[]>(null);
+    const apiUrl = backendUrl.chat + `latest_messages/${props.selectedChat?.id}`;
 
     useEffect(() => {
+        if (!props.selectedChat) return;
         fetchGetSet<MessageDTO[]>(apiUrl, setChatMessages);
-    }, [apiUrl]);
+    }, [props.selectedChat, apiUrl]);
 
-    if (!chatmessages) return <LoadingH2 elementName={"Chat"} />;
+    const formatTime = (timeStamp: Date): string => {
+        const date = new Date(timeStamp);
+        return date.toLocaleTimeString([], {
+            hour12: false,
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+    };
+
+    if (!chatMessages) return <LoadingH2 elementName={"Messages"} />;
+    console.log("chatMessages", chatMessages);
 
     return (
-            <div className="messageDiv"></div>
+        <div className="messagesArea">
+            {chatMessages.map((message, index) => (
+                <div key={index} className="message">
+                    <span className="timeStamp">{formatTime(message.timeStamp)} - </span>
+                    <span className="author">{message.authorId}:</span>
+                    <div className="content">{message.content}</div>
+                </div>
+            ))}
+        </div>
     );
 }
 

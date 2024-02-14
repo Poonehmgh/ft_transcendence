@@ -29,6 +29,7 @@ function Chat() {
         const handleNewEvent = (eventName, data) => {
             console.log("Received event:", eventName, "with data:", data);
         };
+        console.log("socket.onAnyhandleNewEvent());")
         socket.onAny(handleNewEvent);
 
         const handleNewChatMessage = (message: any) => {
