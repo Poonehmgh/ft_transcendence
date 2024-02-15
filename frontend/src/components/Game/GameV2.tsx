@@ -23,8 +23,12 @@ function GameV2() {
   const [gameUpdate, setGameUpdate] = useState(null);
   // const [gameResult, setGameResult] = useState(null);
   const [backgroundColor, setBackgroundColor] = useState("default-color");
-  const [infoContainerClass, setInfoContainerClass] = useState("info-container default-color");
-  const [pongContainerClass, setPongContainerClass] = useState("pong-container default-color");
+  const [infoContainerClass, setInfoContainerClass] = useState(
+    "info-container default-color"
+  );
+  const [pongContainerClass, setPongContainerClass] = useState(
+    "pong-container default-color"
+  );
 
   const socket = io("localhost:5500");
 
@@ -51,7 +55,7 @@ function GameV2() {
   }, []);
 
   useEffect(() => {
-    socket.on("queueConfirm", (data) => {
+    const handleQueue = (data) => {
       if (data === "Confirmed") {
         setQueueStatus("In Queue");
       } else if (data === "InvalidID") {
@@ -61,10 +65,12 @@ function GameV2() {
       } else if (data === "Already in game") {
         setQueueStatus("Already In Game");
       }
-    });
+    };
+
+    socket.on("queueConfirm", handleQueue);
 
     return () => {
-      socket.off("queueConfirm");
+      socket.off("queueConfirm", handleQueue);
     };
   }, [socket]);
 
@@ -132,7 +138,7 @@ function GameV2() {
     setIsPlayerOne(null);
     setGameUpdate(null);
     // setGameResult(null);
-  }
+  };
 
   useEffect(() => {
     socket.on("gameResult", (data) => {
@@ -184,7 +190,7 @@ function GameV2() {
         </div>
         <div className="info-player-right">
           {isPlayerOne ? (
-            <PlayerGameProfile user={opponentData} secondUser={userData}/>
+            <PlayerGameProfile user={opponentData} secondUser={userData} />
           ) : (
             <PlayerGameProfile user={userData} secondUser={opponentData} />
           )}
