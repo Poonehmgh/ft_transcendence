@@ -3,14 +3,14 @@ import "../../styles/gamev2.css";
 
 function OpponentPlank(props) {
   const { newRound, gameUpdate, isPlayerOne } = props;
-  const [plankPosition, setPlankPosition] = useState(81); //BE
+  const [plankPosition, setPlankPosition] = useState(81);
 
   useEffect(() => {
     if (newRound) {
       if (isPlayerOne) {
-        setPlankPosition(-0.21 * newRound.PoPositionPlank2 + 81);
+        setPlankPosition(-0.21 * newRound.PositionPlank2 + 81);
       } else {
-        setPlankPosition(-0.21 * newRound.PoPositionPlank1 + 81);
+        setPlankPosition(-0.21 * newRound.PositionPlank1 + 81);
       }
     }
   }, [isPlayerOne, newRound]);
@@ -29,11 +29,9 @@ function OpponentPlank(props) {
 
   return (
     <>
-      {newRound ? (
-        <div className="plank" style={plankStyle} />
-      ) : (
-        <></>
-      )}
+      {/* {console.log("Opponent Plank rendered")}
+      {console.log(isPlayerOne)} */}
+      {newRound ? <div className="plank" style={plankStyle} /> : <></>}
     </>
   );
 }
