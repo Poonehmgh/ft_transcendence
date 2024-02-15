@@ -10,7 +10,7 @@ import ManageProfile from "src/components/ManageProfile/ManageProfile_main";
 import Home from "./Home/Home_main";
 import { getTokenFromCookie, isTokenValid } from "src/functions/utils";
 import Message from "src/components/shared/Message";
-
+import Auth from "src/components/Home/Auth";
 
 
 
@@ -25,6 +25,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/home" element={<Home />} />
+                    <Route path="/auth" element={<Auth />} /> {/*added this line*/}
                     {validToken ? (
                         <>
                             <Route path="/leaderboard" element={<Leaderboard />} />
