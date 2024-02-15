@@ -54,6 +54,7 @@ function MessageInput(): React.JSX.Element {
                 type="text"
                 className="textInput"
                 placeholder="Type a message..."
+                style={{ borderRadius: "0px 0px 0px 8px" }}
             />
             <button
                 className="bigButton"

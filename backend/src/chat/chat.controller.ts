@@ -40,6 +40,23 @@ export class ChatController {
         }
     }
 
+    @Get("public_chats")
+    async getPublicChats(@Req() req: AuthenticatedRequest, @Res() res) {
+        try {
+            const result = await this.chatService.getPublicChats(req.user.id);
+            if (result instanceof Error) {
+                res.status(500).json({ error: result.message });
+            } else if ("error" in result) {
+                res.status(500).json({ error: result.error });
+            } else {
+                res.status(200).json(result);
+            }
+        } catch (error) {
+            console.error("Error getPublicChats:", error);
+            res.status(500).json({ error: "Internal Server Error" });
+        }
+    }
+
     @Get("latest_messages/:chatId")
     async getLatestMessages(@Param("chatId") chatId: number, @Res() res) {
         try {

@@ -77,3 +77,11 @@ export class ChatDTO {
     chatUsers: ExtendedChatUserDTO[];
     messages: MessageDTO[];
 }
+
+export class BasicChatDTO {
+    id: number;
+    name: string;
+    dm: boolean;
+    isPrivate: boolean;
+    passwordRequired: boolean;
+}

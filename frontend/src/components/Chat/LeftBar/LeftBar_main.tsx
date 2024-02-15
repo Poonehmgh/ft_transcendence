@@ -8,6 +8,7 @@ import { Chat_ChatUsersDTO } from "src/dto/chat-dto";
 // CSS
 import "src/styles/chat.css";
 import "src/styles/style.css";
+import PublicChats from "./PublicChats/PublicChats_main";
 
 interface leftBarProps {
     chats: Chat_ChatUsersDTO[];
@@ -16,8 +17,10 @@ interface leftBarProps {
 function LeftBar(props: leftBarProps): React.JSX.Element {
     return (
         <div className="sideBar">
-            <NewChat />
-
+            <div className="leftBarButtonContainer">
+                <PublicChats />
+                <NewChat />
+            </div>
             <Chats chats={props.chats} />
         </div>
     );

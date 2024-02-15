@@ -2,6 +2,8 @@ import React, { useContext, useRef, useState } from "react";
 import Modal from "react-modal";
 import CreateChatControls from "./CreateChatControls";
 import { fetchX } from "src/functions/utils";
+import SelectUsersTable from "./SelectUsersTable";
+import backendUrl from "src/constants/backendUrl";
 
 // Contexts
 import { ChatContext } from "src/contexts/ChatProvider";
@@ -12,7 +14,6 @@ import { Chat_ChatUsersDTO, NewChatDTO } from "src/dto/chat-dto";
 // CSS
 import "src/styles/modals.css";
 import "src/styles/buttons.css";
-import SelectUsersTable from "./SelectUsersTable";
 
 function NewChat(): React.JSX.Element {
     const { changeActiveChat } = useContext(ChatContext);
@@ -24,7 +25,7 @@ function NewChat(): React.JSX.Element {
         password: null,
         userIds: [],
     });
-    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/chat/create";
+    const apiUrl = backendUrl.chat + "create";
 
     function openModal() {
         setModalIsOpen(true);

@@ -3,7 +3,7 @@ import { PrismaService } from "../prisma/prisma.service";
 import { ChatGatewayService } from "./chat.gateway.service";
 import { UserService } from "src/user/user.service";
 
-import { hashSync } from 'bcryptjs';
+import { hashSync } from "bcryptjs";
 
 import {
     Chat_ChatUser,
@@ -16,6 +16,7 @@ import {
     ExtendedChatUserDTO,
 } from "./chat.DTOs";
 import e from "express";
+import { Chat } from "@prisma/client";
 
 @Injectable()
 export class ChatService {
@@ -55,6 +56,31 @@ export class ChatService {
             return "Unnamed Chat";
         } catch (error) {
             console.error("Error in getChatName:", error);
+            throw error;
+        }
+    }
+
+    async getPublicChats(userId: number): Promise<ChatInfoDTO[]> {
+        try {
+            const unjoinedPublicChats = await this.prisma.chat.findMany({
+                where: {
+                    isPrivate: false,
+                    dm: false,
+                    NOT: {
+                        chatUsers: {
+                            some: {
+                                userId: userId,
+                            },
+                        },
+                    },
+                },
+            });
+
+            return unjoinedPublicChats.map((e: Chat) => {
+                return ChatInfoDTO.fromChat(e);
+            });
+        } catch (error) {
+            console.error(`Error in getPublicChats: ${error.message}`);
             throw error;
         }
     }
@@ -238,9 +264,12 @@ export class ChatService {
             }
 
             const extendedChatUsersPromises = chat.chatUsers.map((chatUser) => {
-                return ExtendedChatUserDTO.fromChatUser(chatUser, this.userService, /* this */);
+                return ExtendedChatUserDTO.fromChatUser(
+                    chatUser,
+                    this.userService /* this */
+                );
             });
-            
+
             const extendedChatUsers = await Promise.all(extendedChatUsersPromises);
             const dynamicChatName = await this.getChatName(chatId, userId);
 

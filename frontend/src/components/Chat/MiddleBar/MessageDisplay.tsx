@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 
 // Contexts
 import { ChatContext } from "src/contexts/ChatProvider";
@@ -12,6 +12,15 @@ import "src/styles/style.css";
 
 function MessageDisplay(): React.JSX.Element {
     const { activeChat } = useContext(ChatContext);
+    const messagesEndRef = useRef(null);
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [activeChat]);
 
     const formatTime = (timeStamp: Date): string => {
         const date = new Date(timeStamp);
@@ -43,6 +52,7 @@ function MessageDisplay(): React.JSX.Element {
                     <div className="content">{e.content}</div>
                 </div>
             ))}
+            <div ref={messagesEndRef} />
         </div>
     );
 }
