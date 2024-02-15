@@ -36,8 +36,10 @@ function MessageDisplay(): React.JSX.Element {
         <div className="messagesArea">
             {activeChat.messages.map((e: MessageDTO) => (
                 <div key={e.id} className="messageFlexStart">
-                    <span className="timeStamp">{formatTime(e.timeStamp)}</span>
-                    <span className="author">{getUserName(e.authorId)}</span>
+                    <div className="nameAndTime">
+                        <div className="timeStamp">{formatTime(e.timeStamp)}</div>
+                        <span className="author">{getUserName(e.authorId)}</span>
+                    </div>
                     <div className="content">{e.content}</div>
                 </div>
             ))}

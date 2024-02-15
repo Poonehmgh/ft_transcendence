@@ -73,11 +73,18 @@
     margin-bottom: 10px;
 }
 
+.nameAndTime {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    box-sizing: border-box;
+}
+
 .messageFlexStart {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
-
     align-items: flex-start;
     background-color: rgb(15, 15, 15);
     border-radius: 8px;
@@ -91,6 +98,7 @@
     color: var(--text-annotation);
     text-align: left;
     min-width: 40px;
+    flex: 0 0 auto;
 }
 
 .author {
@@ -105,7 +113,7 @@
     font-size: medium;
     color: var(--text-primary);
     text-align: left;
-	text-wrap: wrap;
+    text-wrap: wrap;
 }
 
 .sendButton {
