@@ -21,6 +21,7 @@ function GameV2() {
   const [newRound, setNewRound] = useState(null);
   const [isPlayerOne, setIsPlayerOne] = useState(null);
   const [gameUpdate, setGameUpdate] = useState(null);
+  // const [gameResult, setGameResult] = useState(null);
   const [backgroundColor, setBackgroundColor] = useState("default-color");
   const [infoContainerClass, setInfoContainerClass] = useState("info-container default-color");
   const [pongContainerClass, setPongContainerClass] = useState("pong-container default-color");
@@ -71,12 +72,14 @@ function GameV2() {
     if (userData) {
       socket.on("newRound", (data) => {
         setNewRound(data);
-        if (data.userID1 === userData.id) {
-          setIsPlayerOne(true);
-          setOpponentID(data.userID2);
-        } else if (data.userID2 === userData.id) {
-          setIsPlayerOne(false);
-          setOpponentID(data.userID1);
+        if (isPlayerOne === null) {
+          if (data.userID1 === userData.id) {
+            setIsPlayerOne(true);
+            setOpponentID(data.userID2);
+          } else if (data.userID2 === userData.id) {
+            setIsPlayerOne(false);
+            setOpponentID(data.userID1);
+          }
         }
       });
     }
@@ -84,7 +87,7 @@ function GameV2() {
     return () => {
       socket.off("newRound");
     };
-  }, [userData, socket]);
+  }, [userData, socket, isPlayerOne]);
 
   useEffect(() => {
     const fetchOpponentData = async () => {
@@ -106,19 +109,38 @@ function GameV2() {
           console.log(error);
         }
       }
-
-      fetchOpponentData();
     };
+    fetchOpponentData();
   }, [opponentID]);
 
   useEffect(() => {
     socket.on("gameUpdate", (data) => {
       setGameUpdate(data);
-      //When game is over / if(gameUpdate.isGameOver) / reset to hooks basal states
     });
 
     return () => {
       socket.off("gameUpdate");
+    };
+  }, [socket]);
+
+  const resetHooks = () => {
+    setUserData(null);
+    setOpponentID(null);
+    setOpponentData(null);
+    setQueueStatus("Join Queue");
+    setNewRound(null);
+    setIsPlayerOne(null);
+    setGameUpdate(null);
+    // setGameResult(null);
+  }
+
+  useEffect(() => {
+    socket.on("gameResult", (data) => {
+      resetHooks();
+    });
+
+    return () => {
+      socket.off("gameResult");
     };
   }, [socket]);
 
