@@ -40,16 +40,6 @@ export class ChatController {
         }
     }
 
-    //Give 0,0 for first 50 messages
-    @Get(":chatId/messages")
-    async getMessageList(
-        @Param("chatId") chatId: number,
-        @Query("from") from: number,
-        @Query("to") to: number
-    ) {
-        return this.chatService.getMessagesByRange(chatId, from, to);
-    }
-
     @Get("latest_messages/:chatId")
     async getLatestMessages(@Param("chatId") chatId: number, @Res() res) {
         try {
@@ -113,6 +103,16 @@ export class ChatController {
             res.status(500).json({ error: "Internal Server Error" });
         }
     }
+
+      //Give 0,0 for first 50 messages
+      @Get(":chatId/messages")
+      async getMessageList(
+          @Param("chatId") chatId: number,
+          @Query("from") from: number,
+          @Query("to") to: number
+      ) {
+          return this.chatService.getMessagesByRange(chatId, from, to);
+      }
 
     // Manipulate chat
 

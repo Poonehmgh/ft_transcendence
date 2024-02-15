@@ -23,6 +23,7 @@ function MessageDisplay(): React.JSX.Element {
     };
 
     function getUserName(userId: number): string {
+        if (!activeChat || !activeChat.chatUsers) return "Unknown User";
         console.log("activeChat", activeChat);
         const user = activeChat.chatUsers.find(
             (e: ExtendedChatUserDTO) => e.userId === userId
@@ -30,7 +31,7 @@ function MessageDisplay(): React.JSX.Element {
         return user ? user.userName : "Unknown User";
     }
 
-    if (!activeChat) return null;
+    if (!activeChat || !activeChat.messages) return null;
 
     return (
         <div className="messagesArea">

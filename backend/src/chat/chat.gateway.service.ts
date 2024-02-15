@@ -9,7 +9,7 @@ import {
     SendMessageDTO,
 } from "./chat.DTOs";
 import { Socket } from "socket.io";
-import { hashSync } from 'bcryptjs';
+import { hashSync } from "bcryptjs";
 import { userGateway } from "./userGateway";
 
 @Injectable()
@@ -375,16 +375,19 @@ export class ChatGatewayService {
         if (chat) return true;
         return false;
     }
-    async checkIsPossibleToAddInChatWithPassword(inviteForm: InviteUserDTO, inviter: Socket) {
-        if (!await this.isChatPassworded(inviteForm.chatId)) {
+    async checkIsPossibleToAddInChatWithPassword(
+        inviteForm: InviteUserDTO,
+        inviter: Socket
+    ) {
+        if (!(await this.isChatPassworded(inviteForm.chatId))) {
             return true;
         }
         const inviterId: number = this.getUserIdFromSocket(inviter);
-        if(await this.IsUserInChat(inviteForm.chatId, inviterId)){
+        if (await this.IsUserInChat(inviteForm.chatId, inviterId)) {
             return true;
         }
         const hashedPassword = await this.getPasswordFromChat(inviteForm.chatId);
-        if (hashedPassword === hashSync( inviteForm.password, "salt")) {
+        if (hashedPassword === hashSync(inviteForm.password, "salt")) {
             return true;
         }
         return false;

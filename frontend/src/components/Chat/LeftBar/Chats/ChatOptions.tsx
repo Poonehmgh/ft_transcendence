@@ -18,7 +18,7 @@ function ChatOptions(): React.JSX.Element {
     const [hasPassword, setHasPassword] = useState<boolean>(false);
 
     useEffect(() => {
-        if (activeChat) {
+        if (activeChat && activeChat.chatUsers) {
             const userId = parseInt(localStorage.getItem("userId"));
             const thisUser = activeChat.chatUsers.find(
                 (e: ExtendedChatUserDTO) => e.userId === userId
