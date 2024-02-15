@@ -7,6 +7,8 @@ import {
     IsString,
 } from "class-validator";
 import { Chat, Chat_User, Message } from "@prisma/client";
+import { UserService } from "src/user/user.service";
+import { ChatService } from "src/chat/chat.service";
 
 export class CreateNewChatDTO {
     name: string;
@@ -72,6 +74,15 @@ export class MessageDTO {
         this.timeStamp = timeStamp;
         this.content = content;
         this.authorId = authorId;
+    }
+
+    static fromMessage(message: Message): MessageDTO {
+        return new MessageDTO(
+            message.id,
+            message.createdAt,
+            message.content,
+            message.author
+        );
     }
 }
 
@@ -140,6 +151,98 @@ export class ChatUserDTO {
     muted: boolean;
     mutedUntil?: Date;
     invited: boolean;
+
+    constructor(
+        userId: number,
+        chatId: number,
+        owner: boolean,
+        admin: boolean,
+        blocked: boolean,
+        muted: boolean,
+        mutedUntil: Date,
+        invited: boolean
+    ) {
+        this.userId = userId;
+        this.chatId = chatId;
+        this.owner = owner;
+        this.admin = admin;
+        this.blocked = blocked;
+        this.muted = muted;
+        this.mutedUntil = mutedUntil;
+        this.invited = invited;
+    }
+
+    static fromChatUser(chatUser: Chat_User): ChatUserDTO {
+        return new ChatUserDTO(
+            chatUser.userId,
+            chatUser.chatId,
+            chatUser.owner,
+            chatUser.admin,
+            chatUser.blocked,
+            chatUser.muted,
+            chatUser.muted_until,
+            chatUser.invited
+        );
+    }
+}
+
+export class ExtendedChatUserDTO {
+    userId: number;
+    userName?: string | null;
+    chatId: number;
+    chatName?: string | null;
+    owner: boolean;
+    admin: boolean;
+    blocked: boolean;
+    muted: boolean;
+    mutedUntil?: Date | null;
+    invited: boolean;
+
+    constructor(
+        userId: number,
+        userName: string | null,
+        chatId: number,
+        chatName: string | null,
+        owner: boolean,
+        admin: boolean,
+        blocked: boolean,
+        muted: boolean,
+        mutedUntil: Date,
+        invited: boolean
+    ) {
+        this.userId = userId;
+        this.userName = userName;
+        this.chatId = chatId;
+        this.chatName = chatName;
+        this.owner = owner;
+        this.admin = admin;
+        this.blocked = blocked;
+        this.muted = muted;
+        this.mutedUntil = mutedUntil;
+        this.invited = invited;
+    }
+
+    static async fromChatUser(
+        chatUser: Chat_User,
+        userService: UserService,
+        chatService: ChatService
+    ): Promise<ExtendedChatUserDTO> {
+        const userName = await userService.getNameById(chatUser.userId);
+        const chatName = await chatService.getChatName(chatUser.chatId, chatUser.userId);
+
+        return new ExtendedChatUserDTO(
+            chatUser.userId,
+            userName,
+            chatUser.chatId,
+            chatName,
+            chatUser.owner,
+            chatUser.admin,
+            chatUser.blocked,
+            chatUser.muted,
+            chatUser.muted_until,
+            chatUser.invited
+        );
+    }
 }
 
 export class ChatInfoDTO {
@@ -148,13 +251,13 @@ export class ChatInfoDTO {
     dm: boolean;
     isPrivate: boolean;
     passwordRequired: boolean;
-    
+
     constructor(
         id: number,
         name: string,
         dm: boolean,
         isPrivate: boolean,
-        passwordRequired: boolean,
+        passwordRequired: boolean
     ) {
         this.id = id;
         this.name = name;
@@ -163,13 +266,23 @@ export class ChatInfoDTO {
         this.passwordRequired = passwordRequired;
     }
 
-    static fromChat(chat: Chat_ChatUser): ChatInfoDTO {
+    static fromChatDTO(chat: ChatDTO): ChatInfoDTO {
         return new ChatInfoDTO(
             chat.id,
             chat.name,
             chat.dm,
             chat.isPrivate,
-            chat.password ? true : false,
+            chat.passwordRequired
+        );
+    }
+
+    static fromChat(chat: Chat): ChatInfoDTO {
+        return new ChatInfoDTO(
+            chat.id,
+            chat.name,
+            chat.dm,
+            chat.isPrivate,
+            !!chat.password
         );
     }
 }
