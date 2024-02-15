@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import ManageContactsTabs from "./ManageContactsTabs";
 import PlayerCardTable from "../shared/PlayerCardTable";
-import { useNavigate } from "react-router-dom";
 import {
     fetchGetSet,
     authHeader,

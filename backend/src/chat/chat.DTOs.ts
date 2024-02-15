@@ -202,7 +202,7 @@ export class ExtendedChatUserDTO {
         userId: number,
         userName: string | null,
         chatId: number,
-        chatName: string | null,
+       // chatName: string | null,
         owner: boolean,
         admin: boolean,
         blocked: boolean,
@@ -213,7 +213,7 @@ export class ExtendedChatUserDTO {
         this.userId = userId;
         this.userName = userName;
         this.chatId = chatId;
-        this.chatName = chatName;
+        //this.chatName = chatName;
         this.owner = owner;
         this.admin = admin;
         this.blocked = blocked;
@@ -225,16 +225,16 @@ export class ExtendedChatUserDTO {
     static async fromChatUser(
         chatUser: Chat_User,
         userService: UserService,
-        chatService: ChatService
+        //chatService: ChatService
     ): Promise<ExtendedChatUserDTO> {
         const userName = await userService.getNameById(chatUser.userId);
-        const chatName = await chatService.getChatName(chatUser.chatId, chatUser.userId);
+        //const chatName = await chatService.getChatName(chatUser.chatId, chatUser.userId);
 
         return new ExtendedChatUserDTO(
             chatUser.userId,
             userName,
             chatUser.chatId,
-            chatName,
+            //chatName,
             chatUser.owner,
             chatUser.admin,
             chatUser.blocked,

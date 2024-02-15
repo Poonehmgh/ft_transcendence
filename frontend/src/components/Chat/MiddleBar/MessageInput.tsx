@@ -3,30 +3,24 @@ import React, { useContext, useEffect, useRef } from "react";
 // Contexts
 import { SocketContext } from "src/contexts/SocketProvider";
 import { AuthContext } from "src/contexts/AuthProvider";
+import { ChatContext } from "src/contexts/ChatProvider";
 
 // DTO
-import { Chat_ChatUsersDTO, SendMessageDTO } from "src/dto/chat-dto";
+import { SendMessageDTO } from "src/dto/chat-dto";
 
 // CSS
 import "src/styles/chat.css";
 import "src/styles/style.css";
 
-interface messageInputProps {
-    selectedChat: Chat_ChatUsersDTO | null;
-}
-
-function MessageInput(props: messageInputProps): React.JSX.Element {
+function MessageInput(): React.JSX.Element {
     const inputRef = useRef<HTMLInputElement>(null);
     const socket = useContext(SocketContext);
     const { userId } = useContext(AuthContext);
+    const { activeChat } = useContext(ChatContext);
 
     const sendMessage = () => {
         if (inputRef.current.value.length === 0) return;
-        const data = new SendMessageDTO(
-            props.selectedChat.id,
-            userId,
-            inputRef.current.value
-        );
+        const data = new SendMessageDTO(activeChat.id, userId, inputRef.current.value);
         socket.emit("sendMessage", data);
         inputRef.current.value = "";
     };
@@ -49,9 +43,9 @@ function MessageInput(props: messageInputProps): React.JSX.Element {
         };
         // sendMessage is missing, but is const and would trigger another eslint warning
         // eslint-disable-next-line
-    }, [props.selectedChat]);
+    }, [activeChat]);
 
-    if (!props.selectedChat) return null;
+    if (!activeChat) return null;
 
     return (
         <div className="inputDiv">

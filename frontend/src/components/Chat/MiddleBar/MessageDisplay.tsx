@@ -1,17 +1,18 @@
-import React from "react";
+import React, { useContext } from "react";
+
+// Contexts
+import { ChatContext } from "src/contexts/ChatProvider";
 
 // DTO
-import { Chat_CompleteDTO } from "src/dto/chat-dto";
+import { MessageDTO } from "src/dto/chat-dto";
 
 // CSS
 import "src/styles/chat.css";
 import "src/styles/style.css";
 
-interface messageDisplayProps {
-    activeChat: Chat_CompleteDTO | null;
-}
+function MessageDisplay(): React.JSX.Element {
+    const { activeChat } = useContext(ChatContext);
 
-function MessageDisplay(props: messageDisplayProps): React.JSX.Element {
     const formatTime = (timeStamp: Date): string => {
         const date = new Date(timeStamp);
         return date.toLocaleTimeString([], {
@@ -21,15 +22,15 @@ function MessageDisplay(props: messageDisplayProps): React.JSX.Element {
         });
     };
 
-    if (!props.activeChat) return null;
+    if (!activeChat) return null;
 
     return (
         <div className="messagesArea">
-            {props.activeChat.messages.map((message, index) => (
-                <div key={index} className="messageFlexStart">
-                    <span className="timeStamp">{formatTime(message.timeStamp)}</span>
-                    <span className="author">{message.authorId}</span>
-                    <div className="content">{message.content}</div>
+            {activeChat.messages.map((e: MessageDTO) => (
+                <div key={e.id} className="messageFlexStart">
+                    <span className="timeStamp">{formatTime(e.timeStamp)}</span>
+                    <span className="author">{e.authorId}</span>
+                    <div className="content">{e.content}</div>
                 </div>
             ))}
         </div>

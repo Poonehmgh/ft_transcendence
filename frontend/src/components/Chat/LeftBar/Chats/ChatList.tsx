@@ -1,7 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import backendUrl from "src/constants/backendUrl";
+
+// Contexts
+import { ChatContext } from "src/contexts/ChatProvider";
 
 // DTO
-import { Chat_ChatUsersDTO, Chat_CompleteDTO } from "src/dto/chat-dto";
+import { Chat_ChatUsersDTO } from "src/dto/chat-dto";
 import { fetchGet } from "src/functions/utils";
 
 // CSS
@@ -9,13 +13,12 @@ import "src/styles/chat.css";
 import "src/styles/style.css";
 
 interface chatListProps {
-    activeChat: Chat_CompleteDTO | null;
-    onSelectChat: (chat: Chat_ChatUsersDTO) => void;
     chats: Chat_ChatUsersDTO[];
 }
 
 function ChatList(props: chatListProps): React.JSX.Element {
     const [chatNames, setChatNames] = useState<string[]>(null);
+    const { activeChat, changeActiveChat } = useContext(ChatContext);
 
     useEffect(() => {
         if (!props.chats) return;
@@ -23,7 +26,7 @@ function ChatList(props: chatListProps): React.JSX.Element {
             try {
                 const names = await Promise.all(
                     props.chats.map(async (chat) => {
-                        const apiUrl = `${process.env.REACT_APP_BACKEND_URL}/chat/name/${chat.id}`;
+                        const apiUrl = backendUrl.chat + `name/${chat.id}`;
                         const response = await fetchGet<{ name: string }>(apiUrl);
                         return response.name;
                     })
@@ -37,7 +40,7 @@ function ChatList(props: chatListProps): React.JSX.Element {
     }, [props.chats]);
 
     function selectChat(chat: Chat_ChatUsersDTO) {
-        props.onSelectChat(chat);
+        changeActiveChat(chat.id);
     }
 
     if (!chatNames || !props.chats) return <p>Loading...</p>;
@@ -51,9 +54,7 @@ function ChatList(props: chatListProps): React.JSX.Element {
                     <button
                         key={e.id}
                         className={
-                            props.activeChat?.id === e.id
-                                ? "chatButtonSelected"
-                                : "chatButton"
+                            activeChat?.id === e.id ? "chatButtonSelected" : "chatButton"
                         }
                         onClick={() => selectChat(e)}
                     >

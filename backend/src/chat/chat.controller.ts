@@ -100,7 +100,7 @@ export class ChatController {
         @Res() res
     ) {
         try {
-            const result = await this.chatService.getCompleteChat(chatId);
+            const result = await this.chatService.getCompleteChat(chatId, req.user.id);
             if (result instanceof Error) {
                 res.status(500).json({ error: result.message });
             } else if ("error" in result) {

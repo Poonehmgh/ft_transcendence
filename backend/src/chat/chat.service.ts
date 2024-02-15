@@ -214,7 +214,7 @@ export class ChatService {
         return chatUsers.map((e) => e.userId);
     }
 
-    async getCompleteChat(chatId: number): Promise<ChatDTO | Error> {
+    async getCompleteChat(chatId: number, userId: number): Promise<ChatDTO | Error> {
         try {
             const chat = await this.prisma.chat.findUnique({
                 where: {
@@ -236,13 +236,15 @@ export class ChatService {
             }
 
             const extendedChatUsersPromises = chat.chatUsers.map((chatUser) => {
-                return ExtendedChatUserDTO.fromChatUser(chatUser, this.userService, this);
+                return ExtendedChatUserDTO.fromChatUser(chatUser, this.userService, /* this */);
             });
+            
             const extendedChatUsers = await Promise.all(extendedChatUsersPromises);
+            const dynamicChatName = await this.getChatName(chatId, userId);
 
             return {
                 id: chat.id,
-                name: chat.name || "Unnamed Chat",
+                name: dynamicChatName,
                 dm: chat.dm,
                 isPrivate: chat.isPrivate,
                 passwordRequired: !!chat.password,
