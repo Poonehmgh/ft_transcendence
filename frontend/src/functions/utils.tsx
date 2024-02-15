@@ -89,6 +89,9 @@ export async function fetchX<T>(
 
         if (!response.ok) {
             console.error(`${apiUrl}: ${response.status}`);
+            if (response.status === 401) {
+                window.location.href = "/home";
+            }
         }
         return await response.json();
     } catch (error) {
