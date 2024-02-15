@@ -4,7 +4,7 @@ import React, { useContext } from "react";
 import { ChatContext } from "src/contexts/ChatProvider";
 
 // DTO
-import { MessageDTO } from "src/dto/chat-dto";
+import { ExtendedChatUserDTO, MessageDTO } from "src/dto/chat-dto";
 
 // CSS
 import "src/styles/chat.css";
@@ -22,6 +22,14 @@ function MessageDisplay(): React.JSX.Element {
         });
     };
 
+    function getUserName(userId: number): string {
+        console.log("activeChat", activeChat);
+        const user = activeChat.chatUsers.find(
+            (e: ExtendedChatUserDTO) => e.userId === userId
+        );
+        return user ? user.userName : "Unknown User";
+    }
+
     if (!activeChat) return null;
 
     return (
@@ -29,7 +37,7 @@ function MessageDisplay(): React.JSX.Element {
             {activeChat.messages.map((e: MessageDTO) => (
                 <div key={e.id} className="messageFlexStart">
                     <span className="timeStamp">{formatTime(e.timeStamp)}</span>
-                    <span className="author">{e.authorId}</span>
+                    <span className="author">{getUserName(e.authorId)}</span>
                     <div className="content">{e.content}</div>
                 </div>
             ))}
