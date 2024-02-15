@@ -13,7 +13,9 @@ import {
     NewChatDTO,
     MessageDTO,
     ChatDTO,
+    ExtendedChatUserDTO,
 } from "./chat.DTOs";
+import e from "express";
 
 @Injectable()
 export class ChatService {
@@ -96,7 +98,7 @@ export class ChatService {
                 take: 50,
             });
 
-            return messages.map((message) => {
+            return messages.reverse().map((message) => {
                 return new MessageDTO(
                     message.id,
                     message.createdAt,
@@ -172,7 +174,7 @@ export class ChatService {
     async getPreexistingDmChat(
         userId1: number,
         userId2: number
-    ): Promise<Chat_ChatUser | null> {
+    ): Promise<ChatDTO | null> {
         const existingChat = await this.prisma.chat.findFirst({
             where: {
                 dm: true,
@@ -187,7 +189,19 @@ export class ChatService {
                 chatUsers: true,
             },
         });
-        return existingChat;
+        if (!existingChat) return null;
+
+        return new ChatDTO(
+            existingChat.id,
+            existingChat.name,
+            existingChat.dm,
+            existingChat.isPrivate,
+            !!existingChat.password,
+            existingChat.chatUsers.map((chatUser) => {
+                return ChatUserDTO.fromChatUser(chatUser);
+            }),
+            []
+        );
     }
 
     async getActiveUserIds(chatId: number): Promise<number[]> {
@@ -202,7 +216,7 @@ export class ChatService {
         return chatUsers.map((e) => e.userId);
     }
 
-    async getCompleteChat(chatId: number): Promise<ChatDTO | Error> {
+    async getCompleteChat(chatId: number, userId: number): Promise<ChatDTO | Error> {
         try {
             const chat = await this.prisma.chat.findUnique({
                 where: {
@@ -223,31 +237,22 @@ export class ChatService {
                 return new Error("Chat not found");
             }
 
+            const extendedChatUsersPromises = chat.chatUsers.map((chatUser) => {
+                return ExtendedChatUserDTO.fromChatUser(chatUser, this.userService, /* this */);
+            });
+            
+            const extendedChatUsers = await Promise.all(extendedChatUsersPromises);
+            const dynamicChatName = await this.getChatName(chatId, userId);
+
             return {
                 id: chat.id,
-                name: chat.name || "Unnamed Chat",
+                name: dynamicChatName,
                 dm: chat.dm,
                 isPrivate: chat.isPrivate,
                 passwordRequired: !!chat.password,
-                chatUsers: chat.chatUsers.map((chatUser) => {
-                    return {
-                        userId: chatUser.userId,
-                        chatId: chatUser.chatId,
-                        owner: chatUser.owner,
-                        admin: chatUser.admin,
-                        blocked: chatUser.blocked,
-                        muted: chatUser.muted,
-                        mutedUntil: chatUser.muted_until,
-                        invited: chatUser.invited,
-                    };
-                }),
+                chatUsers: extendedChatUsers,
                 messages: chat.messages.reverse().map((message) => {
-                    return {
-                        id: message.id,
-                        timeStamp: message.createdAt,
-                        content: message.content,
-                        authorId: message.author,
-                    };
+                    return MessageDTO.fromMessage(message);
                 }),
             };
         } catch (error) {
@@ -289,13 +294,13 @@ export class ChatService {
                 throw { message: "DM must have exactly 2 users" };
             }
 
-            const preexistingDmChat: Chat_ChatUser = await this.getPreexistingDmChat(
+            const preexistingDmChat: ChatDTO = await this.getPreexistingDmChat(
                 newChatDto.userIds[0],
                 newChatDto.userIds[1]
             );
 
             if (preexistingDmChat) {
-                return ChatInfoDTO.fromChat(preexistingDmChat);
+                return ChatInfoDTO.fromChatDTO(preexistingDmChat);
             }
 
             const newChat = await this.prisma.chat.create({

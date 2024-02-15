@@ -8,10 +8,11 @@ import { IdAndNameDTO } from "src/dto/user-dto";
 // CSS
 import "src/styles/style.css";
 import "src/styles/manageProfile.css";
+import backendUrl from "src/constants/backendUrl";
 
 function RequestOutList() {
     const [group, setGroup] = useState<IdAndNameDTO[]>(null);
-    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/request_out";
+    const apiUrl = backendUrl.user + "request_out";
 
     useEffect(() => {
         fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
