@@ -97,15 +97,19 @@ export class ChatService {
                 },
             });
 
-            return chats.map((chat: Chat_ChatUser) => {
+            const chatInfoPromises = chats.map(async (chat: Chat_ChatUser) => {
+                const chatName = await this.getChatName(chat.id, userId);
                 return {
                     id: chat.id,
-                    name: chat.name || "Unnamed Chat",
+                    name: chatName || "Unnamed Chat",
                     dm: chat.dm,
                     isPrivate: chat.isPrivate,
                     passwordRequired: !!chat.password,
                 };
             });
+
+            const chatInfos = await Promise.all(chatInfoPromises);
+            return chatInfos;
         } catch (error) {
             console.error(`Error in getUsersChats: ${error.message}`);
             throw error;
@@ -125,12 +129,7 @@ export class ChatService {
             });
 
             return messages.reverse().map((message) => {
-                return new MessageDTO(
-                    message.id,
-                    message.createdAt,
-                    message.content,
-                    message.author
-                );
+                return MessageDTO.fromMessage(message);
             });
         } catch (error) {
             console.error(`Error in getLatestMessages: ${error.message}`);
@@ -378,7 +377,7 @@ export class ChatService {
         //newChatDto.password = hashSync(newChatDto.password, "salt");
 
         const newChatName = `Chat with ${firstThreeNames.join(", ")}${
-            omittedCount > 0 ? ` and ${omittedCount} others` : ""
+            omittedCount > 0 ? ` and ${omittedCount} more` : ""
         }`;
 
         const newChat = await this.prisma.chat.create({
@@ -553,12 +552,12 @@ export class ChatService {
             /*
             Maybe have this. But if, then should only delete private chats.
             Public chats should only be actively deleted by the owner.
+           
             const activeUserIds = await this.getActiveUserIds(chatId);
             if (activeUserIds.length === 0) {
                 await this.deleteChat(chatId);
             }
             */
-            this.chatGatewayService.sendChatUpdate(chatId);
             return { message: "Left the chat" };
         } catch (error) {
             console.error(`Error in leaveChat: ${error.message}`);

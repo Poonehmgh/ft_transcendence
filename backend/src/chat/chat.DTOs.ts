@@ -43,11 +43,11 @@ export interface Chat_complete extends Chat {
 
 export class ChatListDTO {
     chatName: string;
-    chatID: number;
+    chatId: number;
 
-    constructor(chatName: string, chatID: number) {
+    constructor(chatName: string, chatId: number) {
         this.chatName = chatName;
-        this.chatID = chatID;
+        this.chatId = chatId;
     }
 }
 
@@ -68,12 +68,14 @@ export class MessageDTO {
     timeStamp: Date;
     content: string;
     authorId: number;
+    chatId: number;
 
-    constructor(id: number, timeStamp: Date, content: string, authorId: number) {
+    constructor(id: number, timeStamp: Date, content: string, authorId: number, chatId: number) {
         this.id = id;
         this.timeStamp = timeStamp;
         this.content = content;
         this.authorId = authorId;
+        this.chatId = chatId;
     }
 
     static fromMessage(message: Message): MessageDTO {
@@ -81,7 +83,8 @@ export class MessageDTO {
             message.id,
             message.createdAt,
             message.content,
-            message.author
+            message.author,
+            message.chatId
         );
     }
 }

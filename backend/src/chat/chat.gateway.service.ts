@@ -306,7 +306,7 @@ export class ChatGatewayService {
         try {
             const chatRes = await this.prisma.chat.findUnique({
                 where: {
-                    id: Number(chat.chatID),
+                    id: Number(chat.chatId),
                 },
                 include: {
                     chatUsers: {
@@ -352,7 +352,9 @@ export class ChatGatewayService {
             if (chatRes) {
                 for (const user of chatRes.chatUsers) {
                     const socket: Socket = this.getUserSocketFromUserId(user.userId);
-                    socket.emit("updateChat", new ChatListDTO(chatRes.name, chatId));
+                    console.log("sending updateChat event to user", user.userId);
+                    if (socket)
+                        socket.emit("updateChat", new ChatListDTO(chatRes.name, chatId));
                 }
             }
         } catch (error) {

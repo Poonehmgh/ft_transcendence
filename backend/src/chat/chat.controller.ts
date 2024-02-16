@@ -15,11 +15,15 @@ import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
 import { ChatUserDTO, NewChatDTO } from "./chat.DTOs";
 import { AuthenticatedRequest } from "src/shared/dto";
 import { get } from "http";
+import { ChatGatewayService } from "./chat.gateway.service";
 
 @Controller("chat")
 @UseGuards(JwtAuthGuard)
 export class ChatController {
-    constructor(private readonly chatService: ChatService) {}
+    constructor(
+        private readonly chatService: ChatService,
+        private readonly chatGatewayService: ChatGatewayService
+    ) {}
 
     // Getters
 
@@ -147,6 +151,7 @@ export class ChatController {
             } else if ("error" in result) {
                 res.status(500).json({ error: result.error });
             } else {
+                //this.chatGatewayService.sendUpdateMessages(result.id, result);
                 res.status(200).json(result);
             }
         } catch (error) {
@@ -239,6 +244,7 @@ export class ChatController {
             } else if ("error" in result) {
                 res.status(500).json({ error: result.error });
             } else {
+                this.chatGatewayService.sendChatUpdate(chatId)
                 res.status(200).json(result);
             }
         } catch (error) {

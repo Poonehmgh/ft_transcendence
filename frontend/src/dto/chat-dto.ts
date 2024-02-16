@@ -38,12 +38,14 @@ export class MessageDTO {
     timeStamp: Date;
     content: string;
     authorId: number;
+    chatId: number;
 
-    constructor(id: number, timeStamp: Date, content: string, authorId: number) {
+    constructor(id: number, timeStamp: Date, content: string, authorId: number, chatId: number) {
         this.id = id;
         this.timeStamp = timeStamp;
         this.content = content;
         this.authorId = authorId;
+        this.chatId = chatId;
     }
 }
 
@@ -87,3 +89,14 @@ export class BasicChatDTO {
     isPrivate: boolean;
     passwordRequired: boolean;
 }
+
+export class ChatListDTO {
+    chatName: string;
+    chatId: number;
+
+    constructor(chatName: string, chatId: number) {
+        this.chatName = chatName;
+        this.chatId = chatId;
+    }
+}
+

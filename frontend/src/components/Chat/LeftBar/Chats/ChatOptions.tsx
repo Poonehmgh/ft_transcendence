@@ -14,7 +14,7 @@ import "src/styles/style.css";
 
 function ChatOptions(): React.JSX.Element {
     const [isOwner, setIsOwner] = useState<boolean>(false);
-    const { activeChat } = useContext(ChatContext);
+    const { activeChat, changeActiveChat, fetchThisUsersChats } = useContext(ChatContext);
     const [hasPassword, setHasPassword] = useState<boolean>(false);
 
     useEffect(() => {
@@ -29,10 +29,15 @@ function ChatOptions(): React.JSX.Element {
     }, [activeChat]);
 
     async function leaveChat() {
-        if (window.confirm(`Leave ${activeChat.name}?`)) {
+        const promptText = activeChat.dm
+            ? `Leave DM with ${activeChat.name}?`
+            : `Leave ${activeChat.name}?`;
+        if (window.confirm(promptText)) {
             const apiUrl = backendUrl.chat + `leave/${activeChat?.id}`;
             const res = await fetchX<{ message: string }>("PATCH", apiUrl, null);
             alert(res.message);
+            fetchThisUsersChats();
+            changeActiveChat(null);
         }
     }
 
@@ -49,6 +54,8 @@ function ChatOptions(): React.JSX.Element {
             name: sanitizedName,
         });
         alert(res.message);
+        fetchThisUsersChats();
+        changeActiveChat(activeChat?.id);
     }
 
     async function removePassword() {
@@ -56,6 +63,8 @@ function ChatOptions(): React.JSX.Element {
         const apiUrl = backendUrl.chat + `remove_password/${activeChat?.id}`;
         const res = await fetchX<{ message: string }>("PATCH", apiUrl, null);
         alert(res.message);
+        fetchThisUsersChats();
+        changeActiveChat(activeChat?.id);
     }
 
     async function changePassword() {
@@ -70,6 +79,8 @@ function ChatOptions(): React.JSX.Element {
             password: newPassword,
         });
         alert(res.message);
+        fetchThisUsersChats();
+        changeActiveChat(activeChat?.id);
     }
 
     if (!activeChat) return null;

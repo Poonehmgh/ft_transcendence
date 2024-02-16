@@ -16,7 +16,7 @@ import "src/styles/modals.css";
 import "src/styles/buttons.css";
 
 function NewChat(): React.JSX.Element {
-    const { changeActiveChat } = useContext(ChatContext);
+    const { changeActiveChat, fetchThisUsersChats } = useContext(ChatContext);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const passwordRef = useRef(null);
     const [newChatDTO, setChatDto] = useState<NewChatDTO>({
@@ -78,6 +78,7 @@ function NewChat(): React.JSX.Element {
                 newChatDTO
             );
             changeActiveChat(newChat.id);
+            fetchThisUsersChats();
             closeModal();
         } catch (error) {
             console.error("Error creating chat:", error);
