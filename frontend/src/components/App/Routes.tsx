@@ -12,6 +12,7 @@ import { gotValidToken } from "src/functions/utils";
 import Auth from "../Home/Auth";
 // Contexts
 import { AuthContext } from "src/contexts/AuthProvider";
+import Message from "src/components/shared/Message";
 
 function PongersRoutes() {
     const location = useLocation();
@@ -50,6 +51,7 @@ function PongersRoutes() {
                     path="/userprofile"
                     element={<ProtectedRoute element={<ManageProfile />} />}
                 />
+                <Route path="/message/:type/:msg" element={<ProtectedRoute element={<Message />} />} />
                 <Route path="*" element={<ErrorPage />} />
             </Routes>
         </div>

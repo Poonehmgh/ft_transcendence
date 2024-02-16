@@ -102,7 +102,7 @@ function TwoFa() {
 
 
     return ( <>
-            {!qrCodeUrl && <Button name={twoFa === true? "Disable" : "Enable"} onClick={() => {handle2FaButtonClick()}} />}
+            {!qrCodeUrl && <Button styleP={{ position: 'absolute', top: '74%', right: "39.5%"}} name={twoFa === true? "Disable" : "Enable"} onClick={() => {handle2FaButtonClick()}} />}
             {qrCodeUrl && !twoFa && <form onSubmit={handleSubmitCode}>
                     <p>Please enter security code.</p>
                     <label htmlFor="securityCode"></label>
