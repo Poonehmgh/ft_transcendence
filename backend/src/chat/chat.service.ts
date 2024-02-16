@@ -97,15 +97,19 @@ export class ChatService {
                 },
             });
 
-            return chats.map((chat: Chat_ChatUser) => {
+            const chatInfoPromises = chats.map(async (chat: Chat_ChatUser) => {
+                const chatName = await this.getChatName(chat.id, userId);
                 return {
                     id: chat.id,
-                    name: chat.name || "Unnamed Chat",
+                    name: chatName || "Unnamed Chat",
                     dm: chat.dm,
                     isPrivate: chat.isPrivate,
                     passwordRequired: !!chat.password,
                 };
             });
+
+            const chatInfos = await Promise.all(chatInfoPromises);
+            return chatInfos;
         } catch (error) {
             console.error(`Error in getUsersChats: ${error.message}`);
             throw error;
@@ -125,12 +129,7 @@ export class ChatService {
             });
 
             return messages.reverse().map((message) => {
-                return new MessageDTO(
-                    message.id,
-                    message.createdAt,
-                    message.content,
-                    message.author
-                );
+                return MessageDTO.fromMessage(message);
             });
         } catch (error) {
             console.error(`Error in getLatestMessages: ${error.message}`);
