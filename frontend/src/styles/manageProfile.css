@@ -134,3 +134,26 @@
 .modalUserList td:nth-child(2) {
     text-align: right;
 }
+
+.logoutButton {
+    --lightnessOffset: 10%;
+    max-width: 45px;
+    height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: var(--text-primary);
+    background-color: hsl(var(--backgroundHue1), 0%, calc(5% + var(--lightnessOffset)));
+    border-radius: 9px;
+    transition: background-color 0.1s ease, --lightnessOffset 0.1s ease;
+    box-sizing: border-box;
+    transition: all 0.25s ease;
+    border: 0px;
+    cursor: pointer;
+    width: 100%;
+
+    &:hover {
+        --lightnessOffset: 20%;
+    }
+}

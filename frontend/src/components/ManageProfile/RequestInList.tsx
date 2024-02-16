@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { fetchGetSet } from "src/functions/utils";
 import { handleAcceptRequest, handleDeclineRequest } from "src/functions/userActions";
+import backendUrl from "src/constants/backendUrl";
 
 // DTO
 import { IdAndNameDTO } from "src/dto/user-dto";
@@ -11,7 +12,7 @@ import "src/styles/manageProfile.css";
 
 function RequestInList() {
     const [group, setGroup] = useState(null);
-    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/request_in";
+    const apiUrl = backendUrl.user + "request_in";
 
     useEffect(() => {
         fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);

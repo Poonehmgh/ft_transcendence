@@ -6,6 +6,7 @@ import {
     authHeader,
     authContentHeader,
     sanitizeInput,
+    fetchX,
 } from "src/functions/utils";
 import LoadingH2 from "src/components/shared/LoadingH2";
 import TwoFa from "src/components/UserProfileModal/TwoFa";
@@ -16,19 +17,20 @@ import { UserProfileDTO } from "src/dto/user-dto";
 import "src/styles/buttons.css";
 import "src/styles/style.css";
 import "src/styles/manageProfile.css";
+import backendUrl from "src/constants/backendUrl";
 
 function ManageProfile() {
     const [userData, setUserData] = useState<UserProfileDTO | null>(null);
     const [avatarURL, setAvatarURL] = useState(null);
     const fileInputRef = useRef(null);
-    const apiUrl_profile = process.env.REACT_APP_BACKEND_URL + "/user/my_profile";
+    const apiUrl_profile = backendUrl.user + "my_profile";
 
     function handleChooseFileClick() {
         fileInputRef.current.click();
     }
 
     async function fetchAvatar() {
-        const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/my_avatar";
+        const apiUrl = backendUrl.user + "my_avatar";
         try {
             const response = await fetch(apiUrl, {
                 method: "GET",
@@ -57,8 +59,8 @@ function ManageProfile() {
         const formData = new FormData();
         formData.append("avatar", file);
         try {
-            await fetch(process.env.REACT_APP_BACKEND_URL + "/user/put_avatar", {
-                method: "POST",
+            await fetch(backendUrl.user + "my_avatar", {
+                method: "PUT",
                 headers: authHeader(),
                 body: formData,
             });
@@ -72,28 +74,26 @@ function ManageProfile() {
         try {
             let newName = prompt("Enter a new name:");
 
-            if (newName === null) return;
+            if (!newName) return;
             newName = newName.trim();
             if (newName === "" || newName === userData.name) return;
 
-            const changeNameDTO = { newName: sanitizeInput(newName) };
-
-            const response = await fetch(
-                process.env.REACT_APP_BACKEND_URL + "/user/change_name",
-                {
-                    method: "POST",
-                    headers: authContentHeader(),
-                    body: JSON.stringify(changeNameDTO),
-                }
-            );
-            if (!response.ok) {
-                const res_data = await response.json();
-                alert(res_data.message);
-            }
+            const data = { newName: sanitizeInput(newName) };
+            const apiUrl = backendUrl.user + "change_name";
+            const res = await fetchX<{ message: string }>("PATCH", apiUrl, data);
+            alert(res.message);
             fetchGetSet(apiUrl_profile, setUserData);
         } catch (error) {
             alert(error);
         }
+    }
+
+    async function handleLogout() {
+        const apiUrl = backendUrl.user + "logout";
+        const res = await fetchX<{ message: string }>("PATCH", apiUrl, null);
+        document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
+        alert(res.message);
+        window.location.href = "/home";
     }
 
     if (!userData) return <LoadingH2 elementName={"Manage your profile"} />;
@@ -114,6 +114,10 @@ function ManageProfile() {
                         {userData.name}
                         <button className="editName" onClick={handleNameChange}>
                             ✎
+                        </button>
+                        <div style={{ width: "100%" }}></div>
+                        <button className="logoutButton" onClick={handleLogout}>
+                            <img src="images/logout.png" alt="Logout" height={"30px"} />
                         </button>
                     </div>
                 </div>

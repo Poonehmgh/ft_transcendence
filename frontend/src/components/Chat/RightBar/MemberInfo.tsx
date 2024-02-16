@@ -1,32 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext } from "react";
 
-// DTO
-import { ChatUserDTO } from "src/dto/chat-dto";
-import { fetchGetSet } from "src/functions/utils";
+// Contexts
+import { ChatContext } from "src/contexts/ChatProvider";
 
 // CSS
 import "src/styles/style.css";
 import "src/styles/chat.css";
 
-interface memberInfoProps {
-    member: ChatUserDTO | null;
-}
+function MemberInfo(): React.JSX.Element {
+    const { selectedUser } = useContext(ChatContext);
 
-function MemberInfo(props: memberInfoProps): React.JSX.Element {
-    const [name, setName] = useState<string[]>([]);
-    const apiUrl =
-        process.env.REACT_APP_BACKEND_URL + "/user/name/" + props.member.userId;
-
-    useEffect(() => {
-        fetchGetSet(apiUrl, setName);
-    }, [apiUrl]);
-
-    if (!props.member) return <div className="p">Loading data...</div>;
+    if (!selectedUser) return <div className="p">Loading data...</div>;
 
     return (
         <div className="sideBar_sub1">
             <div className="chatElementDiv">
-                {`--- ${name} ---`}
+                {`--- ${selectedUser.userName} ---`}
 
                 <table className="chatMemberTable">
                     <thead>
@@ -47,10 +36,10 @@ function MemberInfo(props: memberInfoProps): React.JSX.Element {
                     </thead>
                     <tbody>
                         <tr>
-                            <td>{props.member.owner ? "yes" : "no"}</td>
-                            <td>{props.member.admin ? "yes" : "no"}</td>
-                            <td>{props.member.muted ? "yes" : "no"}</td>
-                            <td>{props.member.invited ? "yes" : "no"}</td>
+                            <td>{selectedUser.owner ? "yes" : "no"}</td>
+                            <td>{selectedUser.admin ? "yes" : "no"}</td>
+                            <td>{selectedUser.muted ? "yes" : "no"}</td>
+                            <td>{selectedUser.invited ? "yes" : "no"}</td>
                         </tr>
                     </tbody>
                 </table>

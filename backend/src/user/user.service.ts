@@ -18,28 +18,17 @@ import {
     INFO_FREQ_ALRDYSENT1,
     INFO_FREQ_ALRDYSENT2,
     INFO_FREQ_CANCEL,
-    INFO_NAMECHANGED,
     INFO_RM,
     INFO_SEND_FREQ,
     INFO_UNBLOCK,
-    ERR_NAMETAKEN,
-    ERR_NAMECHANGE,
 } from "../shared/constants.user.service";
 import * as fs from "fs";
 import * as path from "path";
-import { MatchDTO, MatchInfoDTO } from "src/match/match-dto";
+import { MatchDTO } from "src/match/match-dto";
 
 @Injectable()
 export class UserService {
     constructor(private readonly prisma: PrismaService) {}
-
-    /*    async createUser(userData) {
-        return this.prisma.user.create({ data: userData });
-    }
-
-    async newUser(userData: NewUserDTO): Promise<void> {
-        await this.prisma.user.create({ data: userData });
-    } */
 
     async getMatchIds(userId: number): Promise<number[]> {
         try {
@@ -136,35 +125,6 @@ export class UserService {
     }
 
     // getters
-
-    /*   async getIdAndNameDTOArray(userId: number, fieldName: string): Promise<IdAndNameDTO[]> {
-    const user = await this.prisma.user.findUnique({
-      where: { id: Number(userId) },
-      select: { [fieldName]: true },
-    });
-    if (!user) throw new Error(fieldName);
-    const fieldIds = user[fieldName].map((item: User) => item.id);
-
-    const group = await this.prisma.user.findMany({
-      where: {
-        id: { in: fieldIds }, // Use the extracted array of 'id' values
-      },
-      select: {
-        id: true,
-        name: true,
-      },
-    });
-    if (group.length === 0) {
-      return [];
-    }
-    return group.map(({ id, name }) => {
-      return new IdAndNameDTO(id, name);
-    });
-  } */
-
-    /*  async getFriends_(userId: number): Promise<IdAndNameDTO[]> {
-    return this.getIdAndNameDTOArray(userId, "friends");
-  } */
 
     async getFriends(userId: number): Promise<IdAndNameDTO[]> {
         const user = await this.prisma.user.findUnique({
@@ -312,16 +272,6 @@ export class UserService {
         }
     }
 
-    async getAllIdsAndNames(): Promise<IdAndNameDTO[]> {
-        const users = await this.prisma.user.findMany({
-            select: { id: true, name: true },
-        });
-        if (users.length === 0) return []; // would it not just do that anyway?
-        return users.map(({ id, name }) => {
-            return new IdAndNameDTO(id, name);
-        });
-    }
-
     async getAllUsers(): Promise<UserProfileDTO[]> {
         const allUsers: User[] = await this.prisma.user.findMany({
             orderBy: { id: "desc" },
@@ -372,12 +322,28 @@ export class UserService {
                     name: newName,
                 },
             });
-            return 0;
+            return { success: true, message: "Name changed" };
         } catch (error) {
-            console.log(error);
+            console.error(`Error in changeName: ${error.message}`);
             if (error.code === "P2002") {
-                return 1;
-            } else return 2;
+                return { success: false, message: "Name already taken" };
+            }
+            throw error;
+        }
+    }
+
+    async logout(thisId: number) {
+        try {
+            await this.prisma.user.update({
+                where: { id: thisId },
+                data: {
+                    online: false,
+                },
+            });
+            return { success: true, message: "Logged out" };
+        } catch (error) {
+            console.error(`Error in logout: ${error.message}`);
+            throw error;
         }
     }
 

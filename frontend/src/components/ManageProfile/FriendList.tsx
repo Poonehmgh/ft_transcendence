@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { fetchGetSet } from "src/functions/utils";
 import { handleBlockUser, handleRemoveFriend } from "src/functions/userActions";
+import backendUrl from "src/constants/backendUrl";
 
 // DTO
 import { IdAndNameDTO } from "src/dto/user-dto";
@@ -11,7 +12,7 @@ import "src/styles/manageProfile.css";
 
 function FriendList() {
     const [group, setGroup] = useState(null);
-    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/friends";
+    const apiUrl = backendUrl.user + "friends";
 
     useEffect(() => {
         fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);

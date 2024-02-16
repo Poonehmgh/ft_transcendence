@@ -17,6 +17,9 @@ rebuild:
 	docker-compose build --no-cache
 	docker-compose up --force-recreate -d
 
+nuke: down-v
+	docker system prune --all --force
+
 mgit:
 	git add .
 	@read -p "Enter the commit message: " msg;\

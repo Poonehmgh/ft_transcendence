@@ -11,34 +11,43 @@ export function getCalendarDay(date: Date) {
     return `${day}.${month}.${year}`;
 }
 
-export function getTokenFromCookie() {
+export function getDecodedTokenFromCookie() {
     const cookies = document.cookie.split(";");
-    let tokenValue = null;
 
-    cookies.forEach((cookie) => {
+    for (const cookie of cookies) {
         const [name, value] = cookie.trim().split("=");
 
         if (name === "token") {
-            tokenValue = value;
+            const decodedToken = JSON.parse(atob(value.split(".")[1]));
+            return decodedToken;
         }
-    });
-    return tokenValue;
+    }
+    return null;
+}
+
+export function getPureTokenFromCookie() {
+    const cookies = document.cookie.split(";");
+
+    for (const cookie of cookies) {
+        const [name, value] = cookie.trim().split("=");
+
+        if (name === "token") {
+            return value;
+        }
+    }
+    return null;
 }
 
 // checkers
 
-export function isTokenValid(token: string) {
+export function gotValidToken() {
     try {
+        const token = getDecodedTokenFromCookie();
         if (!token) {
             console.error("No token in cookies.");
             return false;
         }
-
-        const decodedToken = JSON.parse(atob(token.split(".")[1]));
-        const expirationTime = decodedToken.exp * 1000;
-
-        localStorage.setItem("userId", decodedToken.id);
-
+        const expirationTime = token.exp * 1000;
         return expirationTime > Date.now();
     } catch (error) {
         console.error("Error decoding or validating token:", error);
@@ -50,7 +59,7 @@ export function isTokenValid(token: string) {
 
 export function authHeader() {
     const myHeaders: Headers = new Headers();
-    const token: string = "Bearer " + getTokenFromCookie();
+    const token: string = "Bearer " + getPureTokenFromCookie();
     myHeaders.append("Authorization", token);
     return myHeaders;
 }
@@ -58,7 +67,7 @@ export function authHeader() {
 export function authContentHeader() {
     const myHeaders: Headers = new Headers();
     myHeaders.append("Content-Type", "application/json");
-    const token: string = "Bearer " + getTokenFromCookie();
+    const token: string = "Bearer " + getPureTokenFromCookie();
     myHeaders.append("Authorization", token);
 
     return myHeaders;
@@ -80,7 +89,9 @@ export async function fetchX<T>(
 
         if (!response.ok) {
             console.error(`${apiUrl}: ${response.status}`);
-            throw new Error(`Not OK response in fetchX`);
+            if (response.status === 401) {
+                window.location.href = "/home";
+            }
         }
         return await response.json();
     } catch (error) {
@@ -118,8 +129,8 @@ export async function fetchGetSet<T>(
     }
 }
 
-// sanitizers and validators
+// sanitizers
 
 export function sanitizeInput(input: string) {
-    return input.replace(/[^a-zA-Z0-9]/g, "");
+    return input.replace(/[^a-zA-Z0-9_ ]/g, "");
 }

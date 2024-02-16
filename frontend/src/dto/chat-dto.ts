@@ -1,14 +1,4 @@
-export class MessageListElementDTO {
-    id: number;
-    content: string;
-    author: number;
-
-    constructor(id: number, content: string, author: number) {
-        this.id = id;
-        this.content = content;
-        this.author = author;
-    }
-}
+// to backend
 
 export class SendMessageDTO {
     chatId: number;
@@ -22,8 +12,39 @@ export class SendMessageDTO {
     }
 }
 
-export class EstablishConnectDTO {
-    userID: number;
+export class NewChatDTO {
+    dm: boolean;
+    isPrivate: boolean;
+    password?: string = null;
+    userIds: number[];
+}
+
+export class InviteUserDTO {
+    chatId: number;
+    userId: number;
+    password: string;
+
+    constructor(chatID: number, userId: number, password: string) {
+        this.chatId = chatID;
+        this.userId = userId;
+        this.password = password;
+    }
+}
+
+// from backend
+
+export class MessageDTO {
+    id: number;
+    timeStamp: Date;
+    content: string;
+    authorId: number;
+
+    constructor(id: number, timeStamp: Date, content: string, authorId: number) {
+        this.id = id;
+        this.timeStamp = timeStamp;
+        this.content = content;
+        this.authorId = authorId;
+    }
 }
 
 export class ChatUserDTO {
@@ -36,28 +57,33 @@ export class ChatUserDTO {
     invited: boolean;
 }
 
-export class NewChatDTO {
-    dm: boolean;
-    isPrivate: boolean;
-    password?: string = null;
-    userIds: number[];
+export class ExtendedChatUserDTO extends ChatUserDTO {
+    userName: string;
 }
 
-export class InviteUserDTO {
-    chatId: number;
-    userId: number;
-
-    constructor(chatID: number, userId: number) {
-        this.chatId = chatID;
-        this.userId = userId;
-    }
-}
-
-export class ChatInfoDTO {
+export class BasicChatWithUsersDTO {
     id: number;
     name: string;
     dm: boolean;
     isPrivate: boolean;
     passwordRequired: boolean;
     chatUsers: ChatUserDTO[];
+}
+
+export class ChatDTO {
+    id: number;
+    name: string;
+    dm: boolean;
+    isPrivate: boolean;
+    passwordRequired: boolean;
+    chatUsers: ExtendedChatUserDTO[];
+    messages: MessageDTO[];
+}
+
+export class BasicChatDTO {
+    id: number;
+    name: string;
+    dm: boolean;
+    isPrivate: boolean;
+    passwordRequired: boolean;
 }
