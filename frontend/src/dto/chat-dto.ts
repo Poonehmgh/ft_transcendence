@@ -89,3 +89,14 @@ export class BasicChatDTO {
     isPrivate: boolean;
     passwordRequired: boolean;
 }
+
+export class ChatListDTO {
+    chatName: string;
+    chatId: number;
+
+    constructor(chatName: string, chatId: number) {
+        this.chatName = chatName;
+        this.chatId = chatId;
+    }
+}
+

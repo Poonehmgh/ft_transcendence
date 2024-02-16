@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import backendUrl from "src/constants/backendUrl";
 import { fetchX } from "src/functions/utils";
 
@@ -9,6 +9,7 @@ import { SocketContext } from "./SocketProvider";
 import {
     BasicChatWithUsersDTO,
     ChatDTO,
+    ChatListDTO,
     ExtendedChatUserDTO,
     MessageDTO,
 } from "chat-dto";
@@ -19,6 +20,7 @@ export const ChatContext = createContext({
     selectedUser: null,
     changeSelectedUser: (userId: number) => {},
     thisUsersChats: null,
+    fetchThisUsersChats: () => {},
 });
 
 export function ChatProvider({ children }) {
@@ -27,29 +29,39 @@ export function ChatProvider({ children }) {
     const [selectedUser, setSelectedUser] = useState(null);
     const [thisUsersChats, setThisUsersChats] = useState(null);
 
-    const [updateTrigger, setUpdateTrigger] = useState(false);
-
     useEffect(() => {
         if (!socket) return;
 
-        const handleNewChatMessage = async (message: MessageDTO) => {
-            console.log("New message received:", message);
-            if (message.chatId === activeChat.id) {
-                console.log("Updating activeChat with new message:", message);
+        async function handleNewChatMessage(data: MessageDTO) {
+            if (activeChat === null) return;
+            if (data.chatId === activeChat.id) {
                 try {
-                    await changeActiveChat(message.chatId);
+                    await changeActiveChat(data.chatId);
                 } catch (error) {
                     console.error("Error fetching updated chat:", error);
                 }
-
-                /* console.log("Updating activeChat with new message:", message);
+                // this would be far better, but would require a backend change
+                /* 
                 setActiveChat((prevActiveChat) => ({
                     ...prevActiveChat,
                     chatMessages: [...prevActiveChat.chatMessages, message],
                 })); */
             }
-        };
+        }
 
+        async function handleChangeInChat(data: ChatListDTO) {
+            try {
+                if (data.chatId === activeChat?.id) {
+                    await changeActiveChat(data.chatId);
+                }
+
+                fetchThisUsersChats();
+            } catch (error) {
+                console.error("Error handleChangeInChat:", error);
+            }
+        }
+
+        socket.on("updateChat", handleChangeInChat);
         socket.on("updateMessage", handleNewChatMessage);
 
         return () => {
@@ -57,25 +69,30 @@ export function ChatProvider({ children }) {
         };
     }, [socket, activeChat]);
 
-    useEffect(() => {
-        async function fetchThisUsersChats() {
-            try {
-                const apiUrl = backendUrl.chat + "my_chats";
-                const thisUsersChats = await fetchX<BasicChatWithUsersDTO[]>(
-                    "GET",
-                    apiUrl,
-                    null
-                );
-                setThisUsersChats(thisUsersChats);
-            } catch (error) {
-                console.error("Error fetching this user's chats:", error);
-            }
+    async function fetchThisUsersChats() {
+        try {
+            const apiUrl = backendUrl.chat + "my_chats";
+            const thisUsersChats = await fetchX<BasicChatWithUsersDTO[]>(
+                "GET",
+                apiUrl,
+                null
+            );
+            setThisUsersChats(thisUsersChats);
+        } catch (error) {
+            console.error("Error fetching this user's chats:", error);
         }
+    }
 
+    useEffect(() => {
         fetchThisUsersChats();
     }, []);
 
     async function changeActiveChat(chatId: number) {
+        if (chatId === null) {
+            setActiveChat(null);
+            return;
+        }
+
         try {
             const apiUrl = backendUrl.chat + `complete_chat/${chatId}`;
             const newActiveChat = await fetchX<ChatDTO>("GET", apiUrl, null);
@@ -92,16 +109,13 @@ export function ChatProvider({ children }) {
         setSelectedUser(selectedUser);
     }
 
-    const contextValue = useMemo(
-        () => ({
-            activeChat,
-            changeActiveChat,
-            selectedUser,
-            changeSelectedUser,
-            thisUsersChats,
-        }),
-        [activeChat, changeActiveChat, selectedUser, changeSelectedUser, thisUsersChats]
-    );
-
+    const contextValue = {
+        activeChat,
+        changeActiveChat,
+        selectedUser,
+        changeSelectedUser,
+        thisUsersChats,
+        fetchThisUsersChats,
+    };
     return <ChatContext.Provider value={contextValue}>{children}</ChatContext.Provider>;
 }

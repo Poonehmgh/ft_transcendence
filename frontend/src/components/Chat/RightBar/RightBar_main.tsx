@@ -15,7 +15,7 @@ function RightBar(): React.JSX.Element {
     return (
         <div className="sideBar">
             {activeChat && <MemberList />}
-            {selectedUser && <MemberInfo />}
+            {activeChat && selectedUser && <MemberInfo />}
         </div>
     );
 }

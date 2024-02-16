@@ -377,7 +377,7 @@ export class ChatService {
         //newChatDto.password = hashSync(newChatDto.password, "salt");
 
         const newChatName = `Chat with ${firstThreeNames.join(", ")}${
-            omittedCount > 0 ? ` and ${omittedCount} others` : ""
+            omittedCount > 0 ? ` and ${omittedCount} more` : ""
         }`;
 
         const newChat = await this.prisma.chat.create({
@@ -552,12 +552,12 @@ export class ChatService {
             /*
             Maybe have this. But if, then should only delete private chats.
             Public chats should only be actively deleted by the owner.
+           
             const activeUserIds = await this.getActiveUserIds(chatId);
             if (activeUserIds.length === 0) {
                 await this.deleteChat(chatId);
             }
             */
-            this.chatGatewayService.sendChatUpdate(chatId);
             return { message: "Left the chat" };
         } catch (error) {
             console.error(`Error in leaveChat: ${error.message}`);

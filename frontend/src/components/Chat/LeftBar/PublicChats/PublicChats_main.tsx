@@ -36,7 +36,7 @@ function PublicChats(): React.JSX.Element {
                 className="chatModal"
                 overlayClassName="chatModalOverlay"
             >
-                <SelectPublicChatsTable />
+                <SelectPublicChatsTable closeModal={closeModal}/>
                 <button className="closeX" onClick={closeModal}>
                     ❌
                 </button>

@@ -32,7 +32,7 @@ function ChatList(): React.JSX.Element {
                         }
                         onClick={() => selectChat(e)}
                     >
-                        <span>{e.name}</span>
+                        <div>{e.name}</div>
                         <span className="smallTextDiv">
                             {e.dm
                                 ? " DM"

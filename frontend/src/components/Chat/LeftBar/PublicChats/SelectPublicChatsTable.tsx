@@ -14,7 +14,7 @@ import { BasicChatDTO, InviteUserDTO } from "chat-dto";
 import "src/styles/modals.css";
 import "src/styles/buttons.css";
 
-function SelectPublicChatsTable(): React.JSX.Element {
+function SelectPublicChatsTable({closeModal}): React.JSX.Element {
     const { changeActiveChat } = useContext(ChatContext);
     const socket = useContext(SocketContext);
     const { userId } = useContext(AuthContext);
@@ -32,16 +32,16 @@ function SelectPublicChatsTable(): React.JSX.Element {
         if (chat.passwordRequired) {
             password = prompt("Enter chat password");
             if (password === null) return;
-            console.log(password);
         }
         const inviteUserDTO: InviteUserDTO = {
             chatId: chat.id,
             userId: userId,
-
             password: password,
         };
         socket.emit("inviteUser", inviteUserDTO);
+        console.log("chatId", chat.id);
         changeActiveChat(chat.id);
+        closeModal();
     }
 
     if (!publicChats) return <div>Loading data...</div>;
