@@ -18,16 +18,13 @@ import {
     INFO_FREQ_ALRDYSENT1,
     INFO_FREQ_ALRDYSENT2,
     INFO_FREQ_CANCEL,
-    INFO_NAMECHANGED,
     INFO_RM,
     INFO_SEND_FREQ,
     INFO_UNBLOCK,
-    ERR_NAMETAKEN,
-    ERR_NAMECHANGE,
 } from "../shared/constants.user.service";
 import * as fs from "fs";
 import * as path from "path";
-import { MatchDTO, MatchInfoDTO } from "src/match/match-dto";
+import { MatchDTO } from "src/match/match-dto";
 
 @Injectable()
 export class UserService {
@@ -275,16 +272,6 @@ export class UserService {
         }
     }
 
-   /*  async getAllIdsAndNames(): Promise<IdAndNameDTO[]> {
-        const users = await this.prisma.user.findMany({
-            select: { id: true, name: true },
-        });
-        if (users.length === 0) return []; // would it not just do that anyway?
-        return users.map(({ id, name }) => {
-            return new IdAndNameDTO(id, name);
-        });
-    } */
-
     async getAllUsers(): Promise<UserProfileDTO[]> {
         const allUsers: User[] = await this.prisma.user.findMany({
             orderBy: { id: "desc" },
@@ -341,6 +328,21 @@ export class UserService {
             if (error.code === "P2002") {
                 return { success: false, message: "Name already taken" };
             }
+            throw error;
+        }
+    }
+
+    async logout(thisId: number) {
+        try {
+            await this.prisma.user.update({
+                where: { id: thisId },
+                data: {
+                    online: false,
+                },
+            });
+            return { success: true, message: "Logged out" };
+        } catch (error) {
+            console.error(`Error in logout: ${error.message}`);
             throw error;
         }
     }

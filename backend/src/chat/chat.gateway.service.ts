@@ -9,6 +9,7 @@ import {
     SendMessageDTO,
 } from "./chat.DTOs";
 import { Socket } from "socket.io";
+import { hashSync } from "bcryptjs";
 import { userGateway } from "./userGateway";
 
 @Injectable()
@@ -17,6 +18,12 @@ export class ChatGatewayService {
 
     constructor(private readonly prisma: PrismaService) {}
 
+    printConnectedUsers() {
+        console.log("Connected users:");
+        this.connectedUsers.forEach((user) => {
+            console.log("User", user.userID, "on socket", user.socket.id);
+        });
+    }
     async setAllUsersOffline(): Promise<void> {
         await this.prisma.user.updateMany({
             data: {
@@ -50,10 +57,9 @@ export class ChatGatewayService {
     }
 
     deleteUserFromList(userIDToDelete: number) {
-        this.connectedUsers.filter(
+        this.connectedUsers = this.connectedUsers.filter(
             (userGateway) => userGateway.userID !== userIDToDelete
         );
-        //console.log("deleteUserFromList:", this.connectedUsers);
     }
 
     addUserToList(user: userGateway) {
@@ -104,7 +110,7 @@ export class ChatGatewayService {
                 chatId: chatId,
             },
         });
-        if (chatUser.blocked) {
+        if (chatUser?.blocked) {
             return true;
         } else {
             return false;
@@ -325,7 +331,8 @@ export class ChatGatewayService {
     async sendChatAdditionUpdate(inviteForm: InviteUserDTO) {
         const chatName = await this.getChatNameFromID(inviteForm.chatId);
         const socket: Socket = this.getUserSocketFromUserId(inviteForm.userId);
-        socket.emit("updateChat", new ChatListDTO(chatName, inviteForm.chatId));
+        if (socket)
+            socket.emit("updateChat", new ChatListDTO(chatName, inviteForm.chatId));
     }
 
     async sendChatUpdate(chatId: number) {
@@ -353,10 +360,50 @@ export class ChatGatewayService {
         }
     }
 
-    async inviteUserToChat(inviteForm: InviteUserDTO) {
+    async getPasswordFromChat(chatId: number) {
+        const chat = await this.prisma.chat.findUnique({
+            where: {
+                id: chatId,
+            },
+        });
+        return chat.password;
+    }
+
+    async isChatPassworded(chatId: number) {
+        const chat = await this.prisma.chat.findFirst({
+            where: {
+                id: chatId,
+                password: {
+                    not: null,
+                },
+            },
+        });
+        if (chat) return true;
+        return false;
+    }
+    async checkIsPossibleToAddInChatWithPassword(
+        inviteForm: InviteUserDTO,
+        inviter: Socket
+    ) {
+        if (!(await this.isChatPassworded(inviteForm.chatId))) {
+            return true;
+        }
+        const inviterId: number = this.getUserIdFromSocket(inviter);
+        if (await this.IsUserInChat(inviteForm.chatId, inviterId)) {
+            return true;
+        }
+        const hashedPassword = await this.getPasswordFromChat(inviteForm.chatId);
+        if (hashedPassword === hashSync(inviteForm.password, "salt")) {
+            return true;
+        }
+        return false;
+    }
+
+    async inviteUserToChat(inviteForm: InviteUserDTO, inviter: Socket) {
         if (
             !(await this.IsUserInChat(inviteForm.chatId, inviteForm.userId)) &&
-            !(await this.isUserBanned(inviteForm.chatId, inviteForm.userId))
+            !(await this.isUserBanned(inviteForm.chatId, inviteForm.userId)) &&
+            (await this.checkIsPossibleToAddInChatWithPassword(inviteForm, inviter))
         ) {
             var chatUser = await this.prisma.chat_User.create({
                 data: {

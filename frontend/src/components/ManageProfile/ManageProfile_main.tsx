@@ -88,6 +88,14 @@ function ManageProfile() {
         }
     }
 
+    async function handleLogout() {
+        const apiUrl = backendUrl.user + "logout";
+        const res = await fetchX<{ message: string }>("PATCH", apiUrl, null);
+        document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
+        alert(res.message);
+        window.location.href = "/home";
+    }
+
     if (!userData) return <LoadingH2 elementName={"Manage your profile"} />;
 
     return (
@@ -106,6 +114,10 @@ function ManageProfile() {
                         {userData.name}
                         <button className="editName" onClick={handleNameChange}>
                             ✎
+                        </button>
+                        <div style={{ width: "100%" }}></div>
+                        <button className="logoutButton" onClick={handleLogout}>
+                            <img src="images/logout.png" alt="Logout" height={"30px"} />
                         </button>
                     </div>
                 </div>

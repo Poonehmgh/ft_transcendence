@@ -1,17 +1,27 @@
-import React from "react";
+import React, { useContext, useEffect, useRef } from "react";
+
+// Contexts
+import { ChatContext } from "src/contexts/ChatProvider";
 
 // DTO
-import { Chat_CompleteDTO } from "src/dto/chat-dto";
+import { ExtendedChatUserDTO, MessageDTO } from "src/dto/chat-dto";
 
 // CSS
 import "src/styles/chat.css";
 import "src/styles/style.css";
 
-interface messageDisplayProps {
-    activeChat: Chat_CompleteDTO | null;
-}
+function MessageDisplay(): React.JSX.Element {
+    const { activeChat } = useContext(ChatContext);
+    const messagesEndRef = useRef(null);
 
-function MessageDisplay(props: messageDisplayProps): React.JSX.Element {
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [activeChat]);
+
     const formatTime = (timeStamp: Date): string => {
         const date = new Date(timeStamp);
         return date.toLocaleTimeString([], {
@@ -21,17 +31,28 @@ function MessageDisplay(props: messageDisplayProps): React.JSX.Element {
         });
     };
 
-    if (!props.activeChat) return null;
+    function getUserName(userId: number): string {
+        if (!activeChat || !activeChat.chatUsers) return "Unknown User";
+        const user = activeChat.chatUsers.find(
+            (e: ExtendedChatUserDTO) => e.userId === userId
+        );
+        return user ? user.userName : "Unknown User";
+    }
+
+    if (!activeChat || !activeChat.messages) return <div className="messagesArea"></div>;
 
     return (
         <div className="messagesArea">
-            {props.activeChat.messages.map((message, index) => (
-                <div key={index} className="messageFlexStart">
-                    <span className="timeStamp">{formatTime(message.timeStamp)}</span>
-                    <span className="author">{message.authorId}</span>
-                    <div className="content">{message.content}</div>
+            {activeChat.messages.map((e: MessageDTO) => (
+                <div key={e.id} className="messageFlexStart">
+                    <div className="nameAndTime">
+                        <div className="timeStamp">{formatTime(e.timeStamp)}</div>
+                        <span className="author">{getUserName(e.authorId)}</span>
+                    </div>
+                    <div className="content">{e.content}</div>
                 </div>
             ))}
+            <div ref={messagesEndRef} />
         </div>
     );
 }

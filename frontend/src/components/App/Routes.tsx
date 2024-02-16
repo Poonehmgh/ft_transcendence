@@ -9,6 +9,8 @@ import ErrorPage from "src/components/App/ErrorPage";
 import ManageProfile from "src/components/ManageProfile/ManageProfile_main";
 import Home from "../Home/Home_main";
 import { gotValidToken } from "src/functions/utils";
+
+// Contexts
 import { AuthContext } from "src/contexts/AuthProvider";
 
 function PongersRoutes() {
