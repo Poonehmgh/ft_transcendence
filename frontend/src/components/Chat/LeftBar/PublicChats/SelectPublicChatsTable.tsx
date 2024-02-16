@@ -27,21 +27,20 @@ function SelectPublicChatsTable(): React.JSX.Element {
     }, []);
 
     function handleChatSelection(chat: BasicChatDTO) {
+        if (!window.confirm(`Join ${chat.name}?`)) return;
+        let password = null;
         if (chat.passwordRequired) {
-            const password = prompt("Enter chat password");
+            password = prompt("Enter chat password");
             if (password === null) return;
             console.log(password);
-        } else {
-            if (window.confirm(`Join ${chat.name}?`)) {
-                const inviteUserDTO: InviteUserDTO = {
-                    chatId: chat.id,
-                    userId: userId,
-                    password: null,
-                };
-                socket.emit("inviteUser", inviteUserDTO);
-                changeActiveChat(chat.id);
-            }
         }
+        const inviteUserDTO: InviteUserDTO = {
+            chatId: chat.id,
+            userId: userId,
+            password: password,
+        };
+        socket.emit("inviteUser", inviteUserDTO);
+        changeActiveChat(chat.id);
     }
 
     if (!publicChats) return <div>Loading data...</div>;

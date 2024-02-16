@@ -549,10 +549,14 @@ export class ChatService {
                 },
             });
 
+            /*
+            Maybe have this. But if, then should only delete private chats.
+            Public chats should only be actively deleted by the owner.
             const activeUserIds = await this.getActiveUserIds(chatId);
             if (activeUserIds.length === 0) {
                 await this.deleteChat(chatId);
             }
+            */
             this.chatGatewayService.sendChatUpdate(chatId);
             return { message: "Left the chat" };
         } catch (error) {
