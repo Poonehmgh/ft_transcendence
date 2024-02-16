@@ -13,6 +13,8 @@ import backendUrl from "src/constants/backendUrl";
 
 import "../../styles/gamev2.css";
 
+const socket = io("localhost:5500");
+
 function GameV2() {
   const [userData, setUserData] = useState(null);
   const [opponentID, setOpponentID] = useState(null);
@@ -30,7 +32,6 @@ function GameV2() {
     "pong-container default-color"
   );
 
-  const socket = io("localhost:5500");
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -47,6 +48,8 @@ function GameV2() {
 
         const data = await response.json();
         setUserData(data);
+        console.log("fetchUserData");
+        console.log(data);
       } catch (error) {
         console.log(error);
       }
@@ -65,6 +68,10 @@ function GameV2() {
       } else if (data === "Already in game") {
         setQueueStatus("Already In Game");
       }
+
+      console.log("handleQueue");
+      console.log(data);
+
     };
 
     socket.on("queueConfirm", handleQueue);
@@ -72,7 +79,7 @@ function GameV2() {
     return () => {
       socket.off("queueConfirm", handleQueue);
     };
-  }, [socket]);
+  }, []);
 
   useEffect(() => {
     const handleNewRound = (data) => {
@@ -90,6 +97,8 @@ function GameV2() {
           }
         }
       }
+      console.log("handleNewRound");
+      console.log(data);
     };
 
     socket.on("newRound", handleNewRound);
@@ -97,7 +106,7 @@ function GameV2() {
     return () => {
       socket.off("newRound", handleNewRound);
     };
-  }, [userData, socket, isPlayerOne]);
+  }, []);
 
   useEffect(() => {
     const fetchOpponentData = async () => {
@@ -121,11 +130,15 @@ function GameV2() {
       }
     };
     fetchOpponentData();
+    console.log("fetchOpponentData");
+    console.log(opponentData);
   }, [opponentID]);
 
   useEffect(() => {
     const handleGameUpdate = (data) => {
       setGameUpdate(data);
+      console.log("handleGameUpdate");
+      console.log(data);
     }
     
     socket.on("gameUpdate", handleGameUpdate)
@@ -133,7 +146,7 @@ function GameV2() {
     return () => {
       socket.off("gameUpdate", handleGameUpdate);
     };
-  }, [socket]);
+  }, []);
 
   const resetHooks = () => {
     setUserData(null);
@@ -147,8 +160,10 @@ function GameV2() {
   };
 
   useEffect(() => {
-    const handleGameResult = () => {
+    const handleGameResult = (data) => {
       resetHooks();
+      console.log("gameResult");
+      console.log(data);
     } 
 
     socket.on("gameResult", handleGameResult);
@@ -156,11 +171,11 @@ function GameV2() {
     return () => {
       socket.off("gameResult", handleGameResult);
     };
-  }, [socket]);
+  }, []);
 
   const sendMessageToServer = () => {
     //Remove later - need to connect after log-in
-    socket.emit("connectMessage", { userID: userData.id }); //Remove later
+    socket.emit("connectMessage", { userID: 109014 }); //Remove later
     socket.emit("joinQueue", { userID: userData.id });
   };
 
