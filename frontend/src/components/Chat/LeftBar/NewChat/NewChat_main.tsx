@@ -9,7 +9,7 @@ import backendUrl from "src/constants/backendUrl";
 import { ChatContext } from "src/contexts/ChatProvider";
 
 // DTO
-import { Chat_ChatUsersDTO, NewChatDTO } from "src/dto/chat-dto";
+import { BasicChatWithUsersDTO, NewChatDTO } from "src/dto/chat-dto";
 
 // CSS
 import "src/styles/modals.css";
@@ -72,7 +72,11 @@ function NewChat(): React.JSX.Element {
             newChatDTO.password = passwordRef.current.value;
         }
         try {
-            const newChat: Chat_ChatUsersDTO = await fetchX("POST", apiUrl, newChatDTO);
+            const newChat: BasicChatWithUsersDTO = await fetchX(
+                "POST",
+                apiUrl,
+                newChatDTO
+            );
             changeActiveChat(newChat.id);
             closeModal();
         } catch (error) {

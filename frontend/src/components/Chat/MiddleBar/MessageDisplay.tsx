@@ -39,7 +39,7 @@ function MessageDisplay(): React.JSX.Element {
         return user ? user.userName : "Unknown User";
     }
 
-    if (!activeChat || !activeChat.messages) return null;
+    if (!activeChat || !activeChat.messages) return <div className="messagesArea"></div>;
 
     return (
         <div className="messagesArea">

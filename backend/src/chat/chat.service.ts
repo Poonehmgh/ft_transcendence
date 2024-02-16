@@ -304,6 +304,7 @@ export class ChatService {
             if (newChatDTO.dm) {
                 chatInfo = await this.createDmChat(creatorId, newChatDTO);
             } else {
+                console.log("Creating group chat with:", newChatDTO.userIds);
                 chatInfo = await this.createGroupChat(creatorId, newChatDTO);
             }
             //this.chatGatewayService.sendChatUpdate(chatInfo.id);
@@ -374,7 +375,7 @@ export class ChatService {
         const firstThreeNames: string[] = userNames.slice(0, 3);
         const omittedCount: number = userNames.length - 3;
 
-        newChatDto.password = hashSync(newChatDto.password, "salt");
+        //newChatDto.password = hashSync(newChatDto.password, "salt");
 
         const newChatName = `Chat with ${firstThreeNames.join(", ")}${
             omittedCount > 0 ? ` and ${omittedCount} others` : ""

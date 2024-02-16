@@ -37,6 +37,7 @@ function SelectPublicChatsTable(): React.JSX.Element {
         const inviteUserDTO: InviteUserDTO = {
             chatId: chat.id,
             userId: userId,
+
             password: password,
         };
         socket.emit("inviteUser", inviteUserDTO);

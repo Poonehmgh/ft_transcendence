@@ -61,7 +61,7 @@ export class ExtendedChatUserDTO extends ChatUserDTO {
     userName: string;
 }
 
-export class Chat_ChatUsersDTO {
+export class BasicChatWithUsersDTO {
     id: number;
     name: string;
     dm: boolean;

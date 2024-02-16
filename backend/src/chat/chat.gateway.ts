@@ -18,6 +18,7 @@ import {
 import { ChatGatewayService } from "./chat.gateway.service";
 import { userGateway } from "./userGateway";
 import { OnModuleInit } from "@nestjs/common";
+import { connect } from "http2";
 
 @WebSocketGateway()
 export class ChatGateway implements OnModuleInit, OnGatewayDisconnect {
@@ -29,8 +30,19 @@ export class ChatGateway implements OnModuleInit, OnGatewayDisconnect {
     async onModuleInit() {
         await this.chatGatewayService.setAllUsersOffline();
         console.log("Starting chat gateway");
-        this.server.on("connection", (socket) => {
+
+        this.server.on("connection", async (socket) => {
             console.log(`Client ${socket.id} got connected to chat gateway`);
+            
+            const rawUserId = socket.handshake.query.userId;
+            const userId = Array.isArray(rawUserId) ? parseInt(rawUserId[0], 10) : parseInt(rawUserId, 10);
+            
+            this.chatGatewayService.deleteUserFromList(userId);
+            this.chatGatewayService.addUserToList(new userGateway(userId, socket));
+            await this.chatGatewayService.setUserSocketId(userId, socket.id);
+            await this.chatGatewayService.setUserOnlineStatus(userId, true);
+
+            this.chatGatewayService.printConnectedUsers();
         });
     }
 
@@ -42,7 +54,10 @@ export class ChatGateway implements OnModuleInit, OnGatewayDisconnect {
         this.chatGatewayService.deleteUserFromList(userID);
     }
 
-    @SubscribeMessage("connectMessage")
+
+    // fixed filterfunction and added this to intial connect.
+    // sending a connectMessage is now obsolete.
+ /*    @SubscribeMessage("connectMessage")
     async establishConnect(
         @ConnectedSocket() client: Socket,
         @MessageBody() data: EstablishConnectDTO
@@ -50,7 +65,7 @@ export class ChatGateway implements OnModuleInit, OnGatewayDisconnect {
         this.chatGatewayService.addUserToList(new userGateway(data.userID, client));
         await this.chatGatewayService.setUserSocketId(data.userID, client.id);
         await this.chatGatewayService.setUserOnlineStatus(data.userID, true);
-    }
+    } */
 
     @SubscribeMessage("sendMessage")
     async receivingMessage(
