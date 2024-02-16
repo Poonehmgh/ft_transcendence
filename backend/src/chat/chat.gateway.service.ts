@@ -105,7 +105,7 @@ export class ChatGatewayService {
                 chatId: chatId,
             },
         });
-        if (chatUser.blocked) {
+        if (chatUser?.blocked) {
             return true;
         } else {
             return false;
@@ -326,7 +326,8 @@ export class ChatGatewayService {
     async sendChatAdditionUpdate(inviteForm: InviteUserDTO) {
         const chatName = await this.getChatNameFromID(inviteForm.chatId);
         const socket: Socket = this.getUserSocketFromUserId(inviteForm.userId);
-        socket.emit("updateChat", new ChatListDTO(chatName, inviteForm.chatId));
+        if (socket)
+            socket.emit("updateChat", new ChatListDTO(chatName, inviteForm.chatId));
     }
 
     async sendChatUpdate(chatId: number) {

@@ -1,15 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { fetchGetSet } from "src/functions/utils";
 import backendUrl from "src/constants/backendUrl";
 
+// Contexts
+import { ChatContext } from "src/contexts/ChatProvider";
+import { SocketContext } from "src/contexts/SocketProvider";
+import { AuthContext } from "src/contexts/AuthProvider";
+
 // DTO
-import { BasicChatDTO } from "chat-dto";
+import { BasicChatDTO, InviteUserDTO } from "chat-dto";
 
 // CSS
 import "src/styles/modals.css";
 import "src/styles/buttons.css";
 
 function SelectPublicChatsTable(): React.JSX.Element {
+    const { changeActiveChat } = useContext(ChatContext);
+    const socket = useContext(SocketContext);
+    const { userId } = useContext(AuthContext);
     const [publicChats, setPublicChats] = useState<BasicChatDTO[]>(null);
     const [searchQuery, setSearchQuery] = useState<string>("");
 
@@ -24,7 +32,15 @@ function SelectPublicChatsTable(): React.JSX.Element {
             if (password === null) return;
             console.log(password);
         } else {
-            if (window.confirm(`Join ${chat.name}?`)) console.log("would join chat");
+            if (window.confirm(`Join ${chat.name}?`)) {
+                const inviteUserDTO: InviteUserDTO = {
+                    chatId: chat.id,
+                    userId: userId,
+                    password: null,
+                };
+                socket.emit("inviteUser", inviteUserDTO);
+                changeActiveChat(chat.id);
+            }
         }
     }
 
