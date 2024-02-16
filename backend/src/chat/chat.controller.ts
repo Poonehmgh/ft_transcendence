@@ -40,6 +40,23 @@ export class ChatController {
         }
     }
 
+    @Get("public_chats")
+    async getPublicChats(@Req() req: AuthenticatedRequest, @Res() res) {
+        try {
+            const result = await this.chatService.getPublicChats(req.user.id);
+            if (result instanceof Error) {
+                res.status(500).json({ error: result.message });
+            } else if ("error" in result) {
+                res.status(500).json({ error: result.error });
+            } else {
+                res.status(200).json(result);
+            }
+        } catch (error) {
+            console.error("Error getPublicChats:", error);
+            res.status(500).json({ error: "Internal Server Error" });
+        }
+    }
+
     @Get("latest_messages/:chatId")
     async getLatestMessages(@Param("chatId") chatId: number, @Res() res) {
         try {
@@ -104,15 +121,15 @@ export class ChatController {
         }
     }
 
-      //Give 0,0 for first 50 messages
-      @Get(":chatId/messages")
-      async getMessageList(
-          @Param("chatId") chatId: number,
-          @Query("from") from: number,
-          @Query("to") to: number
-      ) {
-          return this.chatService.getMessagesByRange(chatId, from, to);
-      }
+    //Give 0,0 for first 50 messages
+    @Get(":chatId/messages")
+    async getMessageList(
+        @Param("chatId") chatId: number,
+        @Query("from") from: number,
+        @Query("to") to: number
+    ) {
+        return this.chatService.getMessagesByRange(chatId, from, to);
+    }
 
     // Manipulate chat
 
@@ -122,6 +139,7 @@ export class ChatController {
         @Body() newChat: NewChatDTO,
         @Res() res
     ) {
+        console.log("createChatContoller", newChat);
         try {
             const result = await this.chatService.createChat(req.user.id, newChat);
             if (result instanceof Error) {
@@ -132,7 +150,7 @@ export class ChatController {
                 res.status(200).json(result);
             }
         } catch (error) {
-            console.error("Error createChat:", error);
+            console.error("Error createChat Controller:", error);
             res.status(500).json({ error: "Internal Server Error" });
         }
     }

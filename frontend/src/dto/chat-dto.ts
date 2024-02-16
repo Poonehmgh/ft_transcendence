@@ -22,10 +22,12 @@ export class NewChatDTO {
 export class InviteUserDTO {
     chatId: number;
     userId: number;
+    password: string;
 
-    constructor(chatID: number, userId: number) {
+    constructor(chatID: number, userId: number, password: string) {
         this.chatId = chatID;
         this.userId = userId;
+        this.password = password;
     }
 }
 
@@ -59,7 +61,7 @@ export class ExtendedChatUserDTO extends ChatUserDTO {
     userName: string;
 }
 
-export class Chat_ChatUsersDTO {
+export class BasicChatWithUsersDTO {
     id: number;
     name: string;
     dm: boolean;
@@ -76,4 +78,12 @@ export class ChatDTO {
     passwordRequired: boolean;
     chatUsers: ExtendedChatUserDTO[];
     messages: MessageDTO[];
+}
+
+export class BasicChatDTO {
+    id: number;
+    name: string;
+    dm: boolean;
+    isPrivate: boolean;
+    passwordRequired: boolean;
 }

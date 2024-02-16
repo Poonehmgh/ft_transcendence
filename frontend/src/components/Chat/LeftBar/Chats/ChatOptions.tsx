@@ -29,7 +29,7 @@ function ChatOptions(): React.JSX.Element {
     }, [activeChat]);
 
     async function leaveChat() {
-        if (window.confirm("Leave this chat?")) {
+        if (window.confirm(`Leave ${activeChat.name}?`)) {
             const apiUrl = backendUrl.chat + `leave/${activeChat?.id}`;
             const res = await fetchX<{ message: string }>("PATCH", apiUrl, null);
             alert(res.message);

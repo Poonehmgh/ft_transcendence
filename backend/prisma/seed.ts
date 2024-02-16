@@ -38,15 +38,35 @@ async function main() {
             name: "shmismshmang",
         },
     });
+    await prisma.user.create({
+        data: {
+            id: 42,
+            email: "admin@pongers.io",
+            name: "admin",
+        },
+    });
 
-    /*     const pongers = await prisma.chat.create({
+    await prisma.chat.create({
         data: {
             id: 0,
             name: "pongers public channel",
             dm: false,
             password: null,
+            isPrivate: false,
+            chatUsers: {
+                create: [
+                    {
+                        userId: 42,
+                        owner: true,
+                        admin: true,
+                        blocked: false,
+                        muted: false,
+                        invited: false,
+                    },
+                ],
+            },
         },
-    }); */
+    });
 }
 
 main()

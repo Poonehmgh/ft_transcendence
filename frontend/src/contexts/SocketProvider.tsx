@@ -12,8 +12,28 @@ interface socketProviderProps {
 }
 
 export function SocketProvider(props: socketProviderProps): JSX.Element {
-    const [socket, setSocket] = useState<Socket | null>(null);
     const { validToken, userId } = useContext(AuthContext);
+    const [socket, setSocket] = useState<Socket | null>(null);
+    const [updateTrigger, setUpdateTrigger] = useState(false);
+
+    // update activechat if updatemessage.id === activechat.id
+
+    useEffect(() => {
+        if (!socket) return;
+
+        const handleNewChatMessage = (message: any) => {
+            alert(`New chat message: ${message.content}`);
+            setUpdateTrigger((prev) => !prev);
+            //better: add the message to the messages
+        };
+        socket.on("updateMessage", handleNewChatMessage);
+
+        return () => {
+            socket.off("updateMessage", handleNewChatMessage);
+        };
+    }, [socket]);
+
+
 
     useEffect(() => {
         function disconnectSocket(socket: Socket | null, userId: number) {
@@ -26,8 +46,12 @@ export function SocketProvider(props: socketProviderProps): JSX.Element {
 
         if (validToken) {
             console.log("Connecting socket for userId:", userId);
-            const newSocket = io(backendUrl.base, {});
-            newSocket.emit("connectMessage", { userID: userId });
+            const newSocket = io(backendUrl.base, {
+                query: {
+                    userId: userId,
+                }
+            });
+           // newSocket.emit("connectMessage", { userID: userId });
             
             // shouldn't ever not be null, but nice syntax example for
             // react's functional update pattern

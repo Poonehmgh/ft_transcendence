@@ -18,6 +18,12 @@ export class ChatGatewayService {
 
     constructor(private readonly prisma: PrismaService) {}
 
+    printConnectedUsers() {
+        console.log("Connected users:");
+        this.connectedUsers.forEach((user) => {
+            console.log("User", user.userID, "on socket", user.socket.id);
+        });
+    }
     async setAllUsersOffline(): Promise<void> {
         await this.prisma.user.updateMany({
             data: {
@@ -51,10 +57,9 @@ export class ChatGatewayService {
     }
 
     deleteUserFromList(userIDToDelete: number) {
-        this.connectedUsers.filter(
+        this.connectedUsers = this.connectedUsers.filter(
             (userGateway) => userGateway.userID !== userIDToDelete
         );
-        //console.log("deleteUserFromList:", this.connectedUsers);
     }
 
     addUserToList(user: userGateway) {
@@ -105,7 +110,7 @@ export class ChatGatewayService {
                 chatId: chatId,
             },
         });
-        if (chatUser.blocked) {
+        if (chatUser?.blocked) {
             return true;
         } else {
             return false;
@@ -326,7 +331,8 @@ export class ChatGatewayService {
     async sendChatAdditionUpdate(inviteForm: InviteUserDTO) {
         const chatName = await this.getChatNameFromID(inviteForm.chatId);
         const socket: Socket = this.getUserSocketFromUserId(inviteForm.userId);
-        socket.emit("updateChat", new ChatListDTO(chatName, inviteForm.chatId));
+        if (socket)
+            socket.emit("updateChat", new ChatListDTO(chatName, inviteForm.chatId));
     }
 
     async sendChatUpdate(chatId: number) {

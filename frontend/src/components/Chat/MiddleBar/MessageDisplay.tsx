@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 
 // Contexts
 import { ChatContext } from "src/contexts/ChatProvider";
@@ -12,6 +12,15 @@ import "src/styles/style.css";
 
 function MessageDisplay(): React.JSX.Element {
     const { activeChat } = useContext(ChatContext);
+    const messagesEndRef = useRef(null);
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [activeChat]);
 
     const formatTime = (timeStamp: Date): string => {
         const date = new Date(timeStamp);
@@ -24,24 +33,26 @@ function MessageDisplay(): React.JSX.Element {
 
     function getUserName(userId: number): string {
         if (!activeChat || !activeChat.chatUsers) return "Unknown User";
-        console.log("activeChat", activeChat);
         const user = activeChat.chatUsers.find(
             (e: ExtendedChatUserDTO) => e.userId === userId
         );
         return user ? user.userName : "Unknown User";
     }
 
-    if (!activeChat || !activeChat.messages) return null;
+    if (!activeChat || !activeChat.messages) return <div className="messagesArea"></div>;
 
     return (
         <div className="messagesArea">
             {activeChat.messages.map((e: MessageDTO) => (
                 <div key={e.id} className="messageFlexStart">
-                    <span className="timeStamp">{formatTime(e.timeStamp)}</span>
-                    <span className="author">{getUserName(e.authorId)}</span>
+                    <div className="nameAndTime">
+                        <div className="timeStamp">{formatTime(e.timeStamp)}</div>
+                        <span className="author">{getUserName(e.authorId)}</span>
+                    </div>
                     <div className="content">{e.content}</div>
                 </div>
             ))}
+            <div ref={messagesEndRef} />
         </div>
     );
 }
