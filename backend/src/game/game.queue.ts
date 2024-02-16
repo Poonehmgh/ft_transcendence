@@ -16,7 +16,7 @@ export class GameData {
 	ScorePlayer2: number = 0;
 	PositionPlank1: number = 0;
 	PositionPlank2: number = 0;
-	PositionBall: [number, number] = [90, 50];
+	PositionBall: [number, number] = [50, 50];
 	VelocityBall: [number, number] = [10, 0];
 
 	//1 is active, 0 is inactive
@@ -24,10 +24,10 @@ export class GameData {
 
 
 	//constants
-	fieldWidth: number = 180;
+	fieldWidth: number = 100;
 	fieldHeight: number = 100;
 	ballRadius: number = 2;
-	plankWidth: number = 2.75;
+	plankWidth: number = 1.5;
 	plankHeight: number = 35;
 
 	interval: NodeJS.Timer;
@@ -69,7 +69,7 @@ export class GameData {
 	resetGameData = () => {
 		this.PositionPlank1 = 0;
 		this.PositionPlank2 = 0;
-		this.PositionBall = [90, 50];
+		this.PositionBall = [50, 50];
 		this.VelocityBall = [10, 0];
 	}
 
