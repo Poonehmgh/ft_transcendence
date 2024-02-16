@@ -1,12 +1,17 @@
+/*React*/
 import React, {useEffect, useState } from "react";
-
-// CSS
-import "src/styles/playerCardTable.css";
-import Button from "../shared/Button";
-import { authContentHeader } from "src/functions/utils";
-import  QRCode from 'react-qr-code';
 import  {useNavigate}  from 'react-router-dom';
 import { decodeToken } from "react-jwt";
+import  QRCode from 'react-qr-code';
+
+/*CSS*/
+import "src/styles/playerCardTable.css";
+
+/*Components*/
+import Button from "../shared/Button";
+
+/*Header*/
+import { authContentHeader } from "src/functions/utils";
 
 
 
@@ -30,7 +35,6 @@ function TwoFa() {
             .then(data=>{
                 // const token = data.token;
                 // const decoded = decodeToken(token);
-                console.log(twoFa);
                 if (!twoFa){
                     const qrURL = data.url;
                     if (!qrURL)
@@ -38,7 +42,6 @@ function TwoFa() {
                     setQrCodeUrl(qrURL);}
             }).catch(error => {
             console.log("Error in handle2FaButtonClick", error);
-
         })
     }
 
@@ -55,18 +58,18 @@ function TwoFa() {
             method: "POST",
             headers: authContentHeader(),
             body: JSON.stringify({code})
-        }).then(response => {
-            if (!response.ok)
-                throw new Error("Failed to enable 2Fa");
-            return response.json();})
-            .then(data=>{
-                if (data.success === true){
-                    setQrCodeUrl('');
-                }
-            }).then(() => {
-            navigate(`/message/${"success"}/${"2FA is successfully enabled."}`);
-        }).catch(error => {
-            console.log("Error in handleSubmitCode", error);
+            }).then(response => {
+                if (!response.ok)
+                    throw new Error("Failed to enable 2Fa");
+                return response.json();})
+                .then(data=>{
+                    if (data.success === true){
+                        setQrCodeUrl('');
+                    }
+                    }).then(() => {
+                        navigate(`/message/${"success"}/${"2FA is successfully enabled."}`);
+                        }).catch(error => {
+                            console.log("Error in handleSubmitCode", error);
         })
     }
 
@@ -99,7 +102,6 @@ function TwoFa() {
 
 
     return ( <>
-            {/*{!qrCodeUrl && <div>*/}
             {!qrCodeUrl && <Button name={twoFa === true? "Disable" : "Enable"} onClick={() => {handle2FaButtonClick()}} />}
             {qrCodeUrl && !twoFa && <form onSubmit={handleSubmitCode}>
                     <p>Please enter security code.</p>

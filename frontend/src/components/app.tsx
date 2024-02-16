@@ -15,8 +15,8 @@ import Auth from "src/components/Home/Auth";
 
 
 function App() {
-    const token = getTokenFromCookie();
-    const validToken = isTokenValid(token);
+    // const token = getTokenFromCookie();
+    // const validToken = isTokenValid(token);
 
     return (
         <Router>
@@ -26,7 +26,8 @@ function App() {
                     <Route path="/" element={<Home />} />
                     <Route path="/home" element={<Home />} />
                     <Route path="/auth" element={<Auth />} /> {/*added this line*/}
-                    {validToken ? (
+                    {/*temporarily added this amendment:*/}
+                    {isTokenValid(getTokenFromCookie()) ? (
                         <>
                             <Route path="/leaderboard" element={<Leaderboard />} />
                             <Route path="/allusers" element={<AllUsers />} />
