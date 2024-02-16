@@ -207,7 +207,9 @@ export class ChatService {
                     every: {
                         userId: { in: [userId1, userId2] },
                     },
-                    some: {},
+                    some: {
+                        AND: [{ userId: userId1 }, { userId: userId2 }],
+                    },
                 },
             },
             include: {
