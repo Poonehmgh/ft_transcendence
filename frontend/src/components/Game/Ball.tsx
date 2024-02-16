@@ -11,14 +11,14 @@ import "../../styles/gamev2.css";
 
 function Ball(props) {
   const { newRound, gameUpdate } = props;
-  const [ballPosition, setBallPosition] = useState([50, 75]); //BE
+  const [updatedBallPosition, setUpdatedBallPosition] = useState([50, 75]); //BE
 
   useEffect(() => {
     if (newRound) {      
       const x = newRound.PositionBall[0];
       const y = newRound.PositionBall[1];
       
-      setBallPosition([
+      setUpdatedBallPosition([
         0.54 * x + 95.5,
         0.54 * y + 1.5,
       ]);
@@ -28,10 +28,10 @@ function Ball(props) {
 
   useEffect(() => {
     if (gameUpdate) {
-      const x2 = gameUpdate.updatedBallPosition[0];
-      const y2 = gameUpdate.updatedBallPosition[1];
+      const x2 = gameUpdate.ballPosition[0];
+      const y2 = gameUpdate.ballPosition[1];
 
-      setBallPosition([
+      setUpdatedBallPosition([
         0.54 * x2 + 95.5,
         0.54 * y2 + 1.5,
       ]);
@@ -39,8 +39,8 @@ function Ball(props) {
   }, [gameUpdate]);
 
   const ballStyle = {
-    left: `${ballPosition[0]}%`, //BE
-    top: `${ballPosition[1]}%`, //BE
+    left: `${updatedBallPosition[0]}%`, //BE
+    top: `${updatedBallPosition[1]}%`, //BE
     width: `0.5%`, //BE
     height: `1%`, //BE
     borderRadius: "50%",
