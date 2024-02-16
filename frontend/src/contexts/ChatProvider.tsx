@@ -32,14 +32,21 @@ export function ChatProvider({ children }) {
     useEffect(() => {
         if (!socket) return;
 
-        const handleNewChatMessage = (message: MessageDTO) => {
+        const handleNewChatMessage = async (message: MessageDTO) => {
             console.log("New message received:", message);
             if (message.chatId === activeChat.id) {
                 console.log("Updating activeChat with new message:", message);
+                try {
+                    await changeActiveChat(message.chatId);
+                } catch (error) {
+                    console.error("Error fetching updated chat:", error);
+                }
+
+                /* console.log("Updating activeChat with new message:", message);
                 setActiveChat((prevActiveChat) => ({
                     ...prevActiveChat,
                     chatMessages: [...prevActiveChat.chatMessages, message],
-                }));
+                })); */
             }
         };
 
