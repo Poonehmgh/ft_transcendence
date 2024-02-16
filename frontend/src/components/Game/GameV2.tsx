@@ -75,9 +75,11 @@ function GameV2() {
   }, [socket]);
 
   useEffect(() => {
-    if (userData) {
-      socket.on("newRound", (data) => {
+    const handleNewRound = (data) => {
+      if (userData) {
         setNewRound(data);
+        setQueueStatus("Playing");
+        console.log(data);
         if (isPlayerOne === null) {
           if (data.userID1 === userData.id) {
             setIsPlayerOne(true);
@@ -87,11 +89,13 @@ function GameV2() {
             setOpponentID(data.userID1);
           }
         }
-      });
-    }
+      }
+    };
+
+    socket.on("newRound", handleNewRound);
 
     return () => {
-      socket.off("newRound");
+      socket.off("newRound", handleNewRound);
     };
   }, [userData, socket, isPlayerOne]);
 
@@ -120,12 +124,14 @@ function GameV2() {
   }, [opponentID]);
 
   useEffect(() => {
-    socket.on("gameUpdate", (data) => {
+    const handleGameUpdate = (data) => {
       setGameUpdate(data);
-    });
+    }
+    
+    socket.on("gameUpdate", handleGameUpdate)
 
     return () => {
-      socket.off("gameUpdate");
+      socket.off("gameUpdate", handleGameUpdate);
     };
   }, [socket]);
 
@@ -141,12 +147,14 @@ function GameV2() {
   };
 
   useEffect(() => {
-    socket.on("gameResult", (data) => {
+    const handleGameResult = () => {
       resetHooks();
-    });
+    } 
+
+    socket.on("gameResult", handleGameResult);
 
     return () => {
-      socket.off("gameResult");
+      socket.off("gameResult", handleGameResult);
     };
   }, [socket]);
 
