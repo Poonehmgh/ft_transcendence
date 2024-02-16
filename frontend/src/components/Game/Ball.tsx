@@ -1,56 +1,58 @@
 import React, { useEffect, useState } from "react";
 import "../../styles/gamev2.css";
 
-// leftX == 1.5
-// rightX == 99.5
-// lengthX == 98
-
-// lowY == 95.5
-// topY == 52
-// lengthY == 43.5
-
 function Ball(props) {
   const { newRound, gameUpdate } = props;
-  const [updatedBallPosition, setUpdatedBallPosition] = useState([50, 75]); //BE
+  const [currentPosition, setCurrentPosition] = useState([50, 75]);
+  const [targetPosition, setTargetPosition] = useState([50, 75]);
 
   useEffect(() => {
     if (newRound) {      
-      const x = newRound.PositionBall[0];
-      const y = newRound.PositionBall[1];
-      
-      setUpdatedBallPosition([
-        0.54 * x + 95.5,
-        0.54 * y + 1.5,
+      setCurrentPosition([
+        0.98 * newRound.PositionBall[0] + 1.5,
+        -0.435 * newRound.PositionBall[1] + 95.5,
       ]);
-
     }
   }, [newRound]);
 
   useEffect(() => {
     if (gameUpdate) {
-      const x2 = gameUpdate.ballPosition[0];
-      const y2 = gameUpdate.ballPosition[1];
-
-      setUpdatedBallPosition([
-        0.54 * x2 + 95.5,
-        0.54 * y2 + 1.5,
+      setTargetPosition([
+        0.98 * gameUpdate.ballPosition[0] + 1.5,
+        -0.435 * gameUpdate.ballPosition[1] + 95.5,
       ]);
     }
   }, [gameUpdate]);
 
+  useEffect(() => {
+    const updatePosition = () => {
+      const ease = 0.005; // Adjust the ease value for smoother or quicker movement
+      const dx = targetPosition[0] - currentPosition[0];
+      const dy = targetPosition[1] - currentPosition[1];
+      const vx = dx * ease;
+      const vy = dy * ease;
+      setCurrentPosition([currentPosition[0] + vx, currentPosition[1] + vy]);
+    };
+
+    const animationFrame = requestAnimationFrame(updatePosition);
+
+    return () => cancelAnimationFrame(animationFrame);
+  }, [currentPosition, targetPosition]);
+
   const ballStyle = {
-    left: `${updatedBallPosition[0]}%`, //BE
-    top: `${updatedBallPosition[1]}%`, //BE
-    width: `0.5%`, //BE
-    height: `1%`, //BE
+    left: `${currentPosition[0]}%`,
+    top: `${currentPosition[1]}%`,
+    width: `0.5%`,
+    height: `1%`,
     borderRadius: "50%",
   };
 
   return (
     <>
       {newRound ? (
-        <div className="ball" style={ballStyle} />
-      ) : (
+        <div className="ball" style={ballStyle}></div>
+        ) : (
+        // <div className="ball" style={ballStyle}></div>
         <></>
       )}
     </>

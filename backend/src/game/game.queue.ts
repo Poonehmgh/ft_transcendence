@@ -16,8 +16,8 @@ export class GameData {
 	ScorePlayer2: number = 0;
 	PositionPlank1: number = 0;
 	PositionPlank2: number = 0;
-	PositionBall: [number, number] = [50, 50];
-	VelocityBall: [number, number] = [10, 0];
+	PositionBall: [number, number] = [50, 20];
+	VelocityBall: [number, number] = [-10,0];
 
 	//1 is active, 0 is inactive
 	GameStatus: number = 1;
@@ -69,8 +69,8 @@ export class GameData {
 	resetGameData = () => {
 		this.PositionPlank1 = 0;
 		this.PositionPlank2 = 0;
-		this.PositionBall = [50, 50];
-		this.VelocityBall = [10, 0];
+		this.PositionBall = [50, 20];
+		this.VelocityBall = [-10, 0];
 	}
 
 

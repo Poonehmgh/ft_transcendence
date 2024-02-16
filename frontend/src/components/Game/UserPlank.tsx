@@ -44,10 +44,6 @@ function UserPlank(props) {
           default:
             break;
         }
-        socket.emit("updatePLank", {
-          userID: userData.id,
-          plankPosition: (plankPosition - 81) / -0.21,
-        });
       };
 
       window.addEventListener("keydown", handleKeyDown);
@@ -56,21 +52,29 @@ function UserPlank(props) {
         window.removeEventListener("keydown", handleKeyDown);
       };
     }
-  }, [newRound, plankPosition, socket, userData]);
+  }, [newRound, plankPosition]);
+
+  useEffect(() => {
+    if (userData) {
+      const position = (plankPosition - 81) / -0.21;
+      socket.emit("updatePLank", {
+        userID: userData.id,
+        plankPosition: position,
+      });
+    }
+  }, [plankPosition, socket]);
 
   const plankStyle = {
     top: `${plankPosition}%`,
-    height: "15%", 
+    height: "15%",
     width: "1.5%",
   };
 
   return (
     <>
-      {/* {console.log("User Plank rendered")}
-      {console.log(isPlayerOne)} */}
       {newRound ? (
         <div className="plank" style={plankStyle} />
-        ) : (
+      ) : (
         // <div className="plank" style={plankStyle} />
         <></>
       )}

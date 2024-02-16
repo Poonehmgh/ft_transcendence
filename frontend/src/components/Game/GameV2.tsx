@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import PlayerGameProfile from "./PlayerGameProfile";
 import ScoreV2 from "./ScoreV2";
@@ -8,14 +8,11 @@ import Ball from "./Ball";
 
 import { io } from "socket.io-client";
 import { authHeader } from "../../functions/utils";
+import { SocketContext } from "src/contexts/SocketProvider";
 
 import backendUrl from "src/constants/backendUrl";
 
 import "../../styles/gamev2.css";
-
-//Remove later - need to connect after log-in
-const socket = io("localhost:5500");
-socket.emit("connectMessage", { userID: 109014 }); //Remove later
 
 function GameV2() {
   const [userData, setUserData] = useState(null);
@@ -26,6 +23,7 @@ function GameV2() {
   const [isPlayerOne, setIsPlayerOne] = useState(null);
   const [gameUpdate, setGameUpdate] = useState(null);
   // const [gameResult, setGameResult] = useState(null);
+  const [refreshCount, setRefreshCount] = useState(0);
   const [backgroundColor, setBackgroundColor] = useState("default-color");
   const [infoContainerClass, setInfoContainerClass] = useState(
     "info-container default-color"
@@ -33,6 +31,8 @@ function GameV2() {
   const [pongContainerClass, setPongContainerClass] = useState(
     "pong-container default-color"
   );
+
+  const socket = useContext(SocketContext);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -106,7 +106,7 @@ function GameV2() {
     return () => {
       socket.off("newRound", handleNewRound);
     };
-  }, []);
+  }, [refreshCount]);
 
   useEffect(() => {
     const fetchOpponentData = async () => {
@@ -146,7 +146,7 @@ function GameV2() {
     return () => {
       socket.off("gameUpdate", handleGameUpdate);
     };
-  }, []);
+  }, [refreshCount]);
 
   const resetHooks = () => {
     setUserData(null);
@@ -157,6 +157,7 @@ function GameV2() {
     setIsPlayerOne(null);
     setGameUpdate(null);
     // setGameResult(null);
+    setRefreshCount(0);
   };
 
   useEffect(() => {
@@ -171,7 +172,7 @@ function GameV2() {
     return () => {
       socket.off("gameResult", handleGameResult);
     };
-  }, []);
+  }, [refreshCount]);
 
   const sendMessageToServer = () => {
     socket.emit("joinQueue", { userID: userData.id });
@@ -187,6 +188,14 @@ function GameV2() {
     setInfoContainerClass("info-container " + backgroundColor);
     setPongContainerClass("pong-container " + backgroundColor);
   };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setRefreshCount(prevCount => prevCount + 1);
+    }, 1);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="game-container">

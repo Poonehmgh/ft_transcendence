@@ -29,9 +29,12 @@ function OpponentPlank(props) {
 
   return (
     <>
-      {/* {console.log("Opponent Plank rendered")}
-      {console.log(isPlayerOne)} */}
-      {newRound ? <div className="plank" style={plankStyle} /> : <></>}
+      {newRound ? (
+        <div className="plank" style={plankStyle} />
+      ) : (
+        // <div className="plank" style={plankStyle} />
+        <></>
+      )}
     </>
   );
 }
