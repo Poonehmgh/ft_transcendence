@@ -1,17 +1,20 @@
-import {
-    forwardRef,
-    Inject,
-    Injectable,
-    UnauthorizedException,
-    BadRequestException,
-} from '@nestjs/common';
 
-import { PrismaService } from 'src/prisma/prisma.service';
-import { AuthService } from '../auth.service';
-import { User } from '@prisma/client';
+/*Express*/
 import { Request, Response } from 'express';
-import {User_42} from "../interfaces/user_42.interface";
+
+/*Nest*/
+import { forwardRef, Inject, Injectable, UnauthorizedException, BadRequestException,} from '@nestjs/common';
+
+/*Prisma*/
+import { PrismaService } from 'src/prisma/prisma.service';
+import { User } from '@prisma/client';
+
+/*Services*/
+import { AuthService } from '../auth.service';
+
+/**OTPLIB */
 import {authenticator} from "otplib";
+
 @Injectable()
 export class TwoFactorService {
     constructor(
@@ -20,9 +23,11 @@ export class TwoFactorService {
         private authservice: AuthService,
     ){}
 
+    /*redirect 2fa enabled sign in */
     signin2Fa(response: Response, user: User) {
-
-        response.redirect("http://localhost:3000/2fa");
+        const apiUrl = process.env.FRONTEND_URL + "/auth"
+        response.cookie("user", user);
+        response.redirect(apiUrl);
         return response;
     }
 
@@ -62,29 +67,29 @@ export class TwoFactorService {
                 where: {id: foundUser.id},
                 data: {twoFa: true},
             })
+
         const newToken = await this.authservice.generateJwtToken({
             email: foundUser.email,
             id: foundUser.id,
             name: foundUser.name,
             twoFa: true,});
 
-            return newToken;
+            return {"token": newToken};
         }
         throw new BadRequestException("Verify2FaCode: Invalid code.");
     }
 
     /*authenticate signing in with 2fa*/
-    async authenticate2Fa(code: string, email:string) {
+    async authenticate2Fa(code: string, email:string, response: Response){
         const foundUser = await this.authservice.findUserByEmail(email);
         if (!foundUser)
             throw new UnauthorizedException("Authenticate2Fa: No such user found.");
-
         const verified = authenticator.verify({
             token: code,
             secret: foundUser.twoFaSecret,
         });
         if (!verified)
-            throw new BadRequestException("Authenticate2Fa: Invalid code.");
+            throw new Error("Authenticate2Fa: Invalid code.");
 
         const newToken = await this.authservice.generateJwtToken({
             email: foundUser.email,
@@ -92,8 +97,11 @@ export class TwoFactorService {
             name: foundUser.name,
             twoFa: true,
         });
-
-        return newToken;
+        response.status(200);
+        // response.cookie("token", newToken);
+        // response.redirect("http://localhost:3000/home")
+        response.json({token: newToken});
+        return response;
         }
 
 
@@ -119,6 +127,11 @@ export class TwoFactorService {
 
         }
 
-
+        async get2faState(email: string) {
+            const foundUser = await this.authservice.findUserByEmail(email);
+            return {
+                twoFa: foundUser.twoFa,
+            }
+        }
 
 }

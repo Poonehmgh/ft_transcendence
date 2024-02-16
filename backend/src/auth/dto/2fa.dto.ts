@@ -12,6 +12,16 @@ export class TwoFaCodeDto {
     @IsNotEmpty()
     code: string;
 
+    // @IsEmail()
+    // email: string;
+}
+
+export class TwoFaCodeDto2 {
+
+    @IsString()
+    @IsNotEmpty()
+    code: string;
+
     @IsEmail()
     email: string;
 }
