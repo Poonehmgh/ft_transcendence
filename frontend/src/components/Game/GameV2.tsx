@@ -13,7 +13,9 @@ import backendUrl from "src/constants/backendUrl";
 
 import "../../styles/gamev2.css";
 
+//Remove later - need to connect after log-in
 const socket = io("localhost:5500");
+socket.emit("connectMessage", { userID: 109014 }); //Remove later
 
 function GameV2() {
   const [userData, setUserData] = useState(null);
@@ -31,7 +33,6 @@ function GameV2() {
   const [pongContainerClass, setPongContainerClass] = useState(
     "pong-container default-color"
   );
-
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -71,7 +72,6 @@ function GameV2() {
 
       console.log("handleQueue");
       console.log(data);
-
     };
 
     socket.on("queueConfirm", handleQueue);
@@ -139,9 +139,9 @@ function GameV2() {
       setGameUpdate(data);
       console.log("handleGameUpdate");
       console.log(data);
-    }
-    
-    socket.on("gameUpdate", handleGameUpdate)
+    };
+
+    socket.on("gameUpdate", handleGameUpdate);
 
     return () => {
       socket.off("gameUpdate", handleGameUpdate);
@@ -164,7 +164,7 @@ function GameV2() {
       resetHooks();
       console.log("gameResult");
       console.log(data);
-    } 
+    };
 
     socket.on("gameResult", handleGameResult);
 
@@ -174,8 +174,6 @@ function GameV2() {
   }, []);
 
   const sendMessageToServer = () => {
-    //Remove later - need to connect after log-in
-    socket.emit("connectMessage", { userID: 109014 }); //Remove later
     socket.emit("joinQueue", { userID: userData.id });
   };
 
