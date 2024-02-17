@@ -96,7 +96,7 @@ function MemberOptions(): React.JSX.Element {
         changeActiveChat(activeChat?.id);
     }
 
-    if (!selectedUser || !thisUserRole) return <div className="p"></div>;
+    if (!selectedUser || thisUserRole === null) return <div className="p"></div>;
 
     return (
         <div className="sideBar_sub1">
@@ -147,9 +147,9 @@ function MemberOptions(): React.JSX.Element {
                     <div className="memberOptionsButtonsDiv">
                         <button
                             className="bigButton"
-                            onClick={() => changeUserStatus("mute")}
+                            onClick={() => changeUserStatus(selectedUser.muted ? "unmute" : "mute")}
                         >
-                            Mute
+                            {selectedUser.muted ? "Unmute" : "Mute"}
                         </button>
                         <button
                             className="bigButton"

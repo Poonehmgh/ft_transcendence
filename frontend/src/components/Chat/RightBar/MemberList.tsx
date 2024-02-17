@@ -30,7 +30,11 @@ function MemberList(): React.JSX.Element {
                         }
                         onClick={() => changeSelectedUser(e.userId)}
                     >
-                        {e.userName}
+                        <div>{e.userName}</div>
+                        <span className="smallTextDiv">
+                            {e.owner ? "Owner" : e.admin ? "Admin" : "Member"}
+                            {e.muted ? " | Muted" : ""}
+                        </span>
                     </button>
                 ))}
             </div>

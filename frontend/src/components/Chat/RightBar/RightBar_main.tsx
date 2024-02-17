@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import MemberList from "./MemberList";
-import MemberInfo from "./MemberInfo";
 import MemberOptions from "./MemberOptions";
 
 // Contexts
@@ -20,7 +19,6 @@ function RightBar(): React.JSX.Element {
     return (
         <div className="sideBar">
             {<MemberList />}
-            {selectedUser && <MemberInfo />}
             {selectedUser && selectedUser.userId != userId && <MemberOptions />}
         </div>
     );
