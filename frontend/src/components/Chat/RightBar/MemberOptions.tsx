@@ -84,6 +84,9 @@ function MemberOptions(): React.JSX.Element {
         } else if (action === "mute") {
             if (!window.confirm(`Mute ${selectedUser.userName}?`)) return;
             data.muted = true;
+        } else if (action === "unmute") {
+            if (!window.confirm(`Unmute ${selectedUser.userName}?`)) return;
+            data.muted = false;
         } else if (action === "kick") {
             if (!window.confirm(`Kick ${selectedUser.userName}?`)) return;
             data.kick = true;
