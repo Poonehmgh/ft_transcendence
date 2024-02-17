@@ -16,8 +16,8 @@ export class GameData {
 	ScorePlayer2: number = 0;
 	PositionPlank1: number = 0;
 	PositionPlank2: number = 0;
-	PositionBall: [number, number] = [50, 20];
-	VelocityBall: [number, number] = [-10,0];
+	PositionBall: [number, number] = [50, 10];
+	VelocityBall: [number, number] = [10, 0];
 
 	//1 is active, 0 is inactive
 	GameStatus: number = 1;
@@ -27,8 +27,8 @@ export class GameData {
 	fieldWidth: number = 100;
 	fieldHeight: number = 100;
 	ballRadius: number = 2;
-	plankWidth: number = 1.5;
-	plankHeight: number = 35;
+	plankWidth: number = 10;
+	plankHeight: number = 20;
 
 	interval: NodeJS.Timer;
 
@@ -43,21 +43,22 @@ export class GameData {
 	}
 
 	plankCollision = () => {
-		if (this.PositionBall[0] - this.ballRadius < this.plankWidth
-			&& this.PositionBall[1] > this.PositionPlank1
-			&& this.PositionBall[1] < this.PositionPlank1 + this.plankHeight) {
-			const relativeHitPosition = (this.PositionBall[1] - this.PositionPlank1) - (this.plankHeight / 2);
-			this.VelocityBall[1] = relativeHitPosition / (this.plankHeight / 2);
-			this.VelocityBall[0] *= -1;
-		}
-		if (this.PositionBall[0] - this.ballRadius >= this.fieldWidth - this.plankWidth
-			&& this.PositionBall[1] > this.PositionPlank2
-			&& this.PositionBall[1] < this.PositionPlank2 + this.plankHeight) {
-			const relativeHitPosition = (this.PositionBall[1] - this.PositionPlank2) - (this.plankHeight / 2);
-			this.VelocityBall[1] = relativeHitPosition / (this.plankHeight / 2); // Adjust vertical speed + can be tweaked with additional coefficients
-			this.VelocityBall[0] *= -1;
-		}
-	}
+    if (this.PositionBall[0] - this.ballRadius < this.plankWidth &&
+        this.PositionBall[1] + this.ballRadius > this.PositionPlank1 &&
+        this.PositionBall[1] - this.ballRadius < this.PositionPlank1 + this.plankHeight) {
+        const relativeHitPosition = (this.PositionBall[1] - (this.PositionPlank1 + this.plankHeight / 2));
+        this.VelocityBall[1] = relativeHitPosition / (this.plankHeight / 2);
+        this.VelocityBall[0] *= -1;
+    }
+
+    if (this.PositionBall[0] + this.ballRadius > this.fieldWidth - this.plankWidth &&
+        this.PositionBall[1] + this.ballRadius > this.PositionPlank2 &&
+        this.PositionBall[1] - this.ballRadius < this.PositionPlank2 + this.plankHeight) {
+        const relativeHitPosition = (this.PositionBall[1] - (this.PositionPlank2 + this.plankHeight / 2));
+        this.VelocityBall[1] = relativeHitPosition / (this.plankHeight / 2);
+        this.VelocityBall[0] *= -1;
+    }
+}
 
 	sendNewRoundMessage = () => {
 		if (this.GameStatus == 1) {
@@ -69,8 +70,8 @@ export class GameData {
 	resetGameData = () => {
 		this.PositionPlank1 = 0;
 		this.PositionPlank2 = 0;
-		this.PositionBall = [50, 20];
-		this.VelocityBall = [-10, 0];
+		this.PositionBall = [50, 10];
+		this.VelocityBall = [10, 0];
 	}
 
 
@@ -125,7 +126,7 @@ export class GameData {
 		this.PositionBall[0] += this.VelocityBall[0];
 		this.PositionBall[1] += this.VelocityBall[1];
 		this.infoUser1.socket.emit('gameUpdate', new GameUpdateDTO(this.PositionPlank2, this.PositionBall));
-		this.infoUser2.socket.emit('gameUpdate', new GameUpdateDTO(this.PositionPlank1, this.getMirroredPosition()));
+		this.infoUser2.socket.emit('gameUpdate', new GameUpdateDTO(this.PositionPlank1, this.PositionBall));
 	}
 
 	gameLogic = () => {
