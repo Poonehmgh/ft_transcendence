@@ -10,7 +10,7 @@ import PublicChats from "./PublicChats/PublicChats_main";
 function LeftBar(): React.JSX.Element {
     return (
         <div className="sideBar">
-            <div className="leftBarButtonContainer">
+            <div className="memberOptionsButtonsDiv">
                 <PublicChats />
                 <NewChat />
             </div>

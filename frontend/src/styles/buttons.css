@@ -6,6 +6,33 @@
     --backgroundHue1: 0;
 }
 
+.btn-dark {
+    display: inline-block;
+    margin-left: 65px;
+    padding: 0.25rem 0.75rem;
+    border-radius: 10rem;
+    color: #fff;
+    background-color: #434a45; /* Background color of the button */
+    font-size: 0.75rem;
+    letter-spacing: 0.05rem;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    cursor: pointer; /* Add cursor pointer on hover */
+
+    /* Hover effects */
+    &:hover {
+        background-color: #2d2d47; /* Darker background color on hover */
+    }
+
+    /* Optional: Add box shadow on hover */
+    &:hover {
+        box-shadow: 0 0.5rem 1rem rgba(0, 123, 255, 0.5);
+    }
+}
+
+
 .bigButton {
     --lightnessOffset: 0%;
 
@@ -110,66 +137,4 @@
 .textInput::placeholder {
     color: #333333;
     font-size: 0.9rem;
-}
-/*.btn-dark{*/
-/*    margin-left: 65px;*/
-/*}*/
-.btn-dark {
-    display: inline-block;
-    margin-left: 65px;
-    padding: 0.25rem 0.75rem;
-    border-radius: 10rem;
-    color: #fff;
-    background-color: #434a45; /* Background color of the button */
-    font-size: 0.75rem;
-    letter-spacing: 0.05rem;
-    transition: all 0.3s;
-    position: relative;
-    overflow: hidden;
-    z-index: 1;
-    cursor: pointer; /* Add cursor pointer on hover */
-
-    /* Hover effects */
-    &:hover {
-        background-color: #2d2d47; /* Darker background color on hover */
-    }
-
-    /* Optional: Add box shadow on hover */
-    &:hover {
-        box-shadow: 0 0.5rem 1rem rgba(0, 123, 255, 0.5);
-    }
-}
-
-/* Optional reset for presentation */
-* {
-    font-family: Arial;
-    text-decoration: none;
-    font-size: 20px;
-}
-
-.container {
-    padding-top: 50px;
-    margin: 0 auto;
-    width: 100%;
-    text-align: center;
-}
-
-h1 {
-    text-transform: uppercase;
-    font-size: 0.8rem;
-    margin-bottom: 2rem;
-    color: #777;
-}
-
-span {
-    display: block;
-    margin-top: 2rem;
-    font-size: 0.7rem;
-    color: #777;
-}
-
-span a {
-    font-size: 0.7rem;
-    color: #999;
-    text-decoration: underline;
 }

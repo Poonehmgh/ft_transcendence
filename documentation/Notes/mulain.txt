@@ -1,36 +1,30 @@
---- imports ---
-
-backend:
-npm install multer @types/multer
-
-frontend:
-npm install react-modal
-
-(npm install --save-dev @types/react-modal)
-
-
---- notes meeting fedjrrrrr ---
-
-- get last 50 msg function
-- does a new chat being created and a user being part of it emit a socket event?
-	- if not: how does the frontend know to update the user's channel list?
-	- maybe don't need this, because this happens thru a "new chat request" emission?
-
-
 --- to do ---
+- token refresh
+- stress test chat
+- stress test game
+- test 2fa auth
+- test login with taken name
 
-- check if DTO removable from frontend
-- clean up use effect / use state in MyProfileModal
-- rm ScoreCardDTO, just use user profile dto
 
-- UserProfile
-	- unify myProfile and other user profile, conditional render depending on calling user id
-    - fetchGetSetify this
+- add game invite function to chat (button already done)
+- banned users list
+- header to absolute values
+- sanitize username and chatname in backend 
 
-optional:
-- leaderboard
-	- show avatars
-- all users
-	- sortingmode
-	- pagination
-	- search for user by username / filter columns
+
+
+- Optimization (optional)
+    - specific update messages containing the to be updated information (no general re-renders)
+    - sharing one DTO location
+    - Clean up DTO naming and amount of DTOs
+    - Central handlers for backend service functions (try, return diff response types)
+    - Central handler for user interactions frontend
+    - Enum for user rights in chat
+    - avatar handling (show in chat and leaderboard)
+    - paginate all users (maybe other things as well)
+    - sorting options for all users
+    - call older chat messages (standard grab of x, if want earlier, implement mechanism for that)
+    - organize and standardize css
+    - change user status calls to single action (not bools for every possible action)
+    - friend management should use socket
+    - friend management should use a provider

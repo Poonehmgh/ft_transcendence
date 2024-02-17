@@ -31,6 +31,34 @@ export class InviteUserDTO {
     }
 }
 
+export class ChangeChatUserStatusDTO {
+    operatorId: number;
+    chatId: number;
+    userId: number;
+    owner: boolean;
+    muted: boolean;
+    banned: boolean;
+    admin: boolean;
+    kick: boolean;
+    constructor(
+        operatorId: number,
+        chatId: number,
+        userId: number,
+        owner: boolean,
+        muted: boolean,
+        banned: boolean,
+        admin: boolean
+    ) {
+        this.operatorId = operatorId;
+        this.chatId = chatId;
+        this.userId = userId;
+        this.owner = owner;
+        this.muted = muted;
+        this.banned = banned;
+        this.admin = admin;
+    }
+}
+
 // from backend
 
 export class MessageDTO {
@@ -40,7 +68,13 @@ export class MessageDTO {
     authorId: number;
     chatId: number;
 
-    constructor(id: number, timeStamp: Date, content: string, authorId: number, chatId: number) {
+    constructor(
+        id: number,
+        timeStamp: Date,
+        content: string,
+        authorId: number,
+        chatId: number
+    ) {
         this.id = id;
         this.timeStamp = timeStamp;
         this.content = content;
@@ -99,4 +133,3 @@ export class ChatListDTO {
         this.chatId = chatId;
     }
 }
-

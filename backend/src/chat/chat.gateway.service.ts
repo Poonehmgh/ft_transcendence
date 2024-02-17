@@ -434,15 +434,19 @@ export class ChatGatewayService {
     }
 
     getStatusToChange(user, changeForm: ChangeChatUserStatusDTO): string {
-        if (changeForm.kick) return "kick";
-        if (user.owner != changeForm.owner) return "owner";
-        if (!user.admin && user.admin != changeForm.admin) return "admin";
-        if (user.muted && user.muted != changeForm.muted) return "mute";
-        if (!user.banned && user.banned != changeForm.banned) return "ban";
-        return "none";
+        let action = "none";
+
+        if (changeForm.kick) action = "kick";
+        else if (user.owner != changeForm.owner) action = "owner";
+        else if (user.admin != changeForm.admin) action = "admin";
+        else if (user.muted != changeForm.muted) action = "mute";
+        else if (user.banned != changeForm.banned) action = "ban";
+        console.log("getStatusToChange:", action);
+        return action;
     }
 
     async changeOwner(changeForm: ChangeChatUserStatusDTO) {
+        console.log("changeOwner");
         //dont mind that its update many, its just easier to use
         await this.prisma.chat_User.updateMany({
             where: {
@@ -467,6 +471,7 @@ export class ChatGatewayService {
     }
 
     async changeAdmin(changeForm: ChangeChatUserStatusDTO) {
+        console.log("changeAdmin");
         //dont mind that its update many, its just easier to use
         await this.prisma.chat_User.updateMany({
             where: {
@@ -481,6 +486,7 @@ export class ChatGatewayService {
     }
 
     async kickChatUser(changeForm: ChangeChatUserStatusDTO) {
+        console.log("kickChatUser");
         await this.prisma.chat_User.deleteMany({
             where: {
                 userId: Number(changeForm.userId),
@@ -491,6 +497,20 @@ export class ChatGatewayService {
     }
 
     async muteChatUser(changeForm: ChangeChatUserStatusDTO) {
+        console.log("muteChatUser");
+        if (!changeForm.muted) {
+            await this.prisma.chat_User.updateMany({
+                where: {
+                    userId: Number(changeForm.userId),
+                    chatId: Number(changeForm.chatId),
+                },
+                data: {
+                    muted: false,
+                },
+            });
+            this.sendChatUpdate(changeForm.chatId);
+            return;
+        }
         const mutedUntil = new Date();
         mutedUntil.setMinutes(mutedUntil.getMinutes() + 5);
         await this.prisma.chat_User.updateMany({
@@ -507,6 +527,7 @@ export class ChatGatewayService {
     }
 
     async banChatUser(changeForm: ChangeChatUserStatusDTO) {
+        console.log("banChatUser");
         await this.prisma.chat_User.updateMany({
             where: {
                 userId: Number(changeForm.userId),

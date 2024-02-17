@@ -12,16 +12,9 @@ function MemberList(): React.JSX.Element {
     if (!activeChat || !activeChat.chatUsers)
         return <div className="p">Loading data...</div>;
 
-    /* 
-   - interact with chat members
-   - think of decision tree...
-
-   */
-
     return (
         <div className="sideBar_sub1">
             <div className="chatElementDiv">
-                --- chat members ---
                 {activeChat.chatUsers.map((e: ExtendedChatUserDTO) => (
                     <button
                         key={e.userId}
@@ -30,7 +23,11 @@ function MemberList(): React.JSX.Element {
                         }
                         onClick={() => changeSelectedUser(e.userId)}
                     >
-                        {e.userName}
+                        <div>{e.userName}</div>
+                        <span className="smallTextDiv">
+                            {e.owner ? "Owner" : e.admin ? "Admin" : "Member"}
+                            {e.muted ? " | Muted" : ""}
+                        </span>
                     </button>
                 ))}
             </div>

@@ -138,7 +138,7 @@ function ManageProfile() {
                         twoFa={userData.twoFa}
                     />
                 </div>
-                <TwoFa/>
+                <TwoFa />
                 <ManageContactsTabs />
 
                 <input
