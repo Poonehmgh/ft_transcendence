@@ -7,7 +7,7 @@ From user
 | what                        | Message       | takes          |
 |-----------------------------|---------------|----------------|
 | To join game queue          | 'joinQueue'   | JoinGameDTO    |
-| To send an update for plank | 'updatePLank' | PlankUpdateDTO |
+| To send an update for plank | 'updatePlank' | PlankUpdateDTO |
 
 To user
 
