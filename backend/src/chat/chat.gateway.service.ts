@@ -467,6 +467,7 @@ export class ChatGatewayService {
     }
 
     async changeAdmin(changeForm: ChangeChatUserStatusDTO) {
+        console.log("changeAdmin");
         //dont mind that its update many, its just easier to use
         await this.prisma.chat_User.updateMany({
             where: {
@@ -481,6 +482,7 @@ export class ChatGatewayService {
     }
 
     async kickChatUser(changeForm: ChangeChatUserStatusDTO) {
+        console.log("kickChatUser");
         await this.prisma.chat_User.deleteMany({
             where: {
                 userId: Number(changeForm.userId),
@@ -491,6 +493,7 @@ export class ChatGatewayService {
     }
 
     async muteChatUser(changeForm: ChangeChatUserStatusDTO) {
+        console.log("muteChatUser");
         const mutedUntil = new Date();
         mutedUntil.setMinutes(mutedUntil.getMinutes() + 5);
         await this.prisma.chat_User.updateMany({
@@ -507,6 +510,7 @@ export class ChatGatewayService {
     }
 
     async banChatUser(changeForm: ChangeChatUserStatusDTO) {
+        console.log("banChatUser");
         await this.prisma.chat_User.updateMany({
             where: {
                 userId: Number(changeForm.userId),

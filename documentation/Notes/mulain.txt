@@ -6,6 +6,7 @@
 - test login with taken name
 
 
+- add game invite function to chat (button already done)
 - banned users list
 - header to absolute values
 - sanitize username and chatname in backend 
@@ -25,3 +26,5 @@
     - call older chat messages (standard grab of x, if want earlier, implement mechanism for that)
     - organize and standardize css
     - change user status calls to single action (not bools for every possible action)
+    - friend management should use socket
+    - friend management should use a provider

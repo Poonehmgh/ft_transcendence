@@ -4,6 +4,7 @@ import { authContentHeader, fetchGetSet } from "src/functions/utils";
 import PlayerCardTable from "../shared/PlayerCardTable";
 import SocialActionBar from "./SocialActionBar/SocialActionBar_main";
 import MatchHistory from "./MatchHistory";
+import backendUrl from "src/constants/backendUrl";
 
 // DTO
 import { UserProfileDTO } from "src/dto/user-dto";
@@ -22,8 +23,7 @@ interface userProfileModalProps {
 function UserProfileModal(props: userProfileModalProps) {
     const [userProfile, setUserProfile] = useState<UserProfileDTO | null>(null);
     const [avatarURL, setAvatarURL] = useState(null);
-    const apiUrl_profile =
-        process.env.REACT_APP_BACKEND_URL + "/user/profile/" + props.id;
+    const apiUrl_profile = backendUrl.user + "profile/" + props.id;
 
     function closeModal() {
         props.onClose();
@@ -31,7 +31,7 @@ function UserProfileModal(props: userProfileModalProps) {
 
     useEffect(() => {
         async function fetchAvatar() {
-            const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/avatar/" + props.id;
+            const apiUrl = backendUrl.user + "avatar/" + props.id;
             try {
                 const response = await fetch(apiUrl, {
                     method: "GET",
@@ -84,7 +84,9 @@ function UserProfileModal(props: userProfileModalProps) {
                             />
                         </div>
                         {props.id.toString() === localStorage.getItem("userId") ? (
-                            <div className="p" style={{margin:"20px 0px"}}>This is your profile.</div>
+                            <div className="p" style={{ margin: "20px 0px" }}>
+                                This is your profile.
+                            </div>
                         ) : (
                             <SocialActionBar otherProfile={userProfile} />
                         )}

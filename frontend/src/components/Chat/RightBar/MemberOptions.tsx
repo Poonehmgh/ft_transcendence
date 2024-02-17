@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import UserProfileModal from "src/components/UserProfileModal/UserProfileModal_main";
 
 // Contexts
 import { ChatContext } from "src/contexts/ChatProvider";
@@ -25,6 +26,7 @@ function MemberOptions(): React.JSX.Element {
     const socket = useContext(SocketContext);
     const [thisUserRole, setThisUserRole] = useState<Role>(null);
     const [selectedUserRole, setSelectedUserRole] = useState<Role>(null);
+    const [modalIsOpen, setModalIsOpen] = useState(false);
 
     // the role should already be an enum in the model
     useEffect(() => {
@@ -96,16 +98,26 @@ function MemberOptions(): React.JSX.Element {
         changeActiveChat(activeChat?.id);
     }
 
+    function handleOpenModal() {
+        setModalIsOpen(true);
+    }
+
+    function handleCloseModal() {
+        setModalIsOpen(false);
+    }
+
     if (!selectedUser || thisUserRole === null) return <div className="p"></div>;
 
     return (
         <div className="sideBar_sub1">
+            <UserProfileModal
+                id={selectedUser.userId}
+                isOpen={modalIsOpen}
+                onClose={handleCloseModal}
+            />
             <div className="chatElementDiv">
-                <div className="memberOptionsButtonsDiv" style={{ marginBottom: "10px" }}>
-                    <button
-                        className="bigButton"
-                        onClick={() => changeUserStatus("owner")}
-                    >
+                <div className="memberOptionsButtonsDiv">
+                    <button className="bigButton" onClick={handleOpenModal}>
                         View Profile
                     </button>
                     <button
@@ -116,7 +128,7 @@ function MemberOptions(): React.JSX.Element {
                     </button>
                 </div>
 
-                <div className="memberOptionsButtonsDiv" style={{ marginBottom: "10px" }}>
+                <div className="memberOptionsButtonsDiv">
                     {thisUserRole === 2 && (
                         <button
                             className="bigButton"
@@ -147,7 +159,9 @@ function MemberOptions(): React.JSX.Element {
                     <div className="memberOptionsButtonsDiv">
                         <button
                             className="bigButton"
-                            onClick={() => changeUserStatus(selectedUser.muted ? "unmute" : "mute")}
+                            onClick={() =>
+                                changeUserStatus(selectedUser.muted ? "unmute" : "mute")
+                            }
                         >
                             {selectedUser.muted ? "Unmute" : "Mute"}
                         </button>
