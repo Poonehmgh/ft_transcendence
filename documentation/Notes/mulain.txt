@@ -1,4 +1,14 @@
 --- to do ---
+- token refresh
+- stress test chat
+- stress test game
+- test 2fa auth
+- test login with taken name
+
+
+- banned users list
+- header to absolute values
+- sanitize username and chatname in backend 
 
 
 
@@ -13,3 +23,5 @@
     - paginate all users (maybe other things as well)
     - sorting options for all users
     - call older chat messages (standard grab of x, if want earlier, implement mechanism for that)
+    - organize and standardize css
+    - change user status calls to single action (not bools for every possible action)

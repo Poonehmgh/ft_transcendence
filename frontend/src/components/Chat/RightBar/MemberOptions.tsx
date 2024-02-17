@@ -3,12 +3,15 @@ import React, { useContext, useEffect, useState } from "react";
 // Contexts
 import { ChatContext } from "src/contexts/ChatProvider";
 import { AuthContext } from "src/contexts/AuthProvider";
+import { SocketContext } from "src/contexts/SocketProvider";
+
+// DTO
+import { ChatUserDTO, ChangeChatUserStatusDTO } from "chat-dto";
 
 // CSS
 import "src/styles/style.css";
 import "src/styles/chat.css";
 import "src/styles/buttons.css";
-import { ChatUserDTO } from "chat-dto";
 
 enum Role {
     owner = 2,
@@ -17,8 +20,9 @@ enum Role {
 }
 
 function MemberOptions(): React.JSX.Element {
-    const { activeChat, selectedUser } = useContext(ChatContext);
+    const { activeChat, changeActiveChat, selectedUser } = useContext(ChatContext);
     const { userId } = useContext(AuthContext);
+    const socket = useContext(SocketContext);
     const [thisUserRole, setThisUserRole] = useState<Role>(null);
     const [selectedUserRole, setSelectedUserRole] = useState<Role>(null);
 
@@ -51,20 +55,45 @@ function MemberOptions(): React.JSX.Element {
         }
     }, [selectedUser, activeChat.chatUsers]);
 
-    async function changeRole(role: string) {
-        console.log("change role to " + role);
-    }
+    async function changeUserStatus(action: string) {
+        console.log("changeUserStatus. Received action:'" + action + "'");
+        let data: ChangeChatUserStatusDTO = {
+            operatorId: userId,
+            chatId: activeChat.id,
+            userId: selectedUser.userId,
+            owner: false,
+            muted: false,
+            banned: false,
+            admin: false,
+            kick: false,
+        };
 
-    async function muteUser() {
-        console.log("mute user");
-    }
-
-    async function kickUser() {
-        console.log("kick user");
-    }
-
-    async function banUser() {
-        console.log("ban user");
+        if (action === "owner") {
+            if (!window.confirm(`Transfer ownership to ${selectedUser.userName}?`))
+                return;
+            data.owner = true;
+        } else if (action === "admin") {
+            if (!window.confirm(`Grant admin status to ${selectedUser.userName}?`))
+                return;
+            data.admin = true;
+        } else if (action === "member") {
+            if (!window.confirm(`Demote ${selectedUser.userName} to member?`)) return;
+            data.admin = false;
+        } else if (action === "mute") {
+            if (!window.confirm(`Mute ${selectedUser.userName}?`)) return;
+            data.muted = true;
+        } else if (action === "kick") {
+            if (!window.confirm(`Kick ${selectedUser.userName}?`)) return;
+            data.kick = true;
+        } else if (action === "ban") {
+            if (!window.confirm(`Ban ${selectedUser.userName}?`)) return;
+            data.banned = true;
+        } else {
+            console.error("Invalid action");
+            return;
+        }
+        socket.emit("changeChatUserStatus", data);
+        changeActiveChat(activeChat?.id);
     }
 
     if (!selectedUser || !thisUserRole) return <div className="p"></div>;
@@ -72,21 +101,42 @@ function MemberOptions(): React.JSX.Element {
     return (
         <div className="sideBar_sub1">
             <div className="chatElementDiv">
-                <div className="memberOptionsButtonsDiv">
+                <div className="memberOptionsButtonsDiv" style={{ marginBottom: "10px" }}>
+                    <button
+                        className="bigButton"
+                        onClick={() => changeUserStatus("owner")}
+                    >
+                        View Profile
+                    </button>
+                    <button
+                        className="bigButton"
+                        onClick={() => changeUserStatus("owner")}
+                    >
+                        Invite to Match
+                    </button>
+                </div>
+
+                <div className="memberOptionsButtonsDiv" style={{ marginBottom: "10px" }}>
                     {thisUserRole === 2 && (
-                        <button className="bigButton" onClick={() => changeRole("owner")}>
+                        <button
+                            className="bigButton"
+                            onClick={() => changeUserStatus("owner")}
+                        >
                             Transfer ownership
                         </button>
                     )}
                     {thisUserRole === 2 && !selectedUser.admin && (
-                        <button className="bigButton" onClick={() => changeRole("admin")}>
+                        <button
+                            className="bigButton"
+                            onClick={() => changeUserStatus("admin")}
+                        >
                             Make Admin
                         </button>
                     )}
                     {thisUserRole === 2 && selectedUser.admin && (
                         <button
                             className="bigButton"
-                            onClick={() => changeRole("member")}
+                            onClick={() => changeUserStatus("member")}
                         >
                             Demote to Member
                         </button>
@@ -95,13 +145,22 @@ function MemberOptions(): React.JSX.Element {
 
                 {thisUserRole > selectedUserRole && (
                     <div className="memberOptionsButtonsDiv">
-                        <button className="bigButton" onClick={() => muteUser()}>
+                        <button
+                            className="bigButton"
+                            onClick={() => changeUserStatus("mute")}
+                        >
                             Mute
                         </button>
-                        <button className="bigButton" onClick={() => kickUser()}>
+                        <button
+                            className="bigButton"
+                            onClick={() => changeUserStatus("kick")}
+                        >
                             Kick
                         </button>
-                        <button className="bigButton" onClick={() => banUser()}>
+                        <button
+                            className="bigButton"
+                            onClick={() => changeUserStatus("ban")}
+                        >
                             Ban
                         </button>
                     </div>
