@@ -17,7 +17,7 @@ export class GameData {
 	PositionPlank1: number = 0;
 	PositionPlank2: number = 0;
 	PositionBall: [number, number] = [50, 10];
-	VelocityBall: [number, number] = [10, 0];
+	VelocityBall: [number, number] = [0, 1];
 
 	//1 is active, 0 is inactive
 	GameStatus: number = 1;
@@ -32,7 +32,7 @@ export class GameData {
 
 	interval: NodeJS.Timer;
 
-	constructor(infoUser1: userGateway, infoUser2: userGateway, gameID: number, private readonly prismaService: PrismaService) {
+	constructor(infoUser1: userGateway, infoUser2: userGateway, gameID: number) {
 		this.infoUser1 = infoUser1;
 		this.infoUser2 = infoUser2;
 		this.gameID = gameID;
@@ -82,9 +82,9 @@ export class GameData {
 			this.ScorePlayer2++;
 		}
 		if (this.ScorePlayer1 >= 3) {
-			await this.prismaService.match.create({
-				data: new MatchInfoDTO(this),
-			})
+			// await this.prismaService.match.create({
+			// 	data: new MatchInfoDTO(this),
+			// })
 			this.infoUser1.socket.emit('gameResult', 'Won');
 			this.infoUser2.socket.emit('gameResult', 'Lost');
 			clearInterval(this.interval);
@@ -92,9 +92,9 @@ export class GameData {
 			return;
 		}
 		if (this.ScorePlayer2 >= 3) {
-			await this.prismaService.match.create({
-				data: new MatchInfoDTO(this),
-			})
+			// await this.prismaService.match.create({
+			// 	data: new MatchInfoDTO(this),
+			// })
 			this.infoUser2.socket.emit('gameResult', 'Won');
 			this.infoUser1.socket.emit('gameResult', 'Lost');
 			clearInterval(this.interval);
@@ -106,7 +106,7 @@ export class GameData {
 		console.log(`points for player ${user}`)
 		// console.log(this);
 		clearInterval(this.interval);
-		this.interval = setInterval(this.gameLogic, 1000);
+		this.interval = setInterval(this.gameLogic, 69);
 		console.log('restarted');
 
 	}
@@ -158,7 +158,7 @@ export class GameQueue {
 	}
 
 	updatePlankPosition = (data: PlankUpdateDTO) => {
-		const gameData: GameData = this.gameList.find((elem) => elem.infoUser1.userID === data.userID || elem.infoUser1.userID === data.userID);
+		const gameData: GameData = this.gameList.find((elem) => elem.infoUser1.userID === data.userID || elem.infoUser2.userID === data.userID);
 		if (gameData) {
 			// Update the plank position based on the user's ID
 			if (gameData.infoUser1.userID === data.userID) {
@@ -183,10 +183,10 @@ export class GameQueue {
 	}
 
 	initGame = (userInfo1: userGateway, userInfo2: userGateway) => {
-		const gameToStart = new GameData(userInfo1, userInfo2, Math.floor(Math.random() * 1000), this.prismaService)
+		const gameToStart = new GameData(userInfo1, userInfo2, Math.floor(Math.random() * 1000))
 		if (!this.gameList.includes(gameToStart)) {
 			gameToStart.sendNewRoundMessage();
-			gameToStart.interval = setInterval(gameToStart.gameLogic, 1000);
+			gameToStart.interval = setInterval(gameToStart.gameLogic, 69);
 			console.log(`initialized game with`);
 			this.gameList.push(gameToStart);//add id gen from prisma
 		}
