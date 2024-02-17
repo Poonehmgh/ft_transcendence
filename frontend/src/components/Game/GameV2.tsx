@@ -6,7 +6,6 @@ import UserPlank from "./UserPlank";
 import OpponentPlank from "./OpponentPlank";
 import Ball from "./Ball";
 
-import { io } from "socket.io-client";
 import { authHeader } from "../../functions/utils";
 import { SocketContext } from "src/contexts/SocketProvider";
 
@@ -175,7 +174,8 @@ function GameV2() {
   }, [refreshCount]);
 
   const sendMessageToServer = () => {
-    socket.emit("joinQueue", { userID: userData.id });
+    if (userData)
+      socket.emit("joinQueue", { userID: userData.id });
   };
 
   const changeBackground = () => {
@@ -191,8 +191,8 @@ function GameV2() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setRefreshCount(prevCount => prevCount + 1);
-    }, 1);
+      setRefreshCount((prevCount) => prevCount + 1);
+    }, 1000);
 
     return () => clearInterval(interval);
   }, []);
