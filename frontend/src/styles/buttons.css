@@ -6,6 +6,33 @@
     --backgroundHue1: 0;
 }
 
+.btn-dark {
+    display: inline-block;
+    margin-left: 65px;
+    padding: 0.25rem 0.75rem;
+    border-radius: 10rem;
+    color: #fff;
+    background-color: #434a45; /* Background color of the button */
+    font-size: 0.75rem;
+    letter-spacing: 0.05rem;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    cursor: pointer; /* Add cursor pointer on hover */
+
+    /* Hover effects */
+    &:hover {
+        background-color: #2d2d47; /* Darker background color on hover */
+    }
+
+    /* Optional: Add box shadow on hover */
+    &:hover {
+        box-shadow: 0 0.5rem 1rem rgba(0, 123, 255, 0.5);
+    }
+}
+
+
 .bigButton {
     --lightnessOffset: 0%;
 
