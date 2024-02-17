@@ -7,7 +7,7 @@ function Ball(props) {
   const [targetPosition, setTargetPosition] = useState([50, 75]);
 
   useEffect(() => {
-    if (newRound) {      
+    if (newRound) {
       setCurrentPosition([
         0.98 * newRound.PositionBall[0] + 1.5,
         -0.435 * newRound.PositionBall[1] + 95.5,
@@ -19,14 +19,14 @@ function Ball(props) {
     if (gameUpdate) {
       setTargetPosition([
         0.98 * gameUpdate.ballPosition[0] + 1.5,
-        -0.435 * gameUpdate.ballPosition[1] + 95.5,
+        -0.435 * gameUpdate.ballPosition[1] + 94.4,
       ]);
     }
   }, [gameUpdate]);
 
   useEffect(() => {
     const updatePosition = () => {
-      const ease = 0.005; // Adjust the ease value for smoother or quicker movement
+      const ease = 0.1; // Adjust the ease value for smoother or quicker movement
       const dx = targetPosition[0] - currentPosition[0];
       const dy = targetPosition[1] - currentPosition[1];
       const vx = dx * ease;
@@ -42,8 +42,8 @@ function Ball(props) {
   const ballStyle = {
     left: `${currentPosition[0]}%`,
     top: `${currentPosition[1]}%`,
-    width: `0.5%`,
-    height: `1%`,
+    width: `2%`,
+    height: `4%`,
     borderRadius: "50%",
   };
 
@@ -51,7 +51,7 @@ function Ball(props) {
     <>
       {newRound ? (
         <div className="ball" style={ballStyle}></div>
-        ) : (
+      ) : (
         // <div className="ball" style={ballStyle}></div>
         <></>
       )}

@@ -24,7 +24,7 @@ function OpponentPlank(props) {
   const plankStyle = {
     top: `${plankPosition}%`, //BE
     height: "15%", //BE - 43 is the full height
-    width: "1.5%", //BE - 98 is the full width
+    width: "2.5%", //BE - 98 is the full width
   };
 
   return (

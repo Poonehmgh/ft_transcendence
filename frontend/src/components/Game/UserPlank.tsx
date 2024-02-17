@@ -67,7 +67,7 @@ function UserPlank(props) {
   const plankStyle = {
     top: `${plankPosition}%`,
     height: "15%",
-    width: "1.5%",
+    width: "2.5%",
   };
 
   return (
