@@ -15,11 +15,11 @@ import {
 } from "chat-dto";
 
 export const ChatContext = createContext({
-    activeChat: null,
+    activeChat: null as ChatDTO,
     changeActiveChat: (chatId: number) => {},
-    selectedUser: null,
+    selectedUser: null as ExtendedChatUserDTO,
     changeSelectedUser: (userId: number) => {},
-    thisUsersChats: null,
+    thisUsersChats: null as BasicChatWithUsersDTO[],
     fetchThisUsersChats: () => {},
 });
 
@@ -90,6 +90,7 @@ export function ChatProvider({ children }) {
     async function changeActiveChat(chatId: number) {
         if (chatId === null) {
             setActiveChat(null);
+            setSelectedUser(null);
             return;
         }
 
@@ -97,6 +98,7 @@ export function ChatProvider({ children }) {
             const apiUrl = backendUrl.chat + `complete_chat/${chatId}`;
             const newActiveChat = await fetchX<ChatDTO>("GET", apiUrl, null);
             setActiveChat(newActiveChat);
+            setSelectedUser(null);
         } catch (error) {
             console.error("Error changing active chat:", error);
         }

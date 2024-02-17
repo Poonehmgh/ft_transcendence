@@ -10,7 +10,8 @@ import "src/styles/chat.css";
 function MemberInfo(): React.JSX.Element {
     const { selectedUser } = useContext(ChatContext);
 
-    if (!selectedUser) return <div className="p">Loading data...</div>;
+    if (!selectedUser) return <div className="p"></div>;
+    console.log(selectedUser);
 
     return (
         <div className="sideBar_sub1">
