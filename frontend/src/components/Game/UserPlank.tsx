@@ -57,7 +57,7 @@ function UserPlank(props) {
   useEffect(() => {
     if (userData) {
       const position = (plankPosition - 81) / -0.21;
-      socket.emit("updatePLank", {
+      socket.emit("updatePlank", {
         userID: userData.id,
         plankPosition: position,
       });
