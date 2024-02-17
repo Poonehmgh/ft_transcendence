@@ -157,6 +157,7 @@ export class GameQueue {
 	}
 
 	updatePlankPosition = (data: PlankUpdateDTO) => {
+		this.gameList[0].infoUser1.userID;
 		const gameData: GameData = this.gameList.find((elem) => elem.infoUser1.userID === data.userID || elem.infoUser1.userID === data.userID);
 		if (gameData) {
 			// Update the plank position based on the user's ID

@@ -360,27 +360,20 @@ export class ChangeChatUserStatusDTO {
     operatorId: number;
     chatId: number;
     userId: number;
-    owner: boolean;
-    muted: boolean;
-    banned: boolean;
-    admin: boolean;
-    kick: boolean;
+    status: string;
+    value: boolean;
     constructor(
         operatorId: number,
         chatId: number,
         userId: number,
-        owner: boolean,
-        muted: boolean,
-        banned: boolean,
-        admin: boolean
+        status: string,
+        value: boolean
     ) {
         this.operatorId = operatorId;
         this.chatId = chatId;
         this.userId = userId;
-        this.owner = owner;
-        this.muted = muted;
-        this.banned = banned;
-        this.admin = admin;
+        this.status = status;
+        this.value = value;
     }
 }
 
@@ -388,8 +381,6 @@ export class ChangeChatUserStatusDTO {
 //     "operatorId": 1,
 //     "chatId": 2,
 //     "userId": 2,
-//     "owner": "true",
-//     "muted": "false",
-//     "banned": "false",
-//     "admin": "false"
+//     "status": "mute",
+//     "value": true
 // }
