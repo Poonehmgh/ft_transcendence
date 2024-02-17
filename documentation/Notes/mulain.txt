@@ -10,6 +10,7 @@
 - banned users list
 - header to absolute values
 - sanitize username and chatname in backend 
+- rm invited variable
 
 
 

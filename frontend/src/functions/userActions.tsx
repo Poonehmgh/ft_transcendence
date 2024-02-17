@@ -8,6 +8,7 @@ This is the main function that connects to the backend.
 The other functions just prepare the vars.
 */
 async function userAction(method: string, apiUrl: string, body: string) {
+
     try {
         const response: Response = await fetch(apiUrl, {
             method: method,

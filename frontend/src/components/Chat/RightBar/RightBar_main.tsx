@@ -14,7 +14,7 @@ function RightBar(): React.JSX.Element {
     const { activeChat, selectedUser } = useContext(ChatContext);
     const { userId } = useContext(AuthContext);
 
-    if (!activeChat) return <div className="sideBar"></div>;
+    if (activeChat === null) return <div className="sideBar"></div>;
 
     return (
         <div className="sideBar">
