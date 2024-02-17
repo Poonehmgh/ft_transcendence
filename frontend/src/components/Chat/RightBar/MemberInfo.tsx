@@ -11,7 +11,6 @@ function MemberInfo(): React.JSX.Element {
     const { selectedUser } = useContext(ChatContext);
 
     if (!selectedUser) return <div className="p"></div>;
-    console.log(selectedUser);
 
     return (
         <div className="sideBar_sub1">
