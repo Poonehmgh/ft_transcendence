@@ -5,7 +5,7 @@ import PlayerCardTable from "../shared/PlayerCardTable";
 import SocialActionBar from "./SocialActionBar/SocialActionBar_main";
 import MatchHistory from "./MatchHistory";
 import backendUrl from "src/constants/backendUrl";
-
+import TwoFa from "./TwoFa";
 // DTO
 import { UserProfileDTO } from "src/dto/user-dto";
 
@@ -81,6 +81,7 @@ function UserProfileModal(props: userProfileModalProps) {
                                 rank={userProfile.rank}
                                 matches={userProfile.matches}
                                 winrate={userProfile.winrate}
+                                twoFa={userProfile.twoFa}
                             />
                         </div>
                         {props.id.toString() === localStorage.getItem("userId") ? (
@@ -88,9 +89,9 @@ function UserProfileModal(props: userProfileModalProps) {
                                 This is your profile.
                             </div>
                         ) : (
-                            <SocialActionBar otherProfile={userProfile} />
+                            <SocialActionBar otherProfile={userProfile}/>
                         )}
-                        <MatchHistory id={props.id} />
+                        <MatchHistory id={props.id}/>
                     </div>
                 )}
                 <button className="closeX" onClick={closeModal}>

@@ -14,7 +14,7 @@ export class ScoreCardDTO {
         public rank: string,
         public mmr: number,
         public matches: number,
-        public winrate: number
+        public winrate: number,
     ) {}
 }
 
@@ -35,7 +35,8 @@ export class UserProfileDTO {
         public rank: string,
         public matches: number,
         public winrate: number,
-        public online: boolean
+        public online: boolean,
+        public twoFa: boolean,
     ) {}
 }
 

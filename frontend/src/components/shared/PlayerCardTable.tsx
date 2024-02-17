@@ -1,17 +1,21 @@
-import React from "react";
+import React, {useEffect, useState } from "react";
 
 // CSS
 import "src/styles/playerCardTable.css";
+import Button from "./Button";
+import { authContentHeader } from "src/functions/utils";
 
 interface playerCardTableProp {
     mmr: number;
     rank: string;
     matches: number;
     winrate: number;
+    twoFa?: boolean;
 }
 
 function PlayerCardTable(props: playerCardTableProp) {
-    return (
+
+    return ( <div>
         <table className="playerCardTable">
             <tbody>
                 <tr>
@@ -30,9 +34,18 @@ function PlayerCardTable(props: playerCardTableProp) {
                     <td>win rate</td>
                     <td>{props.winrate ? props.winrate : "-"}</td>
                 </tr>
+                <tr>
+                    <td> 2fa</td>
+                    <td>{props.twoFa ? "enabled" : "disabled"}</td>
+                </tr>
             </tbody>
         </table>
+    </div>
+
     );
 }
+
+
+
 
 export default PlayerCardTable;
