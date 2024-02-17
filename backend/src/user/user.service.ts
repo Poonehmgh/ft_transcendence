@@ -380,7 +380,8 @@ export class UserService {
                 console.log(INFO_FREQ_ALRDYSENT2);
             }
             await Promise.all(promises);
-            return INFO_SEND_FREQ;
+
+            return { message: INFO_SEND_FREQ };
         } catch (error) {
             console.log(error);
             return error;
@@ -435,7 +436,7 @@ export class UserService {
                 console.log(INFO_ALRDY_FR2);
             }
             await Promise.all(promises);
-            return INFO_ACCEPT_FREQ;
+            return { message: INFO_ACCEPT_FREQ };
         } catch (error) {
             console.log(error);
             return ERR_ACCEPT_FREQ;

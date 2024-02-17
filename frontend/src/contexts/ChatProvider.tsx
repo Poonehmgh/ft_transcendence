@@ -40,7 +40,7 @@ export function ChatProvider({ children }) {
                 } catch (error) {
                     console.error("Error fetching updated chat:", error);
                 }
-                // this would be far better, but would require a backend change
+                // this would be better, but would require a backend change
                 /* 
                 setActiveChat((prevActiveChat) => ({
                     ...prevActiveChat,

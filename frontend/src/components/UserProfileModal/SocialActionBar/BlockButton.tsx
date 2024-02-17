@@ -7,18 +7,15 @@ import { UserProfileDTO, UserRelation } from "src/dto/user-dto";
 interface blockButtonProps {
     relation: UserRelation;
     otherProfile: UserProfileDTO;
-    reRender: () => void;
 }
 
 function BlockButton(props: blockButtonProps): React.JSX.Element {
     function doBlockUser(id: number, name: string) {
         handleBlockUser(id, name);
-        props.reRender();
     }
 
     function doUnblockUser(id: number, name: string) {
         handleUnBlockUser(id, name);
-        props.reRender();
     }
 
     return (

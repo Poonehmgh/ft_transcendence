@@ -1,7 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import FriendButton from "./FriendButton";
 import BlockButton from "./BlockButton";
 import { fetchGetSet } from "src/functions/utils";
+import backendUrl from "src/constants/backendUrl";
+
+// Contexts
+import { SocketContext } from "src/contexts/SocketProvider";
 
 // DTO
 import { UserRelation, UserProfileDTO } from "src/dto/user-dto";
@@ -14,33 +18,34 @@ interface socialActionBarProps {
 }
 
 function SocialActionBar(props: socialActionBarProps): React.JSX.Element {
+    const socket = useContext(SocketContext);
     const [relation, setRelation] = useState<UserRelation>(null);
-    const [forceRerender, setForceRerender] = useState(false);
-    const apiUrl =
-        process.env.REACT_APP_BACKEND_URL +
-        "/user/user_relation/" +
-        props.otherProfile.id;
 
-    function reRender() {
-        setForceRerender((prevState) => !prevState);
+    useEffect(() => {
+        if (!socket) return;
+
+        socket.on("socialUpdate", () => {
+            updateRelation();
+        });
+
+        return () => {
+            socket.off("socialUpdate");
+        };
+    }, [socket]);
+
+    async function updateRelation() {
+        const apiUrl = backendUrl.user + "user_relation/" + props.otherProfile.id;
+        const relation = await fetchGetSet<UserRelation>(apiUrl, setRelation);
     }
 
     useEffect(() => {
-        fetchGetSet(apiUrl, setRelation);
-    }, [apiUrl, forceRerender]);
+        updateRelation();
+    }, []);
 
     return (
         <div className="socialActionBarMain">
-            <FriendButton
-                relation={relation}
-                otherProfile={props.otherProfile}
-                reRender={reRender}
-            />
-            <BlockButton
-                relation={relation}
-                otherProfile={props.otherProfile}
-                reRender={reRender}
-            />
+            <FriendButton relation={relation} otherProfile={props.otherProfile} />
+            <BlockButton relation={relation} otherProfile={props.otherProfile} />
         </div>
     );
 }

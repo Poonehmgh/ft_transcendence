@@ -24,11 +24,15 @@ import * as path from "path";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
 import { MatchDTO } from "src/match/match-dto";
 import { reqUser, AuthenticatedRequest } from "src/shared/dto";
+import { ChatGatewayService } from "src/chat/chat.gateway.service";
 
 @Controller("user")
 @UseGuards(JwtAuthGuard)
 export class UserController {
-    constructor(private readonly userService: UserService) {}
+    constructor(
+        private readonly userService: UserService,
+        private readonly chatGatewayService: ChatGatewayService
+    ) {}
 
     @Get("my_profile")
     async getMyProfile(@Req() req: AuthenticatedRequest): Promise<UserProfileDTO> {
@@ -205,10 +209,35 @@ export class UserController {
     @Post("friendreq")
     async sendFriendRequest(
         @Req() req: AuthenticatedRequest,
-        @Body() body: { otherId: number }
+        @Body() body: { otherId: number },
+        @Res() res: Response
     ) {
         const { otherId } = body;
-        return this.userService.sendFriendReq(req.user.id, otherId);
+        try {
+            const result = await this.userService.sendFriendReq(req.user.id, otherId);
+            if (result instanceof Error) {
+                res.status(500).json({ error: result.message });
+            } else if ("error" in result) {
+                res.status(500).json({ error: result.error });
+            } else {
+                const updateRecipients = [req.user.id, otherId];
+                const data = {
+                    event: "sendFriendRequest",
+                    from: req.user.id,
+                    to: otherId,
+                };
+                this.chatGatewayService.printConnectedUsers();
+                this.chatGatewayService.sendDataUpdate(
+                    updateRecipients,
+                    "socialUpdate",
+                    data
+                );
+                res.status(200).json(result);
+            }
+        } catch (error) {
+            console.error("Error sendFriendRequest:", error);
+            res.status(500).json({ error: "Internal Server Error" });
+        }
     }
 
     @Delete("friendreq")

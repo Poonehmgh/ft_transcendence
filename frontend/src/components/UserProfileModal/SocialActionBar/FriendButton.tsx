@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
     handleRemoveFriend,
     handleCancelRequest,
     handleSendFriendRequest,
     handleIncomingRequest,
 } from "../../../functions/userActions";
+
+// Contexts
+import { UserDataContext } from "src/contexts/UserDataProvider";
 
 // DTO
 import { UserProfileDTO, UserRelation } from "src/dto/user-dto";
@@ -15,10 +18,11 @@ import "src/styles/buttons.css";
 interface FriendButtonProps {
     relation: UserRelation;
     otherProfile: UserProfileDTO | null;
-    reRender: () => void;
 }
 
 function FriendButton(props: FriendButtonProps): React.JSX.Element | null {
+    const { sendFriendRequest } = useContext(UserDataContext);
+
     if (!props.otherProfile) return <div className="p">Loading data...</div>;
     if (props.relation === UserRelation.blocked)
         return <div className="pInfo">Unblock to interact</div>;
@@ -38,12 +42,11 @@ function FriendButton(props: FriendButtonProps): React.JSX.Element | null {
                 // already handled
                 break;
             case UserRelation.none:
-                handleSendFriendRequest(props.otherProfile.id, props.otherProfile.name);
+                sendFriendRequest(props.otherProfile.id, props.otherProfile.name);
                 break;
             default:
                 console.error("Unexpected relation:", props.relation);
         }
-        props.reRender();
     }
 
     function selectTooltip() {
