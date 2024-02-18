@@ -4,6 +4,8 @@ import "../../styles/gamev2.css";
 function OpponentPlank(props) {
   const { newRound, gameUpdate, isPlayerOne } = props;
   const [plankPosition, setPlankPosition] = useState(81);
+  const plankHeight = "15%";
+  const plankWidth = "2.5%";
 
   useEffect(() => {
     if (newRound) {
@@ -23,8 +25,8 @@ function OpponentPlank(props) {
 
   const plankStyle = {
     top: `${plankPosition}%`, //BE
-    height: "15%", //BE - 43 is the full height
-    width: "2.5%", //BE - 98 is the full width
+    height: plankHeight, //BE - 43 is the full height
+    width: plankWidth, //BE - 98 is the full width
   };
 
   return (

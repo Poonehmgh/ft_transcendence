@@ -14,14 +14,17 @@ import "../../styles/gamev2.css";
 
 function UserPlank(props) {
   const { userData, newRound, isPlayerOne, socket } = props;
-  const [plankPosition, setPlankPosition] = useState(81);
+  const plankHeight = "15%";
+  const plankHeightNumber = 15;
+  const plankWidth = "2.5%";
+  const [plankPosition, setPlankPosition] = useState(96 - plankHeightNumber);
 
   useEffect(() => {
     if (newRound) {
       if (isPlayerOne) {
-        setPlankPosition(-0.21 * newRound.PositionPlank2 + 81);
+        setPlankPosition(-28/65 * newRound.PositionPlank2 + 81);
       } else {
-        setPlankPosition(-0.21 * newRound.PositionPlank1 + 81);
+        setPlankPosition(-28/65 * newRound.PositionPlank1 + 81);
       }
     }
   }, [isPlayerOne, newRound]);
@@ -30,6 +33,7 @@ function UserPlank(props) {
     if (userData) {
       const handleKeyDown = (e: any) => {
         e.preventDefault();
+        console.log(plankPosition);
         switch (e.key) {
           case "ArrowUp":
             if (plankPosition > 53) {
@@ -56,7 +60,7 @@ function UserPlank(props) {
 
   useEffect(() => {
     if (userData) {
-      const position = (plankPosition - 81) / -0.21;
+      let position = (65/28) * (81 - plankPosition);
       socket.emit("updatePlank", {
         userID: userData.id,
         plankPosition: position,
@@ -65,9 +69,9 @@ function UserPlank(props) {
   }, [plankPosition, socket]);
 
   const plankStyle = {
-    top: `${plankPosition}%`,
-    height: "15%",
-    width: "2.5%",
+    top: `${plankPosition}%`, //BE
+    height: plankHeight, //BE - 43 is the full height
+    width: plankWidth, //BE - 98 is the full width
   };
 
   return (
