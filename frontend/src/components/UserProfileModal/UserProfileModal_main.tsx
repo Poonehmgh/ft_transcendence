@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
-import { authContentHeader, fetchGetSet } from "src/functions/utils";
+import { authContentHeader, fetchWrapper } from "src/functions/utils";
 import PlayerCardTable from "../shared/PlayerCardTable";
 import SocialActionBar from "./SocialActionBar/SocialActionBar_main";
 import MatchHistory from "./MatchHistory";
@@ -21,15 +21,16 @@ interface userProfileModalProps {
 }
 
 function UserProfileModal(props: userProfileModalProps) {
-    const [userProfile, setUserProfile] = useState<UserProfileDTO | null>(null);
+    const [userProfile, setUserProfile] = useState<UserProfileDTO>(null);
     const [avatarURL, setAvatarURL] = useState(null);
-    const apiUrl_profile = backendUrl.user + "profile/" + props.id;
 
     function closeModal() {
         props.onClose();
     }
 
     useEffect(() => {
+        if (!props.id) return;
+
         async function fetchAvatar() {
             const apiUrl = backendUrl.user + "avatar/" + props.id;
             try {
@@ -47,11 +48,16 @@ function UserProfileModal(props: userProfileModalProps) {
                 console.log("Error getting Avatar", error);
             }
         }
-        if (props.id) {
-            fetchGetSet(apiUrl_profile, setUserProfile);
-            fetchAvatar();
+
+        async function fetchUserProfile() {
+            const apiUrl = backendUrl.user + "profile/" + props.id;
+            const data = await fetchWrapper<UserProfileDTO>("GET", apiUrl, null);
+            setUserProfile(data);
         }
-    }, [props.isOpen, props.id, apiUrl_profile]);
+
+        fetchUserProfile();
+        fetchAvatar();
+    }, [props.isOpen, props.id]);
 
     return (
         <div>

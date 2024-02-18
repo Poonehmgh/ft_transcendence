@@ -8,7 +8,6 @@ import RightBar from "./RightBar";
 import Score from "./ScorePlayers";
 import {useState, useEffect} from "react";
 import { authHeader } from "../../functions/utils";
-import { fetchGetSet } from "../../../src/functions/utils";
 // import PlayButton from "./PlayButton";
 import { UserProfileDTO } from "src/dto/user-dto";
 import PlayerCardTable from "../shared/PlayerCardTable";

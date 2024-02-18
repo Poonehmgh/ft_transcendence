@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import UserTable from "../shared/UserTable";
 import RankNumberColumn from "./RankNumberColumn";
-import { fetchGetSet } from "src/functions/utils";
 import LoadingH2 from "src/components/shared/LoadingH2";
+import backendUrl from "src/constants/backendUrl";
+import { fetchWrapper } from "utils";
 
 // DTO
 import { UserProfileDTO } from "src/dto/user-dto";
@@ -14,14 +15,16 @@ import "src/styles/style.css";
 function Leaderboard() {
     const [userList, setUserlist] = useState<UserProfileDTO[]>(null);
     const getTopN = 3;
-    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/leaderboard?top=" + getTopN;
 
     useEffect(() => {
-        fetchGetSet<UserProfileDTO[]>(apiUrl, setUserlist);
-    }, [apiUrl]);
+        async function fetchUserList() {
+            const apiUrl = backendUrl.user + "leaderboard?top=" + getTopN;
+            const data = await fetchWrapper<UserProfileDTO[]>("GET", apiUrl, null);
+            setUserlist(data);
+        }
+    }, []);
 
-    if (!userList) return <LoadingH2 elementName={"Leaderboard"} />;
-
+    if (userList === null) return <LoadingH2 elementName={"Leaderboard"} />;
     if (userList.length === 0)
         return (
             <div className="mainContainerRow">

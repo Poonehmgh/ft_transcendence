@@ -1,26 +1,30 @@
 import React, { useEffect, useState } from "react";
 import Login from "./Login";
-import { fetchGetSet } from "src/functions/utils";
 import { UserProfileDTO } from "user-dto";
+import { fetchWrapper } from "utils";
+import backendUrl from "src/constants/backendUrl";
 
 // CSS
 import "src/styles/style.css";
 import "src/styles/home.css";
 
 function Home() {
-    const [userData, setUserData] = useState<UserProfileDTO>(null);
-    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/my_profile";
+    const [userProfile, setUserProfile] = useState<UserProfileDTO>(null);
 
     useEffect(() => {
-        fetchGetSet(apiUrl, setUserData);
-    }, [apiUrl]);
+        async function fetchUserProfile() {
+            const apiUrl = backendUrl.user + "my_profile";
+            const data = await fetchWrapper<UserProfileDTO>("GET", apiUrl, null);
+            setUserProfile(data);
+        }
+    }, []);
 
     return (
         <div className="mainContainerRow">
             <div>
                 <div className="h2">Home</div>
-                {userData ? (
-                    <div className="h2">{`Welcome, ${userData.name}!`}</div>
+                {userProfile ? (
+                    <div className="h2">{`Welcome, ${userProfile.name}!`}</div>
                 ) : (
                     <Login />
                 )}
