@@ -5,16 +5,19 @@
 - test 2fa auth
 - test login with taken name
 
-
+- move 2fa actived / not actived info from playerCard to only ManageProfile
 - add game invite function to chat (button already done)
 - banned users list
 - header to absolute values
 - sanitize username and chatname in backend 
 - rm invited variable
+- test if activating socket for socialUpdate in socialactionbar is unproblematic. should be higher order?
 
 
 
 - Optimization (optional)
+    - send message button in friend list
+    - send message button in userprofilemodal
     - specific update messages containing the to be updated information (no general re-renders)
     - sharing one DTO location
     - Clean up DTO naming and amount of DTOs

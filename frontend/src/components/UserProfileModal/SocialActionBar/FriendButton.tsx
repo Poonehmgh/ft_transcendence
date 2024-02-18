@@ -1,8 +1,5 @@
 import React, { useContext } from "react";
 import {
-    handleRemoveFriend,
-    handleCancelRequest,
-    handleSendFriendRequest,
     handleIncomingRequest,
 } from "../../../functions/userActions";
 
@@ -21,7 +18,7 @@ interface FriendButtonProps {
 }
 
 function FriendButton(props: FriendButtonProps): React.JSX.Element | null {
-    const { sendFriendRequest } = useContext(UserDataContext);
+    const { sendFriendRequest, cancelFriendRequest, removeFriend } = useContext(UserDataContext);
 
     if (!props.otherProfile) return <div className="p">Loading data...</div>;
     if (props.relation === UserRelation.blocked)
@@ -30,10 +27,10 @@ function FriendButton(props: FriendButtonProps): React.JSX.Element | null {
     function doAction() {
         switch (props.relation) {
             case UserRelation.friends:
-                handleRemoveFriend(props.otherProfile.id, props.otherProfile.name);
+                removeFriend(props.otherProfile.id, props.otherProfile.name);
                 break;
             case UserRelation.request_sent:
-                handleCancelRequest(props.otherProfile.id, props.otherProfile.name);
+                cancelFriendRequest(props.otherProfile.id, props.otherProfile.name);
                 break;
             case UserRelation.request_received:
                 handleIncomingRequest(props.otherProfile.id, props.otherProfile.name);

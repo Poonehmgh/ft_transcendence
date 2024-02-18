@@ -75,7 +75,7 @@ export function authContentHeader() {
 
 // fetchers
 
-export async function fetchX<T>(
+export async function fetchWrapper<T>(
     method: string,
     apiUrl: string,
     data: Record<string, any> | null

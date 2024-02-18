@@ -394,7 +394,7 @@ export class UserService {
                 this.filterArray(thisId, "friendReq_out", otherId),
                 this.filterArray(otherId, "friendReq_in", thisId),
             ]);
-            return INFO_FREQ_CANCEL;
+            return { message: INFO_FREQ_CANCEL };
         } catch (error) {
             console.log(error);
             return error;
@@ -460,7 +460,7 @@ export class UserService {
         try {
             this.filterArray(thisId, "friends", otherId);
             this.filterArray(otherId, "friends", thisId);
-            return INFO_RM;
+            return { message: INFO_RM };
         } catch (error) {
             console.log(error);
             return error;
@@ -483,7 +483,7 @@ export class UserService {
                 msg = INFO_BLOCK_CANCEL;
             }
             this.updateArray(thisId, "blocked", [...thisUser.blocked, otherId]);
-            return msg;
+            return { message: msg };
         } catch (error) {
             console.log(error);
             return error;
@@ -493,10 +493,10 @@ export class UserService {
     async unblockUser(thisId: number, otherId: number) {
         try {
             this.filterArray(thisId, "blocked", otherId);
-            return INFO_UNBLOCK;
+            return { message: INFO_UNBLOCK };
         } catch (error) {
             console.log(error);
-            return;
+            return error;
         }
     }
 

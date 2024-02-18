@@ -6,10 +6,11 @@ import {
     authHeader,
     authContentHeader,
     sanitizeInput,
-    fetchX,
+    fetchWrapper,
 } from "src/functions/utils";
 import LoadingH2 from "src/components/shared/LoadingH2";
 import TwoFa from "src/components/UserProfileModal/TwoFa";
+
 // DTO
 import { UserProfileDTO } from "src/dto/user-dto";
 
@@ -80,7 +81,7 @@ function ManageProfile() {
 
             const data = { newName: sanitizeInput(newName) };
             const apiUrl = backendUrl.user + "change_name";
-            const res = await fetchX<{ message: string }>("PATCH", apiUrl, data);
+            const res = await fetchWrapper<{ message: string }>("PATCH", apiUrl, data);
             alert(res.message);
             fetchGetSet(apiUrl_profile, setUserData);
         } catch (error) {
@@ -90,7 +91,7 @@ function ManageProfile() {
 
     async function handleLogout() {
         const apiUrl = backendUrl.user + "logout";
-        const res = await fetchX<{ message: string }>("PATCH", apiUrl, null);
+        const res = await fetchWrapper<{ message: string }>("PATCH", apiUrl, null);
         document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
         alert(res.message);
         window.location.href = "/home";

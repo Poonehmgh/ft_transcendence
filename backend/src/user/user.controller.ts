@@ -226,7 +226,6 @@ export class UserController {
                     from: req.user.id,
                     to: otherId,
                 };
-                this.chatGatewayService.printConnectedUsers();
                 this.chatGatewayService.sendDataUpdate(
                     updateRecipients,
                     "socialUpdate",
@@ -243,51 +242,178 @@ export class UserController {
     @Delete("friendreq")
     async cancelFriendRequest(
         @Req() req: AuthenticatedRequest,
-        @Body() body: { otherId: number }
+        @Body() body: { otherId: number },
+        @Res() res: Response
     ) {
         const { otherId } = body;
-        return this.userService.cancelFriendReq(req.user.id, otherId);
+        try {
+            const result = await this.userService.cancelFriendReq(req.user.id, otherId);
+            if (result instanceof Error) {
+                res.status(500).json({ error: result.message });
+            } else if ("error" in result) {
+                res.status(500).json({ error: result.error });
+            } else {
+                const updateRecipients = [req.user.id, otherId];
+                const data = {
+                    event: "cancelFriendRequest",
+                    from: req.user.id,
+                    to: otherId,
+                };
+                this.chatGatewayService.sendDataUpdate(
+                    updateRecipients,
+                    "socialUpdate",
+                    data
+                );
+                res.status(200).json(result);
+            }
+        } catch (error) {
+            console.error("Error cancelFriendRequest:", error);
+            res.status(500).json({ error: "Internal Server Error" });
+        }
     }
 
-    @Patch("accept_friendreq")
-    async acceptFriendRequest(
+    @Patch("friendreq")
+    async reactToFriendReq(
         @Req() req: AuthenticatedRequest,
-        @Body() body: { otherId: number }
+        @Body() body: { otherId: number; action: string },
+        @Res() res: Response
     ) {
-        const { otherId } = body;
+        const { otherId, action } = body;
+        try {
+            let result: any;
+            let event: string;
+            if (action === "accept") {
+                result = await this.userService.acceptFriendReq(req.user.id, otherId);
+                event = "acceptFriendRequest";
+            } else if (action === "decline") {
+                result = await this.userService.declineFriendReq(req.user.id, otherId);
+                event = "declineFriendRequest";
+            } else {
+                return res.status(400).json({ error: "Invalid action" });
+            }
+
+            if (result instanceof Error) {
+                res.status(500).json({ error: result.message });
+            } else if ("error" in result) {
+                res.status(500).json({ error: result.error });
+            } else {
+                const updateRecipients = [req.user.id, otherId];
+                const data = {
+                    event: event,
+                    from: req.user.id,
+                    to: otherId,
+                    action: action,
+                };
+                this.chatGatewayService.sendDataUpdate(
+                    updateRecipients,
+                    "socialUpdate",
+                    data
+                );
+                res.status(200).json(result);
+            }
+        } catch (error) {
+            console.error("Error reactToFriendReq:", error);
+            res.status(500).json({ error: "Internal Server Error" });
+        }
         return this.userService.acceptFriendReq(req.user.id, otherId);
-    }
-
-    @Patch("decline_friendreq")
-    async declineFriendRequest(
-        @Req() req: AuthenticatedRequest,
-        @Body() body: { otherId: number }
-    ) {
-        const { otherId } = body;
-        return this.userService.declineFriendReq(req.user.id, otherId);
     }
 
     @Delete("friend")
     async removeFriend(
         @Req() req: AuthenticatedRequest,
-        @Body() body: { otherId: number }
+        @Body() body: { otherId: number },
+        @Res() res: Response
     ) {
         const { otherId } = body;
-        return this.userService.removeFriend(req.user.id, otherId);
+        try {
+            const result = await this.userService.removeFriend(req.user.id, otherId);
+            if (result instanceof Error) {
+                res.status(500).json({ error: result.message });
+            } else if ("error" in result) {
+                res.status(500).json({ error: result.error });
+            } else {
+                const updateRecipients = [req.user.id, otherId];
+                const data = {
+                    event: "removeFriend",
+                    from: req.user.id,
+                    to: otherId,
+                };
+                this.chatGatewayService.sendDataUpdate(
+                    updateRecipients,
+                    "socialUpdate",
+                    data
+                );
+                res.status(200).json(result);
+            }
+        } catch (error) {
+            console.error("Error removeFriend:", error);
+            res.status(500).json({ error: "Internal Server Error" });
+        }
     }
 
     @Post("block")
-    async blockUser(@Req() req: AuthenticatedRequest, @Body() body: { otherId: number }) {
+    async blockUser(
+        @Req() req: AuthenticatedRequest,
+        @Body() body: { otherId: number },
+        @Res() res: Response
+    ) {
         const { otherId } = body;
-        return this.userService.blockUser(req.user.id, otherId);
+        try {
+            const result = await this.userService.blockUser(req.user.id, otherId);
+            if (result instanceof Error) {
+                res.status(500).json({ error: result.message });
+            } else if ("error" in result) {
+                res.status(500).json({ error: result.error });
+            } else {
+                const updateRecipients = [req.user.id, otherId];
+                const data = {
+                    event: "blockUser",
+                    from: req.user.id,
+                    to: otherId,
+                };
+                this.chatGatewayService.sendDataUpdate(
+                    updateRecipients,
+                    "socialUpdate",
+                    data
+                );
+                res.status(200).json(result);
+            }
+        } catch (error) {
+            console.error("Error blockUser:", error);
+            res.status(500).json({ error: "Internal Server Error" });
+        }
     }
 
     @Delete("block")
     async unblockUser(
         @Req() req: AuthenticatedRequest,
-        @Body() body: { otherId: number }
+        @Body() body: { otherId: number },
+        @Res() res: Response
     ) {
         const { otherId } = body;
-        return this.userService.unblockUser(req.user.id, otherId);
+        try {
+            const result = await this.userService.unblockUser(req.user.id, otherId);
+            if (result instanceof Error) {
+                res.status(500).json({ error: result.message });
+            } else if ("error" in result) {
+                res.status(500).json({ error: result.error });
+            } else {
+                const updateRecipients = [req.user.id, otherId];
+                const data = {
+                    event: "unblockUser",
+                    from: req.user.id,
+                    to: otherId,
+                };
+                this.chatGatewayService.sendDataUpdate(
+                    updateRecipients,
+                    "socialUpdate",
+                    data
+                );
+                res.status(200).json(result);
+            }
+        } catch (error) {
+            console.error("Error unblockUser:", error);
+            res.status(500).json({ error: "Internal Server Error" });
+        }
     }
 }
