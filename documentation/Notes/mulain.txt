@@ -1,6 +1,11 @@
 --- to do ---
 - token refresh
 - stress test chat
+    - create chat emit
+    - (delete chat emit)
+    - leave chat emit
+    - rename chat emit
+    - change user status emit
 - stress test game
 - test 2fa auth
 - test login with taken name
@@ -17,9 +22,7 @@
 
 
 IMMEDIATE MULAIN
-- creat chat emit
-- delete chat emit
-- rename chat emit
+- invite yourself (join) chat emit
 - add invitegame to chat
 - finish matchhistory
 
@@ -29,9 +32,13 @@ IMMEDIATE MULAIN
 - chat: unban
 - chat: unmute
 
-
+Medium mulain
+- implement delete chat (not actually required lul)
+- delete chat emit
 
 - Optimization (optional)
+    - refactor sendChatCreationUpdate to take any object to transmit meaningful data
+    - streamline emit functions
     - send message button in friend list
     - send message button in userprofilemodal
     - specific update messages containing the to be updated information (no general re-renders)

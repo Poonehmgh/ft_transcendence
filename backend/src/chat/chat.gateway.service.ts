@@ -314,7 +314,9 @@ export class ChatGatewayService {
         }
     }
 
-    async sendChatCreationUpdate(chat: ChatListDTO) {
+    // replaced with sendChatUpdate
+/*     async sendChatCreationUpdate(chat: ChatListDTO) {
+        console.log("sending chat update");
         try {
             const chatRes = await this.prisma.chat.findUnique({
                 where: {
@@ -331,13 +333,15 @@ export class ChatGatewayService {
             if (chatRes) {
                 for (const user of chatRes.chatUsers) {
                     const socket: Socket = this.getUserSocketFromUserId(user.userId);
-                    socket.emit("updateChat", chat);
+                    console.log("sendChatCreationUpdate sending to user ", user.userId);
+                    if (socket)
+                        socket.emit("updateChat", chat);
                 }
             }
         } catch (error) {
             console.log(`error in sendChatCreationUpdate: ${error.message}`);
         }
-    }
+    } */
 
     //send updates to everyone in chat
     async sendChatAdditionUpdate(inviteForm: InviteUserDTO) {
@@ -349,7 +353,7 @@ export class ChatGatewayService {
 
     async sendChatUpdate(chatId: number) {
         try {
-            const chatRes = await this.prisma.chat.findUnique({
+            const chat = await this.prisma.chat.findUnique({
                 where: {
                     id: Number(chatId),
                 },
@@ -361,12 +365,12 @@ export class ChatGatewayService {
                     },
                 },
             });
-            if (chatRes) {
-                for (const user of chatRes.chatUsers) {
+            if (chat) {
+                for (const user of chat.chatUsers) {
                     const socket: Socket = this.getUserSocketFromUserId(user.userId);
                     console.log("sending updateChat event to user", user.userId);
                     if (socket)
-                        socket.emit("updateChat", new ChatListDTO(chatRes.name, chatId));
+                        socket.emit("updateChat", new ChatListDTO(chat.name, chatId));
                 }
             }
         } catch (error) {
