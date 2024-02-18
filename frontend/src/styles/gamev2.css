@@ -32,6 +32,32 @@
 	background-color: #3ca06c;
 }
 
+.outcome-window {
+	width: 200px;
+	height: 40px;
+	background-color: #3ca06c;
+	color: black;
+	display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.victory-window {
+	background-color: darkgreen;
+	color: white;
+	font-weight: bolder;
+}
+
+.defeat-window {
+	background-color: darkred;
+	color: white;
+	font-weight: bolder;
+}
+
+.outcome-text {
+	text-align: center;
+}
+
 .info-container {
 	grid-row: 2 / 3;
 	grid-column: 1 / 9;

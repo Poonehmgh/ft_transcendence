@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 
+import GameOutcome from "./GameOutcome";
 import PlayerGameProfile from "./PlayerGameProfile";
 import ScoreV2 from "./ScoreV2";
 import UserPlank from "./UserPlank";
@@ -21,8 +22,9 @@ function GameV2() {
   const [newRound, setNewRound] = useState(null);
   const [isPlayerOne, setIsPlayerOne] = useState(null);
   const [gameUpdate, setGameUpdate] = useState(null);
-  // const [gameResult, setGameResult] = useState(null);
+  const [gameResult, setGameResult] = useState(null);
   const [refreshCount, setRefreshCount] = useState(0);
+
   const [backgroundColor, setBackgroundColor] = useState("default-color");
   const [infoContainerClass, setInfoContainerClass] = useState(
     "info-container default-color"
@@ -61,6 +63,7 @@ function GameV2() {
     const handleQueue = (data) => {
       if (data === "Confirmed") {
         setQueueStatus("In Queue");
+        setGameResult(null);
       } else if (data === "InvalidID") {
         setQueueStatus("Invalid ID");
       } else if (data === "Already in queue") {
@@ -155,7 +158,6 @@ function GameV2() {
     setNewRound(null);
     setIsPlayerOne(null);
     setGameUpdate(null);
-    // setGameResult(null);
     setRefreshCount(0);
   };
 
@@ -164,6 +166,10 @@ function GameV2() {
       resetHooks();
       console.log("gameResult");
       console.log(data);
+      if (data === "Won")
+        setGameResult("Victory");
+      else if (data === "Lost")
+        setGameResult("Defeat");
     };
 
     socket.on("gameResult", handleGameResult);
@@ -174,8 +180,7 @@ function GameV2() {
   }, [refreshCount]);
 
   const sendMessageToServer = () => {
-    if (userData)
-      socket.emit("joinQueue", { userID: userData.id });
+    if (userData) socket.emit("joinQueue", { userID: userData.id });
   };
 
   const changeBackground = () => {
@@ -203,6 +208,7 @@ function GameV2() {
         <button className="game-button" onClick={sendMessageToServer}>
           {queueStatus}
         </button>
+        <GameOutcome gameResult={gameResult} />
         <button className="game-button" onClick={changeBackground}>
           Change Background
         </button>
