@@ -308,7 +308,6 @@ export class ChatService {
                 console.log("Creating group chat with:", newChatDTO.userIds);
                 chatInfo = await this.createGroupChat(creatorId, newChatDTO);
             }
-            //this.chatGatewayService.sendChatUpdate(chatInfo.id);
             return chatInfo;
         } catch (error) {
             console.error(`Error in createChat: ${error.message}`);

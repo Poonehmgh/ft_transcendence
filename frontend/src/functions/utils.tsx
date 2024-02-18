@@ -75,11 +75,11 @@ export function authContentHeader() {
 
 // fetchers
 
-export async function fetchX<T>(
+export async function fetchWrapper<T>(
     method: string,
     apiUrl: string,
     data: Record<string, any> | null
-): Promise<T | null> {
+): Promise<T | any> {
     try {
         const response: Response = await fetch(apiUrl, {
             method: method,
@@ -92,7 +92,10 @@ export async function fetchX<T>(
             if (response.status === 401) {
                 window.location.href = "/home";
             }
+            const errorMessage = { message: `Error ${response.status}: ${response.statusText}` };
+            return errorMessage;
         }
+
         return await response.json();
     } catch (error) {
         console.error("Error in fetchX:", error);

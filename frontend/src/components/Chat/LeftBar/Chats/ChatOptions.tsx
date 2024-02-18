@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import backendUrl from "src/constants/backendUrl";
-import { fetchX, sanitizeInput } from "src/functions/utils";
+import { fetchWrapper, sanitizeInput } from "src/functions/utils";
 
 // Contexts
 import { ChatContext } from "src/contexts/ChatProvider";
@@ -34,7 +34,7 @@ function ChatOptions(): React.JSX.Element {
             : `Leave ${activeChat.name}?`;
         if (window.confirm(promptText)) {
             const apiUrl = backendUrl.chat + `leave/${activeChat?.id}`;
-            const res = await fetchX<{ message: string }>("PATCH", apiUrl, null);
+            const res = await fetchWrapper<{ message: string }>("PATCH", apiUrl, null);
             alert(res.message);
             fetchThisUsersChats();
             changeActiveChat(null);
@@ -50,7 +50,7 @@ function ChatOptions(): React.JSX.Element {
             return;
         }
         const apiUrl = backendUrl.chat + `rename/${activeChat?.id}`;
-        const res = await fetchX<{ message: string }>("PATCH", apiUrl, {
+        const res = await fetchWrapper<{ message: string }>("PATCH", apiUrl, {
             name: sanitizedName,
         });
         alert(res.message);
@@ -61,7 +61,7 @@ function ChatOptions(): React.JSX.Element {
     async function removePassword() {
         if (!window.confirm("Are you sure you want to remove the password?")) return;
         const apiUrl = backendUrl.chat + `remove_password/${activeChat?.id}`;
-        const res = await fetchX<{ message: string }>("PATCH", apiUrl, null);
+        const res = await fetchWrapper<{ message: string }>("PATCH", apiUrl, null);
         alert(res.message);
         fetchThisUsersChats();
         changeActiveChat(activeChat?.id);
@@ -75,7 +75,7 @@ function ChatOptions(): React.JSX.Element {
             return;
         }
         const apiUrl = backendUrl.chat + `change_password/${activeChat?.id}`;
-        const res = await fetchX<{ message: string }>("PATCH", apiUrl, {
+        const res = await fetchWrapper<{ message: string }>("PATCH", apiUrl, {
             password: newPassword,
         });
         alert(res.message);

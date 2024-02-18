@@ -143,7 +143,6 @@ export class ChatController {
         @Body() newChat: NewChatDTO,
         @Res() res
     ) {
-        console.log("createChatContoller", newChat);
         try {
             const result = await this.chatService.createChat(req.user.id, newChat);
             if (result instanceof Error) {
@@ -151,7 +150,7 @@ export class ChatController {
             } else if ("error" in result) {
                 res.status(500).json({ error: result.error });
             } else {
-                //this.chatGatewayService.sendUpdateMessages(result.id, result);
+                this.chatGatewayService.sendChatUpdate(result.id);
                 res.status(200).json(result);
             }
         } catch (error) {
@@ -174,6 +173,8 @@ export class ChatController {
             } else if ("error" in result) {
                 res.status(500).json({ error: result.error });
             } else {
+                console.log("renameChat:", chatId, name);
+                this.chatGatewayService.sendChatUpdate(chatId);
                 res.status(200).json(result);
             }
         } catch (error) {
@@ -244,7 +245,7 @@ export class ChatController {
             } else if ("error" in result) {
                 res.status(500).json({ error: result.error });
             } else {
-                this.chatGatewayService.sendChatUpdate(chatId)
+                this.chatGatewayService.sendChatUpdate(chatId);
                 res.status(200).json(result);
             }
         } catch (error) {

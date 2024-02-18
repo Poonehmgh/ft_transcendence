@@ -1,7 +1,7 @@
 import React, { useContext, useRef, useState } from "react";
 import Modal from "react-modal";
 import CreateChatControls from "./CreateChatControls";
-import { fetchX } from "src/functions/utils";
+import { fetchWrapper } from "src/functions/utils";
 import SelectUsersTable from "./SelectUsersTable";
 import backendUrl from "src/constants/backendUrl";
 
@@ -72,7 +72,7 @@ function NewChat(): React.JSX.Element {
             newChatDTO.password = passwordRef.current.value;
         }
         try {
-            const newChat: BasicChatWithUsersDTO = await fetchX(
+            const newChat: BasicChatWithUsersDTO = await fetchWrapper(
                 "POST",
                 apiUrl,
                 newChatDTO

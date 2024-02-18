@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import backendUrl from "src/constants/backendUrl";
-import { fetchX } from "src/functions/utils";
+import { fetchWrapper } from "src/functions/utils";
 
 // Contexts
 import { SocketContext } from "./SocketProvider";
@@ -40,7 +40,7 @@ export function ChatProvider({ children }) {
                 } catch (error) {
                     console.error("Error fetching updated chat:", error);
                 }
-                // this would be far better, but would require a backend change
+                // this would be better, but would require a backend change
                 /* 
                 setActiveChat((prevActiveChat) => ({
                     ...prevActiveChat,
@@ -72,7 +72,7 @@ export function ChatProvider({ children }) {
     async function fetchThisUsersChats() {
         try {
             const apiUrl = backendUrl.chat + "my_chats";
-            const thisUsersChats = await fetchX<BasicChatWithUsersDTO[]>(
+            const thisUsersChats = await fetchWrapper<BasicChatWithUsersDTO[]>(
                 "GET",
                 apiUrl,
                 null
@@ -96,7 +96,7 @@ export function ChatProvider({ children }) {
 
         try {
             const apiUrl = backendUrl.chat + `complete_chat/${chatId}`;
-            const newActiveChat = await fetchX<ChatDTO>("GET", apiUrl, null);
+            const newActiveChat = await fetchWrapper<ChatDTO>("GET", apiUrl, null);
             setActiveChat(newActiveChat);
             setSelectedUser(null);
         } catch (error) {

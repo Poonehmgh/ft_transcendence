@@ -14,13 +14,13 @@ import { userGateway } from "./userGateway";
 
 @Injectable()
 export class ChatGatewayService {
-    connectedUsers: userGateway[] = [];
+    static connectedUsers: userGateway[] = [];
 
     constructor(private readonly prisma: PrismaService) {}
 
     printConnectedUsers() {
         console.log("Connected users:");
-        this.connectedUsers.forEach((user) => {
+        ChatGatewayService.connectedUsers.forEach((user) => {
             console.log("User", user.userID, "on socket", user.socket.id);
         });
     }
@@ -42,7 +42,7 @@ export class ChatGatewayService {
     }
 
     getUserIdFromSocket(socket: Socket) {
-        const user: userGateway = this.connectedUsers.find(
+        const user: userGateway = ChatGatewayService.connectedUsers.find(
             (user) => user.socket === socket
         );
         if (!user) return;
@@ -50,20 +50,20 @@ export class ChatGatewayService {
     }
 
     getUserSocketFromUserId(userId: number) {
-        const user: userGateway = this.connectedUsers.find(
+        const user: userGateway = ChatGatewayService.connectedUsers.find(
             (user) => user.userID === userId
         );
         return user ? user.socket : null;
     }
 
     deleteUserFromList(userIDToDelete: number) {
-        this.connectedUsers = this.connectedUsers.filter(
+        ChatGatewayService.connectedUsers = ChatGatewayService.connectedUsers.filter(
             (userGateway) => userGateway.userID !== userIDToDelete
         );
     }
 
     addUserToList(user: userGateway) {
-        this.connectedUsers.push(user);
+        ChatGatewayService.connectedUsers.push(user);
     }
 
     async IsUserInChat(chatId: number, userId: number) {
@@ -224,6 +224,18 @@ export class ChatGatewayService {
         }
     }
 
+    async sendDataUpdate(recipientIds: number[], event: string, data: any) {
+        console.log("userids", recipientIds);
+        for (const id of recipientIds) {
+            const socket: Socket = this.getUserSocketFromUserId(id);
+            console.log("socket:", socket?.id);
+            if (socket) {
+                console.log("sendDataUpdate: sending", event, "to user", id, "with data", data);
+                socket.emit(event, data);
+            }
+        }
+    }
+
     async checkIfDMChatExists(userId1: number, userId2: number): Promise<boolean> {
         const existingChat = await this.prisma.chat.findFirst({
             where: {
@@ -302,7 +314,9 @@ export class ChatGatewayService {
         }
     }
 
-    async sendChatCreationUpdate(chat: ChatListDTO) {
+    // replaced with sendChatUpdate
+/*     async sendChatCreationUpdate(chat: ChatListDTO) {
+        console.log("sending chat update");
         try {
             const chatRes = await this.prisma.chat.findUnique({
                 where: {
@@ -319,13 +333,15 @@ export class ChatGatewayService {
             if (chatRes) {
                 for (const user of chatRes.chatUsers) {
                     const socket: Socket = this.getUserSocketFromUserId(user.userId);
-                    socket.emit("updateChat", chat);
+                    console.log("sendChatCreationUpdate sending to user ", user.userId);
+                    if (socket)
+                        socket.emit("updateChat", chat);
                 }
             }
         } catch (error) {
             console.log(`error in sendChatCreationUpdate: ${error.message}`);
         }
-    }
+    } */
 
     //send updates to everyone in chat
     async sendChatAdditionUpdate(inviteForm: InviteUserDTO) {
@@ -337,7 +353,7 @@ export class ChatGatewayService {
 
     async sendChatUpdate(chatId: number) {
         try {
-            const chatRes = await this.prisma.chat.findUnique({
+            const chat = await this.prisma.chat.findUnique({
                 where: {
                     id: Number(chatId),
                 },
@@ -349,12 +365,12 @@ export class ChatGatewayService {
                     },
                 },
             });
-            if (chatRes) {
-                for (const user of chatRes.chatUsers) {
+            if (chat) {
+                for (const user of chat.chatUsers) {
                     const socket: Socket = this.getUserSocketFromUserId(user.userId);
                     console.log("sending updateChat event to user", user.userId);
                     if (socket)
-                        socket.emit("updateChat", new ChatListDTO(chatRes.name, chatId));
+                        socket.emit("updateChat", new ChatListDTO(chat.name, chatId));
                 }
             }
         } catch (error) {

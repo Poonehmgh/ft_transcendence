@@ -1,5 +1,7 @@
-import React from "react";
-import { handleBlockUser, handleUnBlockUser } from "src/functions/userActions";
+import React, { useContext } from "react";
+
+// Contexts
+import { UserDataContext } from "src/contexts/UserDataProvider";
 
 // DTO
 import { UserProfileDTO, UserRelation } from "src/dto/user-dto";
@@ -7,19 +9,10 @@ import { UserProfileDTO, UserRelation } from "src/dto/user-dto";
 interface blockButtonProps {
     relation: UserRelation;
     otherProfile: UserProfileDTO;
-    reRender: () => void;
 }
 
 function BlockButton(props: blockButtonProps): React.JSX.Element {
-    function doBlockUser(id: number, name: string) {
-        handleBlockUser(id, name);
-        props.reRender();
-    }
-
-    function doUnblockUser(id: number, name: string) {
-        handleUnBlockUser(id, name);
-        props.reRender();
-    }
+    const { blockUser, unblockUser } = useContext(UserDataContext);
 
     return (
         <button
@@ -27,8 +20,8 @@ function BlockButton(props: blockButtonProps): React.JSX.Element {
             data-tooltip={props.relation === UserRelation.blocked ? "Unblock" : "Block"}
             onClick={() => {
                 props.relation === UserRelation.blocked
-                    ? doUnblockUser(props.otherProfile.id, props.otherProfile.name)
-                    : doBlockUser(props.otherProfile.id, props.otherProfile.name);
+                    ? unblockUser(props.otherProfile.id, props.otherProfile.name)
+                    : blockUser(props.otherProfile.id, props.otherProfile.name);
             }}
         >
             {props.relation === UserRelation.blocked ? "🕊️" : "🚫"}

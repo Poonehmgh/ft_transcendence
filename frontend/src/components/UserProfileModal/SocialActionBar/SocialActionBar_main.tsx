@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import FriendButton from "./FriendButton";
 import BlockButton from "./BlockButton";
-import { fetchGetSet } from "src/functions/utils";
+
+// Contexts
+import { UserDataContext } from "src/contexts/UserDataProvider";
 
 // DTO
 import { UserRelation, UserProfileDTO } from "src/dto/user-dto";
@@ -14,33 +16,35 @@ interface socialActionBarProps {
 }
 
 function SocialActionBar(props: socialActionBarProps): React.JSX.Element {
+    const { friends, friendReqOut, friendReqIn, blockedUsers } =
+        useContext(UserDataContext);
     const [relation, setRelation] = useState<UserRelation>(null);
-    const [forceRerender, setForceRerender] = useState(false);
-    const apiUrl =
-        process.env.REACT_APP_BACKEND_URL +
-        "/user/user_relation/" +
-        props.otherProfile.id;
 
-    function reRender() {
-        setForceRerender((prevState) => !prevState);
+    function updateRelation() {
+        console.log("updateRelation: firends: ", friends);
+        let newRelation = UserRelation.none;
+        const otherId = props.otherProfile.id;
+
+        if (friends.some((item) => item.id === otherId)) {
+            newRelation = UserRelation.friends;
+        } else if (friendReqOut.some((item) => item.id === otherId)) {
+            newRelation = UserRelation.request_sent;
+        } else if (friendReqIn.some((item) => item.id === otherId)) {
+            newRelation = UserRelation.request_received;
+        } else if (blockedUsers.some((item) => item.id === otherId)) {
+            newRelation = UserRelation.blocked;
+        }
+        setRelation(newRelation);
     }
 
     useEffect(() => {
-        fetchGetSet(apiUrl, setRelation);
-    }, [apiUrl, forceRerender]);
+        updateRelation();
+    }, [friends, friendReqOut, friendReqIn, blockedUsers]);
 
     return (
         <div className="socialActionBarMain">
-            <FriendButton
-                relation={relation}
-                otherProfile={props.otherProfile}
-                reRender={reRender}
-            />
-            <BlockButton
-                relation={relation}
-                otherProfile={props.otherProfile}
-                reRender={reRender}
-            />
+            <FriendButton relation={relation} otherProfile={props.otherProfile} />
+            <BlockButton relation={relation} otherProfile={props.otherProfile} />
         </div>
     );
 }
