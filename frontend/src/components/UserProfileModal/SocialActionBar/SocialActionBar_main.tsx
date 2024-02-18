@@ -1,11 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import FriendButton from "./FriendButton";
 import BlockButton from "./BlockButton";
-import { fetchGetSet } from "src/functions/utils";
-import backendUrl from "src/constants/backendUrl";
 
 // Contexts
-import { SocketContext } from "src/contexts/SocketProvider";
+import { UserDataContext } from "src/contexts/UserDataProvider";
 
 // DTO
 import { UserRelation, UserProfileDTO } from "src/dto/user-dto";
@@ -18,29 +16,30 @@ interface socialActionBarProps {
 }
 
 function SocialActionBar(props: socialActionBarProps): React.JSX.Element {
-    const socket = useContext(SocketContext);
+    const { friends, friendReqOut, friendReqIn, blockedUsers } =
+        useContext(UserDataContext);
     const [relation, setRelation] = useState<UserRelation>(null);
 
-    useEffect(() => {
-        if (!socket) return;
+    function updateRelation() {
+        console.log("updateRelation: firends: ", friends);
+        let newRelation = UserRelation.none;
+        const otherId = props.otherProfile.id;
 
-        socket.on("socialUpdate", () => {
-            updateRelation();
-        });
-
-        return () => {
-            socket.off("socialUpdate");
-        };
-    }, [socket]);
-
-    async function updateRelation() {
-        const apiUrl = backendUrl.user + "user_relation/" + props.otherProfile.id;
-        const relation = await fetchGetSet<UserRelation>(apiUrl, setRelation);
+        if (friends.some((item) => item.id === otherId)) {
+            newRelation = UserRelation.friends;
+        } else if (friendReqOut.some((item) => item.id === otherId)) {
+            newRelation = UserRelation.request_sent;
+        } else if (friendReqIn.some((item) => item.id === otherId)) {
+            newRelation = UserRelation.request_received;
+        } else if (blockedUsers.some((item) => item.id === otherId)) {
+            newRelation = UserRelation.blocked;
+        }
+        setRelation(newRelation);
     }
 
     useEffect(() => {
         updateRelation();
-    }, []);
+    }, [friends, friendReqOut, friendReqIn, blockedUsers]);
 
     return (
         <div className="socialActionBarMain">

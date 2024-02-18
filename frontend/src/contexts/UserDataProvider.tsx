@@ -64,7 +64,8 @@ export function UserDataProvider({ children }) {
         setBlockedUsers(blocked);
     }
 
-    async function updateUserData() {
+    function updateUserData() {
+        console.log("updateUserData");
         updateFriends();
         updateFriendReqOut();
         updateFriendReqIn();
@@ -162,14 +163,17 @@ export function UserDataProvider({ children }) {
             const method = "PATCH";
             const apiUrl = backendUrl.user + "friendreq";
             const body = { otherId: otherId, action: "accept" };
-            const response = await fetchWrapper<{ message: string }>(method, apiUrl, body);
+            const response = await fetchWrapper<{ message: string }>(
+                method,
+                apiUrl,
+                body
+            );
             if (response) {
                 updateFriendReqIn();
                 updateFriends();
                 alert(response.message);
             }
         }
-       
     }
 
     async function declineRequest(otherId: number, otherName: string) {
@@ -177,7 +181,11 @@ export function UserDataProvider({ children }) {
             const method = "PATCH";
             const apiUrl = backendUrl.user + "friendreq";
             const body = { otherId: otherId, action: "decline" };
-            const response = await fetchWrapper<{ message: string }>(method, apiUrl, body);
+            const response = await fetchWrapper<{ message: string }>(
+                method,
+                apiUrl,
+                body
+            );
             if (response) {
                 updateFriendReqIn();
                 alert(response.message);

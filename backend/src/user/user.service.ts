@@ -439,7 +439,7 @@ export class UserService {
             return { message: INFO_ACCEPT_FREQ };
         } catch (error) {
             console.log(error);
-            return ERR_ACCEPT_FREQ;
+            return error;
         }
     }
 
@@ -449,10 +449,10 @@ export class UserService {
                 this.filterArray(thisId, "friendReq_in", otherId),
                 this.filterArray(otherId, "friendReq_out", thisId),
             ]);
-            return INFO_DECL_FREQ;
+            return { message: INFO_DECL_FREQ };
         } catch (error) {
             console.log(error);
-            return ERR_DECL_FREQ;
+            return error;
         }
     }
 

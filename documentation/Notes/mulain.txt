@@ -11,7 +11,23 @@
 - header to absolute values
 - sanitize username and chatname in backend 
 - rm invited variable
-- test if activating socket for socialUpdate in socialactionbar is unproblematic. should be higher order?
+- clean up unneccesary files
+- clean up folder structure frontend
+- clean up folder structure backend
+
+
+IMMEDIATE MULAIN
+- creat chat emit
+- delete chat emit
+- rename chat emit
+- add invitegame to chat
+- finish matchhistory
+
+-blocked: what about DM? not show chat?
+- blocked: what about groupchat invite from blocked? show chat but keep the blocked users msg hidden?
+
+- chat: unban
+- chat: unmute
 
 
 

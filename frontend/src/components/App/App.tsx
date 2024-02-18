@@ -8,13 +8,13 @@ import { UserDataProvider } from "src/contexts/UserDataProvider";
 function App() {
     return (
         <AuthProvider>
-            <SocketProvider>
-                <UserDataProvider>
+            <UserDataProvider>
+                <SocketProvider>
                     <BrowserRouter>
                         <PongersRoutes />
                     </BrowserRouter>
-                </UserDataProvider>
-            </SocketProvider>
+                </SocketProvider>
+            </UserDataProvider>
         </AuthProvider>
     );
 }

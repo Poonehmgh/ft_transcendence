@@ -293,6 +293,8 @@ export class UserController {
             }
 
             if (result instanceof Error) {
+                console.log("about to try to send result.message");
+                console.log(result.message);
                 res.status(500).json({ error: result.message });
             } else if ("error" in result) {
                 res.status(500).json({ error: result.error });
