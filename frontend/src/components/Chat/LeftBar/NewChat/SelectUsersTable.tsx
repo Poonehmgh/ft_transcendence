@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import backendUrl from "src/constants/backendUrl";
-import { fetchWrapper } from "utils";
+import { fetchWrapper } from "src/functions/utils";
 
 // DTO
 import { UserProfileDTO } from "src/dto/user-dto";

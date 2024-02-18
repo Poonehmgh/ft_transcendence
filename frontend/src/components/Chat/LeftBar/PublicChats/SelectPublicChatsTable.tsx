@@ -5,7 +5,7 @@ import backendUrl from "src/constants/backendUrl";
 import { ChatContext } from "src/contexts/ChatProvider";
 import { SocketContext } from "src/contexts/SocketProvider";
 import { AuthContext } from "src/contexts/AuthProvider";
-import { fetchWrapper } from "utils";
+import { fetchWrapper } from "src/functions/utils";
 
 // DTO
 import { BasicChatDTO, InviteUserDTO } from "chat-dto";

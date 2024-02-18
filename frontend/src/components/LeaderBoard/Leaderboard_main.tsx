@@ -3,7 +3,7 @@ import UserTable from "../shared/UserTable";
 import RankNumberColumn from "./RankNumberColumn";
 import LoadingH2 from "src/components/shared/LoadingH2";
 import backendUrl from "src/constants/backendUrl";
-import { fetchWrapper } from "utils";
+import { fetchWrapper } from "src/functions/utils";
 
 // DTO
 import { UserProfileDTO } from "src/dto/user-dto";
@@ -22,6 +22,8 @@ function Leaderboard() {
             const data = await fetchWrapper<UserProfileDTO[]>("GET", apiUrl, null);
             setUserlist(data);
         }
+
+        fetchUserList();
     }, []);
 
     if (userList === null) return <LoadingH2 elementName={"Leaderboard"} />;

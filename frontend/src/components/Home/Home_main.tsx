@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Login from "./Login";
 import { UserProfileDTO } from "user-dto";
-import { fetchWrapper } from "utils";
+import { fetchWrapper } from "src/functions/utils";
 import backendUrl from "src/constants/backendUrl";
 
 // CSS

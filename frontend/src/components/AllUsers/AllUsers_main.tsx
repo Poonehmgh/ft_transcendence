@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import UserTable from "../shared/UserTable";
-import { fetchGetSet } from "src/functions/utils";
-
-import { UserProfileDTO } from "src/dto/user-dto";
 import LoadingH2 from "../shared/LoadingH2";
+import backendUrl from "src/constants/backendUrl";
+import { fetchWrapper } from "src/functions/utils";
+
+// DTO
+import { UserProfileDTO } from "src/dto/user-dto";
 
 // CSS
 import "src/styles/style.css";
@@ -12,11 +14,16 @@ import "src/styles/buttons.css";
 function AllUsers() {
     const [users, setUsers] = useState<UserProfileDTO[]>(null);
     const [searchQuery, setSearchQuery] = useState<string>("");
-    const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/all_users";
 
     useEffect(() => {
-        fetchGetSet(apiUrl, setUsers);
-    }, [apiUrl]);
+        async function fetchUsers() {
+            const apiUrl = backendUrl.user + "all_users";
+            const data = await fetchWrapper<UserProfileDTO[]>("GET", apiUrl, null);
+            setUsers(data);
+        }
+
+        fetchUsers();
+    }, []);
 
     if (!users) return <LoadingH2 elementName={"All Users"} />;
 
