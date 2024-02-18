@@ -16,7 +16,7 @@ export class GameData {
 	ScorePlayer2: number = 0;
 	PositionPlank1: number = 0;
 	PositionPlank2: number = 0;
-	PositionBall: [number, number] = [50, 15];
+	PositionBall: [number, number] = [50, 50];
 	VelocityBall: [number, number] = [1, 0];
 
 	//1 is active, 0 is inactive
@@ -27,8 +27,8 @@ export class GameData {
 	fieldWidth: number = 100;
 	fieldHeight: number = 100;
 	ballRadius: number = 2;
-	plankWidth: number = 1.5;
-	plankHeight: number = 15;
+	plankWidth: number = 3;
+	plankHeight: number = 20;
 
 	interval: NodeJS.Timer;
 
@@ -43,22 +43,25 @@ export class GameData {
 	}
 
 	plankCollision = () => {
-    if (this.PositionBall[0] - this.ballRadius < this.plankWidth &&
-        this.PositionBall[1] + this.ballRadius > this.PositionPlank1 &&
-        this.PositionBall[1] - this.ballRadius < this.PositionPlank1 + this.plankHeight) {
-        const relativeHitPosition = (this.PositionBall[1] - (this.PositionPlank1 + this.plankHeight / 2));
-        this.VelocityBall[1] = relativeHitPosition / (this.plankHeight / 2);
-        this.VelocityBall[0] *= -1;
-    }
-
-    if (this.PositionBall[0] + this.ballRadius > this.fieldWidth - this.plankWidth &&
-        this.PositionBall[1] + this.ballRadius > this.PositionPlank2 &&
-        this.PositionBall[1] - this.ballRadius < this.PositionPlank2 + this.plankHeight) {
-        const relativeHitPosition = (this.PositionBall[1] - (this.PositionPlank2 + this.plankHeight / 2));
-        this.VelocityBall[1] = relativeHitPosition / (this.plankHeight / 2);
-        this.VelocityBall[0] *= -1;
-    }
-}
+		// console.log(this);
+		if (this.PositionBall[0] - this.ballRadius < this.plankWidth
+			&& this.PositionBall[1] > this.PositionPlank1
+			&& this.PositionBall[1] < this.PositionPlank1 + this.plankHeight) {
+				console.log("LEFT COLLISION");
+				const relativeHitPosition = (this.PositionBall[1] - this.PositionPlank1) - (this.plankHeight / 2);
+				this.VelocityBall[1] = relativeHitPosition / (this.plankHeight / 2);
+				this.VelocityBall[0] *= -1;
+			}
+			if (this.PositionBall[0] + this.ballRadius >= this.fieldWidth - this.plankWidth
+				&& this.PositionBall[1] > this.PositionPlank2
+				&& this.PositionBall[1] < this.PositionPlank2 + this.plankHeight) {
+					console.log("RIGHT COLLISION");
+					// console.log(this);
+			const relativeHitPosition = (this.PositionBall[1] - this.PositionPlank2) - (this.plankHeight / 2);
+			this.VelocityBall[1] = relativeHitPosition / (this.plankHeight / 2); // Adjust vertical speed + can be tweaked with additional coefficients
+			this.VelocityBall[0] *= -1;
+		}
+	}
 
 	sendNewRoundMessage = () => {
 		if (this.GameStatus == 1) {
@@ -70,16 +73,16 @@ export class GameData {
 	resetGameData = () => {
 		this.PositionPlank1 = 0;
 		this.PositionPlank2 = 0;
-		this.PositionBall = [50, 20];
+		this.PositionBall = [50, 50];
 		this.VelocityBall = [1, 0];
 	}
 
 
 	async addPointToUser(user: number) {
 		if (user == 1) {
-			this.ScorePlayer1++;
-		} else if (user == 2) {
 			this.ScorePlayer2++;
+		} else if (user == 2) {
+			this.ScorePlayer1++;
 		}
 		if (this.ScorePlayer1 >= 3) {
 			// await this.prismaService.match.create({
@@ -101,8 +104,8 @@ export class GameData {
 			this.GameStatus = 0;
 			return;
 		}
-		this.resetGameData();
 		// console.log(this);
+		this.resetGameData();
 		this.sendNewRoundMessage();
 		console.log(`points for player ${user}`)
 		// console.log(this);
