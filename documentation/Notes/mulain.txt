@@ -6,6 +6,8 @@
     - leave chat emit
     - rename chat emit
     - change user status emit
+    - test muted 
+    - test banned
 - stress test game
 - test 2fa auth
 - test login with taken name
@@ -29,8 +31,6 @@
 
 
 IMMEDIATE MULAIN
-- handle bans frontend
-- handle bans backend
 - react to inviteEmission
 - add invite game button to profile?
 -blocked: what about DM? not show chat?

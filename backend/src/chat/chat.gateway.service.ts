@@ -211,7 +211,11 @@ export class ChatGatewayService {
                 include: {
                     chat: {
                         include: {
-                            chatUsers: true,
+                            chatUsers: {
+                                where: {
+                                    banned: false,
+                                },
+                            },
                         },
                     },
                 },
@@ -230,7 +234,14 @@ export class ChatGatewayService {
             const socket: Socket = this.getUserSocketFromUserId(id);
             console.log("socket:", socket?.id);
             if (socket) {
-                console.log("sendDataUpdate: sending", event, "to user", id, "with data", data);
+                console.log(
+                    "sendDataUpdate: sending",
+                    event,
+                    "to user",
+                    id,
+                    "with data",
+                    data
+                );
                 socket.emit(event, data);
             }
         }
@@ -280,13 +291,13 @@ export class ChatGatewayService {
         }
     }
 
-   /*  async checkIsProperChat(chat: CreateNewChatDTO) {
+    /*  async checkIsProperChat(chat: CreateNewChatDTO) {
         if (chat.chat_users.length < 2) throw { message: "Not enough users" };
         const ownerCount: number = this.countOwners(chat.chat_users);
         if (ownerCount > 1) throw { message: "Too much owners" };
         if (chat.dm) await this.checkIsProperDM(chat);
     } */
-/* 
+    /* 
     async createNewEmptyChat(data: CreateNewChatDTO) {
         try {
             await this.checkIsProperChat(data);
@@ -315,7 +326,7 @@ export class ChatGatewayService {
     } */
 
     // replaced with sendChatUpdate
-/*     async sendChatCreationUpdate(chat: ChatListDTO) {
+    /*     async sendChatCreationUpdate(chat: ChatListDTO) {
         console.log("sending chat update");
         try {
             const chatRes = await this.prisma.chat.findUnique({
@@ -345,7 +356,7 @@ export class ChatGatewayService {
 
     // function not used, replaced with sendChatUpdate. didnt actually send updates to everyone...
     //send updates to everyone in chat
-   /*  async sendChatAdditionUpdate(inviteForm: InviteUserDTO) {
+    /*  async sendChatAdditionUpdate(inviteForm: InviteUserDTO) {
         const chatName = await this.getChatNameFromID(inviteForm.chatId);
         const socket: Socket = this.getUserSocketFromUserId(inviteForm.userId);
         if (socket)
@@ -360,6 +371,9 @@ export class ChatGatewayService {
                 },
                 include: {
                     chatUsers: {
+                        where: {
+                            banned: false,
+                        },
                         select: {
                             userId: true,
                         },
@@ -555,7 +569,7 @@ export class ChatGatewayService {
             },
         });
         this.sendChatUpdate(changeForm.chatId);
-        
+
         //this.kickChatUser(changeForm);
     }
 
