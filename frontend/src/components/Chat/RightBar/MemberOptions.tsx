@@ -39,6 +39,7 @@ function MemberOptions(): React.JSX.Element {
                 setSelectedUserRole(Role.member);
             }
 
+            // should probably be in the chatprovider
             const thisUser = activeChat.chatUsers.find(
                 (e: ChatUserDTO) => e.userId === userId
             );
@@ -55,7 +56,7 @@ function MemberOptions(): React.JSX.Element {
                 setThisUserRole(Role.member);
             }
         }
-    }, [selectedUser, activeChat.chatUsers]);
+    }, [selectedUser, activeChat.chatUsers, userId]);
 
     async function changeUserStatus(action: string) {
         console.log("changeUserStatus. Received action:'" + action + "'");
@@ -64,9 +65,9 @@ function MemberOptions(): React.JSX.Element {
             chatId: activeChat.id,
             userId: selectedUser.userId,
             owner: false,
-            muted: false,
-            banned: false,
-            admin: false,
+            muted: selectedUser.muted,
+            banned: selectedUser.banned,
+            admin: selectedUser.admin,
             kick: false,
         };
 
@@ -93,12 +94,20 @@ function MemberOptions(): React.JSX.Element {
         } else if (action === "ban") {
             if (!window.confirm(`Ban ${selectedUser.userName}?`)) return;
             data.banned = true;
+        } else if (action === "unban") {
+            if (!window.confirm(`Unban ${selectedUser.userName}?`)) return;
+            data.banned = false;
         } else {
             console.error("Invalid action");
             return;
         }
         socket.emit("changeChatUserStatus", data);
         changeActiveChat(activeChat?.id);
+    }
+
+    function inviteUserToMatch() {
+        if (!window.confirm(`Invite ${selectedUser.userName} to a pongers match?`))
+            socket.emit("inviteUserToMatch", { userId: selectedUser.userId });
     }
 
     function handleOpenModal() {
@@ -123,10 +132,7 @@ function MemberOptions(): React.JSX.Element {
                     <button className="bigButton" onClick={handleOpenModal}>
                         View Profile
                     </button>
-                    <button
-                        className="bigButton"
-                        onClick={() => changeUserStatus("owner")}
-                    >
+                    <button className="bigButton" onClick={() => inviteUserToMatch()}>
                         Invite to Match
                     </button>
                 </div>
@@ -176,9 +182,11 @@ function MemberOptions(): React.JSX.Element {
                         </button>
                         <button
                             className="bigButton"
-                            onClick={() => changeUserStatus("ban")}
+                            onClick={() =>
+                                changeUserStatus(selectedUser.banned ? "unban" : "ban")
+                            }
                         >
-                            Ban
+                            {selectedUser.banned ? "Unban" : "Ban"}
                         </button>
                     </div>
                 )}

@@ -3,7 +3,7 @@ import FriendButton from "./FriendButton";
 import BlockButton from "./BlockButton";
 
 // Contexts
-import { UserDataContext } from "src/contexts/UserDataProvider";
+import { SocialDataContext } from "src/contexts/SocialDataProvider";
 
 // DTO
 import { UserRelation, UserProfileDTO } from "src/dto/user-dto";
@@ -17,29 +17,28 @@ interface socialActionBarProps {
 
 function SocialActionBar(props: socialActionBarProps): React.JSX.Element {
     const { friends, friendReqOut, friendReqIn, blockedUsers } =
-        useContext(UserDataContext);
+        useContext(SocialDataContext);
     const [relation, setRelation] = useState<UserRelation>(null);
 
-    function updateRelation() {
-        console.log("updateRelation: firends: ", friends);
-        let newRelation = UserRelation.none;
-        const otherId = props.otherProfile.id;
-
-        if (friends.some((item) => item.id === otherId)) {
-            newRelation = UserRelation.friends;
-        } else if (friendReqOut.some((item) => item.id === otherId)) {
-            newRelation = UserRelation.request_sent;
-        } else if (friendReqIn.some((item) => item.id === otherId)) {
-            newRelation = UserRelation.request_received;
-        } else if (blockedUsers.some((item) => item.id === otherId)) {
-            newRelation = UserRelation.blocked;
-        }
-        setRelation(newRelation);
-    }
-
     useEffect(() => {
+        function updateRelation() {
+            let newRelation = UserRelation.none;
+            const otherId = props.otherProfile.id;
+
+            if (blockedUsers.some((e) => e.id === otherId)) {
+                newRelation = UserRelation.blocked;
+            } else if (friends.some((e) => e.id === otherId)) {
+                newRelation = UserRelation.friends;
+            } else if (friendReqIn.some((e) => e.id === otherId)) {
+                newRelation = UserRelation.request_received;
+            } else if (friendReqOut.some((e) => e.id === otherId)) {
+                newRelation = UserRelation.request_sent;
+            }
+            setRelation(newRelation);
+        }
+
         updateRelation();
-    }, [friends, friendReqOut, friendReqIn, blockedUsers]);
+    }, [friends, friendReqOut, friendReqIn, blockedUsers, props.otherProfile]);
 
     return (
         <div className="socialActionBarMain">

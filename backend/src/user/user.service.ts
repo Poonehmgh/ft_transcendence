@@ -46,7 +46,7 @@ export class UserService {
         }
     }
 
-    async getMatchDtos(matchIds: number[]): Promise<MatchDTO[]> {
+    async getMatches(matchIds: number[]): Promise<MatchDTO[]> {
         try {
             const matches = await this.prisma.match.findMany({
                 where: {
@@ -56,7 +56,9 @@ export class UserService {
                 },
             });
 
-            return matches.map((match) => new MatchDTO(match));
+            return await Promise.all(
+                matches.map(async (match) => await MatchDTO.fromMatch(match, this))
+            );
         } catch (error) {
             console.error("Error retrieving match DTOs:", error);
             throw error;

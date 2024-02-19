@@ -5,7 +5,7 @@ import { fetchWrapper } from "src/functions/utils";
 // DTO
 import { IdAndNameDTO } from "user-dto";
 
-export const UserDataContext = createContext({
+export const SocialDataContext = createContext({
     friends: null as IdAndNameDTO[],
     friendReqOut: null as IdAndNameDTO[],
     friendReqIn: null as IdAndNameDTO[],
@@ -20,7 +20,7 @@ export const UserDataContext = createContext({
     updateUserData: () => {},
 });
 
-export function UserDataProvider({ children }) {
+export function SocialDataProvider({ children }) {
     const [friends, setFriends] = useState<IdAndNameDTO[]>(null);
     const [friendReqOut, setFriendReqOut] = useState<IdAndNameDTO[]>(null);
     const [friendReqIn, setFriendReqIn] = useState<IdAndNameDTO[]>(null);
@@ -74,6 +74,7 @@ export function UserDataProvider({ children }) {
 
     useEffect(() => {
         updateUserData();
+        // eslint-disable-next-line
     }, []);
 
     // user actions
@@ -209,8 +210,8 @@ export function UserDataProvider({ children }) {
     };
 
     return (
-        <UserDataContext.Provider value={contextValue}>
+        <SocialDataContext.Provider value={contextValue}>
             {children}
-        </UserDataContext.Provider>
+        </SocialDataContext.Provider>
     );
 }

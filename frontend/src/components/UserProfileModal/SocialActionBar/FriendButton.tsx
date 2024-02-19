@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 
 // Contexts
-import { UserDataContext } from "src/contexts/UserDataProvider";
+import { SocialDataContext } from "src/contexts/SocialDataProvider";
 
 // DTO
 import { UserProfileDTO, UserRelation } from "src/dto/user-dto";
@@ -21,7 +21,7 @@ function FriendButton(props: FriendButtonProps): React.JSX.Element | null {
         acceptRequest,
         declineRequest,
         removeFriend,
-    } = useContext(UserDataContext);
+    } = useContext(SocialDataContext);
 
     if (!props.otherProfile) return <div className="p">Loading data...</div>;
     if (props.relation === UserRelation.blocked)

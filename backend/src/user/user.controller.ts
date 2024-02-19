@@ -81,7 +81,7 @@ export class UserController {
     @Get("matches/:id")
     async getMatches(@Param("id") id: number): Promise<MatchDTO[]> {
         const matchIds = await this.userService.getMatchIds(Number(id));
-        return this.userService.getMatchDtos(matchIds);
+        return this.userService.getMatches(matchIds);
     }
 
     @Get("user_relation/:id")

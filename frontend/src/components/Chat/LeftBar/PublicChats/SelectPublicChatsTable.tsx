@@ -84,8 +84,16 @@ function SelectPublicChatsTable({ closeModal }): React.JSX.Element {
                                     style={{ cursor: "default" }}
                                 >
                                     <td>
-                                        {e.name}
-                                        {e.passwordRequired ? " 🔐" : ""}
+                                        <div
+                                            style={{
+                                                width: "100%",
+                                                display: "flex",
+                                                justifyContent: "space-between",
+                                            }}
+                                        >
+                                            <div>{e.name}</div>
+                                            <div>{e.passwordRequired ? " 🔐" : ""}</div>
+                                        </div>
                                     </td>
                                 </tr>
                             ))}

@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Modal from "react-modal";
 import { authContentHeader, fetchWrapper } from "src/functions/utils";
 import PlayerCardTable from "../shared/PlayerCardTable";
 import SocialActionBar from "./SocialActionBar/SocialActionBar_main";
 import MatchHistory from "./MatchHistory";
 import backendUrl from "src/constants/backendUrl";
+
+// Contexts
+import { AuthContext } from "src/contexts/AuthProvider";
 
 // DTO
 import { UserProfileDTO } from "src/dto/user-dto";
@@ -21,6 +24,7 @@ interface userProfileModalProps {
 }
 
 function UserProfileModal(props: userProfileModalProps) {
+    const { userId } = useContext(AuthContext);
     const [userProfile, setUserProfile] = useState<UserProfileDTO>(null);
     const [avatarURL, setAvatarURL] = useState(null);
 
@@ -90,7 +94,7 @@ function UserProfileModal(props: userProfileModalProps) {
                                 twoFa={userProfile.twoFa}
                             />
                         </div>
-                        {props.id.toString() === localStorage.getItem("userId") ? (
+                        {props.id === userId ? (
                             <div className="p" style={{ margin: "20px 0px" }}>
                                 This is your profile.
                             </div>

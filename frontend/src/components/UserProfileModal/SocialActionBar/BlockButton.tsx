@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 
 // Contexts
-import { UserDataContext } from "src/contexts/UserDataProvider";
+import { SocialDataContext } from "src/contexts/SocialDataProvider";
 
 // DTO
 import { UserProfileDTO, UserRelation } from "src/dto/user-dto";
@@ -12,20 +12,24 @@ interface blockButtonProps {
 }
 
 function BlockButton(props: blockButtonProps): React.JSX.Element {
-    const { blockUser, unblockUser } = useContext(UserDataContext);
+    const { blockUser, unblockUser } = useContext(SocialDataContext);
 
     return (
-        <button
-            className="userActionButton"
-            data-tooltip={props.relation === UserRelation.blocked ? "Unblock" : "Block"}
-            onClick={() => {
-                props.relation === UserRelation.blocked
-                    ? unblockUser(props.otherProfile.id, props.otherProfile.name)
-                    : blockUser(props.otherProfile.id, props.otherProfile.name);
-            }}
-        >
-            {props.relation === UserRelation.blocked ? "🕊️" : "🚫"}
-        </button>
+        <div>
+            <button
+                className="userActionButton"
+                data-tooltip={
+                    props.relation === UserRelation.blocked ? "Unblock" : "Block"
+                }
+                onClick={() => {
+                    props.relation === UserRelation.blocked
+                        ? unblockUser(props.otherProfile.id, props.otherProfile.name)
+                        : blockUser(props.otherProfile.id, props.otherProfile.name);
+                }}
+            >
+                {props.relation === UserRelation.blocked ? "🕊️" : "🚫"}
+            </button>
+        </div>
     );
 }
 

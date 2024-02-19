@@ -25,7 +25,7 @@ function MemberList(): React.JSX.Element {
                     >
                         <div>{e.userName}</div>
                         <span className="smallTextDiv">
-                            {e.owner ? "Owner" : e.admin ? "Admin" : "Member"}
+                            {e.owner ? "Owner" : e.admin ? "Admin" : e.banned ? "Banned" : "Member"}
                             {e.muted ? " | Muted" : ""}
                         </span>
                     </button>

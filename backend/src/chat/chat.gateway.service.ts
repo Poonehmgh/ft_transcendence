@@ -280,13 +280,13 @@ export class ChatGatewayService {
         }
     }
 
-    async checkIsProperChat(chat: CreateNewChatDTO) {
+   /*  async checkIsProperChat(chat: CreateNewChatDTO) {
         if (chat.chat_users.length < 2) throw { message: "Not enough users" };
         const ownerCount: number = this.countOwners(chat.chat_users);
         if (ownerCount > 1) throw { message: "Too much owners" };
         if (chat.dm) await this.checkIsProperDM(chat);
-    }
-
+    } */
+/* 
     async createNewEmptyChat(data: CreateNewChatDTO) {
         try {
             await this.checkIsProperChat(data);
@@ -312,7 +312,7 @@ export class ChatGatewayService {
         } catch (error) {
             console.log(`error in createNewEmptyChat: ${error.message}`);
         }
-    }
+    } */
 
     // replaced with sendChatUpdate
 /*     async sendChatCreationUpdate(chat: ChatListDTO) {
@@ -343,13 +343,14 @@ export class ChatGatewayService {
         }
     } */
 
+    // function not used, replaced with sendChatUpdate. didnt actually send updates to everyone...
     //send updates to everyone in chat
-    async sendChatAdditionUpdate(inviteForm: InviteUserDTO) {
+   /*  async sendChatAdditionUpdate(inviteForm: InviteUserDTO) {
         const chatName = await this.getChatNameFromID(inviteForm.chatId);
         const socket: Socket = this.getUserSocketFromUserId(inviteForm.userId);
         if (socket)
             socket.emit("updateChat", new ChatListDTO(chatName, inviteForm.chatId));
-    }
+    } */
 
     async sendChatUpdate(chatId: number) {
         try {
@@ -429,7 +430,7 @@ export class ChatGatewayService {
                     userId: inviteForm.userId,
                 },
             });
-            if (chatUser) await this.sendChatAdditionUpdate(inviteForm);
+            if (chatUser) await this.sendChatUpdate(inviteForm.chatId);
         }
     }
 
@@ -550,10 +551,12 @@ export class ChatGatewayService {
                 chatId: Number(changeForm.chatId),
             },
             data: {
-                blocked: changeForm.banned,
+                banned: changeForm.banned,
             },
         });
-        this.kickChatUser(changeForm);
+        this.sendChatUpdate(changeForm.chatId);
+        
+        //this.kickChatUser(changeForm);
     }
 
     async changeUsersInChatStatus(changeForm: ChangeChatUserStatusDTO) {

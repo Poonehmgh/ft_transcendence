@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 
 // Contexts
-import { UserDataContext } from "src/contexts/UserDataProvider";
+import { SocialDataContext } from "src/contexts/SocialDataProvider";
 
 // DTO
 import { IdAndNameDTO } from "src/dto/user-dto";
@@ -11,7 +11,7 @@ import "src/styles/style.css";
 import "src/styles/manageProfile.css";
 
 function RequestOutList() {
-    const { cancelFriendRequest, friendReqOut } = useContext(UserDataContext);
+    const { cancelFriendRequest, friendReqOut } = useContext(SocialDataContext);
 
     if (friendReqOut === null) return <div className="p">Loading data...</div>;
     if (friendReqOut.length === 0)

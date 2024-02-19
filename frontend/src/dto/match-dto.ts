@@ -2,13 +2,15 @@ export class MatchDTO {
     id: number;
     begin: Date | null;
     end: Date | null;
-    length_sec: number;
-    player1_id: number;
-    player2_id: number;
-    score_p1: number;
-    score_p2: number;
-    winner_id: number | null;
-    winner_name: string | null;
+    length_sec: number | null;
+    player1Id: number;
+    player1Name: string;
+    player1Score: number;
+    player2Id: number;
+    player2Name: string;
+    player2Score: number;
+    winnerId: number | null;
+    winnerName: string | null;
 }
 
 export class MatchInfoDTO {
