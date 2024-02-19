@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import UserProfileModal from "../UserProfileModal/UserProfileModal_main";
-import { fetchGetSet } from "utils";
+import backendUrl from "src/constants/backendUrl";
+import { fetchWrapper } from "utils";
 
 // DTO
 import { UserProfileDTO } from "src/dto/user-dto";
@@ -31,8 +32,13 @@ function AllUsersTable(props: allUsersTable_prop): React.JSX.Element {
     };
 
     useEffect(() => {
-        const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/all_users";
-        fetchGetSet(apiUrl, setAllUsersTable);
+        async function fetchAllUsers() {
+            const apiUrl = backendUrl.user + "all_users";
+            const data = await fetchWrapper<UserProfileDTO[]>("GET", apiUrl, null);
+            setAllUsersTable(data);
+        }
+
+        fetchAllUsers();
     }, [props.n]);
 
     if (allUsersTable.length === 0)

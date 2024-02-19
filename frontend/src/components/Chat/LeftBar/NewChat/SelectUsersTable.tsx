@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { fetchGetSet } from "src/functions/utils";
 import backendUrl from "src/constants/backendUrl";
+import { fetchWrapper } from "src/functions/utils";
 
 // DTO
 import { UserProfileDTO } from "src/dto/user-dto";
@@ -17,11 +17,16 @@ function SelectUsersTable(props: selectUsersTableProps): React.JSX.Element {
     const [users, setUsers] = useState<UserProfileDTO[]>(null);
     const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
     const [searchQuery, setSearchQuery] = useState<string>("");
-    const apiUrl = backendUrl.user + "other_users";
 
     useEffect(() => {
-        fetchGetSet<UserProfileDTO[]>(apiUrl, setUsers);
-    }, [apiUrl]);
+        async function fetchUsers() {
+            const apiUrl = backendUrl.user + "other_users";
+            const data = await fetchWrapper<UserProfileDTO[]>("GET", apiUrl, null);
+            setUsers(data);
+        }
+
+        fetchUsers();
+    }, []);
 
     function handleUserSelection(userId: number) {
         const newSelectedUsers = updateSelectedUsers(selectedUsers, userId);

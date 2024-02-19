@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
-import { fetchGetSet } from "src/functions/utils";
 import backendUrl from "src/constants/backendUrl";
+import { fetchWrapper } from "src/functions/utils";
 
 // Contexts
 import { ChatContext } from "src/contexts/ChatProvider";
@@ -14,7 +14,7 @@ import { BasicChatDTO, InviteUserDTO } from "chat-dto";
 import "src/styles/modals.css";
 import "src/styles/buttons.css";
 
-function SelectPublicChatsTable({closeModal}): React.JSX.Element {
+function SelectPublicChatsTable({ closeModal }): React.JSX.Element {
     const { changeActiveChat } = useContext(ChatContext);
     const socket = useContext(SocketContext);
     const { userId } = useContext(AuthContext);
@@ -22,8 +22,13 @@ function SelectPublicChatsTable({closeModal}): React.JSX.Element {
     const [searchQuery, setSearchQuery] = useState<string>("");
 
     useEffect(() => {
-        const apiUrl = backendUrl.chat + "public_chats";
-        fetchGetSet<BasicChatDTO[]>(apiUrl, setPublicChats);
+        async function fetchPublicChats() {
+            const apiUrl = backendUrl.chat + "public_chats";
+            const data = await fetchWrapper<BasicChatDTO[]>("GET", apiUrl, null);
+            setPublicChats(data);
+        }
+
+        fetchPublicChats();
     }, []);
 
     function handleChatSelection(chat: BasicChatDTO) {

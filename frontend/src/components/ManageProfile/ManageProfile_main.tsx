@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import ManageContactsTabs from "./ManageContactsTabs";
 import PlayerCardTable from "../shared/PlayerCardTable";
 import {
-    fetchGetSet,
     authHeader,
     authContentHeader,
     sanitizeInput,
@@ -21,10 +20,9 @@ import "src/styles/manageProfile.css";
 import backendUrl from "src/constants/backendUrl";
 
 function ManageProfile() {
-    const [userData, setUserData] = useState<UserProfileDTO | null>(null);
+    const [userProfile, setUserProfile] = useState<UserProfileDTO>(null);
     const [avatarURL, setAvatarURL] = useState(null);
     const fileInputRef = useRef(null);
-    const apiUrl_profile = backendUrl.user + "my_profile";
 
     function handleChooseFileClick() {
         fileInputRef.current.click();
@@ -48,10 +46,16 @@ function ManageProfile() {
         }
     }
 
+    async function fetchUserProfile() {
+        const apiUrl = backendUrl.user + "my_profile";
+        const data = await fetchWrapper<UserProfileDTO>("GET", apiUrl, null);
+        setUserProfile(data);
+    }
+
     useEffect(() => {
-        fetchGetSet(apiUrl_profile, setUserData);
+        fetchUserProfile();
         fetchAvatar();
-    }, [apiUrl_profile]);
+    }, []);
 
     async function handleAvatarChange(e) {
         const file = e.target.files[0];
@@ -77,13 +81,13 @@ function ManageProfile() {
 
             if (!newName) return;
             newName = newName.trim();
-            if (newName === "" || newName === userData.name) return;
+            if (newName === "" || newName === userProfile.name) return;
 
             const data = { newName: sanitizeInput(newName) };
             const apiUrl = backendUrl.user + "change_name";
             const res = await fetchWrapper<{ message: string }>("PATCH", apiUrl, data);
             alert(res.message);
-            fetchGetSet(apiUrl_profile, setUserData);
+            fetchUserProfile();
         } catch (error) {
             alert(error);
         }
@@ -97,7 +101,7 @@ function ManageProfile() {
         window.location.href = "/home";
     }
 
-    if (!userData) return <LoadingH2 elementName={"Manage your profile"} />;
+    if (!userProfile) return <LoadingH2 elementName={"Manage your profile"} />;
 
     return (
         <div className="mainContainerColumn" style={{ alignItems: "center" }}>
@@ -112,7 +116,7 @@ function ManageProfile() {
                             alignItems: "flex-end",
                         }}
                     >
-                        {userData.name}
+                        {userProfile.name}
                         <button className="editName" onClick={handleNameChange}>
                             ✎
                         </button>
@@ -132,11 +136,11 @@ function ManageProfile() {
                     />
                     <div className="expanderHorizontal" />
                     <PlayerCardTable
-                        mmr={userData.mmr}
-                        rank={userData.rank}
-                        matches={userData.matches}
-                        winrate={userData.winrate}
-                        twoFa={userData.twoFa}
+                        mmr={userProfile.mmr}
+                        rank={userProfile.rank}
+                        matches={userProfile.matches}
+                        winrate={userProfile.winrate}
+                        twoFa={userProfile.twoFa}
                     />
                 </div>
                 <TwoFa />

@@ -89,9 +89,7 @@ export async function fetchWrapper<T>(
 
         if (!response.ok) {
             console.error(`${apiUrl}: ${response.status}`);
-            if (response.status === 401) {
-                window.location.href = "/home";
-            }
+         
             const errorMessage = { message: `Error ${response.status}: ${response.statusText}` };
             return errorMessage;
         }
@@ -102,7 +100,7 @@ export async function fetchWrapper<T>(
     }
 }
 
-export async function fetchGet<T>(apiUrl: string): Promise<T> {
+/* export async function fetchGet<T>(apiUrl: string): Promise<T> {
     try {
         const response: Response = await fetch(apiUrl, {
             method: "GET",
@@ -118,9 +116,9 @@ export async function fetchGet<T>(apiUrl: string): Promise<T> {
         console.log(error);
         return null;
     }
-}
+} */
 
-export async function fetchGetSet<T>(
+/* export async function fetchGetSet<T>(
     apiUrl: string,
     setter: React.Dispatch<React.SetStateAction<T | null>>
 ) {
@@ -130,7 +128,7 @@ export async function fetchGetSet<T>(
     } catch (error) {
         setter(null);
     }
-}
+} */
 
 // sanitizers
 

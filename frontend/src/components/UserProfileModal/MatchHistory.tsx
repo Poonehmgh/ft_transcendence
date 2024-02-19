@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { fetchGetSet, getCalendarDay } from "src/functions/utils";
+import { fetchWrapper, getCalendarDay } from "src/functions/utils";
 
 // DTO
 import { MatchDTO } from "src/dto/match-dto";
@@ -8,6 +8,7 @@ import { UserProfileDTO } from "src/dto/user-dto";
 // CSS
 import "src/styles/style.css";
 import "src/styles/matchHistory.css";
+import backendUrl from "src/constants/backendUrl";
 
 interface matchHistoryProps {
     id: number;
@@ -17,15 +18,20 @@ function MatchHistory(props: matchHistoryProps): React.JSX.Element {
     const [matches, setMatches] = useState<MatchDTO[]>(null);
     //const [player1, setPlayer1] = useState<UserProfileDTO>(null);
     //const [player2, setPlayer2] = useState<UserProfileDTO>(null);
-    const apiUrl_matches =
-        process.env.REACT_APP_BACKEND_URL + "/user/matches/" + props.id;
+
     //const apiUrl_p1 = process.env.REACT_APP_BACKEND_URL + "/user/profile/" + ;
 
     useEffect(() => {
-        fetchGetSet<MatchDTO[]>(apiUrl_matches, setMatches);
-    }, [apiUrl_matches]);
+        async function fetchMatches() {
+            const apiUrl = backendUrl.user + "matches/" + props.id;
+            const data = await fetchWrapper<MatchDTO[]>("GET", apiUrl, null);
+            setMatches(data);
+        }
 
-    if (!matches) return <div className="p">Loading data...</div>;
+        fetchMatches();
+    }, [props.id]);
+
+    if (matches === null) return <div className="p">Loading data...</div>;
     if (matches.length === 0) return <div className="p">No matches played.</div>;
 
     return (
