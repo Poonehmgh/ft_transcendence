@@ -89,9 +89,7 @@ export async function fetchWrapper<T>(
 
         if (!response.ok) {
             console.error(`${apiUrl}: ${response.status}`);
-            if (response.status === 401) {
-                window.location.href = "/home";
-            }
+         
             const errorMessage = { message: `Error ${response.status}: ${response.statusText}` };
             return errorMessage;
         }
