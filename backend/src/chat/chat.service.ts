@@ -89,11 +89,23 @@ export class ChatService {
         try {
             const chats = await this.prisma.chat.findMany({
                 where: {
-                    chatUsers: {
-                        some: {
-                            userId: userId,
+                    AND: [
+                        {
+                            chatUsers: {
+                                some: {
+                                    userId: userId,
+                                },
+                            },
                         },
-                    },
+                        {
+                            chatUsers: {
+                                some: {
+                                    userId: userId,
+                                    banned: false,
+                                },
+                            },
+                        },
+                    ],
                 },
             });
 
@@ -238,7 +250,7 @@ export class ChatService {
         const chatUsers = await this.prisma.chat_User.findMany({
             where: {
                 chatId: Number(chatId),
-                invited: false,
+                banned: false,
                 blocked: false,
             },
         });

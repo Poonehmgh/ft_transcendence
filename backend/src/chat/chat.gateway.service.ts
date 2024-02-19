@@ -551,10 +551,12 @@ export class ChatGatewayService {
                 chatId: Number(changeForm.chatId),
             },
             data: {
-                blocked: changeForm.banned,
+                banned: changeForm.banned,
             },
         });
-        this.kickChatUser(changeForm);
+        this.sendChatUpdate(changeForm.chatId);
+        
+        //this.kickChatUser(changeForm);
     }
 
     async changeUsersInChatStatus(changeForm: ChangeChatUserStatusDTO) {

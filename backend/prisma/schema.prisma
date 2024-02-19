@@ -88,7 +88,7 @@ model Chat_User {
     blocked     Boolean  @default(false)
     muted       Boolean  @default(false)
     muted_until DateTime @default(now())
-    invited     Boolean  @default(false)
+    banned      Boolean  @default(false)
 
     @@index([userId, chatId])
 }

@@ -153,7 +153,7 @@ export class ChatUserDTO {
     blocked: boolean;
     muted: boolean;
     mutedUntil?: Date;
-    invited: boolean;
+    banned: boolean;
 
     constructor(
         userId: number,
@@ -163,7 +163,7 @@ export class ChatUserDTO {
         blocked: boolean,
         muted: boolean,
         mutedUntil: Date,
-        invited: boolean
+        banned: boolean
     ) {
         this.userId = userId;
         this.chatId = chatId;
@@ -172,7 +172,7 @@ export class ChatUserDTO {
         this.blocked = blocked;
         this.muted = muted;
         this.mutedUntil = mutedUntil;
-        this.invited = invited;
+        this.banned = banned;
     }
 
     static fromChatUser(chatUser: Chat_User): ChatUserDTO {
@@ -184,7 +184,7 @@ export class ChatUserDTO {
             chatUser.blocked,
             chatUser.muted,
             chatUser.muted_until,
-            chatUser.invited
+            chatUser.banned
         );
     }
 }
@@ -199,7 +199,7 @@ export class ExtendedChatUserDTO {
     blocked: boolean;
     muted: boolean;
     mutedUntil?: Date | null;
-    invited: boolean;
+    banned: boolean;
 
     constructor(
         userId: number,
@@ -222,7 +222,7 @@ export class ExtendedChatUserDTO {
         this.blocked = blocked;
         this.muted = muted;
         this.mutedUntil = mutedUntil;
-        this.invited = invited;
+        this.banned = invited;
     }
 
     static async fromChatUser(
@@ -243,7 +243,7 @@ export class ExtendedChatUserDTO {
             chatUser.blocked,
             chatUser.muted,
             chatUser.muted_until,
-            chatUser.invited
+            chatUser.banned
         );
     }
 }

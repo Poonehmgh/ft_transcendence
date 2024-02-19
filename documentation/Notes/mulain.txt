@@ -29,35 +29,30 @@
 
 
 IMMEDIATE MULAIN
-- finish matchhistory
-- fix socialbuttons on profile css
+- handle bans frontend
+- handle bans backend
+- react to inviteEmission
 - add invite game button to profile?
-
 -blocked: what about DM? not show chat?
 
-- chat: unban
-- chat: unmute
-
 Medium mulain
+- fix socialbuttons on profile css
+- updating chatUser attributes in current version must incorporate current state
 - implement delete chat (not actually required lul)
 - delete chat emit
 
 - Optimization (optional)
-    - refactor sendChatCreationUpdate to take any object to transmit meaningful data
     - streamline emit functions
+    - specific update messages containing the to be updated information (no general re-renders)
+    - change user status calls to single action (not bools for every possible action)
     - send message button in friend list
     - send message button in userprofilemodal
-    - specific update messages containing the to be updated information (no general re-renders)
     - sharing one DTO location
     - Clean up DTO naming and amount of DTOs
     - Central handlers for backend service functions (try, return diff response types)
-    - Central handler for user interactions frontend
     - Enum for user rights in chat
     - avatar handling (show in chat and leaderboard)
     - paginate all users (maybe other things as well)
     - sorting options for all users
     - call older chat messages (standard grab of x, if want earlier, implement mechanism for that)
     - organize and standardize css
-    - change user status calls to single action (not bools for every possible action)
-    - friend management should use socket
-    - friend management should use a provider

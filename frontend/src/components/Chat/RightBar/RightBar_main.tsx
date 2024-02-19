@@ -18,7 +18,7 @@ function RightBar(): React.JSX.Element {
 
     return (
         <div className="sideBar">
-            {<MemberList />}
+            <MemberList />
             {selectedUser && selectedUser.userId !== userId && <MemberOptions />}
         </div>
     );
