@@ -203,32 +203,35 @@ export class ChatService {
         const existingChat = await this.prisma.chat.findFirst({
             where: {
                 dm: true,
-                chatUsers: {
-                    every: {
-                        userId: { in: [userId1, userId2] },
+                AND: [
+                    {
+                        chatUsers: {
+                            some: {
+                                userId: userId1,
+                            },
+                        },
                     },
-                    some: {
-                        AND: [{ userId: userId1 }, { userId: userId2 }],
+                    {
+                        chatUsers: {
+                            some: {
+                                userId: userId2,
+                            },
+                        },
                     },
-                },
+                ],
             },
             include: {
                 chatUsers: true,
             },
         });
-        if (!existingChat) return null;
 
-        return new ChatDTO(
-            existingChat.id,
-            existingChat.name,
-            existingChat.dm,
-            existingChat.isPrivate,
-            !!existingChat.password,
-            existingChat.chatUsers.map((chatUser) => {
-                return ChatUserDTO.fromChatUser(chatUser);
-            }),
-            []
-        );
+        if (!existingChat) {
+            console.log("getPreexistingDmChat: No preexisting DM chat found");
+            return null;
+        }
+
+        console.log("getPreexistingDmChat: Preexisting DM chat found");
+        return ChatDTO.fromChat(existingChat);
     }
 
     async getActiveUserIds(chatId: number): Promise<number[]> {
@@ -297,6 +300,7 @@ export class ChatService {
         creatorId: number,
         newChatDTO: NewChatDTO
     ): Promise<ChatInfoDTO | Error> {
+        console.log("createChat called");
         newChatDTO.userIds.push(creatorId);
 
         let chatInfo: ChatInfoDTO;
@@ -305,7 +309,6 @@ export class ChatService {
             if (newChatDTO.dm) {
                 chatInfo = await this.createDmChat(creatorId, newChatDTO);
             } else {
-                console.log("Creating group chat with:", newChatDTO.userIds);
                 chatInfo = await this.createGroupChat(creatorId, newChatDTO);
             }
             return chatInfo;
@@ -319,6 +322,7 @@ export class ChatService {
         creatorId: number,
         newChatDto: NewChatDTO
     ): Promise<ChatInfoDTO | null> {
+        console.log("creatDmChat called for users:", newChatDto.userIds);
         try {
             if (newChatDto.userIds.length !== 2) {
                 throw { message: "DM must have exactly 2 users" };
@@ -368,10 +372,11 @@ export class ChatService {
         creatorId: number,
         newChatDto: NewChatDTO
     ): Promise<ChatInfoDTO | null> {
+        console.log("createGroupChat called for users:", newChatDto.userIds);
+
         const userNames: string[] = await Promise.all(
             newChatDto.userIds.map(async (e) => await this.userService.getNameById(e))
         );
-
         const firstThreeNames: string[] = userNames.slice(0, 3);
         const omittedCount: number = userNames.length - 3;
 

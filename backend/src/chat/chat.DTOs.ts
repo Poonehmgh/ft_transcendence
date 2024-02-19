@@ -316,6 +316,18 @@ export class ChatDTO {
         this.chatUsers = chatUsers;
         this.messages = messages;
     }
+    
+    static fromChat(chat: Chat): ChatDTO {
+        return new ChatDTO(
+            chat.id,
+            chat.name,
+            chat.dm,
+            chat.isPrivate,
+            !!chat.password,
+            [],
+            []
+        );
+    }
 }
 
 //Its json for tests
