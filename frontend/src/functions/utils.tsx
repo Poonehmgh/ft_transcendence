@@ -89,7 +89,8 @@ export async function fetchWrapper<T>(
         });
 
         if (!response.ok) {
-            if (response.status === 401 && window.location.pathname !== "/home") {
+            const excludedPaths = ["/home", "/auth", "/message"];
+            if (response.status === 401 && !excludedPaths.includes(window.location.pathname)) {
                 window.location.href = "/home";
             }
             console.error(`${apiUrl}: ${response.status}`);
@@ -98,6 +99,7 @@ export async function fetchWrapper<T>(
             };
             return errorMessage;
         }
+        
 
         return await response.json();
     } catch (error) {
