@@ -282,7 +282,7 @@ export class ChatService {
             const extendedChatUsersPromises = chat.chatUsers.map((chatUser) => {
                 return ExtendedChatUserDTO.fromChatUser(
                     chatUser,
-                    this.userService /* this */
+                    this.userService
                 );
             });
 
@@ -363,7 +363,6 @@ export class ChatService {
                                 admin: false,
                                 muted: false,
                                 blocked: false,
-                                invited: e === creatorId ? false : true,
                             })),
                         },
                     },
@@ -412,7 +411,6 @@ export class ChatService {
                             admin: e === creatorId ? true : false,
                             muted: false,
                             blocked: false,
-                            invited: e === creatorId ? false : true,
                         })),
                     },
                 },
