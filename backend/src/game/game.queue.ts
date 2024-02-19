@@ -17,7 +17,7 @@ export class GameData {
 	PositionPlank1: number = 0;
 	PositionPlank2: number = 0;
 	PositionBall: [number, number] = [50, 50];
-	VelocityBall: [number, number] = [10, 0];
+	VelocityBall: [number, number] = [1, 0];
 
 	//1 is active, 0 is inactive
 	GameStatus: number = 1;
@@ -27,12 +27,12 @@ export class GameData {
 	fieldWidth: number = 100;
 	fieldHeight: number = 100;
 	ballRadius: number = 2;
-	plankWidth: number = 10;
-	plankHeight: number = 20;
+	plankWidth: number = 1.5;
+	plankHeight: number = 35;
 
 	interval: NodeJS.Timer;
 
-	constructor(infoUser1: userGateway, infoUser2: userGateway, gameID: number, private readonly prismaService: PrismaService) {
+	constructor(infoUser1: userGateway, infoUser2: userGateway, gameID: number) {
 		this.infoUser1 = infoUser1;
 		this.infoUser2 = infoUser2;
 		this.gameID = gameID;
@@ -43,16 +43,20 @@ export class GameData {
 	}
 
 	plankCollision = () => {
+		// console.log(this);
 		if (this.PositionBall[0] - this.ballRadius < this.plankWidth
 			&& this.PositionBall[1] > this.PositionPlank1
 			&& this.PositionBall[1] < this.PositionPlank1 + this.plankHeight) {
-			const relativeHitPosition = (this.PositionBall[1] - this.PositionPlank1) - (this.plankHeight / 2);
-			this.VelocityBall[1] = relativeHitPosition / (this.plankHeight / 2);
-			this.VelocityBall[0] *= -1;
-		}
-		if (this.PositionBall[0] - this.ballRadius >= this.fieldWidth - this.plankWidth
-			&& this.PositionBall[1] > this.PositionPlank2
-			&& this.PositionBall[1] < this.PositionPlank2 + this.plankHeight) {
+				console.log("LEFT COLLISION");
+				const relativeHitPosition = (this.PositionBall[1] - this.PositionPlank1) - (this.plankHeight / 2);
+				this.VelocityBall[1] = relativeHitPosition / (this.plankHeight / 2);
+				this.VelocityBall[0] *= -1;
+			}
+			if (this.PositionBall[0] + this.ballRadius >= this.fieldWidth - this.plankWidth
+				&& this.PositionBall[1] > this.PositionPlank2
+				&& this.PositionBall[1] < this.PositionPlank2 + this.plankHeight) {
+					console.log("RIGHT COLLISION");
+					// console.log(this);
 			const relativeHitPosition = (this.PositionBall[1] - this.PositionPlank2) - (this.plankHeight / 2);
 			this.VelocityBall[1] = relativeHitPosition / (this.plankHeight / 2); // Adjust vertical speed + can be tweaked with additional coefficients
 			this.VelocityBall[0] *= -1;
@@ -70,20 +74,20 @@ export class GameData {
 		this.PositionPlank1 = 0;
 		this.PositionPlank2 = 0;
 		this.PositionBall = [50, 50];
-		this.VelocityBall = [10, 0];
+		this.VelocityBall = [1, 0];
 	}
 
 
 	async addPointToUser(user: number) {
 		if (user == 1) {
-			this.ScorePlayer1++;
-		} else if (user == 2) {
 			this.ScorePlayer2++;
+		} else if (user == 2) {
+			this.ScorePlayer1++;
 		}
 		if (this.ScorePlayer1 >= 3) {
-			await this.prismaService.match.create({
-				data: new MatchInfoDTO(this),
-			})
+			// await this.prismaService.match.create({
+			// 	data: new MatchInfoDTO(this),
+			// })
 			this.infoUser1.socket.emit('gameResult', 'Won');
 			this.infoUser2.socket.emit('gameResult', 'Lost');
 			clearInterval(this.interval);
@@ -91,21 +95,22 @@ export class GameData {
 			return;
 		}
 		if (this.ScorePlayer2 >= 3) {
-			await this.prismaService.match.create({
-				data: new MatchInfoDTO(this),
-			})
+			// await this.prismaService.match.create({
+			// 	data: new MatchInfoDTO(this),
+			// })
 			this.infoUser2.socket.emit('gameResult', 'Won');
 			this.infoUser1.socket.emit('gameResult', 'Lost');
 			clearInterval(this.interval);
 			this.GameStatus = 0;
 			return;
 		}
+		// console.log(this);
 		this.resetGameData();
 		this.sendNewRoundMessage();
 		console.log(`points for player ${user}`)
 		// console.log(this);
 		clearInterval(this.interval);
-		this.interval = setInterval(this.gameLogic, 1000);
+		this.interval = setInterval(this.gameLogic, 69);
 		console.log('restarted');
 
 	}
@@ -125,7 +130,7 @@ export class GameData {
 		this.PositionBall[0] += this.VelocityBall[0];
 		this.PositionBall[1] += this.VelocityBall[1];
 		this.infoUser1.socket.emit('gameUpdate', new GameUpdateDTO(this.PositionPlank2, this.PositionBall));
-		this.infoUser2.socket.emit('gameUpdate', new GameUpdateDTO(this.PositionPlank1, this.getMirroredPosition()));
+		this.infoUser2.socket.emit('gameUpdate', new GameUpdateDTO(this.PositionPlank1, this.PositionBall));
 	}
 
 	gameLogic = () => {
@@ -157,7 +162,7 @@ export class GameQueue {
 	}
 
 	updatePlankPosition = (data: PlankUpdateDTO) => {
-		const gameData: GameData = this.gameList.find((elem) => elem.infoUser1.userID === data.userID || elem.infoUser1.userID === data.userID);
+		const gameData: GameData = this.gameList.find((elem) => elem.infoUser1.userID === data.userID || elem.infoUser2.userID === data.userID);
 		if (gameData) {
 			// Update the plank position based on the user's ID
 			if (gameData.infoUser1.userID === data.userID) {
@@ -182,10 +187,10 @@ export class GameQueue {
 	}
 
 	initGame = (userInfo1: userGateway, userInfo2: userGateway) => {
-		const gameToStart = new GameData(userInfo1, userInfo2, Math.floor(Math.random() * 1000), this.prismaService)
+		const gameToStart = new GameData(userInfo1, userInfo2, Math.floor(Math.random() * 1000))
 		if (!this.gameList.includes(gameToStart)) {
 			gameToStart.sendNewRoundMessage();
-			gameToStart.interval = setInterval(gameToStart.gameLogic, 1000);
+			gameToStart.interval = setInterval(gameToStart.gameLogic, 69);
 			console.log(`initialized game with`);
 			this.gameList.push(gameToStart);//add id gen from prisma
 		}
