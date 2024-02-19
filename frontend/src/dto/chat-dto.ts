@@ -99,6 +99,7 @@ export class ChatUserDTO {
     admin: boolean;
     blocked: boolean;
     muted: boolean;
+    mutedUntil?: Date;
     banned: boolean;
 }
 

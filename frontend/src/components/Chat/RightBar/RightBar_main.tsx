@@ -19,26 +19,26 @@ function RightBar(): React.JSX.Element {
     const [thisUserRole, setThisUserRole] = useState<ChatRole>(null);
 
     useEffect(() => {
-        if (activeChat && activeChat.chatUsers) {
-            const thisUser = activeChat.chatUsers.find(
-                (e: ChatUserDTO) => e.userId === userId
-            );
-            if (!thisUser) {
-                console.error("User not found in chat");
-                return;
-            }
-
-            if (thisUser.owner) {
-                setThisUserRole(ChatRole.owner);
-            } else if (thisUser.admin) {
-                setThisUserRole(ChatRole.admin);
-            } else {
-                setThisUserRole(ChatRole.member);
-            }
+        if (!activeChat || !activeChat.chatUsers) return;
+        const thisUser = activeChat.chatUsers.find(
+            (e: ChatUserDTO) => e.userId === userId
+        );
+        if (!thisUser) {
+            console.error("User not found in chat");
+            return;
         }
-    }, [selectedUser, activeChat.chatUsers, userId]);
 
-    if (activeChat === null) return <div className="sideBar"></div>;
+        if (thisUser.owner) {
+            setThisUserRole(ChatRole.owner);
+        } else if (thisUser.admin) {
+            setThisUserRole(ChatRole.admin);
+        } else {
+            setThisUserRole(ChatRole.member);
+        }
+    }, [selectedUser, activeChat?.chatUsers, userId]);
+
+    if (activeChat === null || activeChat.chatUsers === null)
+        return <div className="sideBar"></div>;
 
     return (
         <div className="sideBar">
