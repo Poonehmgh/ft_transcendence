@@ -32,13 +32,16 @@ function ChatList(): React.JSX.Element {
                         }
                         onClick={() => selectChat(e)}
                     >
-                        <span>{e.name}</span>
+                        <div>{e.name}</div>
                         <span className="smallTextDiv">
                             {e.dm
                                 ? " DM"
                                 : e.isPrivate
                                 ? " private Group"
                                 : " public Group"}
+                        </span>
+                        <span style={{ fontSize: "small" }}>
+                            {e.passwordRequired ? " 🔒" : ""}
                         </span>
                     </button>
                 ))

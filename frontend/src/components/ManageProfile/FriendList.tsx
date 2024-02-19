@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { fetchGetSet } from "src/functions/utils";
-import { handleBlockUser, handleRemoveFriend } from "src/functions/userActions";
-import backendUrl from "src/constants/backendUrl";
+import React, { useContext } from "react";
+
+// Contexts
+import { SocialDataContext } from "src/contexts/SocialDataProvider";
 
 // DTO
 import { IdAndNameDTO } from "src/dto/user-dto";
@@ -11,54 +11,38 @@ import "src/styles/style.css";
 import "src/styles/manageProfile.css";
 
 function FriendList() {
-    const [group, setGroup] = useState(null);
-    const apiUrl = backendUrl.user + "friends";
+    const { friends, removeFriend, blockUser } = useContext(SocialDataContext);
 
-    useEffect(() => {
-        fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
-    }, [apiUrl]);
-
-    function doRemoveFriend(id: number, name: string) {
-        handleRemoveFriend(id, name);
-        fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
-    }
-
-    function doRemoveAndBlockFriend(id: number, name: string) {
-        handleBlockUser(id, name);
-        fetchGetSet<IdAndNameDTO[]>(apiUrl, setGroup);
-    }
-
-    function handleSendMsg(id: number) {
+    // will implement this if we have time
+    /*   function handleSendMsg(id: number) {
         console.log("Mock execute send msg to user with id ", id);
-    }
+    } */
 
-    if (!group) return <div className="p">Loading data...</div>;
-    if (group.length === 0) return <div className="p">No friends.</div>;
+    if (friends === null) return <div className="p">Loading data...</div>;
+    if (friends.length === 0) return <div className="p">No friends.</div>;
 
     return (
         <table className="modalUserList">
             <tbody>
-                {group.map((element, index) => (
-                    <tr key={index}>
-                        <td>{element.name}</td>
+                {friends.map((e: IdAndNameDTO) => (
+                    <tr key={e.id}>
+                        <td>{e.name}</td>
                         <td>
-                            <button
+                            {/*   <button
                                 className="contactsButton"
-                                onClick={() => handleSendMsg(element.id)}
+                                onClick={() => handleSendMsg(e.id)}
                             >
                                 ✉️
-                            </button>
+                            </button> */}
                             <button
                                 className="contactsButton"
-                                onClick={() => doRemoveFriend(element.id, element.name)}
+                                onClick={() => removeFriend(e.id, e.name)}
                             >
                                 ❌
                             </button>
                             <button
                                 className="contactsButton"
-                                onClick={() =>
-                                    doRemoveAndBlockFriend(element.id, element.name)
-                                }
+                                onClick={() => blockUser(e.id, e.name)}
                             >
                                 🚫
                             </button>

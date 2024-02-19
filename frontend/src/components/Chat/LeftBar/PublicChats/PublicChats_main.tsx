@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useState } from "react";
 import Modal from "react-modal";
 import SelectPublicChatsTable from "./SelectPublicChatsTable";
 
@@ -36,7 +36,7 @@ function PublicChats(): React.JSX.Element {
                 className="chatModal"
                 overlayClassName="chatModalOverlay"
             >
-                <SelectPublicChatsTable />
+                <SelectPublicChatsTable closeModal={closeModal} />
                 <button className="closeX" onClick={closeModal}>
                     ❌
                 </button>

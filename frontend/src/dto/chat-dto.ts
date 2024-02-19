@@ -31,6 +31,34 @@ export class InviteUserDTO {
     }
 }
 
+export class ChangeChatUserStatusDTO {
+    operatorId: number;
+    chatId: number;
+    userId: number;
+    owner: boolean;
+    muted: boolean;
+    banned: boolean;
+    admin: boolean;
+    kick: boolean;
+    constructor(
+        operatorId: number,
+        chatId: number,
+        userId: number,
+        owner: boolean,
+        muted: boolean,
+        banned: boolean,
+        admin: boolean
+    ) {
+        this.operatorId = operatorId;
+        this.chatId = chatId;
+        this.userId = userId;
+        this.owner = owner;
+        this.muted = muted;
+        this.banned = banned;
+        this.admin = admin;
+    }
+}
+
 // from backend
 
 export class MessageDTO {
@@ -38,12 +66,20 @@ export class MessageDTO {
     timeStamp: Date;
     content: string;
     authorId: number;
+    chatId: number;
 
-    constructor(id: number, timeStamp: Date, content: string, authorId: number) {
+    constructor(
+        id: number,
+        timeStamp: Date,
+        content: string,
+        authorId: number,
+        chatId: number
+    ) {
         this.id = id;
         this.timeStamp = timeStamp;
         this.content = content;
         this.authorId = authorId;
+        this.chatId = chatId;
     }
 }
 
@@ -54,7 +90,7 @@ export class ChatUserDTO {
     admin: boolean;
     blocked: boolean;
     muted: boolean;
-    invited: boolean;
+    banned: boolean;
 }
 
 export class ExtendedChatUserDTO extends ChatUserDTO {
@@ -86,4 +122,14 @@ export class BasicChatDTO {
     dm: boolean;
     isPrivate: boolean;
     passwordRequired: boolean;
+}
+
+export class ChatListDTO {
+    chatName: string;
+    chatId: number;
+
+    constructor(chatName: string, chatId: number) {
+        this.chatName = chatName;
+        this.chatId = chatId;
+    }
 }

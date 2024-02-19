@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { fetchGetSet, getCalendarDay } from "src/functions/utils";
+import React, { useContext, useEffect, useState } from "react";
+import { fetchWrapper, getCalendarDay } from "src/functions/utils";
+import backendUrl from "src/constants/backendUrl";
+
+// Contexts
+import { AuthContext } from "src/contexts/AuthProvider";
 
 // DTO
 import { MatchDTO } from "src/dto/match-dto";
-import { UserProfileDTO } from "src/dto/user-dto";
 
 // CSS
 import "src/styles/style.css";
@@ -14,18 +17,20 @@ interface matchHistoryProps {
 }
 
 function MatchHistory(props: matchHistoryProps): React.JSX.Element {
+    const { userId } = useContext(AuthContext);
     const [matches, setMatches] = useState<MatchDTO[]>(null);
-    //const [player1, setPlayer1] = useState<UserProfileDTO>(null);
-    //const [player2, setPlayer2] = useState<UserProfileDTO>(null);
-    const apiUrl_matches =
-        process.env.REACT_APP_BACKEND_URL + "/user/matches/" + props.id;
-    //const apiUrl_p1 = process.env.REACT_APP_BACKEND_URL + "/user/profile/" + ;
 
     useEffect(() => {
-        fetchGetSet<MatchDTO[]>(apiUrl_matches, setMatches);
-    }, [apiUrl_matches]);
+        async function fetchMatches() {
+            const apiUrl = backendUrl.user + "matches/" + props.id;
+            const data = await fetchWrapper<MatchDTO[]>("GET", apiUrl, null);
+            setMatches(data);
+        }
 
-    if (!matches) return <div className="p">Loading data...</div>;
+        fetchMatches();
+    }, [props.id]);
+
+    if (matches === null) return <div className="p">Loading data...</div>;
     if (matches.length === 0) return <div className="p">No matches played.</div>;
 
     return (
@@ -37,27 +42,25 @@ function MatchHistory(props: matchHistoryProps): React.JSX.Element {
                 <thead>
                     <tr>
                         <th>Date</th>
-                        <th>{"Player 1 \n (score)"}</th>
-                        <th>{"Player 2 \n (score)"}</th>
-                        <th>Winner</th>
+                        <th>{"Opponent"}</th>
+                        <th>Score</th>
+                        <th>Result</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {matches.map((element: MatchDTO) => (
-                        <tr key={element.id}>
-                            <td>{getCalendarDay(element.begin)}</td>
-                            <td>
-                                {element.player1_id}
-                                <br />
-                                {`(${element.score_p1})`}
+                    {matches.map((e: MatchDTO) => (
+                        <tr key={e.id}>
+                            <td>{getCalendarDay(e.begin)}</td>
+                            <td>{e.player2Name}</td>
+                            <td style={{ textAlign: "center" }}>
+                                {e.player1Score} - {e.player2Score}
                             </td>
-                            <td>
-                                {element.player2_id}
-                                <br />
-                                {`(${element.score_p2})`}
-                            </td>
-                            <td>
-                                {element.winner_name ? element.winner_name : "- DRAW -"}
+                            <td style={{ textAlign: "center" }}>
+                                {e.winnerId === null
+                                    ? "draw"
+                                    : e.winnerId === userId
+                                    ? "🏆"
+                                    : "💥"}
                             </td>
                         </tr>
                     ))}

@@ -4,6 +4,7 @@ import backendUrl from "src/constants/backendUrl";
 
 // Contexts
 import { AuthContext } from "./AuthProvider";
+import { SocialDataContext } from "./SocialDataProvider";
 
 export const SocketContext = createContext<Socket | null>(null);
 
@@ -13,62 +14,43 @@ interface socketProviderProps {
 
 export function SocketProvider(props: socketProviderProps): JSX.Element {
     const { validToken, userId } = useContext(AuthContext);
+    const { updateUserData } = useContext(SocialDataContext);
     const [socket, setSocket] = useState<Socket | null>(null);
-    const [updateTrigger, setUpdateTrigger] = useState(false);
-
-    // update activechat if updatemessage.id === activechat.id
 
     useEffect(() => {
-        if (!socket) return;
-
-        const handleNewChatMessage = (message: any) => {
-            alert(`New chat message: ${message.content}`);
-            setUpdateTrigger((prev) => !prev);
-            //better: add the message to the messages
-        };
-        socket.on("updateMessage", handleNewChatMessage);
-
-        return () => {
-            socket.off("updateMessage", handleNewChatMessage);
-        };
-    }, [socket]);
-
-
-
-    useEffect(() => {
-        function disconnectSocket(socket: Socket | null, userId: number) {
-            if (socket) {
-                console.log("Disconnecting socket for userId:", userId);
-                socket.disconnect();
-                setSocket(null);
-            }
-        }
-
-        if (validToken) {
+        function connectSocket() {
             console.log("Connecting socket for userId:", userId);
             const newSocket = io(backendUrl.base, {
                 query: {
                     userId: userId,
-                }
+                },
             });
-           // newSocket.emit("connectMessage", { userID: userId });
-            
-            // shouldn't ever not be null, but nice syntax example for
-            // react's functional update pattern
-            setSocket((prevSocket) => {
-                if (prevSocket) {
-                    prevSocket.disconnect();
-                }
-                return newSocket;
-            });
-        } else {
-            disconnectSocket(socket, userId);
+            setSocket(newSocket);
+            return newSocket;
         }
 
-        return () => {
-            disconnectSocket(socket, userId);
-        };
-        // eslint wants socket in the dependency array, but it would trigger an infinite loop
+        function disconnectSocket(socket: Socket) {
+            console.log("Disconnecting socket for userId:", userId);
+            socket.disconnect();
+        }
+
+        if (validToken && !socket) {
+            const newSocket = connectSocket();
+            newSocket.on("socialUpdate", updateUserData);
+            newSocket.onAny((event, ...args) => {
+                console.log("socket event:", event, args);
+            });
+
+            return () => {
+                newSocket.off("socialUpdate", updateUserData);
+                newSocket.offAny();
+                disconnectSocket(newSocket);
+            };
+        } else if (!validToken && socket) {
+            disconnectSocket(socket);
+            setSocket(null);
+        }
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [validToken, userId]);
 

@@ -1,9 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Modal from "react-modal";
-import { authContentHeader, fetchGetSet } from "src/functions/utils";
+import { authContentHeader, fetchWrapper } from "src/functions/utils";
 import PlayerCardTable from "../shared/PlayerCardTable";
 import SocialActionBar from "./SocialActionBar/SocialActionBar_main";
 import MatchHistory from "./MatchHistory";
+import backendUrl from "src/constants/backendUrl";
+
+// Contexts
+import { AuthContext } from "src/contexts/AuthProvider";
 
 // DTO
 import { UserProfileDTO } from "src/dto/user-dto";
@@ -20,18 +24,19 @@ interface userProfileModalProps {
 }
 
 function UserProfileModal(props: userProfileModalProps) {
-    const [userProfile, setUserProfile] = useState<UserProfileDTO | null>(null);
+    const { userId } = useContext(AuthContext);
+    const [userProfile, setUserProfile] = useState<UserProfileDTO>(null);
     const [avatarURL, setAvatarURL] = useState(null);
-    const apiUrl_profile =
-        process.env.REACT_APP_BACKEND_URL + "/user/profile/" + props.id;
 
     function closeModal() {
         props.onClose();
     }
 
     useEffect(() => {
+        if (!props.id) return;
+
         async function fetchAvatar() {
-            const apiUrl = process.env.REACT_APP_BACKEND_URL + "/user/avatar/" + props.id;
+            const apiUrl = backendUrl.user + "avatar/" + props.id;
             try {
                 const response = await fetch(apiUrl, {
                     method: "GET",
@@ -47,11 +52,16 @@ function UserProfileModal(props: userProfileModalProps) {
                 console.log("Error getting Avatar", error);
             }
         }
-        if (props.id) {
-            fetchGetSet(apiUrl_profile, setUserProfile);
-            fetchAvatar();
+
+        async function fetchUserProfile() {
+            const apiUrl = backendUrl.user + "profile/" + props.id;
+            const data = await fetchWrapper<UserProfileDTO>("GET", apiUrl, null);
+            setUserProfile(data);
         }
-    }, [props.isOpen, props.id, apiUrl_profile]);
+
+        fetchUserProfile();
+        fetchAvatar();
+    }, [props.isOpen, props.id]);
 
     return (
         <div>
@@ -81,10 +91,13 @@ function UserProfileModal(props: userProfileModalProps) {
                                 rank={userProfile.rank}
                                 matches={userProfile.matches}
                                 winrate={userProfile.winrate}
+                                twoFa={userProfile.twoFa}
                             />
                         </div>
-                        {props.id.toString() === localStorage.getItem("userId") ? (
-                            <div className="p" style={{margin:"20px 0px"}}>This is your profile.</div>
+                        {props.id === userId ? (
+                            <div className="p" style={{ margin: "20px 0px" }}>
+                                This is your profile.
+                            </div>
                         ) : (
                             <SocialActionBar otherProfile={userProfile} />
                         )}

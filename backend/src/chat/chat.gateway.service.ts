@@ -14,13 +14,13 @@ import { userGateway } from "./userGateway";
 
 @Injectable()
 export class ChatGatewayService {
-    connectedUsers: userGateway[] = [];
+    static connectedUsers: userGateway[] = [];
 
     constructor(private readonly prisma: PrismaService) {}
 
     printConnectedUsers() {
         console.log("Connected users:");
-        this.connectedUsers.forEach((user) => {
+        ChatGatewayService.connectedUsers.forEach((user) => {
             console.log("User", user.userID, "on socket", user.socket.id);
         });
     }
@@ -42,7 +42,7 @@ export class ChatGatewayService {
     }
 
     getUserIdFromSocket(socket: Socket) {
-        const user: userGateway = this.connectedUsers.find(
+        const user: userGateway = ChatGatewayService.connectedUsers.find(
             (user) => user.socket === socket
         );
         if (!user) return;
@@ -50,20 +50,20 @@ export class ChatGatewayService {
     }
 
     getUserSocketFromUserId(userId: number) {
-        const user: userGateway = this.connectedUsers.find(
+        const user: userGateway = ChatGatewayService.connectedUsers.find(
             (user) => user.userID === userId
         );
         return user ? user.socket : null;
     }
 
     deleteUserFromList(userIDToDelete: number) {
-        this.connectedUsers = this.connectedUsers.filter(
+        ChatGatewayService.connectedUsers = ChatGatewayService.connectedUsers.filter(
             (userGateway) => userGateway.userID !== userIDToDelete
         );
     }
 
     addUserToList(user: userGateway) {
-        this.connectedUsers.push(user);
+        ChatGatewayService.connectedUsers.push(user);
     }
 
     async IsUserInChat(chatId: number, userId: number) {
@@ -224,6 +224,18 @@ export class ChatGatewayService {
         }
     }
 
+    async sendDataUpdate(recipientIds: number[], event: string, data: any) {
+        console.log("userids", recipientIds);
+        for (const id of recipientIds) {
+            const socket: Socket = this.getUserSocketFromUserId(id);
+            console.log("socket:", socket?.id);
+            if (socket) {
+                console.log("sendDataUpdate: sending", event, "to user", id, "with data", data);
+                socket.emit(event, data);
+            }
+        }
+    }
+
     async checkIfDMChatExists(userId1: number, userId2: number): Promise<boolean> {
         const existingChat = await this.prisma.chat.findFirst({
             where: {
@@ -268,13 +280,13 @@ export class ChatGatewayService {
         }
     }
 
-    async checkIsProperChat(chat: CreateNewChatDTO) {
+   /*  async checkIsProperChat(chat: CreateNewChatDTO) {
         if (chat.chat_users.length < 2) throw { message: "Not enough users" };
         const ownerCount: number = this.countOwners(chat.chat_users);
         if (ownerCount > 1) throw { message: "Too much owners" };
         if (chat.dm) await this.checkIsProperDM(chat);
-    }
-
+    } */
+/* 
     async createNewEmptyChat(data: CreateNewChatDTO) {
         try {
             await this.checkIsProperChat(data);
@@ -300,13 +312,15 @@ export class ChatGatewayService {
         } catch (error) {
             console.log(`error in createNewEmptyChat: ${error.message}`);
         }
-    }
+    } */
 
-    async sendChatCreationUpdate(chat: ChatListDTO) {
+    // replaced with sendChatUpdate
+/*     async sendChatCreationUpdate(chat: ChatListDTO) {
+        console.log("sending chat update");
         try {
             const chatRes = await this.prisma.chat.findUnique({
                 where: {
-                    id: Number(chat.chatID),
+                    id: Number(chat.chatId),
                 },
                 include: {
                     chatUsers: {
@@ -319,25 +333,28 @@ export class ChatGatewayService {
             if (chatRes) {
                 for (const user of chatRes.chatUsers) {
                     const socket: Socket = this.getUserSocketFromUserId(user.userId);
-                    socket.emit("updateChat", chat);
+                    console.log("sendChatCreationUpdate sending to user ", user.userId);
+                    if (socket)
+                        socket.emit("updateChat", chat);
                 }
             }
         } catch (error) {
             console.log(`error in sendChatCreationUpdate: ${error.message}`);
         }
-    }
+    } */
 
+    // function not used, replaced with sendChatUpdate. didnt actually send updates to everyone...
     //send updates to everyone in chat
-    async sendChatAdditionUpdate(inviteForm: InviteUserDTO) {
+   /*  async sendChatAdditionUpdate(inviteForm: InviteUserDTO) {
         const chatName = await this.getChatNameFromID(inviteForm.chatId);
         const socket: Socket = this.getUserSocketFromUserId(inviteForm.userId);
         if (socket)
             socket.emit("updateChat", new ChatListDTO(chatName, inviteForm.chatId));
-    }
+    } */
 
     async sendChatUpdate(chatId: number) {
         try {
-            const chatRes = await this.prisma.chat.findUnique({
+            const chat = await this.prisma.chat.findUnique({
                 where: {
                     id: Number(chatId),
                 },
@@ -349,10 +366,12 @@ export class ChatGatewayService {
                     },
                 },
             });
-            if (chatRes) {
-                for (const user of chatRes.chatUsers) {
+            if (chat) {
+                for (const user of chat.chatUsers) {
                     const socket: Socket = this.getUserSocketFromUserId(user.userId);
-                    socket.emit("updateChat", new ChatListDTO(chatRes.name, chatId));
+                    console.log("sending updateChat event to user", user.userId);
+                    if (socket)
+                        socket.emit("updateChat", new ChatListDTO(chat.name, chatId));
                 }
             }
         } catch (error) {
@@ -411,7 +430,7 @@ export class ChatGatewayService {
                     userId: inviteForm.userId,
                 },
             });
-            if (chatUser) await this.sendChatAdditionUpdate(inviteForm);
+            if (chatUser) await this.sendChatUpdate(inviteForm.chatId);
         }
     }
 
@@ -432,15 +451,19 @@ export class ChatGatewayService {
     }
 
     getStatusToChange(user, changeForm: ChangeChatUserStatusDTO): string {
-        if (changeForm.kick) return "kick";
-        if (user.owner != changeForm.owner) return "owner";
-        if (!user.admin && user.admin != changeForm.admin) return "admin";
-        if (user.muted && user.muted != changeForm.muted) return "mute";
-        if (!user.banned && user.banned != changeForm.banned) return "ban";
-        return "none";
+        let action = "none";
+
+        if (changeForm.kick) action = "kick";
+        else if (user.owner != changeForm.owner) action = "owner";
+        else if (user.admin != changeForm.admin) action = "admin";
+        else if (user.muted != changeForm.muted) action = "mute";
+        else if (user.banned != changeForm.banned) action = "ban";
+        console.log("getStatusToChange:", action);
+        return action;
     }
 
     async changeOwner(changeForm: ChangeChatUserStatusDTO) {
+        console.log("changeOwner");
         //dont mind that its update many, its just easier to use
         await this.prisma.chat_User.updateMany({
             where: {
@@ -465,6 +488,7 @@ export class ChatGatewayService {
     }
 
     async changeAdmin(changeForm: ChangeChatUserStatusDTO) {
+        console.log("changeAdmin");
         //dont mind that its update many, its just easier to use
         await this.prisma.chat_User.updateMany({
             where: {
@@ -479,6 +503,7 @@ export class ChatGatewayService {
     }
 
     async kickChatUser(changeForm: ChangeChatUserStatusDTO) {
+        console.log("kickChatUser");
         await this.prisma.chat_User.deleteMany({
             where: {
                 userId: Number(changeForm.userId),
@@ -489,6 +514,20 @@ export class ChatGatewayService {
     }
 
     async muteChatUser(changeForm: ChangeChatUserStatusDTO) {
+        console.log("muteChatUser");
+        if (!changeForm.muted) {
+            await this.prisma.chat_User.updateMany({
+                where: {
+                    userId: Number(changeForm.userId),
+                    chatId: Number(changeForm.chatId),
+                },
+                data: {
+                    muted: false,
+                },
+            });
+            this.sendChatUpdate(changeForm.chatId);
+            return;
+        }
         const mutedUntil = new Date();
         mutedUntil.setMinutes(mutedUntil.getMinutes() + 5);
         await this.prisma.chat_User.updateMany({
@@ -505,16 +544,19 @@ export class ChatGatewayService {
     }
 
     async banChatUser(changeForm: ChangeChatUserStatusDTO) {
+        console.log("banChatUser");
         await this.prisma.chat_User.updateMany({
             where: {
                 userId: Number(changeForm.userId),
                 chatId: Number(changeForm.chatId),
             },
             data: {
-                blocked: changeForm.banned,
+                banned: changeForm.banned,
             },
         });
-        this.kickChatUser(changeForm);
+        this.sendChatUpdate(changeForm.chatId);
+        
+        //this.kickChatUser(changeForm);
     }
 
     async changeUsersInChatStatus(changeForm: ChangeChatUserStatusDTO) {
