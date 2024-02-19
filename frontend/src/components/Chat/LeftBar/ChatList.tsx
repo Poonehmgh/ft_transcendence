@@ -40,6 +40,9 @@ function ChatList(): React.JSX.Element {
                                 ? " private Group"
                                 : " public Group"}
                         </span>
+                        <span style={{ fontSize: "small" }}>
+                            {e.passwordRequired ? " 🔒" : ""}
+                        </span>
                     </button>
                 ))
             )}

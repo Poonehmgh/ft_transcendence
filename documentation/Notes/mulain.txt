@@ -22,12 +22,11 @@
 
 
 IMMEDIATE MULAIN
-- invite yourself (join) chat emit
 - add invitegame to chat
 - finish matchhistory
+- fix socialbuttons on profile css
 
 -blocked: what about DM? not show chat?
-- blocked: what about groupchat invite from blocked? show chat but keep the blocked users msg hidden?
 
 - chat: unban
 - chat: unmute

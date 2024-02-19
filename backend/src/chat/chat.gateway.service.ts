@@ -429,7 +429,7 @@ export class ChatGatewayService {
                     userId: inviteForm.userId,
                 },
             });
-            if (chatUser) await this.sendChatAdditionUpdate(inviteForm);
+            if (chatUser) await this.sendChatUpdate(inviteForm.chatId);
         }
     }
 
