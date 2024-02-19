@@ -19,12 +19,15 @@
 - clean up unneccesary files
 - clean up folder structure frontend
 - clean up folder structure backend
+- hanlde invite user to game-
+    - backend structure
+    - frontend: navigate to game page after invite? how to handle this
 
 
 IMMEDIATE MULAIN
-- add invitegame to chat
 - finish matchhistory
 - fix socialbuttons on profile css
+- add invite game button to profile?
 
 -blocked: what about DM? not show chat?
 

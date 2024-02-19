@@ -15,17 +15,21 @@ function BlockButton(props: blockButtonProps): React.JSX.Element {
     const { blockUser, unblockUser } = useContext(UserDataContext);
 
     return (
-        <button
-            className="userActionButton"
-            data-tooltip={props.relation === UserRelation.blocked ? "Unblock" : "Block"}
-            onClick={() => {
-                props.relation === UserRelation.blocked
-                    ? unblockUser(props.otherProfile.id, props.otherProfile.name)
-                    : blockUser(props.otherProfile.id, props.otherProfile.name);
-            }}
-        >
-            {props.relation === UserRelation.blocked ? "🕊️" : "🚫"}
-        </button>
+        <div>
+            <button
+                className="userActionButton"
+                data-tooltip={
+                    props.relation === UserRelation.blocked ? "Unblock" : "Block"
+                }
+                onClick={() => {
+                    props.relation === UserRelation.blocked
+                        ? unblockUser(props.otherProfile.id, props.otherProfile.name)
+                        : blockUser(props.otherProfile.id, props.otherProfile.name);
+                }}
+            >
+                {props.relation === UserRelation.blocked ? "🕊️" : "🚫"}
+            </button>
+        </div>
     );
 }
 

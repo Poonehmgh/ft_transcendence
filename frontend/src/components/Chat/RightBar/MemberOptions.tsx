@@ -101,6 +101,11 @@ function MemberOptions(): React.JSX.Element {
         changeActiveChat(activeChat?.id);
     }
 
+    function inviteUserToMatch() {
+        if (!window.confirm(`Invite ${selectedUser.userName} to a pongers match?`))
+            socket.emit("inviteUserToMatch", { userId: selectedUser.userId });
+    }
+
     function handleOpenModal() {
         setModalIsOpen(true);
     }
@@ -125,7 +130,7 @@ function MemberOptions(): React.JSX.Element {
                     </button>
                     <button
                         className="bigButton"
-                        onClick={() => changeUserStatus("owner")}
+                        onClick={() => inviteUserToMatch()}
                     >
                         Invite to Match
                     </button>

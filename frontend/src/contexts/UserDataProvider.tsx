@@ -74,6 +74,7 @@ export function UserDataProvider({ children }) {
 
     useEffect(() => {
         updateUserData();
+        // eslint-disable-next-line
     }, []);
 
     // user actions
