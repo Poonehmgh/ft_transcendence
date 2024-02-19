@@ -1,3 +1,12 @@
+// only frontend use
+
+export enum ChatRole {
+    owner = 3,
+    admin = 2,
+    member = 1,
+    banned = 0,
+}
+
 // to backend
 
 export class SendMessageDTO {
