@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 
 import GameOutcome from "./GameOutcome";
 import PlayerGameProfile from "./PlayerGameProfile";
-import ScoreV2 from "./ScoreV2";
+import ScoreV2 from "./Score";
 import UserPlank from "./UserPlank";
 import OpponentPlank from "./OpponentPlank";
 import Ball from "./Ball";
@@ -14,7 +14,7 @@ import backendUrl from "src/constants/backendUrl";
 
 import "../../styles/gamev2.css";
 
-function GameV2() {
+function Game() {
   const [userData, setUserData] = useState(null);
   const [opponentID, setOpponentID] = useState(null);
   const [opponentData, setOpponentData] = useState(null);
@@ -50,8 +50,8 @@ function GameV2() {
 
         const data = await response.json();
         setUserData(data);
-        console.log("fetchUserData");
-        console.log(data);
+        // console.log("fetchUserData");
+        // console.log(data);
       } catch (error) {
         console.log(error);
       }
@@ -72,8 +72,8 @@ function GameV2() {
         setQueueStatus("Already In Game");
       }
 
-      console.log("handleQueue");
-      console.log(data);
+      // console.log("handleQueue");
+      // console.log(data);
     };
 
     socket.on("queueConfirm", handleQueue);
@@ -88,7 +88,7 @@ function GameV2() {
       if (userData) {
         setNewRound(data);
         setQueueStatus("Playing");
-        console.log(data);
+        // console.log(data);
         if (isPlayerOne === null) {
           if (data.userID1 === userData.id) {
             setIsPlayerOne(true);
@@ -99,8 +99,8 @@ function GameV2() {
           }
         }
       }
-      console.log("handleNewRound");
-      console.log(data);
+      // console.log("handleNewRound");
+      // console.log(data);
     };
 
     socket.on("newRound", handleNewRound);
@@ -132,15 +132,15 @@ function GameV2() {
       }
     };
     fetchOpponentData();
-    console.log("fetchOpponentData");
-    console.log(opponentData);
+    // console.log("fetchOpponentData");
+    // console.log(opponentData);
   }, [opponentID]);
 
   useEffect(() => {
     const handleGameUpdate = (data) => {
       setGameUpdate(data);
-      console.log("handleGameUpdate");
-      console.log(data);
+      // console.log("handleGameUpdate");
+      // console.log(data);
     };
 
     socket.on("gameUpdate", handleGameUpdate);
@@ -164,8 +164,8 @@ function GameV2() {
   useEffect(() => {
     const handleGameResult = (data) => {
       resetHooks();
-      console.log("gameResult");
-      console.log(data);
+      // console.log("gameResult");
+      // console.log(data);
       if (data === "Won")
         setGameResult("Victory");
       else if (data === "Lost")
@@ -189,10 +189,12 @@ function GameV2() {
         ? "alternative-color"
         : "default-color"
     );
+  };
 
+  useEffect(() => {
     setInfoContainerClass("info-container " + backgroundColor);
     setPongContainerClass("pong-container " + backgroundColor);
-  };
+  }, [backgroundColor]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -271,4 +273,4 @@ function GameV2() {
   );
 }
 
-export default GameV2;
+export default Game;

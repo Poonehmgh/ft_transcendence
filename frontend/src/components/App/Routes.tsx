@@ -3,7 +3,7 @@ import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Header from "src/components/Header/Header_main";
 import Leaderboard from "src/components/LeaderBoard/Leaderboard_main";
 import AllUsers from "src/components/AllUsers/AllUsers_main";
-import Game from "src/components/Game/GameV2";
+import Game from "src/components/Game/Game";
 import Chat from "src/components/Chat/Chat_main";
 import ErrorPage from "src/components/App/ErrorPage";
 import ManageProfile from "src/components/ManageProfile/ManageProfile_main";

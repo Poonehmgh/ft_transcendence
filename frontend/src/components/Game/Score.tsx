@@ -1,7 +1,7 @@
 import React from "react";
 import "../../styles/gamev2.css";
 
-const ScoreV2 = (props) => {
+const Score = (props) => {
   const { newRound } = props;
   return (
     <>
@@ -16,4 +16,4 @@ const ScoreV2 = (props) => {
   );
 };
 
-export default ScoreV2;
+export default Score;
