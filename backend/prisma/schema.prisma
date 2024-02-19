@@ -38,7 +38,7 @@ model Match {
     id          Int       @id @unique @default(autoincrement())
     begin       DateTime?
     end         DateTime?
-    length_sec  Int       @default(0)
+    length_sec  Int?
     // players
     player1     Int
     player2     Int

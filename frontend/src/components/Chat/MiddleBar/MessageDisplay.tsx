@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 
 // Contexts
 import { ChatContext } from "src/contexts/ChatProvider";
-import { UserDataContext } from "src/contexts/UserDataProvider";
+import { SocialDataContext } from "src/contexts/SocialDataProvider";
 
 // DTO
 import { ExtendedChatUserDTO, MessageDTO } from "src/dto/chat-dto";
@@ -13,7 +13,7 @@ import "src/styles/style.css";
 
 function MessageDisplay(): React.JSX.Element {
     const { activeChat } = useContext(ChatContext);
-    const { blockedUsers } = useContext(UserDataContext);
+    const { blockedUsers } = useContext(SocialDataContext);
     const messagesEndRef = useRef(null);
 
     const scrollToBottom = () => {

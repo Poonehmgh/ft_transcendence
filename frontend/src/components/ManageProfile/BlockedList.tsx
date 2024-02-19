@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 
 // Contexts
-import { UserDataContext } from "src/contexts/UserDataProvider";
+import { SocialDataContext } from "src/contexts/SocialDataProvider";
 
 // DTO
 import { IdAndNameDTO } from "src/dto/user-dto";
@@ -11,7 +11,7 @@ import "src/styles/style.css";
 import "src/styles/manageProfile.css";
 
 function BlockedList() {
-    const { blockedUsers, unblockUser } = useContext(UserDataContext);
+    const { blockedUsers, unblockUser } = useContext(SocialDataContext);
 
     if (blockedUsers === null) return <div className="p">Loading data...</div>;
     if (blockedUsers.length === 0) return <div className="p">No toxic ppl... yet!</div>;

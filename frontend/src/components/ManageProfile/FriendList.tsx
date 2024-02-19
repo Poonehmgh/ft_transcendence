@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 
 // Contexts
-import { UserDataContext } from "src/contexts/UserDataProvider";
+import { SocialDataContext } from "src/contexts/SocialDataProvider";
 
 // DTO
 import { IdAndNameDTO } from "src/dto/user-dto";
@@ -11,7 +11,7 @@ import "src/styles/style.css";
 import "src/styles/manageProfile.css";
 
 function FriendList() {
-    const { friends, removeFriend, blockUser } = useContext(UserDataContext);
+    const { friends, removeFriend, blockUser } = useContext(SocialDataContext);
 
     // will implement this if we have time
     /*   function handleSendMsg(id: number) {

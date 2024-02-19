@@ -55,7 +55,7 @@ function MemberOptions(): React.JSX.Element {
                 setThisUserRole(Role.member);
             }
         }
-    }, [selectedUser, activeChat.chatUsers]);
+    }, [selectedUser, activeChat.chatUsers, userId]);
 
     async function changeUserStatus(action: string) {
         console.log("changeUserStatus. Received action:'" + action + "'");

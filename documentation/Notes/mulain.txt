@@ -9,6 +9,10 @@
 - stress test game
 - test 2fa auth
 - test login with taken name
+- updates after game:
+    - match model
+    - add match id to user model match[]
+    - calculate new win rate and update user model winrate field
 
 - move 2fa actived / not actived info from playerCard to only ManageProfile
 - add game invite function to chat (button already done)

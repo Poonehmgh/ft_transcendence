@@ -3,7 +3,7 @@ import FriendButton from "./FriendButton";
 import BlockButton from "./BlockButton";
 
 // Contexts
-import { UserDataContext } from "src/contexts/UserDataProvider";
+import { SocialDataContext } from "src/contexts/SocialDataProvider";
 
 // DTO
 import { UserRelation, UserProfileDTO } from "src/dto/user-dto";
@@ -17,7 +17,7 @@ interface socialActionBarProps {
 
 function SocialActionBar(props: socialActionBarProps): React.JSX.Element {
     const { friends, friendReqOut, friendReqIn, blockedUsers } =
-        useContext(UserDataContext);
+        useContext(SocialDataContext);
     const [relation, setRelation] = useState<UserRelation>(null);
 
     useEffect(() => {
@@ -38,7 +38,7 @@ function SocialActionBar(props: socialActionBarProps): React.JSX.Element {
         }
 
         updateRelation();
-    }, [friends, friendReqOut, friendReqIn, blockedUsers]);
+    }, [friends, friendReqOut, friendReqIn, blockedUsers, props.otherProfile]);
 
     return (
         <div className="socialActionBarMain">

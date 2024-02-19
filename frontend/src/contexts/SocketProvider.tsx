@@ -4,7 +4,7 @@ import backendUrl from "src/constants/backendUrl";
 
 // Contexts
 import { AuthContext } from "./AuthProvider";
-import { UserDataContext } from "./UserDataProvider";
+import { SocialDataContext } from "./SocialDataProvider";
 
 export const SocketContext = createContext<Socket | null>(null);
 
@@ -14,7 +14,7 @@ interface socketProviderProps {
 
 export function SocketProvider(props: socketProviderProps): JSX.Element {
     const { validToken, userId } = useContext(AuthContext);
-    const { updateUserData } = useContext(UserDataContext);
+    const { updateUserData } = useContext(SocialDataContext);
     const [socket, setSocket] = useState<Socket | null>(null);
 
     useEffect(() => {

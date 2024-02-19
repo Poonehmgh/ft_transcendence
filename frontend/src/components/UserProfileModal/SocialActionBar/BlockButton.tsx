@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 
 // Contexts
-import { UserDataContext } from "src/contexts/UserDataProvider";
+import { SocialDataContext } from "src/contexts/SocialDataProvider";
 
 // DTO
 import { UserProfileDTO, UserRelation } from "src/dto/user-dto";
@@ -12,7 +12,7 @@ interface blockButtonProps {
 }
 
 function BlockButton(props: blockButtonProps): React.JSX.Element {
-    const { blockUser, unblockUser } = useContext(UserDataContext);
+    const { blockUser, unblockUser } = useContext(SocialDataContext);
 
     return (
         <div>
