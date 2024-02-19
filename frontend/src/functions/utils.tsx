@@ -1,5 +1,3 @@
-import React from "react";
-
 // getters
 
 export function getCalendarDay(date: Date) {
@@ -12,17 +10,12 @@ export function getCalendarDay(date: Date) {
 }
 
 export function getDecodedTokenFromCookie() {
-    const cookies = document.cookie.split(";");
+    const token = getPureTokenFromCookie();
 
-    for (const cookie of cookies) {
-        const [name, value] = cookie.trim().split("=");
+    if (!token) return null;
 
-        if (name === "token") {
-            const decodedToken = JSON.parse(atob(value.split(".")[1]));
-            return decodedToken;
-        }
-    }
-    return null;
+    const decodedToken = JSON.parse(atob(token.split(".")[1]));
+    return decodedToken;
 }
 
 export function getPureTokenFromCookie() {
@@ -61,6 +54,7 @@ export function authHeader() {
     const myHeaders: Headers = new Headers();
     const token: string = "Bearer " + getPureTokenFromCookie();
     myHeaders.append("Authorization", token);
+
     return myHeaders;
 }
 
@@ -88,9 +82,13 @@ export async function fetchWrapper<T>(
         });
 
         if (!response.ok) {
+            if (response.status === 401 && window.location.pathname !== "/home") {
+                window.location.href = "/home";
+            }
             console.error(`${apiUrl}: ${response.status}`);
-         
-            const errorMessage = { message: `Error ${response.status}: ${response.statusText}` };
+            const errorMessage = {
+                message: `Error ${response.status}: ${response.statusText}`,
+            };
             return errorMessage;
         }
 
@@ -99,36 +97,6 @@ export async function fetchWrapper<T>(
         console.error("Error in fetchX:", error);
     }
 }
-
-/* export async function fetchGet<T>(apiUrl: string): Promise<T> {
-    try {
-        const response: Response = await fetch(apiUrl, {
-            method: "GET",
-            headers: authContentHeader(),
-        });
-        if (!response.ok) {
-            console.log(apiUrl, ": ", response.status);
-            console.log("not response ok in fetchget");
-            return null;
-        }
-        return await response.json();
-    } catch (error) {
-        console.log(error);
-        return null;
-    }
-} */
-
-/* export async function fetchGetSet<T>(
-    apiUrl: string,
-    setter: React.Dispatch<React.SetStateAction<T | null>>
-) {
-    try {
-        const data = await fetchGet<T>(apiUrl);
-        setter(data);
-    } catch (error) {
-        setter(null);
-    }
-} */
 
 // sanitizers
 
