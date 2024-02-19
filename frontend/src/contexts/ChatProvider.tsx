@@ -40,12 +40,8 @@ export function ChatProvider({ children }) {
                 } catch (error) {
                     console.error("Error fetching updated chat:", error);
                 }
-                // this would be better, but would require a backend change
-                /* 
-                setActiveChat((prevActiveChat) => ({
-                    ...prevActiveChat,
-                    chatMessages: [...prevActiveChat.chatMessages, message],
-                })); */
+
+
             }
         }
 
@@ -65,6 +61,7 @@ export function ChatProvider({ children }) {
         socket.on("updateMessage", handleNewChatMessage);
 
         return () => {
+            socket.off("updateChat", handleChangeInChat);
             socket.off("updateMessage", handleNewChatMessage);
         };
     }, [socket, activeChat]);
@@ -77,6 +74,11 @@ export function ChatProvider({ children }) {
                 apiUrl,
                 null
             );
+            if (activeChat && !thisUsersChats.some(e => e.chatId === activeChat.chatId)) {
+                console.log("activeChat not in thisUsersChats, setting to null");
+                setActiveChat(null);
+            }
+
             setThisUsersChats(thisUsersChats);
         } catch (error) {
             console.error("Error fetching this user's chats:", error);

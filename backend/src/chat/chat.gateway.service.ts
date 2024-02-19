@@ -510,6 +510,7 @@ export class ChatGatewayService {
                 chatId: Number(changeForm.chatId),
             },
         });
+        this.sendDataUpdate([changeForm.userId], "updateChat", new ChatListDTO("noone cares", changeForm.chatId) );
         this.sendChatUpdate(changeForm.chatId);
     }
 

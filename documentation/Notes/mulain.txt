@@ -26,11 +26,12 @@
 - hanlde invite user to game-
     - backend structure
     - frontend: navigate to game page after invite? how to handle this
+- handle redirection urls properly with env substitution
 
 
 IMMEDIATE MULAIN
-- handle bans frontend
-- handle bans backend
+- rerender on getting kicked: memberlist not rerendering
+- have to refresh before memberlist renders
 - react to inviteEmission
 - add invite game button to profile?
 -blocked: what about DM? not show chat?
