@@ -395,13 +395,3 @@ export class ChangeChatUserStatusDTO {
         this.admin = admin;
     }
 }
-
-// {
-//     "operatorId": 1,
-//     "chatId": 2,
-//     "userId": 2,
-//     "owner": "true",
-//     "muted": "false",
-//     "banned": "false",
-//     "admin": "false"
-// }
