@@ -94,14 +94,10 @@ export function ChatProvider({ children }) {
             return;
         }
 
-        try {
-            const apiUrl = backendUrl.chat + `complete_chat/${chatId}`;
-            const newActiveChat = await fetchWrapper<ChatDTO>("GET", apiUrl, null);
-            setActiveChat(newActiveChat);
-            setSelectedUser(null);
-        } catch (error) {
-            console.error("Error changing active chat:", error);
-        }
+        const apiUrl = backendUrl.chat + `complete_chat/${chatId}`;
+        const newActiveChat = await fetchWrapper<ChatDTO>("GET", apiUrl, null);
+        setActiveChat(newActiveChat);
+        setSelectedUser(null);
     }
 
     function changeSelectedUser(userId: number) {
@@ -119,5 +115,6 @@ export function ChatProvider({ children }) {
         thisUsersChats,
         fetchThisUsersChats,
     };
+
     return <ChatContext.Provider value={contextValue}>{children}</ChatContext.Provider>;
 }
