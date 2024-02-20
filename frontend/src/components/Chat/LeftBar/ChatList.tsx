@@ -26,7 +26,7 @@ function ChatList(): React.JSX.Element {
         return (
             !chat.dm ||
             !chat.chatUsers?.some((chatUser: ChatUserDTO) =>
-                blockedUsers?.some((blockedUser: IdAndNameDTO) => blockedUser.id === chatUser.userId)
+                blockedUsers?.some((blockedUser: IdAndNameDTO) => blockedUser?.id === chatUser?.userId)
             )
         );
     });
