@@ -16,7 +16,8 @@ import "src/styles/modals.css";
 import "src/styles/buttons.css";
 
 function NewChat(): React.JSX.Element {
-    const { changeActiveChat, fetchThisUsersChats } = useContext(ChatContext);
+    const { changeActiveChat, updateMyChats: fetchThisUsersChats } =
+        useContext(ChatContext);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const passwordRef = useRef(null);
     const [newChatDTO, setChatDto] = useState<NewChatDTO>({

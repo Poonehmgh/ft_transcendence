@@ -150,7 +150,7 @@ export class ChatController {
             } else if ("error" in result) {
                 res.status(500).json({ error: result.error });
             } else {
-                this.chatGatewayService.sendChatUpdate(result.id);
+                this.chatGatewayService.sendEventToChat(result.id, "updateChat");
                 res.status(200).json(result);
             }
         } catch (error) {
@@ -174,7 +174,7 @@ export class ChatController {
                 res.status(500).json({ error: result.error });
             } else {
                 console.log("renameChat:", chatId, name);
-                this.chatGatewayService.sendChatUpdate(chatId);
+                this.chatGatewayService.sendEventToChat(chatId, "updateChat");
                 res.status(200).json(result);
             }
         } catch (error) {
@@ -245,7 +245,7 @@ export class ChatController {
             } else if ("error" in result) {
                 res.status(500).json({ error: result.error });
             } else {
-                this.chatGatewayService.sendChatUpdate(chatId);
+                this.chatGatewayService.sendEventToChat(chatId, "updateChat");
                 res.status(200).json(result);
             }
         } catch (error) {

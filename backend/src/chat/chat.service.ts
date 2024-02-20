@@ -107,6 +107,9 @@ export class ChatService {
                         },
                     ],
                 },
+                include: {
+                    chatUsers: true,
+                },
             });
 
             const chatInfoPromises = chats.map(async (chat: Chat_ChatUser) => {
@@ -117,6 +120,7 @@ export class ChatService {
                     dm: chat.dm,
                     isPrivate: chat.isPrivate,
                     passwordRequired: !!chat.password,
+                    chatUsers: chat.chatUsers,
                 };
             });
 

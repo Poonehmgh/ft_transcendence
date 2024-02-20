@@ -100,10 +100,9 @@ export async function fetchWrapper<T>(
             return errorMessage;
         }
         
-
         return await response.json();
     } catch (error) {
-        console.error("Error in fetchX:", error);
+        console.error("Error in fetchWrapper:", error);
     }
 }
 

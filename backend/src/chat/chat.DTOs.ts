@@ -130,10 +130,6 @@ export class SendMessageDTO {
     }
 }
 
-export class EstablishConnectDTO {
-    userID: number;
-}
-
 export class NewChatDTO {
     @IsBoolean()
     dm: boolean;
@@ -336,32 +332,6 @@ export class ChatDTO {
     }
 }
 
-//Its json for tests
-// {
-//     "name": "name??",
-//     "dm": false,
-//     "pw_protected": false,
-//     "password": false,
-//     "chat_users": [
-//     {
-//         "userId" : 1,
-//         "owner": false,
-//         "admin": false,
-//         "blocked": false,
-//         "muted": false,
-//         "invited": false
-//     },
-//     {
-//         "userId" : 2,
-//         "owner": false,
-//         "admin": false,
-//         "blocked": false,
-//         "muted": false,
-//         "invited": false
-//     }
-// ]
-// }
-
 export class InviteUserDTO {
     chatId: number;
     userId: number;
@@ -399,5 +369,15 @@ export class ChangeChatUserStatusDTO {
         this.muted = muted;
         this.banned = banned;
         this.admin = admin;
+    }
+}
+
+// socket events
+
+export class ChatIdDTO {
+    chatId: number;
+
+    constructor(chatId: number) {
+        this.chatId = chatId;
     }
 }
