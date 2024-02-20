@@ -34,10 +34,10 @@ Meeting
     - Can remove socket from user model?
     - invite to game interaction
     - update prisma on game finish
+    - muted until?
 
 
 IMMEDIATE MULAIN
-- sanitize username and chatname in backend 
 - pw hash
 - rerender on getting kicked: memberlist not rerendering
 - have to refresh before memberlist renders, but only sometimes?!
@@ -50,6 +50,9 @@ After testing complete:
 - remove functions that put socket into user model in backend
 
 - Optimization (optional)
+    - remove password functionality from non public chats:
+        you cant join them anyway if you are not invited
+    - add invite more users function to chats (that are not dms)
     - filter function for chats: filter dms, group chats, global chats
     - keeping banned users in chat as banned users not elegant.
     - best to remove chatusers completely tbh and go with simple arrays.
