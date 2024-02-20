@@ -226,7 +226,7 @@ export class UserController {
                     from: req.user.id,
                     to: otherId,
                 };
-                this.chatGatewayService.sendDataUpdate(
+                this.chatGatewayService.sendDataEventToList(
                     updateRecipients,
                     "socialUpdate",
                     data
@@ -259,7 +259,7 @@ export class UserController {
                     from: req.user.id,
                     to: otherId,
                 };
-                this.chatGatewayService.sendDataUpdate(
+                this.chatGatewayService.sendDataEventToList(
                     updateRecipients,
                     "socialUpdate",
                     data
@@ -306,7 +306,7 @@ export class UserController {
                     to: otherId,
                     action: action,
                 };
-                this.chatGatewayService.sendDataUpdate(
+                this.chatGatewayService.sendDataEventToList(
                     updateRecipients,
                     "socialUpdate",
                     data
@@ -340,7 +340,7 @@ export class UserController {
                     from: req.user.id,
                     to: otherId,
                 };
-                this.chatGatewayService.sendDataUpdate(
+                this.chatGatewayService.sendDataEventToList(
                     updateRecipients,
                     "socialUpdate",
                     data
@@ -373,7 +373,7 @@ export class UserController {
                     from: req.user.id,
                     to: otherId,
                 };
-                this.chatGatewayService.sendDataUpdate(
+                this.chatGatewayService.sendDataEventToList(
                     updateRecipients,
                     "socialUpdate",
                     data
@@ -406,7 +406,7 @@ export class UserController {
                     from: req.user.id,
                     to: otherId,
                 };
-                this.chatGatewayService.sendDataUpdate(
+                this.chatGatewayService.sendDataEventToList(
                     updateRecipients,
                     "socialUpdate",
                     data

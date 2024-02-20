@@ -14,7 +14,11 @@ import "src/styles/style.css";
 
 function ChatOptions(): React.JSX.Element {
     const [isOwner, setIsOwner] = useState<boolean>(false);
-    const { activeChat, changeActiveChat, fetchThisUsersChats } = useContext(ChatContext);
+    const {
+        activeChat,
+        changeActiveChat,
+        updateMyChats: fetchThisUsersChats,
+    } = useContext(ChatContext);
     const [hasPassword, setHasPassword] = useState<boolean>(false);
 
     useEffect(() => {

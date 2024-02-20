@@ -143,3 +143,13 @@ export class ChatListDTO {
         this.chatId = chatId;
     }
 }
+
+// socket events
+
+export class ChatIdDTO {
+    chatId: number;
+
+    constructor(chatId: number) {
+        this.chatId = chatId;
+    }
+}

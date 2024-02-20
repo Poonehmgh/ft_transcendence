@@ -35,7 +35,7 @@ function RightBar(): React.JSX.Element {
         } else {
             setThisUserRole(ChatRole.member);
         }
-    }, [selectedUser, activeChat?.chatUsers, userId]);
+    }, [selectedUser, activeChat, activeChat?.chatUsers, userId]);
 
     if (activeChat === null || activeChat.chatUsers === null)
         return <div className="sideBar"></div>;

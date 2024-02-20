@@ -33,7 +33,7 @@ function UserProfileModal(props: userProfileModalProps) {
     }
 
     useEffect(() => {
-        if (!props.id) return;
+        if (props.id === null) return;
 
         async function fetchAvatar() {
             const apiUrl = backendUrl.user + "avatar/" + props.id;
