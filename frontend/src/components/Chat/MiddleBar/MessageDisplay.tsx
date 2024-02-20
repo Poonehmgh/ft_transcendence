@@ -46,7 +46,7 @@ function MessageDisplay(): React.JSX.Element {
     return (
         <div className="messagesArea">
             {activeChat.messages.map((e: MessageDTO) => {
-                if (blockedUsers.some((user) => user.id === e.authorId)) {
+                if (blockedUsers?.some((user) => user.id === e.authorId)) {
                     return null;
                 }
                 return (
