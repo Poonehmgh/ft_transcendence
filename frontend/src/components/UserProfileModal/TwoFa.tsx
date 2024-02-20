@@ -84,12 +84,12 @@ function TwoFa() {
 
     const submitDisable = () => {
         console.log("submitDisable", securityCode);
-
+        const code = securityCode;
         const apiUrl = process.env.REACT_APP_BACKEND_URL + "/auth/twofa/deactivate";
         fetch(apiUrl, {
             method: "POST",
             headers: authContentHeader(),
-            body: JSON.stringify({securityCode})
+            body: JSON.stringify({code})
         }).then(response => {
             if (!response.ok)
                 throw new Error("Failed to disable 2Fa");
@@ -102,6 +102,7 @@ function TwoFa() {
             }).then(() => {
             navigate(`/message/${"success"}/${"2FA is successfully disabled."}`);
         }).catch(error => {
+            // navigate(`/message/${"success"}/Error: ${error}`);
             console.log("Error in handleSubmitCode", error);
         })
 
@@ -110,7 +111,7 @@ function TwoFa() {
 
     useEffect(() => {
         fetch2FaStateFromDatabase();
-    }, []);
+    }, [disableClicked]);
 
     const fetch2FaStateFromDatabase = () => {
         fetch(process.env.REACT_APP_BACKEND_URL + "/auth/twofa/state",
@@ -120,7 +121,6 @@ function TwoFa() {
             .then(response => response.json())
             .then(data => {
                 set2fa(data.twoFa);
-                console.log("@@@@2fa", data.twoFa);
             })
             .catch(error => {
                 console.error('Error fetching 2FA state:', error);
@@ -129,7 +129,7 @@ function TwoFa() {
 
 
     return ( <>
-            {!qrCodeUrl && <Button styleP={{ position: 'absolute', top: '74%', right: "39.5%"}} name={twoFa === true? "Disable" : "Enable"} onClick={() => {handle2FaButtonClick()}} />}
+            {!disableClicked && !qrCodeUrl && <Button styleP={{ position: 'absolute', top: '74%', right: "39.5%"}} name={twoFa === true? "Disable" : "Enable"} onClick={() => {handle2FaButtonClick()}} />}
             {qrCodeUrl && !twoFa && <form onSubmit={handleSubmitCode}>
                     <p>Please enter security code.</p>
                     <label htmlFor="securityCode"></label>

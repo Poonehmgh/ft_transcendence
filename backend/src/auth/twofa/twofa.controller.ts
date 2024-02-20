@@ -58,10 +58,9 @@ export class TwoFaController{
     /*deactivate 2fa*/
     @Post("/deactivate")
     @UseGuards(JwtAuthGuard)
-    async deactivate2fa(@Req() request: Request, @Body() twoFaDto: TwoFaCodeDto2){
+    async deactivate2fa(@Req() request: Request, @Body() twoFaDto: TwoFaCodeDto){
         const {code} = twoFaDto;
         const user = request.user as User_42;
-        return ({"hello":code});
         return this.twoFAservice.deactivate2Fa(code, user.email);
     }
 
