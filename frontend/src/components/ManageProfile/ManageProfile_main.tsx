@@ -140,7 +140,6 @@ function ManageProfile() {
                         rank={userProfile.rank}
                         matches={userProfile.matches}
                         winrate={userProfile.winrate}
-                        twoFa={userProfile.twoFa}
                     />
                 </div>
                 <TwoFa />

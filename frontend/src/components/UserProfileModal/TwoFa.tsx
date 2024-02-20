@@ -75,6 +75,7 @@ function TwoFa() {
                         navigate(`/message/${"success"}/${"2FA is successfully enabled."}`);
                         }).catch(error => {
                             console.log("Error in handleSubmitCode", error);
+                            navigate(`/message/${"success"}/${error}`);
         })
     }
 
@@ -129,7 +130,8 @@ function TwoFa() {
 
 
     return ( <>
-            {!disableClicked && !qrCodeUrl && <Button styleP={{ position: 'absolute', top: '74%', right: "39.5%"}} name={twoFa === true? "Disable" : "Enable"} onClick={() => {handle2FaButtonClick()}} />}
+        <div style={{fontSize: "smaller", marginLeft: "110px", display: 'block', marginTop: "-10px"}}>TwoFa <span style={{ marginLeft: "60px" }}>{twoFa? "       enabled" : "      disabled"}</span></div>
+            {!disableClicked && !qrCodeUrl && <Button styleP={{ position: 'absolute', top: '78%', right: "39.5%"}} name={twoFa === true? "Disable" : "Enable"} onClick={() => {handle2FaButtonClick()}} />}
             {qrCodeUrl && !twoFa && <form onSubmit={handleSubmitCode}>
                     <p>Please enter security code.</p>
                     <label htmlFor="securityCode"></label>
