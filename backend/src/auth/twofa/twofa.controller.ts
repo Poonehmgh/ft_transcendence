@@ -55,13 +55,15 @@ export class TwoFaController{
     }
 
     //
-    // /*deactivate 2fa*/
-    // @Post("/deactivate")
-    // @UseGuards(JwtAuthGuard)
-    // async deactivate2fa(@Body() twoFaDto: TwoFaCodeDto){
-    //     const {code, email} = twoFaDto;
-    //     return this.twoFAservice.deactivate2Fa(code, email);
-    // }
+    /*deactivate 2fa*/
+    @Post("/deactivate")
+    @UseGuards(JwtAuthGuard)
+    async deactivate2fa(@Req() request: Request, @Body() twoFaDto: TwoFaCodeDto2){
+        const {code} = twoFaDto;
+        const user = request.user as User_42;
+        return ({"hello":code});
+        return this.twoFAservice.deactivate2Fa(code, user.email);
+    }
 
     @Get("/state")
     @UseGuards(JwtAuthGuard)
