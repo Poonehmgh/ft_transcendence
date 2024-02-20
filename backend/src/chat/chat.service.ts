@@ -2,7 +2,6 @@ import { HttpStatus, Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import { ChatGatewayService } from "./chat.gateway.service";
 import { UserService } from "src/user/user.service";
-
 import { genSaltSync, hashSync } from "bcryptjs";
 
 import {
@@ -15,9 +14,7 @@ import {
     ChatDTO,
     ExtendedChatUserDTO,
 } from "./chat.DTOs";
-import e from "express";
 import { Chat } from "@prisma/client";
-import { ChangeNameDTO } from "src/user/user-dto";
 
 @Injectable()
 export class ChatService {

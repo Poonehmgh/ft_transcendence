@@ -34,7 +34,7 @@ export class ChatGateway implements OnModuleInit, OnGatewayDisconnect {
             this.chatGatewayService.deleteUserFromList(userId);
             this.chatGatewayService.addUserToList(new userGateway(userId, socket));
 
-            // await this.chatGatewayService.setUserSocketId(userId, socket.id);
+            await this.chatGatewayService.setUserSocketId(userId, socket.id);
             await this.chatGatewayService.setUserOnlineStatus(userId, true);
 
             this.chatGatewayService.printConnectedUsers();

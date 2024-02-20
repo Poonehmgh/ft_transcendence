@@ -28,6 +28,8 @@
     - backend structure
     - frontend: navigate to game page after invite? how to handle this
 
+- reimplement socketId
+
 
 Meeting
     - List of duties to help Fedia

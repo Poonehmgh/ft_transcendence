@@ -9,7 +9,7 @@ import {
     SendMessageDTO,
 } from "./chat.DTOs";
 import { Socket } from "socket.io";
-import { hashSync } from "bcryptjs";
+import { compareSync, hashSync } from "bcryptjs";
 import { userGateway } from "./userGateway";
 
 @Injectable()
@@ -24,6 +24,7 @@ export class ChatGatewayService {
             console.log("User", user.userID, "on socket", user.socket.id);
         });
     }
+
     async setAllUsersOffline(): Promise<void> {
         await this.prisma.user.updateMany({
             data: {
@@ -31,6 +32,65 @@ export class ChatGatewayService {
             },
         });
     }
+
+    async setUserOnlineStatus(userID: number, status: boolean) {
+        try {
+            await this.prisma.user.updateMany({
+                where: {
+                    id: Number(userID),
+                },
+                data: {
+                    online: Boolean(status),
+                },
+            });
+        } catch (error) {
+            console.log(`error in setUserOnlineStatus: ${error.message}`);
+        }
+    }
+
+    deleteUserFromList(userIDToDelete: number) {
+        ChatGatewayService.connectedUsers = ChatGatewayService.connectedUsers.filter(
+            (userGateway) => userGateway.userID !== userIDToDelete
+        );
+    }
+
+    addUserToList(user: userGateway) {
+        ChatGatewayService.connectedUsers.push(user);
+    }
+
+    // storing socket for game
+
+    async setUserSocketId(userId: number, socketId: string) {
+        try {
+            await this.prisma.user.updateMany({
+                where: {
+                    id: Number(userId),
+                },
+                data: {
+                    socketId: String(socketId),
+                },
+            });
+        } catch (error) {
+            console.log(`error in setUserSocketId: ${error.message}`);
+        }
+    }
+
+    async deleteUserSocketID(userID: number) {
+        try {
+            await this.prisma.user.updateMany({
+                where: {
+                    id: Number(userID),
+                },
+                data: {
+                    socketId: "",
+                },
+            });
+        } catch (error) {
+            console.log(`error in deleteUserSocketID: ${error.message}`);
+        }
+    }
+
+    // getters
 
     async getChatNameFromID(chatID: number): Promise<string> {
         const chat = await this.prisma.chat.findFirst({
@@ -56,15 +116,7 @@ export class ChatGatewayService {
         return user ? user.socket : null;
     }
 
-    deleteUserFromList(userIDToDelete: number) {
-        ChatGatewayService.connectedUsers = ChatGatewayService.connectedUsers.filter(
-            (userGateway) => userGateway.userID !== userIDToDelete
-        );
-    }
-
-    addUserToList(user: userGateway) {
-        ChatGatewayService.connectedUsers.push(user);
-    }
+    // checkers
 
     async IsUserInChat(chatId: number, userId: number) {
         const chatUser = await this.prisma.chat_User.findFirst({
@@ -143,51 +195,6 @@ export class ChatGatewayService {
             console.log(`error in addMessageToChat: ${error.message}`);
         }
     }
-
-    async setUserOnlineStatus(userID: number, status: boolean) {
-        try {
-            await this.prisma.user.updateMany({
-                where: {
-                    id: Number(userID),
-                },
-                data: {
-                    online: Boolean(status),
-                },
-            });
-        } catch (error) {
-            console.log(`error in setUserOnlineStatus: ${error.message}`);
-        }
-    }
-
-/*     async setUserSocketId(userId: number, socketId: string) {
-        try {
-            await this.prisma.user.updateMany({
-                where: {
-                    id: Number(userId),
-                },
-                data: {
-                    socketId: String(socketId),
-                },
-            });
-        } catch (error) {
-            console.log(`error in setUserSocketId: ${error.message}`);
-        }
-    } */
-
-  /*   async deleteUserSocketID(userID: number) {
-        try {
-            await this.prisma.user.updateMany({
-                where: {
-                    id: Number(userID),
-                },
-                data: {
-                    socketId: "",
-                },
-            });
-        } catch (error) {
-            console.log(`error in deleteUserSocketID: ${error.message}`);
-        }
-    } */
 
     /*    sendMessageToIDList(
         userIdList: number[],
@@ -301,7 +308,7 @@ export class ChatGatewayService {
         if (chat) return true;
         return false;
     }
-    
+
     async checkIsPossibleToAddInChatWithPassword(
         inviteForm: InviteUserDTO,
         inviter: Socket
@@ -334,6 +341,18 @@ export class ChatGatewayService {
             });
             if (chatUser) await this.sendEventToChat(inviteForm.chatId, "updateChat");
         }
+    }
+
+    async checkPassword(chatId: number, passwordInput: string) {
+        const chat = await this.prisma.chat.findUnique({
+            where: {
+                id: chatId,
+            },
+        });
+        const hashedPasswordInput = hashSync(passwordInput, chat.passwordSalt);
+        const result = compareSync(hashedPasswordInput, chat.passwordHash);
+        console.log("checkPassword result:", result ? "correct" : "incorrect");
+        return result;
     }
 
     async joinChat(inviteForm: InviteUserDTO, inviter: Socket) {
@@ -482,7 +501,11 @@ export class ChatGatewayService {
                 banned: changeForm.banned,
             },
         });
-        this.sendDataEventToList([changeForm.userId], "updateChat", new ChatIdDTO(changeForm.chatId));
+        this.sendDataEventToList(
+            [changeForm.userId],
+            "updateChat",
+            new ChatIdDTO(changeForm.chatId)
+        );
         this.sendEventToChat(changeForm.chatId, "updateChat");
     }
 
