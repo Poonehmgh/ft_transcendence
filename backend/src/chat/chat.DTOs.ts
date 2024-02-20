@@ -70,7 +70,13 @@ export class MessageDTO {
     authorId: number;
     chatId: number;
 
-    constructor(id: number, timeStamp: Date, content: string, authorId: number, chatId: number) {
+    constructor(
+        id: number,
+        timeStamp: Date,
+        content: string,
+        authorId: number,
+        chatId: number
+    ) {
         this.id = id;
         this.timeStamp = timeStamp;
         this.content = content;
@@ -122,10 +128,6 @@ export class SendMessageDTO {
         this.userId = userID;
         this.content = content;
     }
-}
-
-export class EstablishConnectDTO {
-    userID: number;
 }
 
 export class NewChatDTO {
@@ -205,7 +207,7 @@ export class ExtendedChatUserDTO {
         userId: number,
         userName: string | null,
         chatId: number,
-       // chatName: string | null,
+        // chatName: string | null,
         owner: boolean,
         admin: boolean,
         blocked: boolean,
@@ -227,7 +229,7 @@ export class ExtendedChatUserDTO {
 
     static async fromChatUser(
         chatUser: Chat_User,
-        userService: UserService,
+        userService: UserService
         //chatService: ChatService
     ): Promise<ExtendedChatUserDTO> {
         const userName = await userService.getNameById(chatUser.userId);
@@ -316,7 +318,7 @@ export class ChatDTO {
         this.chatUsers = chatUsers;
         this.messages = messages;
     }
-    
+
     static fromChat(chat: Chat): ChatDTO {
         return new ChatDTO(
             chat.id,
@@ -329,32 +331,6 @@ export class ChatDTO {
         );
     }
 }
-
-//Its json for tests
-// {
-//     "name": "name??",
-//     "dm": false,
-//     "pw_protected": false,
-//     "password": false,
-//     "chat_users": [
-//     {
-//         "userId" : 1,
-//         "owner": false,
-//         "admin": false,
-//         "blocked": false,
-//         "muted": false,
-//         "invited": false
-//     },
-//     {
-//         "userId" : 2,
-//         "owner": false,
-//         "admin": false,
-//         "blocked": false,
-//         "muted": false,
-//         "invited": false
-//     }
-// ]
-// }
 
 export class InviteUserDTO {
     chatId: number;
@@ -396,12 +372,12 @@ export class ChangeChatUserStatusDTO {
     }
 }
 
-// {
-//     "operatorId": 1,
-//     "chatId": 2,
-//     "userId": 2,
-//     "owner": "true",
-//     "muted": "false",
-//     "banned": "false",
-//     "admin": "false"
-// }
+// socket events
+
+export class ChatIdDTO {
+    chatId: number;
+
+    constructor(chatId: number) {
+        this.chatId = chatId;
+    }
+}

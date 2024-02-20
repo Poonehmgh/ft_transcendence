@@ -9,9 +9,9 @@ import { SocketContext } from "./SocketProvider";
 import {
     BasicChatWithUsersDTO,
     ChatDTO,
-    ChatListDTO,
     ExtendedChatUserDTO,
     MessageDTO,
+    ChatIdDTO,
 } from "chat-dto";
 
 export const ChatContext = createContext({
@@ -19,20 +19,30 @@ export const ChatContext = createContext({
     changeActiveChat: (chatId: number) => {},
     selectedUser: null as ExtendedChatUserDTO,
     changeSelectedUser: (userId: number) => {},
-    thisUsersChats: null as BasicChatWithUsersDTO[],
-    fetchThisUsersChats: () => {},
+    myChats: null as BasicChatWithUsersDTO[],
+    updateMyChats: () => {},
 });
 
 export function ChatProvider({ children }) {
     const socket = useContext(SocketContext);
     const [activeChat, setActiveChat] = useState(null);
     const [selectedUser, setSelectedUser] = useState(null);
-    const [thisUsersChats, setThisUsersChats] = useState(null);
+    const [myChats, setMyChats] = useState(null);
+
+    async function updateMyChats() {
+        const apiUrl = backendUrl.chat + "my_chats";
+        const newMyChats = await fetchWrapper<BasicChatWithUsersDTO[]>(
+            "GET",
+            apiUrl,
+            null
+        );
+        setMyChats(newMyChats);
+    }
 
     useEffect(() => {
         if (!socket) return;
 
-        async function handleNewChatMessage(data: MessageDTO) {
+        async function handleNewMessageEvent(data: MessageDTO) {
             if (activeChat === null) return;
             if (data.chatId === activeChat.id) {
                 try {
@@ -40,53 +50,33 @@ export function ChatProvider({ children }) {
                 } catch (error) {
                     console.error("Error fetching updated chat:", error);
                 }
-
-
             }
         }
 
-        async function handleChangeInChat(data: ChatListDTO) {
+        async function handleUpdateChatEvent(data: ChatIdDTO) {
+            if (activeChat === null) return;
             try {
-                if (data.chatId === activeChat?.id) {
+                if (data.chatId === activeChat.id) {
                     await changeActiveChat(data.chatId);
                 }
 
-                fetchThisUsersChats();
+                updateMyChats();
             } catch (error) {
                 console.error("Error handleChangeInChat:", error);
             }
         }
 
-        socket.on("updateChat", handleChangeInChat);
-        socket.on("updateMessage", handleNewChatMessage);
+        socket.on("newMessage", handleNewMessageEvent);
+        socket.on("updateChat", handleUpdateChatEvent);
 
         return () => {
-            socket.off("updateChat", handleChangeInChat);
-            socket.off("updateMessage", handleNewChatMessage);
+            socket.off("newMessage");
+            socket.off("updateChat");
         };
     }, [socket, activeChat]);
 
-    async function fetchThisUsersChats() {
-        try {
-            const apiUrl = backendUrl.chat + "my_chats";
-            const thisUsersChats = await fetchWrapper<BasicChatWithUsersDTO[]>(
-                "GET",
-                apiUrl,
-                null
-            );
-            if (activeChat && !thisUsersChats.some(e => e.chatId === activeChat.chatId)) {
-                console.log("activeChat not in thisUsersChats, setting to null");
-                setActiveChat(null);
-            }
-
-            setThisUsersChats(thisUsersChats);
-        } catch (error) {
-            console.error("Error fetching this user's chats:", error);
-        }
-    }
-
     useEffect(() => {
-        fetchThisUsersChats();
+        updateMyChats();
     }, []);
 
     async function changeActiveChat(chatId: number) {
@@ -114,8 +104,8 @@ export function ChatProvider({ children }) {
         changeActiveChat,
         selectedUser,
         changeSelectedUser,
-        thisUsersChats,
-        fetchThisUsersChats,
+        myChats,
+        updateMyChats,
     };
 
     return <ChatContext.Provider value={contextValue}>{children}</ChatContext.Provider>;

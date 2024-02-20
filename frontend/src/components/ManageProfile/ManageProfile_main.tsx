@@ -78,13 +78,12 @@ function ManageProfile() {
     async function handleNameChange() {
         try {
             let newName = prompt("Enter a new name:");
-
             if (!newName) return;
             newName = newName.trim();
             if (newName === "" || newName === userProfile.name) return;
 
-            const data = { newName: sanitizeInput(newName) };
             const apiUrl = backendUrl.user + "change_name";
+            const data = { newName: sanitizeInput(newName) };
             const res = await fetchWrapper<{ message: string }>("PATCH", apiUrl, data);
             alert(res.message);
             fetchUserProfile();
@@ -140,7 +139,6 @@ function ManageProfile() {
                         rank={userProfile.rank}
                         matches={userProfile.matches}
                         winrate={userProfile.winrate}
-                        twoFa={userProfile.twoFa}
                     />
                 </div>
                 <TwoFa />

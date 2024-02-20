@@ -14,7 +14,11 @@ import "src/styles/style.css";
 
 function ChatOptions(): React.JSX.Element {
     const [isOwner, setIsOwner] = useState<boolean>(false);
-    const { activeChat, changeActiveChat, fetchThisUsersChats } = useContext(ChatContext);
+    const {
+        activeChat,
+        changeActiveChat,
+        updateMyChats: fetchThisUsersChats,
+    } = useContext(ChatContext);
     const [hasPassword, setHasPassword] = useState<boolean>(false);
 
     useEffect(() => {
@@ -42,17 +46,15 @@ function ChatOptions(): React.JSX.Element {
     }
 
     async function renameChat() {
-        const newName = prompt("Enter new chat name:");
+        let newName = prompt("Enter new chat name:");
         if (!newName) return;
-        const sanitizedName = sanitizeInput(newName);
-        if (sanitizedName.length < 3) {
-            alert("Name must be at least 3 characters long");
-            return;
-        }
+        newName = newName.trim();
+        if (newName === "" || newName === activeChat.name) return;
+
         const apiUrl = backendUrl.chat + `rename/${activeChat?.id}`;
-        const res = await fetchWrapper<{ message: string }>("PATCH", apiUrl, {
-            name: sanitizedName,
-        });
+        const data = { newName: sanitizeInput(newName) };
+        console.log(data);
+        const res = await fetchWrapper<{ message: string }>("PATCH", apiUrl, data);
         alert(res.message);
         fetchThisUsersChats();
         changeActiveChat(activeChat?.id);

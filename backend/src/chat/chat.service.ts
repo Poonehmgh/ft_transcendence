@@ -17,6 +17,7 @@ import {
 } from "./chat.DTOs";
 import e from "express";
 import { Chat } from "@prisma/client";
+import { ChangeNameDTO } from "src/user/user-dto";
 
 @Injectable()
 export class ChatService {
@@ -107,6 +108,9 @@ export class ChatService {
                         },
                     ],
                 },
+                include: {
+                    chatUsers: true,
+                },
             });
 
             const chatInfoPromises = chats.map(async (chat: Chat_ChatUser) => {
@@ -117,6 +121,7 @@ export class ChatService {
                     dm: chat.dm,
                     isPrivate: chat.isPrivate,
                     passwordRequired: !!chat.password,
+                    chatUsers: chat.chatUsers,
                 };
             });
 

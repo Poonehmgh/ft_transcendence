@@ -9,13 +9,15 @@ import {
     Req,
     Res,
     Patch,
+    BadRequestException,
 } from "@nestjs/common";
+import { Response } from "express";
 import { ChatService } from "./chat.service";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
 import { ChatUserDTO, NewChatDTO } from "./chat.DTOs";
 import { AuthenticatedRequest } from "src/shared/dto";
-import { get } from "http";
 import { ChatGatewayService } from "./chat.gateway.service";
+import { ChangeNameDTO } from "src/user/user-dto";
 
 @Controller("chat")
 @UseGuards(JwtAuthGuard)
@@ -141,7 +143,7 @@ export class ChatController {
     async createChat(
         @Req() req: AuthenticatedRequest,
         @Body() newChat: NewChatDTO,
-        @Res() res
+        @Res() res: Response
     ) {
         try {
             const result = await this.chatService.createChat(req.user.id, newChat);
@@ -150,7 +152,7 @@ export class ChatController {
             } else if ("error" in result) {
                 res.status(500).json({ error: result.error });
             } else {
-                this.chatGatewayService.sendChatUpdate(result.id);
+                this.chatGatewayService.sendEventToChat(result.id, "updateChat");
                 res.status(200).json(result);
             }
         } catch (error) {
@@ -163,21 +165,29 @@ export class ChatController {
     async renameChat(
         @Req() req: AuthenticatedRequest,
         @Param("chatId") chatId: number,
-        @Body("name") name: string,
-        @Res() res
+        @Body() changeNameDto: ChangeNameDTO,
+        @Res() res: Response
     ) {
+        console.log("renameChat called.");
+        console.log("body:", Body);
         try {
-            const result = await this.chatService.renameChat(req.user.id, chatId, name);
+            const result = await this.chatService.renameChat(
+                req.user.id,
+                chatId,
+                changeNameDto.newName
+            );
             if (result instanceof Error) {
                 res.status(500).json({ error: result.message });
             } else if ("error" in result) {
                 res.status(500).json({ error: result.error });
             } else {
-                console.log("renameChat:", chatId, name);
-                this.chatGatewayService.sendChatUpdate(chatId);
+                this.chatGatewayService.sendEventToChat(chatId, "updateChat");
                 res.status(200).json(result);
             }
         } catch (error) {
+            if (error instanceof BadRequestException) {
+                return res.status(400).json({ error: error.getResponse() });
+            }
             console.error("Error renameChat:", error);
             res.status(500).json({ error: "Internal Server Error" });
         }
@@ -245,7 +255,7 @@ export class ChatController {
             } else if ("error" in result) {
                 res.status(500).json({ error: result.error });
             } else {
-                this.chatGatewayService.sendChatUpdate(chatId);
+                this.chatGatewayService.sendEventToChat(chatId, "updateChat");
                 res.status(200).json(result);
             }
         } catch (error) {

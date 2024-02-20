@@ -109,9 +109,13 @@ export class TwoFactorService {
             const foundUser = await this.authservice.findUserByEmail(email);
             if (!foundUser)
                 throw new BadRequestException("Deactivate2Fa: No such user found.");
-            if (authenticator.verify({
+
+            const verified = authenticator.verify({
                 token: code,
-                secret:foundUser.twoFaSecret }))
+                secret:foundUser.twoFaSecret });
+                // console.log("here", code, foundUser.twoFaSecret, verified);
+
+            if (!verified)
             {
                 const updateUser = await this.prisma.user.update({
                     where: {id: foundUser.id},

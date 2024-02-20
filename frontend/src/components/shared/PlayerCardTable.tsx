@@ -32,10 +32,6 @@ function PlayerCardTable(props: playerCardTableProp) {
                         <td>win rate</td>
                         <td>{props.winrate ? props.winrate : "-"}</td>
                     </tr>
-                    <tr>
-                        <td> 2fa</td>
-                        <td>{props.twoFa ? "enabled" : "disabled"}</td>
-                    </tr>
                 </tbody>
             </table>
         </div>

@@ -4,18 +4,27 @@ import React, { useContext, useEffect } from "react";
 import { ChatContext } from "src/contexts/ChatProvider";
 
 // DTO
-import { ExtendedChatUserDTO } from "src/dto/chat-dto";
+import { ChatRole, ExtendedChatUserDTO } from "src/dto/chat-dto";
 
-function MemberList(): React.JSX.Element {
+interface memberListProps {
+    thisUserRole: ChatRole;
+}
+
+function MemberList(props: memberListProps): React.JSX.Element {
     const { activeChat, selectedUser, changeSelectedUser } = useContext(ChatContext);
 
     if (!activeChat || !activeChat.chatUsers)
         return <div className="p">Loading data...</div>;
 
+    const filteredChatUsers =
+        props.thisUserRole < ChatRole.admin
+            ? activeChat.chatUsers.filter((user) => !user.banned)
+            : activeChat.chatUsers;
+
     return (
         <div className="sideBar_sub1">
             <div className="chatElementDiv">
-                {activeChat.chatUsers.map((e: ExtendedChatUserDTO) => (
+                {filteredChatUsers.map((e: ExtendedChatUserDTO) => (
                     <button
                         key={e.userId}
                         className={
@@ -25,7 +34,13 @@ function MemberList(): React.JSX.Element {
                     >
                         <div>{e.userName}</div>
                         <span className="smallTextDiv">
-                            {e.owner ? "Owner" : e.admin ? "Admin" : e.banned ? "Banned" : "Member"}
+                            {e.owner
+                                ? "Owner"
+                                : e.admin
+                                ? "Admin"
+                                : e.banned
+                                ? "Banned"
+                                : "Member"}
                             {e.muted ? " | Muted" : ""}
                         </span>
                     </button>

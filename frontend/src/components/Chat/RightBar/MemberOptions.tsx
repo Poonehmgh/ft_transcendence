@@ -7,53 +7,33 @@ import { AuthContext } from "src/contexts/AuthProvider";
 import { SocketContext } from "src/contexts/SocketProvider";
 
 // DTO
-import { ChatUserDTO, ChangeChatUserStatusDTO } from "chat-dto";
+import { ChangeChatUserStatusDTO, ChatRole } from "src/dto/chat-dto";
 
 // CSS
 import "src/styles/style.css";
 import "src/styles/chat.css";
 import "src/styles/buttons.css";
 
-enum Role {
-    owner = 2,
-    admin = 1,
-    member = 0,
+interface memberOptionsProps{
+    thisUserRole: ChatRole;
 }
 
-function MemberOptions(): React.JSX.Element {
+function MemberOptions(props: memberOptionsProps): React.JSX.Element {
     const { activeChat, changeActiveChat, selectedUser } = useContext(ChatContext);
     const { userId } = useContext(AuthContext);
     const socket = useContext(SocketContext);
-    const [thisUserRole, setThisUserRole] = useState<Role>(null);
-    const [selectedUserRole, setSelectedUserRole] = useState<Role>(null);
+    const [selectedUserRole, setSelectedUserRole] = useState<ChatRole>(null);
     const [modalIsOpen, setModalIsOpen] = useState(false);
 
     // the role should already be an enum in the model
     useEffect(() => {
         if (selectedUser) {
             if (selectedUser.owner) {
-                setSelectedUserRole(Role.owner);
+                setSelectedUserRole(ChatRole.owner);
             } else if (selectedUser.admin) {
-                setSelectedUserRole(Role.admin);
+                setSelectedUserRole(ChatRole.admin);
             } else {
-                setSelectedUserRole(Role.member);
-            }
-
-            // should probably be in the chatprovider
-            const thisUser = activeChat.chatUsers.find(
-                (e: ChatUserDTO) => e.userId === userId
-            );
-            if (!thisUser) {
-                console.error("User not found in chat");
-                return;
-            }
-
-            if (thisUser.owner) {
-                setThisUserRole(Role.owner);
-            } else if (thisUser.admin) {
-                setThisUserRole(Role.admin);
-            } else {
-                setThisUserRole(Role.member);
+                setSelectedUserRole(ChatRole.member);
             }
         }
     }, [selectedUser, activeChat.chatUsers, userId]);
@@ -118,7 +98,7 @@ function MemberOptions(): React.JSX.Element {
         setModalIsOpen(false);
     }
 
-    if (!selectedUser || thisUserRole === null) return <div className="p"></div>;
+    if (!selectedUser || props.thisUserRole === null) return <div className="p"></div>;
 
     return (
         <div className="sideBar_sub1">
@@ -138,7 +118,7 @@ function MemberOptions(): React.JSX.Element {
                 </div>
 
                 <div className="memberOptionsButtonsDiv">
-                    {thisUserRole === 2 && (
+                    {props.thisUserRole === 2 && (
                         <button
                             className="bigButton"
                             onClick={() => changeUserStatus("owner")}
@@ -146,7 +126,7 @@ function MemberOptions(): React.JSX.Element {
                             Transfer ownership
                         </button>
                     )}
-                    {thisUserRole === 2 && !selectedUser.admin && (
+                    {props.thisUserRole === 2 && !selectedUser.admin && (
                         <button
                             className="bigButton"
                             onClick={() => changeUserStatus("admin")}
@@ -154,7 +134,7 @@ function MemberOptions(): React.JSX.Element {
                             Make Admin
                         </button>
                     )}
-                    {thisUserRole === 2 && selectedUser.admin && (
+                    {props.thisUserRole === 2 && selectedUser.admin && (
                         <button
                             className="bigButton"
                             onClick={() => changeUserStatus("member")}
@@ -164,7 +144,7 @@ function MemberOptions(): React.JSX.Element {
                     )}
                 </div>
 
-                {thisUserRole > selectedUserRole && (
+                {props.thisUserRole > selectedUserRole && (
                     <div className="memberOptionsButtonsDiv">
                         <button
                             className="bigButton"

@@ -1,3 +1,12 @@
+// only frontend use
+
+export enum ChatRole {
+    owner = 3,
+    admin = 2,
+    member = 1,
+    banned = 0,
+}
+
 // to backend
 
 export class SendMessageDTO {
@@ -90,6 +99,7 @@ export class ChatUserDTO {
     admin: boolean;
     blocked: boolean;
     muted: boolean;
+    mutedUntil?: Date;
     banned: boolean;
 }
 
@@ -130,6 +140,16 @@ export class ChatListDTO {
 
     constructor(chatName: string, chatId: number) {
         this.chatName = chatName;
+        this.chatId = chatId;
+    }
+}
+
+// socket events
+
+export class ChatIdDTO {
+    chatId: number;
+
+    constructor(chatId: number) {
         this.chatId = chatId;
     }
 }
