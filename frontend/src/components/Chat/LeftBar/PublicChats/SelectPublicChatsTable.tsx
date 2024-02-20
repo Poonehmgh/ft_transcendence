@@ -38,12 +38,12 @@ function SelectPublicChatsTable({ closeModal }): React.JSX.Element {
             password = prompt("Enter chat password");
             if (password === null) return;
         }
-        const inviteUserDTO: InviteUserDTO = {
+        const inviteUserDto: InviteUserDTO = {
             chatId: chat.id,
             userId: userId,
             password: password,
         };
-        socket.emit("inviteUser", inviteUserDTO);
+        socket.emit("inviteUser", inviteUserDto);
         console.log("chatId", chat.id);
         changeActiveChat(chat.id);
         closeModal();

@@ -21,14 +21,12 @@ function ChatList(): React.JSX.Element {
     }
 
     if (!myChats) return <p>Loading...</p>;
-    console.log("blockedUsers", blockedUsers);
-    console.log("myChats: chatuseers", myChats.map((e) => e.chatUsers));
 
     const filteredChats = myChats.filter((chat) => {
         return (
             !chat.dm ||
             !chat.chatUsers?.some((chatUser: ChatUserDTO) =>
-                blockedUsers?.some((blockedUser: IdAndNameDTO) => blockedUser.id === chatUser.userId)
+                blockedUsers?.some((blockedUser: IdAndNameDTO) => blockedUser?.id === chatUser?.userId)
             )
         );
     });

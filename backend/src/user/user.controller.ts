@@ -16,15 +16,17 @@ import {
     Delete,
 } from "@nestjs/common";
 import { Response } from "express";
-import { UserRelation, IdAndNameDTO, UserProfileDTO, ChangeNameDTO } from "./user-dto";
 import { UserService } from "./user.service";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from "multer";
 import * as path from "path";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
-import { MatchDTO } from "src/match/match-dto";
-import { reqUser, AuthenticatedRequest } from "src/shared/dto";
 import { ChatGatewayService } from "src/chat/chat.gateway.service";
+
+// DTO
+import { MatchDTO } from "src/match/match-dto";
+import { UserRelation, IdAndNameDTO, UserProfileDTO, ChangeNameDTO } from "./user-dto";
+import { reqUser, AuthenticatedRequest } from "src/shared/dto";
 
 @Controller("user")
 @UseGuards(JwtAuthGuard)
@@ -144,13 +146,13 @@ export class UserController {
     @Patch("change_name")
     async changeName(
         @Req() req: AuthenticatedRequest,
-        @Body() changeNameDTO: ChangeNameDTO,
+        @Body() changeNameDto: ChangeNameDTO,
         @Res() res: Response
     ) {
         try {
             const result = await this.userService.changeName(
                 req.user.id,
-                changeNameDTO.newName
+                changeNameDto.newName
             );
             if (!result.success) {
                 res.status(500).json({ message: result.message });

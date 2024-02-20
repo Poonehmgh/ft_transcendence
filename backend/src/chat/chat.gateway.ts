@@ -55,7 +55,7 @@ export class ChatGateway implements OnModuleInit, OnGatewayDisconnect {
         @MessageBody() message: SendMessageDTO
     ) {
         console.log("sendMessage chat socket api: ", message);
-        const messageID: number = await this.chatGatewayService.addMessageToChat(message);
+        await this.chatGatewayService.addMessageToChat(message);
         // should be optimized to directly send the message to the chat
         // currently, the entire chat is refetched by frontend upon receiving a new message
         await this.chatGatewayService.sendEventToChat(message.chatId, "newMessage");
@@ -69,6 +69,16 @@ export class ChatGateway implements OnModuleInit, OnGatewayDisconnect {
         console.log("inviteUser:", message);
         await this.chatGatewayService.inviteUserToChat(message, client);
     }
+
+    @SubscribeMessage("joinChat")
+    async JoinChat(
+        @ConnectedSocket() client: Socket,
+        @MessageBody() message: InviteUserDTO
+    ) {
+        console.log("joinChat:", message);
+        await this.chatGatewayService.inviteUserToChat(message, client);
+    }
+
 
     @SubscribeMessage("changeChatUserStatus")
     async changeUsersInChatStatus(

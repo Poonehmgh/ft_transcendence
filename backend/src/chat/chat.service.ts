@@ -17,6 +17,7 @@ import {
 } from "./chat.DTOs";
 import e from "express";
 import { Chat } from "@prisma/client";
+import { ChangeNameDTO } from "src/user/user-dto";
 
 @Injectable()
 export class ChatService {

@@ -117,7 +117,6 @@ export class ChatGatewayService {
         }
     }
 
-    //maybe add protection so users not in chat cant update it
     async addMessageToChat(data: SendMessageDTO) {
         try {
             if (!(await this.IsUserInChat(data.chatId, data.userId))) {
@@ -126,6 +125,10 @@ export class ChatGatewayService {
             }
             if (await this.isUserMuted(data.chatId, data.userId)) {
                 console.log("user is muted");
+                return -1;
+            }
+            if (await this.isUserBanned(data.chatId, data.userId)) {
+                console.log("user is banned");
                 return -1;
             }
             const message = await this.prisma.message.create({
@@ -156,7 +159,7 @@ export class ChatGatewayService {
         }
     }
 
-    async setUserSocketId(userId: number, socketId: string) {
+/*     async setUserSocketId(userId: number, socketId: string) {
         try {
             await this.prisma.user.updateMany({
                 where: {
@@ -169,9 +172,9 @@ export class ChatGatewayService {
         } catch (error) {
             console.log(`error in setUserSocketId: ${error.message}`);
         }
-    }
+    } */
 
-    async deleteUserSocketID(userID: number) {
+  /*   async deleteUserSocketID(userID: number) {
         try {
             await this.prisma.user.updateMany({
                 where: {
@@ -184,7 +187,7 @@ export class ChatGatewayService {
         } catch (error) {
             console.log(`error in deleteUserSocketID: ${error.message}`);
         }
-    }
+    } */
 
     /*    sendMessageToIDList(
         userIdList: number[],
@@ -298,6 +301,7 @@ export class ChatGatewayService {
         if (chat) return true;
         return false;
     }
+    
     async checkIsPossibleToAddInChatWithPassword(
         inviteForm: InviteUserDTO,
         inviter: Socket
@@ -323,6 +327,22 @@ export class ChatGatewayService {
             (await this.checkIsPossibleToAddInChatWithPassword(inviteForm, inviter))
         ) {
             var chatUser = await this.prisma.chat_User.create({
+                data: {
+                    chatId: inviteForm.chatId,
+                    userId: inviteForm.userId,
+                },
+            });
+            if (chatUser) await this.sendEventToChat(inviteForm.chatId, "updateChat");
+        }
+    }
+
+    async joinChat(inviteForm: InviteUserDTO, inviter: Socket) {
+        if (
+            !(await this.IsUserInChat(inviteForm.chatId, inviteForm.userId)) &&
+            !(await this.isUserBanned(inviteForm.chatId, inviteForm.userId)) &&
+            (await this.checkIsPossibleToAddInChatWithPassword(inviteForm, inviter))
+        ) {
+            const chatUser = await this.prisma.chat_User.create({
                 data: {
                     chatId: inviteForm.chatId,
                     userId: inviteForm.userId,
