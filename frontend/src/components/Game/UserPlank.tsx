@@ -15,9 +15,8 @@ import "../../styles/gamev2.css";
 function UserPlank(props) {
   const { userData, newRound, isPlayerOne, socket } = props;
   const plankHeight = "15%";
-  const plankHeightNumber = 15;
   const plankWidth = "2.5%";
-  const [plankPosition, setPlankPosition] = useState(96 - plankHeightNumber);
+  const [plankPosition, setPlankPosition] = useState(81);
 
   useEffect(() => {
     if (newRound) {
