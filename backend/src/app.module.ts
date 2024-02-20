@@ -15,10 +15,12 @@ import { UserService } from "./user/user.service";
 
 import { ChatModule } from "./chat/chat.module";
 import { ChatGatewayService } from "./chat/chat.gateway.service";
+import { ChatController } from "./chat/chat.controller";
+import { ChatService } from "./chat/chat.service";
 
 @Module({
-  imports: [UserModule, PrismaModule, AuthModule, GameGatewayModule, ChatModule],
-  controllers: [AppController, UserController],
-  providers: [AppService, PrismaService, UserService, ChatGatewayService ],
+    imports: [UserModule, PrismaModule, AuthModule, GameGatewayModule, ChatModule],
+    controllers: [AppController, UserController, ChatController],
+    providers: [AppService, PrismaService, UserService, ChatService, ChatGatewayService],
 })
 export class AppModule {}

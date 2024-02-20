@@ -94,10 +94,10 @@ export async function fetchWrapper<T>(
                 window.location.href = "/home";
             }
             console.error(`${apiUrl}: ${response.status}`);
-            const errorMessage = {
+           /*  const errorMessage = {
                 message: `Error ${response.status}: ${response.statusText}`,
             };
-            return errorMessage;
+            return errorMessage; */
         }
         
         return await response.json();
