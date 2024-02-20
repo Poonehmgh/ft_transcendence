@@ -286,14 +286,14 @@ export class ChatGatewayService {
                 id: chatId,
             },
         });
-        return chat.password;
+        return chat.passwordHash;
     }
 
     async isChatPassworded(chatId: number) {
         const chat = await this.prisma.chat.findFirst({
             where: {
                 id: chatId,
-                password: {
+                passwordHash: {
                     not: null,
                 },
             },

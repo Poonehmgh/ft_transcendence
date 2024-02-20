@@ -287,7 +287,7 @@ export class ChatInfoDTO {
             chat.name,
             chat.dm,
             chat.isPrivate,
-            !!chat.password
+            !!chat.passwordHash
         );
     }
 }
@@ -325,7 +325,7 @@ export class ChatDTO {
             chat.name,
             chat.dm,
             chat.isPrivate,
-            !!chat.password,
+            !!chat.passwordHash,
             [],
             []
         );

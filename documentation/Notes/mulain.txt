@@ -39,6 +39,9 @@ Meeting
 
 IMMEDIATE MULAIN
 - pw hash
+    - on chat creation
+    - change password
+    - active join password
 - rerender on getting kicked: memberlist not rerendering
 - have to refresh before memberlist renders, but only sometimes?!
 - react to inviteEmission

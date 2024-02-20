@@ -3,7 +3,7 @@ import { PrismaService } from "../prisma/prisma.service";
 import { ChatGatewayService } from "./chat.gateway.service";
 import { UserService } from "src/user/user.service";
 
-import { hashSync } from "bcryptjs";
+import { genSaltSync, hashSync } from "bcryptjs";
 
 import {
     Chat_ChatUser,
@@ -120,7 +120,7 @@ export class ChatService {
                     name: chatName || "Unnamed Chat",
                     dm: chat.dm,
                     isPrivate: chat.isPrivate,
-                    passwordRequired: !!chat.password,
+                    passwordRequired: !!chat.passwordHash,
                     chatUsers: chat.chatUsers,
                 };
             });
@@ -299,7 +299,7 @@ export class ChatService {
                 name: dynamicChatName,
                 dm: chat.dm,
                 isPrivate: chat.isPrivate,
-                passwordRequired: !!chat.password,
+                passwordRequired: !!chat.passwordHash,
                 chatUsers: extendedChatUsers,
                 messages: chat.messages.reverse().map((message) => {
                     return MessageDTO.fromMessage(message);
@@ -359,7 +359,7 @@ export class ChatService {
                     name: "DM",
                     dm: true,
                     isPrivate: true,
-                    password: null,
+                    passwordHash: null,
                     chatUsers: {
                         createMany: {
                             data: newChatDto.userIds.map((e) => ({
@@ -368,7 +368,6 @@ export class ChatService {
                                 admin: false,
                                 muted: false,
                                 blocked: false,
-                                invited: e === creatorId ? false : true,
                             })),
                         },
                     },
@@ -390,6 +389,7 @@ export class ChatService {
         newChatDto: NewChatDTO
     ): Promise<ChatInfoDTO | null> {
         console.log("createGroupChat called for users:", newChatDto.userIds);
+        let salt: string = null;
 
         const userNames: string[] = await Promise.all(
             newChatDto.userIds.map(async (e) => await this.userService.getNameById(e))
@@ -397,7 +397,10 @@ export class ChatService {
         const firstThreeNames: string[] = userNames.slice(0, 3);
         const omittedCount: number = userNames.length - 3;
 
-        //newChatDto.password = hashSync(newChatDto.password, "salt");
+        if (newChatDto.password) {
+            salt = genSaltSync(10);
+            newChatDto.password = hashSync(newChatDto.password, salt);
+        }
 
         const newChatName = `Chat with ${firstThreeNames.join(", ")}${
             omittedCount > 0 ? ` and ${omittedCount} more` : ""
@@ -408,7 +411,8 @@ export class ChatService {
                 name: newChatName,
                 dm: false,
                 isPrivate: newChatDto.isPrivate,
-                password: newChatDto.password,
+                passwordHash: newChatDto.password,
+                passwordSalt: salt,
                 chatUsers: {
                     createMany: {
                         data: newChatDto.userIds.map((e) => ({
@@ -417,7 +421,6 @@ export class ChatService {
                             admin: e === creatorId ? true : false,
                             muted: false,
                             blocked: false,
-                            invited: e === creatorId ? false : true,
                         })),
                     },
                 },
@@ -427,11 +430,11 @@ export class ChatService {
             },
         });
 
-        const password_required = newChat.password !== null;
+        const passwordRequired = newChat.passwordHash !== null;
 
         return {
             ...newChat,
-            passwordRequired: password_required,
+            passwordRequired: passwordRequired,
         };
     }
 
@@ -512,7 +515,7 @@ export class ChatService {
                         id: Number(chatId),
                     },
                     data: {
-                        password: null,
+                        passwordHash: null,
                     },
                 });
                 return { message: "Password removed" };
@@ -542,7 +545,7 @@ export class ChatService {
                         id: Number(chatId),
                     },
                     data: {
-                        password,
+                        passwordHash: password,
                     },
                 });
                 return { message: "Password changed" };
