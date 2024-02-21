@@ -131,6 +131,25 @@ export class AuthService {
         return token;
     }
 
+    async generateRefrehToken(payload: {id: number, email: string, name: string, twoFa: boolean}) {
+        const refreshToken = await this.jwt.signAsync(payload,
+            {
+                secret: jwtSecret,
+                expiresIn: jwtExpire,
+            });
+
+        const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
+
+
+        await this.prisma.user.update({
+            where: { id: payload.id },
+            data: { refreshToken: hashedRefreshToken }
+        });
+
+        return refreshToken;
+    }
+
+
     async generateTwoFaQRCode(user, secret){
         const url = await this.otpAuthUrl(user.email, secret);
         const qrcode = await this.generateQRCode(url);

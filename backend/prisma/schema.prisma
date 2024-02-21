@@ -29,6 +29,7 @@ model User {
     friendReq_in  Int[]
     blocked       Int[]
     userChats     Chat_User[]
+    refreshToken String?
 }
 
 model Match {
