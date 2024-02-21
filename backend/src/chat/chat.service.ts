@@ -2,8 +2,7 @@ import { HttpStatus, Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import { ChatGatewayService } from "./chat.gateway.service";
 import { UserService } from "src/user/user.service";
-
-import { hashSync } from "bcryptjs";
+import { genSaltSync, hashSync } from "bcryptjs";
 
 import {
     Chat_ChatUser,
@@ -15,9 +14,7 @@ import {
     ChatDTO,
     ExtendedChatUserDTO,
 } from "./chat.DTOs";
-import e from "express";
 import { Chat } from "@prisma/client";
-import { ChangeNameDTO } from "src/user/user-dto";
 
 @Injectable()
 export class ChatService {
@@ -120,7 +117,7 @@ export class ChatService {
                     name: chatName || "Unnamed Chat",
                     dm: chat.dm,
                     isPrivate: chat.isPrivate,
-                    passwordRequired: !!chat.password,
+                    passwordRequired: !!chat.passwordHash,
                     chatUsers: chat.chatUsers,
                 };
             });
@@ -256,7 +253,6 @@ export class ChatService {
             where: {
                 chatId: Number(chatId),
                 banned: false,
-                blocked: false,
             },
         });
 
@@ -299,7 +295,7 @@ export class ChatService {
                 name: dynamicChatName,
                 dm: chat.dm,
                 isPrivate: chat.isPrivate,
-                passwordRequired: !!chat.password,
+                passwordRequired: !!chat.passwordHash,
                 chatUsers: extendedChatUsers,
                 messages: chat.messages.reverse().map((message) => {
                     return MessageDTO.fromMessage(message);
@@ -359,7 +355,7 @@ export class ChatService {
                     name: "DM",
                     dm: true,
                     isPrivate: true,
-                    password: null,
+                    passwordHash: null,
                     chatUsers: {
                         createMany: {
                             data: newChatDto.userIds.map((e) => ({
@@ -367,7 +363,6 @@ export class ChatService {
                                 owner: false,
                                 admin: false,
                                 muted: false,
-                                blocked: false,
                             })),
                         },
                     },
@@ -389,6 +384,7 @@ export class ChatService {
         newChatDto: NewChatDTO
     ): Promise<ChatInfoDTO | null> {
         console.log("createGroupChat called for users:", newChatDto.userIds);
+        let salt: string = null;
 
         const userNames: string[] = await Promise.all(
             newChatDto.userIds.map(async (e) => await this.userService.getNameById(e))
@@ -396,7 +392,10 @@ export class ChatService {
         const firstThreeNames: string[] = userNames.slice(0, 3);
         const omittedCount: number = userNames.length - 3;
 
-        //newChatDto.password = hashSync(newChatDto.password, "salt");
+        if (newChatDto.password) {
+            salt = genSaltSync(10);
+            newChatDto.password = hashSync(newChatDto.password, salt);
+        }
 
         const newChatName = `Chat with ${firstThreeNames.join(", ")}${
             omittedCount > 0 ? ` and ${omittedCount} more` : ""
@@ -407,7 +406,8 @@ export class ChatService {
                 name: newChatName,
                 dm: false,
                 isPrivate: newChatDto.isPrivate,
-                password: newChatDto.password,
+                passwordHash: newChatDto.password,
+                passwordSalt: salt,
                 chatUsers: {
                     createMany: {
                         data: newChatDto.userIds.map((e) => ({
@@ -415,7 +415,6 @@ export class ChatService {
                             owner: e === creatorId ? true : false,
                             admin: e === creatorId ? true : false,
                             muted: false,
-                            blocked: false,
                         })),
                     },
                 },
@@ -425,11 +424,11 @@ export class ChatService {
             },
         });
 
-        const password_required = newChat.password !== null;
+        const passwordRequired = newChat.passwordHash !== null;
 
         return {
             ...newChat,
-            passwordRequired: password_required,
+            passwordRequired: passwordRequired,
         };
     }
 
@@ -510,7 +509,7 @@ export class ChatService {
                         id: Number(chatId),
                     },
                     data: {
-                        password: null,
+                        passwordHash: null,
                     },
                 });
                 return { message: "Password removed" };
@@ -524,7 +523,10 @@ export class ChatService {
     }
 
     async changePassword(userId: number, chatId: number, password: string) {
+        console.log("changePassword called");
         try {
+            let salt: string = null;
+
             const chat = await this.prisma.chat.findUniqueOrThrow({
                 where: {
                     id: Number(chatId),
@@ -534,13 +536,17 @@ export class ChatService {
                 },
             });
 
+            const newSalt = genSaltSync(10);
+            const newPasswordHash = hashSync(password, newSalt);
+
             if (chat.chatUsers.find((e) => e.userId === userId && e.owner)) {
                 await this.prisma.chat.update({
                     where: {
                         id: Number(chatId),
                     },
                     data: {
-                        password,
+                        passwordHash: newPasswordHash,
+                        passwordSalt: newSalt,
                     },
                 });
                 return { message: "Password changed" };

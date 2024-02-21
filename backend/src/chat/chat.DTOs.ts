@@ -95,7 +95,7 @@ export class MessageDTO {
     }
 }
 
-export class ParticipantListElementDTO {
+/* export class ParticipantListElementDTO {
     userName: string;
     userId: number;
     owner: boolean;
@@ -116,7 +116,7 @@ export class ParticipantListElementDTO {
         this.admin = admin;
         this.online = online;
     }
-}
+} */
 
 export class SendMessageDTO {
     chatId: number;
@@ -152,7 +152,6 @@ export class ChatUserDTO {
     chatId: number;
     owner: boolean;
     admin: boolean;
-    blocked: boolean;
     muted: boolean;
     mutedUntil?: Date;
     banned: boolean;
@@ -162,7 +161,6 @@ export class ChatUserDTO {
         chatId: number,
         owner: boolean,
         admin: boolean,
-        blocked: boolean,
         muted: boolean,
         mutedUntil: Date,
         banned: boolean
@@ -171,7 +169,6 @@ export class ChatUserDTO {
         this.chatId = chatId;
         this.owner = owner;
         this.admin = admin;
-        this.blocked = blocked;
         this.muted = muted;
         this.mutedUntil = mutedUntil;
         this.banned = banned;
@@ -183,7 +180,6 @@ export class ChatUserDTO {
             chatUser.chatId,
             chatUser.owner,
             chatUser.admin,
-            chatUser.blocked,
             chatUser.muted,
             chatUser.muted_until,
             chatUser.banned
@@ -210,7 +206,6 @@ export class ExtendedChatUserDTO {
         // chatName: string | null,
         owner: boolean,
         admin: boolean,
-        blocked: boolean,
         muted: boolean,
         mutedUntil: Date,
         invited: boolean
@@ -221,7 +216,6 @@ export class ExtendedChatUserDTO {
         //this.chatName = chatName;
         this.owner = owner;
         this.admin = admin;
-        this.blocked = blocked;
         this.muted = muted;
         this.mutedUntil = mutedUntil;
         this.banned = invited;
@@ -242,7 +236,6 @@ export class ExtendedChatUserDTO {
             //chatName,
             chatUser.owner,
             chatUser.admin,
-            chatUser.blocked,
             chatUser.muted,
             chatUser.muted_until,
             chatUser.banned
@@ -287,7 +280,7 @@ export class ChatInfoDTO {
             chat.name,
             chat.dm,
             chat.isPrivate,
-            !!chat.password
+            !!chat.passwordHash
         );
     }
 }
@@ -325,14 +318,14 @@ export class ChatDTO {
             chat.name,
             chat.dm,
             chat.isPrivate,
-            !!chat.password,
+            !!chat.passwordHash,
             [],
             []
         );
     }
 }
 
-export class InviteUserDTO {
+export class JoinChatDTO {
     chatId: number;
     userId: number;
     password: string;

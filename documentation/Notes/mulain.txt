@@ -10,6 +10,8 @@
     - test banned
     - kick from chat
     - test unbanned
+    - test password
+    - test password after change
 - stress test game
 - test 2fa auth
 - test login with taken name
@@ -24,32 +26,22 @@
 - clean up unneccesary files
 - clean up folder structure frontend
 - clean up folder structure backend
-- complete implementation of game invite function
-    - backend structure
-    - frontend: navigate to game page after invite? how to handle this
 
 
-Meeting
-    - List of duties to help Fedia
-    - Can remove socket from user model?
-    - invite to game interaction
-    - update prisma on game finish
-    - muted until?
+
 
 
 IMMEDIATE MULAIN
-- pw hash
+- handle game invites
 - rerender on getting kicked: memberlist not rerendering
+- memberlist also not rerendering on joining public chat sometimes?! dafuq?
 - have to refresh before memberlist renders, but only sometimes?!
-- react to inviteEmission
-- get chat message names not from chat but from backend? (Problem: user left chat/ kicked etc)
 
 
-After testing complete:
-- remove socket from user model
-- remove functions that put socket into user model in backend
+
 
 - Optimization (optional)
+    - get chat message names not from chat but from backend? (Problem: user left chat/ kicked etc)
     - remove password functionality from non public chats:
         you cant join them anyway if you are not invited
     - add invite more users function to chats (that are not dms)
