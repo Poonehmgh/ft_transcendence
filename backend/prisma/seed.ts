@@ -51,7 +51,7 @@ async function main() {
             id: 0,
             name: "pongers public channel",
             dm: false,
-            password: null,
+            passwordHash: null,
             isPrivate: false,
             chatUsers: {
                 create: [
@@ -59,12 +59,19 @@ async function main() {
                         userId: 42,
                         owner: true,
                         admin: true,
-                        blocked: false,
                         muted: false,
-                        invited: false,
                     },
                 ],
             },
+        },
+    });
+
+    await prisma.message.create({
+        data: {
+            id: 0,
+            content: "Welcome to pongers public channel!",
+            chatId: 0,
+            author: 42,
         },
     });
 }
