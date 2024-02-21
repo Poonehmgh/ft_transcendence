@@ -64,6 +64,7 @@ export class ChatGateway implements OnModuleInit, OnGatewayDisconnect {
     }
 
     // currently not used, because a user can only invite another user upon chat creation
+    // and that doesnt need any checks and is handled over API
     // maybe later implement a function to add users to a chat after creation
     // useful, but not required by project
     @SubscribeMessage("inviteUser")
@@ -71,8 +72,8 @@ export class ChatGateway implements OnModuleInit, OnGatewayDisconnect {
         @ConnectedSocket() client: Socket,
         @MessageBody() message: JoinChatDTO
     ) {
-        console.log("inviteUser:", message);
-        await this.chatGatewayService.inviteUserToChat(message, client);
+        console.log("inviteUser (INACTIVE):", message);
+        //await this.chatGatewayService.inviteUserToChat(message, client);
     }
 
     @SubscribeMessage("joinChat")
@@ -81,7 +82,7 @@ export class ChatGateway implements OnModuleInit, OnGatewayDisconnect {
         @MessageBody() message: JoinChatDTO
     ) {
         console.log("joinChat:", message);
-        //await this.chatGatewayService.joinChat(message, client);
+        await this.chatGatewayService.joinChat(message);
     }
 
     @SubscribeMessage("changeChatUserStatus")

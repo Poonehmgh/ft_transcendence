@@ -253,7 +253,6 @@ export class ChatService {
             where: {
                 chatId: Number(chatId),
                 banned: false,
-                blocked: false,
             },
         });
 
@@ -364,7 +363,6 @@ export class ChatService {
                                 owner: false,
                                 admin: false,
                                 muted: false,
-                                blocked: false,
                             })),
                         },
                     },

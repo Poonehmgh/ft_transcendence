@@ -120,6 +120,20 @@ export class ChatGatewayService {
 
     // checkers
 
+    isUserinChat(chat: Chat_ChatUser, userId: number) {
+        return chat.chatUsers.find((user) => user.userId === userId);
+    }
+
+    isUserBanned(chat: Chat_ChatUser, userId: number) {
+        return chat.chatUsers.find((user) => user.userId === userId && user.banned);
+    }
+
+    isPasswordCorrect(chat: Chat_ChatUser, passwordInput: string) {
+        const result = compareSync(passwordInput, chat.passwordHash);
+        console.log("checkPassword result:", result ? "correct" : "incorrect");
+        return result;
+    }
+
     async isUserInChat_prisma(chatId: number, userId: number) {
         const chatUser = await this.prisma.chat_User.findFirst({
             where: {
@@ -172,6 +186,45 @@ export class ChatGatewayService {
     }
 
     // manipulation
+
+    async joinChat(joinChatDto: JoinChatDTO) {
+        try {
+            const chat = await this.prisma.chat.findUnique({
+                where: {
+                    id: joinChatDto.chatId,
+                },
+                include: {
+                    chatUsers: true,
+                },
+            });
+
+            if (this.isUserinChat(chat, joinChatDto.userId)) {
+                throw new Error("User is already in chat");
+            }
+            if (this.isUserBanned(chat, joinChatDto.userId)) {
+                throw new Error("User is banned from chat");
+            }
+            if (chat.passwordHash != null) {
+                if (!this.isPasswordCorrect(chat, joinChatDto.password)) {
+                    throw new Error("Password is incorrect");
+                }
+            }
+
+            const chatUser = await this.prisma.chat_User.create({
+                data: {
+                    chatId: joinChatDto.chatId,
+                    userId: joinChatDto.userId,
+                },
+            });
+
+            await this.sendEventToChat(joinChatDto.chatId, "updateChat");
+        } catch (error) {
+            console.log(`error in joinChat: ${error.message}`);
+            await this.sendDataEventToList([joinChatDto.userId], "errorAlert", {
+                message: error.message,
+            });
+        }
+    }
 
     async addMessageToChat(data: SendMessageDTO) {
         try {
@@ -245,17 +298,17 @@ export class ChatGatewayService {
     // sending
 
     async sendDataEventToList(recipientIds: number[], event: string, data: any) {
-        console.log("sendDataUpdate. recipientIds:", recipientIds);
+        console.log("sendDataEventToList: ", recipientIds);
         for (const id of recipientIds) {
             const socket: Socket = this.getUserSocketFromUserId(id);
             console.log(`socket for ${id}: ${socket?.id}`);
             if (socket) {
                 console.log(
-                    "sendDataUpdate: sending",
+                    "sendDataEventToList: sending",
                     event,
-                    "to user",
+                    "to user:",
                     id,
-                    "with data",
+                    "with data:",
                     data
                 );
                 socket.emit(event, data);
@@ -263,7 +316,7 @@ export class ChatGatewayService {
         }
     }
 
-    // not for transmitting data, just informs all members of the chat about an event
+    // not for transmitting data, just sends an event (payload chatId) to all active members of a chat
     async sendEventToChat(chatId: number, event: string) {
         try {
             const chat = await this.prisma.chat.findUnique({
@@ -295,7 +348,7 @@ export class ChatGatewayService {
 
     // unordered
 
-    async getPasswordFromChat(chatId: number) {
+    /*  async getPasswordFromChat(chatId: number) {
         const chat = await this.prisma.chat.findUnique({
             where: {
                 id: chatId,
@@ -315,9 +368,9 @@ export class ChatGatewayService {
         });
         if (chat) return true;
         return false;
-    }
+    } */
 
-    async checkIsPossibleToAddInChatWithPassword(
+    /*    async checkIsPossibleToAddInChatWithPassword(
         inviteForm: JoinChatDTO,
         inviter: Socket
     ) {
@@ -333,9 +386,9 @@ export class ChatGatewayService {
             return true;
         }
         return false;
-    }
+    } */
 
-    async inviteUserToChat(inviteForm: JoinChatDTO, inviter: Socket) {
+    /*   async inviteUserToChat(inviteForm: JoinChatDTO, inviter: Socket) {
         if (
             !(await this.isUserInChat_prisma(inviteForm.chatId, inviteForm.userId)) &&
             !(await this.isUserBanned_prisma(inviteForm.chatId, inviteForm.userId)) &&
@@ -349,59 +402,7 @@ export class ChatGatewayService {
             });
             if (chatUser) await this.sendEventToChat(inviteForm.chatId, "updateChat");
         }
-    }
-
-    isUserinChat(chat: Chat_ChatUser, userId: number) {
-        return chat.chatUsers.find((user) => user.userId === userId);
-    }
-
-    isUserBanned(chat: Chat_ChatUser, userId: number) {
-        return chat.chatUsers.find((user) => user.userId === userId && user.banned);
-    }
-
-    isPasswordCorrect(chat: Chat_ChatUser, passwordInput: string) {
-        const hashedPasswordInput = hashSync(passwordInput, chat.passwordSalt);
-        const result = compareSync(hashedPasswordInput, chat.passwordHash);
-        console.log("checkPassword result:", result ? "correct" : "incorrect");
-        return result;
-    }
-
-    async joinChat(joinChatDto: JoinChatDTO) {
-        try {
-            const chat = await this.prisma.chat.findUnique({
-                where: {
-                    id: joinChatDto.chatId,
-                },
-                include: {
-                    chatUsers: true,
-                },
-            });
-
-            if (this.isUserinChat(chat, joinChatDto.userId)) {
-                return { message: "User is already in chat" };
-            }
-            if (this.isUserBanned(chat, joinChatDto.userId)) {
-                return { message: "User is banned from chat" };
-            }
-            if (chat.passwordHash != null) {
-                if (!this.isPasswordCorrect(chat, joinChatDto.password)) {
-                    return { message: "Password is incorrect" };
-                }
-            }
-
-            const chatUser = await this.prisma.chat_User.create({
-                data: {
-                    chatId: joinChatDto.chatId,
-                    userId: joinChatDto.userId,
-                },
-            });
-
-            await this.sendEventToChat(joinChatDto.chatId, "updateChat");
-        } catch (error) {
-            console.log(`error in joinChat: ${error.message}`);
-            throw error;
-        }
-    }
+    } */
 
     async getChatUserObjectFromId(userId: number, chatId: number) {
         return this.prisma.chat_User.findFirst({

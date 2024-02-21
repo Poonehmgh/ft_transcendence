@@ -86,7 +86,6 @@ model Chat_User {
     chatId      Int
     owner       Boolean  @default(false)
     admin       Boolean  @default(false)
-    blocked     Boolean  @default(false)
     muted       Boolean  @default(false)
     muted_until DateTime @default(now())
     banned      Boolean  @default(false)
