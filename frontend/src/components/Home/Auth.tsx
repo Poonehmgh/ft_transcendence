@@ -37,8 +37,7 @@ const Auth = () => {
                     ).then(data=>{
                         const token = data.token;
                         document.cookie = `token=${token}`;
-                        // window.location.href = process.env.REACT_APP_FRONTEND_URL + "/home";
-                        window.location.href = "http://localhost:3000/home";
+                        window.location.href = process.env.REACT_APP_FRONTEND_URL + "/home";
                     }
                         ).catch((error) =>{
                             console.error('Error authenticating:', error);
