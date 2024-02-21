@@ -28,7 +28,7 @@ export class NewChatDTO {
     userIds: number[];
 }
 
-export class InviteUserDTO {
+export class JoinChatDTO {
     chatId: number;
     userId: number;
     password: string;

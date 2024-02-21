@@ -1,16 +1,18 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
+import { Socket } from "socket.io";
+import { compareSync, hashSync } from "bcryptjs";
+import { userGateway } from "./userGateway";
+
+// DTO
 import {
     ChangeChatUserStatusDTO,
-    ChatListDTO,
+    ChatDTO,
     ChatIdDTO,
-    CreateNewChatDTO,
-    InviteUserDTO,
+    Chat_ChatUser,
+    JoinChatDTO,
     SendMessageDTO,
 } from "./chat.DTOs";
-import { Socket } from "socket.io";
-import { hashSync } from "bcryptjs";
-import { userGateway } from "./userGateway";
 
 @Injectable()
 export class ChatGatewayService {
@@ -24,6 +26,7 @@ export class ChatGatewayService {
             console.log("User", user.userID, "on socket", user.socket.id);
         });
     }
+
     async setAllUsersOffline(): Promise<void> {
         await this.prisma.user.updateMany({
             data: {
@@ -31,6 +34,65 @@ export class ChatGatewayService {
             },
         });
     }
+
+    async setUserOnlineStatus(userID: number, status: boolean) {
+        try {
+            await this.prisma.user.updateMany({
+                where: {
+                    id: Number(userID),
+                },
+                data: {
+                    online: Boolean(status),
+                },
+            });
+        } catch (error) {
+            console.log(`error in setUserOnlineStatus: ${error.message}`);
+        }
+    }
+
+    deleteUserFromList(userIDToDelete: number) {
+        ChatGatewayService.connectedUsers = ChatGatewayService.connectedUsers.filter(
+            (userGateway) => userGateway.userID !== userIDToDelete
+        );
+    }
+
+    addUserToList(user: userGateway) {
+        ChatGatewayService.connectedUsers.push(user);
+    }
+
+    // storing socket for game
+
+    async setUserSocketId(userId: number, socketId: string) {
+        try {
+            await this.prisma.user.updateMany({
+                where: {
+                    id: Number(userId),
+                },
+                data: {
+                    socketId: String(socketId),
+                },
+            });
+        } catch (error) {
+            console.log(`error in setUserSocketId: ${error.message}`);
+        }
+    }
+
+    async deleteUserSocketID(userID: number) {
+        try {
+            await this.prisma.user.updateMany({
+                where: {
+                    id: Number(userID),
+                },
+                data: {
+                    socketId: "",
+                },
+            });
+        } catch (error) {
+            console.log(`error in deleteUserSocketID: ${error.message}`);
+        }
+    }
+
+    // getters
 
     async getChatNameFromID(chatID: number): Promise<string> {
         const chat = await this.prisma.chat.findFirst({
@@ -56,17 +118,23 @@ export class ChatGatewayService {
         return user ? user.socket : null;
     }
 
-    deleteUserFromList(userIDToDelete: number) {
-        ChatGatewayService.connectedUsers = ChatGatewayService.connectedUsers.filter(
-            (userGateway) => userGateway.userID !== userIDToDelete
-        );
+    // checkers
+
+    isUserinChat(chat: Chat_ChatUser, userId: number) {
+        return chat.chatUsers.find((user) => user.userId === userId);
     }
 
-    addUserToList(user: userGateway) {
-        ChatGatewayService.connectedUsers.push(user);
+    isUserBanned(chat: Chat_ChatUser, userId: number) {
+        return chat.chatUsers.find((user) => user.userId === userId && user.banned);
     }
 
-    async IsUserInChat(chatId: number, userId: number) {
+    isPasswordCorrect(chat: Chat_ChatUser, passwordInput: string) {
+        const result = compareSync(passwordInput, chat.passwordHash);
+        console.log("checkPassword result:", result ? "correct" : "incorrect");
+        return result;
+    }
+
+    async isUserInChat_prisma(chatId: number, userId: number) {
         const chatUser = await this.prisma.chat_User.findFirst({
             where: {
                 userId: userId,
@@ -103,7 +171,7 @@ export class ChatGatewayService {
         return false;
     }
 
-    async isUserBanned(chatId: number, userId: number): Promise<Boolean> {
+    async isUserBanned_prisma(chatId: number, userId: number): Promise<Boolean> {
         const chatUser = await this.prisma.chat_User.findFirst({
             where: {
                 userId: userId,
@@ -117,9 +185,50 @@ export class ChatGatewayService {
         }
     }
 
+    // manipulation
+
+    async joinChat(joinChatDto: JoinChatDTO) {
+        try {
+            const chat = await this.prisma.chat.findUnique({
+                where: {
+                    id: joinChatDto.chatId,
+                },
+                include: {
+                    chatUsers: true,
+                },
+            });
+
+            if (this.isUserinChat(chat, joinChatDto.userId)) {
+                throw new Error("User is already in chat");
+            }
+            if (this.isUserBanned(chat, joinChatDto.userId)) {
+                throw new Error("User is banned from chat");
+            }
+            if (chat.passwordHash != null) {
+                if (!this.isPasswordCorrect(chat, joinChatDto.password)) {
+                    throw new Error("Password is incorrect");
+                }
+            }
+
+            const chatUser = await this.prisma.chat_User.create({
+                data: {
+                    chatId: joinChatDto.chatId,
+                    userId: joinChatDto.userId,
+                },
+            });
+
+            await this.sendEventToChat(joinChatDto.chatId, "updateChat");
+        } catch (error) {
+            console.log(`error in joinChat: ${error.message}`);
+            await this.sendDataEventToList([joinChatDto.userId], "errorAlert", {
+                message: error.message,
+            });
+        }
+    }
+
     async addMessageToChat(data: SendMessageDTO) {
         try {
-            if (!(await this.IsUserInChat(data.chatId, data.userId))) {
+            if (!(await this.isUserInChat_prisma(data.chatId, data.userId))) {
                 console.log("user is not in chat");
                 return -1;
             }
@@ -127,7 +236,7 @@ export class ChatGatewayService {
                 console.log("user is muted");
                 return -1;
             }
-            if (await this.isUserBanned(data.chatId, data.userId)) {
+            if (await this.isUserBanned_prisma(data.chatId, data.userId)) {
                 console.log("user is banned");
                 return -1;
             }
@@ -143,51 +252,6 @@ export class ChatGatewayService {
             console.log(`error in addMessageToChat: ${error.message}`);
         }
     }
-
-    async setUserOnlineStatus(userID: number, status: boolean) {
-        try {
-            await this.prisma.user.updateMany({
-                where: {
-                    id: Number(userID),
-                },
-                data: {
-                    online: Boolean(status),
-                },
-            });
-        } catch (error) {
-            console.log(`error in setUserOnlineStatus: ${error.message}`);
-        }
-    }
-
-/*     async setUserSocketId(userId: number, socketId: string) {
-        try {
-            await this.prisma.user.updateMany({
-                where: {
-                    id: Number(userId),
-                },
-                data: {
-                    socketId: String(socketId),
-                },
-            });
-        } catch (error) {
-            console.log(`error in setUserSocketId: ${error.message}`);
-        }
-    } */
-
-  /*   async deleteUserSocketID(userID: number) {
-        try {
-            await this.prisma.user.updateMany({
-                where: {
-                    id: Number(userID),
-                },
-                data: {
-                    socketId: "",
-                },
-            });
-        } catch (error) {
-            console.log(`error in deleteUserSocketID: ${error.message}`);
-        }
-    } */
 
     /*    sendMessageToIDList(
         userIdList: number[],
@@ -231,18 +295,20 @@ export class ChatGatewayService {
         }
     } */
 
+    // sending
+
     async sendDataEventToList(recipientIds: number[], event: string, data: any) {
-        console.log("sendDataUpdate. recipientIds:", recipientIds);
+        console.log("sendDataEventToList: ", recipientIds);
         for (const id of recipientIds) {
             const socket: Socket = this.getUserSocketFromUserId(id);
             console.log(`socket for ${id}: ${socket?.id}`);
             if (socket) {
                 console.log(
-                    "sendDataUpdate: sending",
+                    "sendDataEventToList: sending",
                     event,
-                    "to user",
+                    "to user:",
                     id,
-                    "with data",
+                    "with data:",
                     data
                 );
                 socket.emit(event, data);
@@ -250,7 +316,7 @@ export class ChatGatewayService {
         }
     }
 
-    // not for transmitting data, just informs all members of the chat about an event
+    // not for transmitting data, just sends an event (payload chatId) to all active members of a chat
     async sendEventToChat(chatId: number, event: string) {
         try {
             const chat = await this.prisma.chat.findUnique({
@@ -280,37 +346,39 @@ export class ChatGatewayService {
         }
     }
 
-    async getPasswordFromChat(chatId: number) {
+    // unordered
+
+    /*  async getPasswordFromChat(chatId: number) {
         const chat = await this.prisma.chat.findUnique({
             where: {
                 id: chatId,
             },
         });
-        return chat.password;
+        return chat.passwordHash;
     }
 
     async isChatPassworded(chatId: number) {
         const chat = await this.prisma.chat.findFirst({
             where: {
                 id: chatId,
-                password: {
+                passwordHash: {
                     not: null,
                 },
             },
         });
         if (chat) return true;
         return false;
-    }
-    
-    async checkIsPossibleToAddInChatWithPassword(
-        inviteForm: InviteUserDTO,
+    } */
+
+    /*    async checkIsPossibleToAddInChatWithPassword(
+        inviteForm: JoinChatDTO,
         inviter: Socket
     ) {
         if (!(await this.isChatPassworded(inviteForm.chatId))) {
             return true;
         }
         const inviterId: number = this.getUserIdFromSocket(inviter);
-        if (await this.IsUserInChat(inviteForm.chatId, inviterId)) {
+        if (await this.isUserInChat_prisma(inviteForm.chatId, inviterId)) {
             return true;
         }
         const hashedPassword = await this.getPasswordFromChat(inviteForm.chatId);
@@ -318,12 +386,12 @@ export class ChatGatewayService {
             return true;
         }
         return false;
-    }
+    } */
 
-    async inviteUserToChat(inviteForm: InviteUserDTO, inviter: Socket) {
+    /*   async inviteUserToChat(inviteForm: JoinChatDTO, inviter: Socket) {
         if (
-            !(await this.IsUserInChat(inviteForm.chatId, inviteForm.userId)) &&
-            !(await this.isUserBanned(inviteForm.chatId, inviteForm.userId)) &&
+            !(await this.isUserInChat_prisma(inviteForm.chatId, inviteForm.userId)) &&
+            !(await this.isUserBanned_prisma(inviteForm.chatId, inviteForm.userId)) &&
             (await this.checkIsPossibleToAddInChatWithPassword(inviteForm, inviter))
         ) {
             var chatUser = await this.prisma.chat_User.create({
@@ -334,23 +402,7 @@ export class ChatGatewayService {
             });
             if (chatUser) await this.sendEventToChat(inviteForm.chatId, "updateChat");
         }
-    }
-
-    async joinChat(inviteForm: InviteUserDTO, inviter: Socket) {
-        if (
-            !(await this.IsUserInChat(inviteForm.chatId, inviteForm.userId)) &&
-            !(await this.isUserBanned(inviteForm.chatId, inviteForm.userId)) &&
-            (await this.checkIsPossibleToAddInChatWithPassword(inviteForm, inviter))
-        ) {
-            const chatUser = await this.prisma.chat_User.create({
-                data: {
-                    chatId: inviteForm.chatId,
-                    userId: inviteForm.userId,
-                },
-            });
-            if (chatUser) await this.sendEventToChat(inviteForm.chatId, "updateChat");
-        }
-    }
+    } */
 
     async getChatUserObjectFromId(userId: number, chatId: number) {
         return this.prisma.chat_User.findFirst({
@@ -379,6 +431,8 @@ export class ChatGatewayService {
         console.log("getStatusToChange:", action);
         return action;
     }
+
+    // role changes
 
     async changeOwner(changeForm: ChangeChatUserStatusDTO) {
         console.log("changeOwner");
@@ -482,13 +536,17 @@ export class ChatGatewayService {
                 banned: changeForm.banned,
             },
         });
-        this.sendDataEventToList([changeForm.userId], "updateChat", new ChatIdDTO(changeForm.chatId));
+        this.sendDataEventToList(
+            [changeForm.userId],
+            "updateChat",
+            new ChatIdDTO(changeForm.chatId)
+        );
         this.sendEventToChat(changeForm.chatId, "updateChat");
     }
 
     async changeUsersInChatStatus(changeForm: ChangeChatUserStatusDTO) {
         try {
-            if (!(await this.IsUserInChat(changeForm.chatId, changeForm.userId))) {
+            if (!(await this.isUserInChat_prisma(changeForm.chatId, changeForm.userId))) {
                 var socket: Socket = this.getUserSocketFromUserId(changeForm.operatorId);
                 socket.emit("error", "User is not in chat");
                 return -1;

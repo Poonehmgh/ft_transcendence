@@ -68,10 +68,12 @@ export function ChatProvider({ children }) {
 
         socket.on("newMessage", handleNewMessageEvent);
         socket.on("updateChat", handleUpdateChatEvent);
+        socket.on("errorAlert", (data) => alert(data.message));
 
         return () => {
             socket.off("newMessage");
             socket.off("updateChat");
+            socket.off("errorAlert");
         };
     }, [socket, activeChat]);
 

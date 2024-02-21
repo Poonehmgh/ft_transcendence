@@ -7,10 +7,12 @@ import {
     WebSocketServer,
 } from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
-import { ChangeChatUserStatusDTO, InviteUserDTO, SendMessageDTO } from "./chat.DTOs";
 import { ChatGatewayService } from "./chat.gateway.service";
 import { userGateway } from "./userGateway";
 import { OnModuleInit } from "@nestjs/common";
+
+// DTO
+import { ChangeChatUserStatusDTO, JoinChatDTO, SendMessageDTO } from "./chat.DTOs";
 
 @WebSocketGateway()
 export class ChatGateway implements OnModuleInit, OnGatewayDisconnect {
@@ -34,7 +36,7 @@ export class ChatGateway implements OnModuleInit, OnGatewayDisconnect {
             this.chatGatewayService.deleteUserFromList(userId);
             this.chatGatewayService.addUserToList(new userGateway(userId, socket));
 
-            // await this.chatGatewayService.setUserSocketId(userId, socket.id);
+            await this.chatGatewayService.setUserSocketId(userId, socket.id);
             await this.chatGatewayService.setUserOnlineStatus(userId, true);
 
             this.chatGatewayService.printConnectedUsers();
@@ -42,7 +44,7 @@ export class ChatGateway implements OnModuleInit, OnGatewayDisconnect {
     }
 
     async handleDisconnect(client: Socket) {
-        console.log("handleDisconnect called");
+        console.log("handleDisconnect");
         const userID = this.chatGatewayService.getUserIdFromSocket(client);
         if (!userID) return;
         await this.chatGatewayService.setUserOnlineStatus(userID, false);
@@ -61,24 +63,27 @@ export class ChatGateway implements OnModuleInit, OnGatewayDisconnect {
         await this.chatGatewayService.sendEventToChat(message.chatId, "newMessage");
     }
 
+    // currently not used, because a user can only invite another user upon chat creation
+    // and that doesnt need any checks and is handled over API
+    // maybe later implement a function to add users to a chat after creation
+    // useful, but not required by project
     @SubscribeMessage("inviteUser")
     async InviteUserToChat(
         @ConnectedSocket() client: Socket,
-        @MessageBody() message: InviteUserDTO
+        @MessageBody() message: JoinChatDTO
     ) {
-        console.log("inviteUser:", message);
-        await this.chatGatewayService.inviteUserToChat(message, client);
+        console.log("inviteUser (INACTIVE):", message);
+        //await this.chatGatewayService.inviteUserToChat(message, client);
     }
 
     @SubscribeMessage("joinChat")
     async JoinChat(
         @ConnectedSocket() client: Socket,
-        @MessageBody() message: InviteUserDTO
+        @MessageBody() message: JoinChatDTO
     ) {
         console.log("joinChat:", message);
-        await this.chatGatewayService.inviteUserToChat(message, client);
+        await this.chatGatewayService.joinChat(message);
     }
-
 
     @SubscribeMessage("changeChatUserStatus")
     async changeUsersInChatStatus(
