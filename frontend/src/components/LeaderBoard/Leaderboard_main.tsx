@@ -26,7 +26,7 @@ function Leaderboard() {
         fetchUserList();
     }, []);
 
-    if (userList === null) return <LoadingH2 elementName={"Leaderboard"} />;
+    if (userList === null || userList === undefined) return <LoadingH2 elementName={"Leaderboard"} />;
     if (userList.length === 0)
         return (
             <div className="mainContainerRow">

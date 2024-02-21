@@ -110,7 +110,7 @@ export class GameData {
 		console.log(`points for player ${user}`)
 		// console.log(this);
 		clearInterval(this.interval);
-		this.interval = setInterval(this.gameLogic, 69);
+		this.interval = setInterval(this.gameLogic, 10);
 		console.log('restarted');
 
 	}
@@ -190,12 +190,12 @@ export class GameQueue {
 		const gameToStart = new GameData(userInfo1, userInfo2, Math.floor(Math.random() * 1000))
 		if (!this.gameList.includes(gameToStart)) {
 			gameToStart.sendNewRoundMessage();
-			gameToStart.interval = setInterval(gameToStart.gameLogic, 69);
+			gameToStart.interval = setInterval(gameToStart.gameLogic, 10);
 			console.log(`initialized game with`);
 			this.gameList.push(gameToStart);//add id gen from prisma
 		}
 		if (this.gameCheckerInterval == null) {
-			this.gameCheckerInterval = setInterval(this.gameCleaner, 100);
+			this.gameCheckerInterval = setInterval(this.gameCleaner, 10);
 		}
 	}
 

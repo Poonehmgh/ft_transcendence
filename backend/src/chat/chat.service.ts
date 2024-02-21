@@ -283,7 +283,7 @@ export class ChatService {
             const extendedChatUsersPromises = chat.chatUsers.map((chatUser) => {
                 return ExtendedChatUserDTO.fromChatUser(
                     chatUser,
-                    this.userService /* this */
+                    this.userService
                 );
             });
 

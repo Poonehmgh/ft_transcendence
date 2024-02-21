@@ -10,16 +10,16 @@ function OpponentPlank(props) {
   useEffect(() => {
     if (newRound) {
       if (isPlayerOne) {
-        setPlankPosition(-0.21 * newRound.PositionPlank2 + 81);
+        setPlankPosition(-28/65 * newRound.PositionPlank2 + 81);
       } else {
-        setPlankPosition(-0.21 * newRound.PositionPlank1 + 81);
+        setPlankPosition(-28/65 * newRound.PositionPlank2 + 81);
       }
     }
   }, [isPlayerOne, newRound]);
 
   useEffect(() => {
     if (gameUpdate) {
-      setPlankPosition(-0.21 * gameUpdate.enemyPlankPosition + 81);
+      setPlankPosition(-28/65 * gameUpdate.enemyPlankPosition + 81);
     }
   }, [gameUpdate]);
 
