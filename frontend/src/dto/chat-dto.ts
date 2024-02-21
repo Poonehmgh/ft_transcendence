@@ -97,7 +97,6 @@ export class ChatUserDTO {
     chatId: number;
     owner: boolean;
     admin: boolean;
-    blocked: boolean;
     muted: boolean;
     mutedUntil?: Date;
     banned: boolean;

@@ -415,7 +415,6 @@ export class ChatService {
                             owner: e === creatorId ? true : false,
                             admin: e === creatorId ? true : false,
                             muted: false,
-                            blocked: false,
                         })),
                     },
                 },
@@ -524,7 +523,10 @@ export class ChatService {
     }
 
     async changePassword(userId: number, chatId: number, password: string) {
+        console.log("changePassword called");
         try {
+            let salt: string = null;
+
             const chat = await this.prisma.chat.findUniqueOrThrow({
                 where: {
                     id: Number(chatId),
@@ -534,13 +536,17 @@ export class ChatService {
                 },
             });
 
+            const newSalt = genSaltSync(10);
+            const newPasswordHash = hashSync(password, newSalt);
+
             if (chat.chatUsers.find((e) => e.userId === userId && e.owner)) {
                 await this.prisma.chat.update({
                     where: {
                         id: Number(chatId),
                     },
                     data: {
-                        passwordHash: password,
+                        passwordHash: newPasswordHash,
+                        passwordSalt: newSalt,
                     },
                 });
                 return { message: "Password changed" };
