@@ -63,7 +63,31 @@ export class AuthService {
 
     async registerUser(user) {
         const { id, email, surname } = user;
-        const name: string = user.name;
+        let name: string = user.name;
+
+        let findUnique = await this.prisma.user.findUnique({
+            where: {
+                name: name,
+            }
+        })
+
+        if (findUnique)
+        {
+            for (let i = 1; i < 100; i++)
+            {
+                const newName = name + "_" + i;
+                let findUnique = await this.prisma.user.findUnique({
+                    where: {
+                        name: newName,
+                    }
+                })
+                if (!findUnique)
+                {
+                    name = newName;
+                    break;
+                }
+            }
+        }
 
         try{
             const newUser = this.prisma.user.create({
