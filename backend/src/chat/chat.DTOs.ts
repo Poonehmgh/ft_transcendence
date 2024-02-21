@@ -95,7 +95,7 @@ export class MessageDTO {
     }
 }
 
-export class ParticipantListElementDTO {
+/* export class ParticipantListElementDTO {
     userName: string;
     userId: number;
     owner: boolean;
@@ -116,7 +116,7 @@ export class ParticipantListElementDTO {
         this.admin = admin;
         this.online = online;
     }
-}
+} */
 
 export class SendMessageDTO {
     chatId: number;
@@ -332,7 +332,7 @@ export class ChatDTO {
     }
 }
 
-export class InviteUserDTO {
+export class JoinChatDTO {
     chatId: number;
     userId: number;
     password: string;

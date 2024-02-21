@@ -8,7 +8,7 @@ import { SocketContext } from "src/contexts/SocketProvider";
 import { AuthContext } from "src/contexts/AuthProvider";
 
 // DTO
-import { BasicChatDTO, InviteUserDTO } from "chat-dto";
+import { BasicChatDTO, JoinChatDTO } from "chat-dto";
 
 // CSS
 import "src/styles/modals.css";
@@ -38,7 +38,7 @@ function SelectPublicChatsTable({ closeModal }): React.JSX.Element {
             password = prompt("Enter chat password");
             if (password === null) return;
         }
-        const inviteUserDto: InviteUserDTO = {
+        const inviteUserDto: JoinChatDTO = {
             chatId: chat.id,
             userId: userId,
             password: password,
