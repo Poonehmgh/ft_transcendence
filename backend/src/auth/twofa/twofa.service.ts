@@ -74,8 +74,16 @@ export class TwoFactorService {
             name: foundUser.name,
             twoFa: true,});
 
-            return {"token": newToken};
+        const newRefreshToken = await this.authservice.generateRefreshToken({
+            email: foundUser.email,
+            id: foundUser.id,
+            name: foundUser.name,
+            twoFa: true
+        });
+
+        return {"token": newToken, "refreshToken": newRefreshToken };
         }
+
         throw new BadRequestException("Verify2FaCode: Invalid code.");
     }
 
@@ -97,10 +105,18 @@ export class TwoFactorService {
             name: foundUser.name,
             twoFa: true,
         });
+
+        const newRefreshToken = await this.authservice.generateRefreshToken({
+            email: foundUser.email,
+            id: foundUser.id,
+            name: foundUser.name,
+            twoFa: true,
+        });
+
         response.status(200);
         // response.cookie("token", newToken);
         // response.redirect("http://localhost:3000/home")
-        response.json({token: newToken});
+        response.json({token: newToken, refreshToken: newRefreshToken});
         return response;
         }
 
@@ -119,11 +135,13 @@ export class TwoFactorService {
             {
                 const updateUser = await this.prisma.user.update({
                     where: {id: foundUser.id},
-                    data: {twoFa: false, twoFaSecret:''},
-                })
+                    data: {twoFa: false, twoFaSecret:''}})
                 const newToken = await this.authservice.generateJwtToken({email: foundUser.email, id: foundUser.id, name: foundUser.name, twoFa: false});
+                const newRefreshToken = await this.authservice.generateRefreshToken({email: foundUser.email, id: foundUser.id, name: foundUser.name, twoFa: false});
+
                 return {
                     newToken,
+                    newRefreshToken,
                 }
             }
             else
