@@ -18,7 +18,7 @@ function Ball(props) {
   useEffect(() => {
     if (gameUpdate) {
       setTargetPosition([
-        1 * gameUpdate.ballPosition[0] - 0.4,
+        1 * gameUpdate.ballPosition[0] - 0.7,
         -0.425 * gameUpdate.ballPosition[1] + 94,
       ]);
     }
