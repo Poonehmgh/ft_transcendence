@@ -17,6 +17,16 @@ export function SocketProvider(props: socketProviderProps): JSX.Element {
     const { updateUserData } = useContext(SocialDataContext);
     const [socket, setSocket] = useState<Socket | null>(null);
 
+	function  handleGameInvite(data:any) {
+		console.log("handleGameinvite:" ,data);
+		if (prompt(data.message)) {
+			socket.emit("gameInvite_accept",data );
+		} else {
+			socket.emit("gameInvite_decline")
+		}
+	}
+
+
     useEffect(() => {
         function connectSocket() {
             console.log("Connecting socket for userId:", userId);
@@ -37,12 +47,14 @@ export function SocketProvider(props: socketProviderProps): JSX.Element {
         if (validToken && !socket) {
             const newSocket = connectSocket();
             newSocket.on("socialUpdate", updateUserData);
+            newSocket.on("gameInvite", handleGameInvite);
             newSocket.onAny((event, ...args) => {
                 console.log("socket event:", event, args);
             });
 
             return () => {
                 newSocket.off("socialUpdate", updateUserData);
+                newSocket.off("gameInvite", updateUserData);
                 newSocket.offAny();
                 disconnectSocket(newSocket);
             };
