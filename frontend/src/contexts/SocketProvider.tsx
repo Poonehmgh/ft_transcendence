@@ -50,31 +50,34 @@ export function SocketProvider(props: socketProviderProps): JSX.Element {
             socket.disconnect();
         }
 
-        if (validToken && !socket) {
-            const newSocket = connectSocket();
+        function initSocket() {
+            if (validToken && !socket) {
+                const newSocket = connectSocket();
 
-            newSocket.on("socialUpdate", updateUserData);
-            newSocket.on("matchInvite", (data: GameInviteDTO) =>
-                handleMatchInvite(data, newSocket)
-            );
-            newSocket.on("errorAlert", (data) => alert(data.message));
-            newSocket.onAny((event, ...args) => {
-                console.log("socket event:", event, args);
-            });
+                newSocket.on("socialUpdate", updateUserData);
+                newSocket.on("matchInvite", (data: GameInviteDTO) =>
+                    handleMatchInvite(data, newSocket)
+                );
+                newSocket.on("errorAlert", (data) => alert(data.message));
+                newSocket.onAny((event, ...args) => {
+                    console.log("socket event:", event, args);
+                });
 
-            setSocket(newSocket);
+                setSocket(newSocket);
 
-            return () => {
-                newSocket.off("errorAlert");
-                newSocket.off("socialUpdate", updateUserData);
-                newSocket.off("gameInvite", updateUserData);
-                newSocket.offAny();
-                disconnectSocket(newSocket);
-            };
-        } else if (!validToken && socket) {
-            disconnectSocket(socket);
-            setSocket(null);
+                return () => {
+                    newSocket.off("errorAlert");
+                    newSocket.off("socialUpdate", updateUserData);
+                    newSocket.off("gameInvite", updateUserData);
+                    newSocket.offAny();
+                    disconnectSocket(newSocket);
+                };
+            } else if (!validToken && socket) {
+                disconnectSocket(socket);
+                setSocket(null);
+            }
         }
+        initSocket();
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [validToken, userId]);
