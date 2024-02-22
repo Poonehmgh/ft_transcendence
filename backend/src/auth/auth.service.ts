@@ -2,7 +2,7 @@
 import {Request, Response} from "express"
 
 /*NestJS*/
-import {BadRequestException, ForbiddenException, Injectable, InternalServerErrorException, Req} from '@nestjs/common';
+import {BadRequestException, ForbiddenException, Injectable, InternalServerErrorException, Req, UnauthorizedException} from '@nestjs/common';
 /*Prisma*/
 
 import {PrismaService} from "../prisma/prisma.service";
@@ -48,6 +48,14 @@ export class AuthService {
             twoFa: false,
         });
 
+        const newRefreshToken = await this.generateRefreshToken({
+            email: user.email,
+            id: user.id,
+            name: user.name,
+            twoFa: false,
+        });
+
+        response.cookie("refreshToken", newRefreshToken); //httpOnly:?, path:
         response.cookie("token", newToken);
         const apiUrl = process.env.FRONTEND_URL
         response.status(302).redirect(apiUrl);
@@ -131,11 +139,15 @@ export class AuthService {
         return token;
     }
 
-    async generateRefrehToken(payload: {id: number, email: string, name: string, twoFa: boolean}) {
+    async generateRefreshToken(payload: {id: number, email: string, name: string, twoFa: boolean}) {
+
+        const refreshSecret = process.env.REFRESH_JWT_SECRET;
+        const refreshExpire = process.env.REFRESH_JWT_EXPIRE;
+
         const refreshToken = await this.jwt.signAsync(payload,
             {
-                secret: jwtSecret,
-                expiresIn: jwtExpire,
+                secret: refreshSecret,
+                expiresIn: refreshExpire,
             });
 
         const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
@@ -147,6 +159,31 @@ export class AuthService {
         });
 
         return refreshToken;
+    }
+
+    async validateRefreshToken(refreshToken) {
+
+        let payload = null;
+        const refreshSecret = process.env.REFRESH_JWT_SECRET;
+        const refreshExpire = process.env.REFRESH_JWT_EXPIRE;
+
+        try {
+            payload = await this.jwt.verifyAsync(refreshToken, { secret: refreshSecret });
+        } catch (e) {
+            throw new UnauthorizedException('Invalid refresh token');
+        }
+
+        const user = await this.prisma.user.findUnique({ where: { id: payload.id } });
+        if (!user) {
+            throw new UnauthorizedException('Invalid refresh token');
+        }
+
+        const isTokenValid = await bcrypt.compare(refreshToken, user.refreshToken);
+        if (!isTokenValid) {
+            throw new UnauthorizedException('Invalid refresh token');
+        }
+
+        return { id: user.id, email: user.email, name: user.name, twoFa: user.twoFa };
     }
 
 
