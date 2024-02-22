@@ -89,8 +89,8 @@ function MemberOptions(props: memberOptionsProps): React.JSX.Element {
     }
 
     function inviteUserToMatch() {
-        if (!window.confirm(`Invite ${selectedUser.userName} to a pongers match?`))
-            socket.emit("matchInvite", { recipientId: selectedUser.userId });
+        if (window.confirm(`Invite ${selectedUser.userName} to a pongers match?`))
+            socket.emit("matchInvite", { recipientId: 98525});
     }
 
     function handleOpenModal() {

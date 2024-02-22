@@ -3,22 +3,29 @@ import { PrismaService } from "../prisma/prisma.service";
 import { Socket } from "socket.io";
 import { compareSync, hashSync } from "bcryptjs";
 import { userGateway } from "./userGateway";
+import { UserService } from "src/user/user.service";
 
 // DTO
 import {
     ChangeChatUserStatusDTO,
-    ChatDTO,
     ChatIdDTO,
     Chat_ChatUser,
+    GameInviteDTO,
+    GameInviteAction,
     JoinChatDTO,
     SendMessageDTO,
 } from "./chat.DTOs";
+import { GameQueue } from "src/game/game.queue";
 
 @Injectable()
 export class ChatGatewayService {
     static connectedUsers: userGateway[] = [];
 
-    constructor(private readonly prisma: PrismaService) {}
+    constructor(
+        private readonly prisma: PrismaService,
+        private readonly userService: UserService,
+        private readonly gameQueue: GameQueue
+    ) {}
 
     printConnectedUsers() {
         console.log("Connected users:");
@@ -120,7 +127,7 @@ export class ChatGatewayService {
 
     // checkers
 
-    isUserinChat(chat: Chat_ChatUser, userId: number) {
+    isUserInChat(chat: Chat_ChatUser, userId: number) {
         return chat.chatUsers.find((user) => user.userId === userId);
     }
 
@@ -198,7 +205,7 @@ export class ChatGatewayService {
                 },
             });
 
-            if (this.isUserinChat(chat, joinChatDto.userId)) {
+            if (this.isUserInChat(chat, joinChatDto.userId)) {
                 throw new Error("User is already in chat");
             }
             if (this.isUserBanned(chat, joinChatDto.userId)) {
@@ -316,7 +323,7 @@ export class ChatGatewayService {
         }
     }
 
-    // not for transmitting data, just sends an event (payload chatId) to all active members of a chat
+    // not for transmitting flexible data, just sends an event (payload chatId) to all active members of a chat
     async sendEventToChat(chatId: number, event: string) {
         try {
             const chat = await this.prisma.chat.findUnique({
@@ -578,6 +585,49 @@ export class ChatGatewayService {
             if (statusToChange == "none") throw { message: "Nothing to change" };
         } catch (error) {
             console.log(`error in changeUsersInChatStatus: ${error.message}`);
+        }
+    }
+
+    // game invites
+
+    async inviteUserToMatch(recipientId: number, userSocket: Socket) {
+        try {
+            const inviterId = this.getUserIdFromSocket(userSocket);
+            if (!inviterId) {
+                throw new Error("inviterId not found");
+            }
+            const recipient = await this.userService.getUserById(recipientId);
+            if (!recipient) {
+                throw new Error("Recipient not found");
+            }
+            if (inviterId in recipient.blocked) {
+                throw new Error("You are blocked by this user");
+            }
+            if (this.gameQueue.isUserInQueue(recipientId)) {
+                throw new Error("User is already queueing");
+            }
+            if (this.gameQueue.isUserInMatch(recipientId)) {
+                throw new Error("User is already in a match");
+            }
+            const inviterName = await this.userService.getNameById(inviterId);
+                // this throws on fail
+            const recipientSocket = this.getUserSocketFromUserId(recipientId);
+            if (!recipientSocket) {
+                throw new Error("Recipient is not online");
+            }
+
+            const inviteData = new GameInviteDTO(
+                inviterId,
+                inviterName,
+                recipientId,
+                recipient.name,
+                GameInviteAction.invite
+            );
+
+            recipientSocket.emit("matchInvite", inviteData);
+        } catch (error) {
+            console.log(`error in inviteUserToMatch: ${error.message}`);
+            userSocket.emit("errorAlert", { message: error.message });
         }
     }
 }

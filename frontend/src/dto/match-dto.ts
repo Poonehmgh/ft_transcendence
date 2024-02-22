@@ -25,11 +25,3 @@ export class MatchInfoDTO {
     winner_name: string;
     winner_id: number = 0;
 }
-
-export class GameInviteDTO {
-	senderId: number;
-	senderName: string;
-	recipientId: number;
-	recipientName: string;
-	payload?: string;
-}

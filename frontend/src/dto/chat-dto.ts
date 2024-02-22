@@ -152,3 +152,33 @@ export class ChatIdDTO {
         this.chatId = chatId;
     }
 }
+
+export class GameInviteDTO {
+    inviterId: number;
+    inviterName: string;
+    inviteeId: number;
+    inviteeName: string;
+    action: GameInviteAction;
+
+    constructor(
+        inviterId: number,
+        inviterName: string,
+        inviteeId: number,
+        inviteeName: string,
+        action: GameInviteAction
+    ) {
+        this.inviterId = inviterId;
+        this.inviterName = inviterName;
+        this.inviteeId = inviteeId;
+        this.inviteeName = inviteeName;
+        this.action = action;
+    }
+}
+
+export enum GameInviteAction {
+    invite,
+    acceptInvite,
+    declineInvite,
+    matchBegin,
+}
+

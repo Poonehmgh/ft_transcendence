@@ -12,6 +12,11 @@
     - test unbanned
     - test password
     - test password after change
+- stress test invites
+    - invitee in queue
+    - invitee has blcoked inviter
+    - invitee in game
+    - invitee offline
 - stress test game
 - test 2fa auth
 - test login with taken name

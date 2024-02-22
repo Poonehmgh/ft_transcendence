@@ -12,7 +12,12 @@ import { userGateway } from "./userGateway";
 import { OnModuleInit } from "@nestjs/common";
 
 // DTO
-import { ChangeChatUserStatusDTO, JoinChatDTO, SendMessageDTO } from "./chat.DTOs";
+import {
+    ChangeChatUserStatusDTO,
+    GameInviteDTO,
+    JoinChatDTO,
+    SendMessageDTO,
+} from "./chat.DTOs";
 
 @WebSocketGateway()
 export class ChatGateway implements OnModuleInit, OnGatewayDisconnect {
@@ -64,15 +69,15 @@ export class ChatGateway implements OnModuleInit, OnGatewayDisconnect {
     }
 
     // currently not used, because a user can only invite another user upon chat creation
-    // and that doesnt need any checks and is handled over API
+    // and that is handled over API
     // maybe later implement a function to add users to a chat after creation
     // useful, but not required by project
-    @SubscribeMessage("inviteUser")
+    @SubscribeMessage("chatInvite")
     async InviteUserToChat(
         @ConnectedSocket() client: Socket,
         @MessageBody() message: JoinChatDTO
     ) {
-        console.log("inviteUser (INACTIVE):", message);
+        console.log("chatInvite (INACTIVE):", message);
         //await this.chatGatewayService.inviteUserToChat(message, client);
     }
 
@@ -92,5 +97,54 @@ export class ChatGateway implements OnModuleInit, OnGatewayDisconnect {
     ) {
         console.log("changeChatUserStatus:", message);
         await this.chatGatewayService.changeUsersInChatStatus(message);
+    }
+
+    @SubscribeMessage("matchInvite")
+    async handleMatchInvite(
+        @ConnectedSocket() userSocket: Socket,
+        @MessageBody() data: { recipientId: string } | GameInviteDTO
+    ) {
+        console.log("matchInvite:", data);
+        if ("recipientId" in data) {
+            try {
+                await this.chatGatewayService.inviteUserToMatch(
+                    parseInt(data.recipientId),
+                    userSocket
+                );
+            } catch (error) {
+                console.error("Error matchInvite:", error);
+                userSocket.emit("errorAlert", { message: error.message });
+            }
+        }
+        /*
+ 
+  
+      case data.action: acceptInvite
+          start local catch block
+          get inviterName or throw
+          get inviteename or throw
+          get socket of inviter or throw
+          get socket of invitee or throw
+  
+          emit to both "matchInvite" with both names and action: matchBeginn
+          start countdown for x seconds
+          launch game init 
+  
+          catch
+          if sockets
+          emit errorAlert to inviter and invitee
+  
+      case data.action: declineinvite
+          start local catch block
+          get inviteename or throw
+          get socket of inviter or throw
+  
+          emit matchinvite to inviter with updated inviteename and action:declineinvite
+  
+  
+  
+  
+
+      */
     }
 }
