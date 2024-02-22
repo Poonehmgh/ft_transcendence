@@ -14,6 +14,7 @@ import { OnModuleInit } from "@nestjs/common";
 // DTO
 import {
     ChangeChatUserStatusDTO,
+    GameInviteAction,
     GameInviteDTO,
     JoinChatDTO,
     SendMessageDTO,
@@ -116,6 +117,26 @@ export class ChatGateway implements OnModuleInit, OnGatewayDisconnect {
                 userSocket.emit("errorAlert", { message: error.message });
             }
         }
+        else {
+            switch (data.action) {
+                case GameInviteAction.acceptInvite:
+                    try {
+                        await this.chatGatewayService.acceptMatchInvite(data);
+                    } catch (error) {
+                        console.error("Error matchInvite:", error);
+                        userSocket.emit("errorAlert", { message: error.message });
+                    }
+                    break;
+                case GameInviteAction.declineInvite:
+                    try {
+                        await this.chatGatewayService.declineMatchInvite(data);
+                    } catch (error) {
+                        console.error("Error matchInvite:", error);
+                        userSocket.emit("errorAlert", { message: error.message });
+                    }
+                    break;
+            }
+
         /*
  
   

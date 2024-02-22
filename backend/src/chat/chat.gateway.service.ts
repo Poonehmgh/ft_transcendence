@@ -610,7 +610,7 @@ export class ChatGatewayService {
                 throw new Error("User is already in a match");
             }
             const inviterName = await this.userService.getNameById(inviterId);
-                // this throws on fail
+            // this throws on fail
             const recipientSocket = this.getUserSocketFromUserId(recipientId);
             if (!recipientSocket) {
                 throw new Error("Recipient is not online");
@@ -628,6 +628,33 @@ export class ChatGatewayService {
         } catch (error) {
             console.log(`error in inviteUserToMatch: ${error.message}`);
             userSocket.emit("errorAlert", { message: error.message });
+        }
+    }
+
+    async acceptMatchInvite(data: GameInviteDTO) {
+        try {
+            const inviterSocket = this.getUserSocketFromUserId(data.inviterId);
+            const inviteeSocket = this.getUserSocketFromUserId(data.inviteeId);
+            if (!inviterSocket || !inviteeSocket) {
+                throw new Error("One of the users is not online");
+            }
+
+            const inviterGateway: userGateway = null;
+            inviterGateway.socket = inviterSocket;
+            inviterGateway.userID = data.inviterId;
+            inviterGateway.userName = data.inviterName;
+
+            this.gameQueue.initGame(
+                inviterGateway,
+                new userGateway(data.inviteeId, inviteeSocket)
+            );
+            inviterSocket.emit("matchInvite", {
+                action: GameInviteAction.matchBegin,
+                inviteeId: data.inviteeId,
+            });
+        } catch (error) {
+            console.log(`error in acceptMatchInvite: ${error.message}`);
+            recipientSocket.emit("errorAlert", { message: error.message });
         }
     }
 }
