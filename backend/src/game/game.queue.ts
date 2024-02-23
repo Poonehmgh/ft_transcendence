@@ -6,150 +6,150 @@ import {MatchInfoDTO} from "../match/match-dto";
 
 export class GameData {
 
-	//user info
-	infoUser1: userGateway
-	infoUser2: userGateway
-	gameID: number
+    //user info
+    infoUser1: userGateway
+    infoUser2: userGateway
+    gameID: number
 
-	//variables
-	ScorePlayer1: number = 0;
-	ScorePlayer2: number = 0;
-	PositionPlank1: number = 0;
-	PositionPlank2: number = 0;
-	PositionBall: [number, number] = [50, 50];
-	VelocityBall: [number, number] = [1, 0];
+    //variables
+    ScorePlayer1: number = 0;
+    ScorePlayer2: number = 0;
+    PositionPlank1: number = 0;
+    PositionPlank2: number = 0;
+    PositionBall: [number, number] = [50, 50];
+    VelocityBall: [number, number] = [1, 0];
 
-	//1 is active, 0 is inactive
-	GameStatus: number = 1;
-
-
-	//constants
-	fieldWidth: number = 100;
-	fieldHeight: number = 100;
-	ballRadius: number = 2;
-	plankWidth: number = 1.5;
-	plankHeight: number = 35;
-
-	interval: NodeJS.Timer;
-
-	constructor(infoUser1: userGateway, infoUser2: userGateway, gameID: number) {
-		this.infoUser1 = infoUser1;
-		this.infoUser2 = infoUser2;
-		this.gameID = gameID;
-	}
-
-	getMirroredPosition = (): [number, number] => {
-		return [100 - this.PositionBall[0], this.PositionBall[1]];
-	}
-
-	plankCollision = () => {
-		// console.log(this);
-		if (this.PositionBall[0] - this.ballRadius < this.plankWidth
-			&& this.PositionBall[1] > this.PositionPlank1
-			&& this.PositionBall[1] < this.PositionPlank1 + this.plankHeight) {
-				console.log("LEFT COLLISION");
-				const relativeHitPosition = (this.PositionBall[1] - this.PositionPlank1) - (this.plankHeight / 2);
-				this.VelocityBall[1] = relativeHitPosition / (this.plankHeight / 2);
-				this.VelocityBall[0] *= -1;
-			}
-			if (this.PositionBall[0] + this.ballRadius >= this.fieldWidth - this.plankWidth
-				&& this.PositionBall[1] > this.PositionPlank2
-				&& this.PositionBall[1] < this.PositionPlank2 + this.plankHeight) {
-					console.log("RIGHT COLLISION");
-					// console.log(this);
-			const relativeHitPosition = (this.PositionBall[1] - this.PositionPlank2) - (this.plankHeight / 2);
-			this.VelocityBall[1] = relativeHitPosition / (this.plankHeight / 2); // Adjust vertical speed + can be tweaked with additional coefficients
-			this.VelocityBall[0] *= -1;
-		}
-	}
-
-	sendNewRoundMessage = () => {
-		if (this.GameStatus == 1) {
-			this.infoUser1.socket.emit('newRound', new NewRoundDTO(this));
-			this.infoUser2.socket.emit('newRound', new NewRoundDTO(this));
-		}
-	}
-
-	resetGameData = () => {
-		this.PositionPlank1 = 0;
-		this.PositionPlank2 = 0;
-		this.PositionBall = [50, 50];
-		this.VelocityBall = [1, 0];
-	}
+    //1 is active, 0 is inactive
+    GameStatus: number = 1;
 
 
-	async addPointToUser(user: number) {
-		if (user == 1) {
-			this.ScorePlayer2++;
-		} else if (user == 2) {
-			this.ScorePlayer1++;
-		}
-		if (this.ScorePlayer1 >= 3) {
-			// await this.prismaService.match.create({
-			// 	data: new MatchInfoDTO(this),
-			// })
-			this.infoUser1.socket.emit('gameResult', 'Won');
-			this.infoUser2.socket.emit('gameResult', 'Lost');
-			clearInterval(this.interval);
-			this.GameStatus = 0;
-			return;
-		}
-		if (this.ScorePlayer2 >= 3) {
-			// await this.prismaService.match.create({
-			// 	data: new MatchInfoDTO(this),
-			// })
-			this.infoUser2.socket.emit('gameResult', 'Won');
-			this.infoUser1.socket.emit('gameResult', 'Lost');
-			clearInterval(this.interval);
-			this.GameStatus = 0;
-			return;
-		}
-		// console.log(this);
-		this.resetGameData();
-		this.sendNewRoundMessage();
-		console.log(`points for player ${user}`)
-		// console.log(this);
-		clearInterval(this.interval);
-		this.interval = setInterval(this.gameLogic, 69);
-		console.log('restarted');
+    //constants
+    fieldWidth: number = 100;
+    fieldHeight: number = 100;
+    ballRadius: number = 2;
+    plankWidth: number = 1.5;
+    plankHeight: number = 35;
 
-	}
+    interval: NodeJS.Timer;
 
-	fieldCollision = () => {
-		if (this.PositionBall[1] - this.ballRadius <= 0 || this.PositionBall[1] + this.ballRadius >= this.fieldHeight) {
-			this.VelocityBall[1] *= -1;
-		}
-		if (this.PositionBall[0] - this.ballRadius < -10) {
-			this.addPointToUser(1);
-		} else if (this.PositionBall[0] + this.ballRadius >= this.fieldWidth + 10) {
-			this.addPointToUser(2);
-		}
-	}
+    constructor(infoUser1: userGateway, infoUser2: userGateway, gameID: number) {
+        this.infoUser1 = infoUser1;
+        this.infoUser2 = infoUser2;
+        this.gameID = gameID;
+    }
 
-	updateBallPosition = () => {
-		this.PositionBall[0] += this.VelocityBall[0];
-		this.PositionBall[1] += this.VelocityBall[1];
-		this.infoUser1.socket.emit('gameUpdate', new GameUpdateDTO(this.PositionPlank2, this.PositionBall));
-		this.infoUser2.socket.emit('gameUpdate', new GameUpdateDTO(this.PositionPlank1, this.PositionBall));
-	}
+    getMirroredPosition = (): [number, number] => {
+        return [100 - this.PositionBall[0], this.PositionBall[1]];
+    }
 
-	gameLogic = () => {
-		this.plankCollision();
-		this.fieldCollision();
-		this.updateBallPosition();
-		// console.log(this);
-	}
+    plankCollision = () => {
+        // console.log(this);
+        if (this.PositionBall[0] - this.ballRadius < this.plankWidth
+            && this.PositionBall[1] > this.PositionPlank1
+            && this.PositionBall[1] < this.PositionPlank1 + this.plankHeight) {
+            console.log("LEFT COLLISION");
+            const relativeHitPosition = (this.PositionBall[1] - this.PositionPlank1) - (this.plankHeight / 2);
+            this.VelocityBall[1] = relativeHitPosition / (this.plankHeight / 2);
+            this.VelocityBall[0] *= -1;
+        }
+        if (this.PositionBall[0] + this.ballRadius >= this.fieldWidth - this.plankWidth
+            && this.PositionBall[1] > this.PositionPlank2
+            && this.PositionBall[1] < this.PositionPlank2 + this.plankHeight) {
+            console.log("RIGHT COLLISION");
+            // console.log(this);
+            const relativeHitPosition = (this.PositionBall[1] - this.PositionPlank2) - (this.plankHeight / 2);
+            this.VelocityBall[1] = relativeHitPosition / (this.plankHeight / 2); // Adjust vertical speed + can be tweaked with additional coefficients
+            this.VelocityBall[0] *= -1;
+        }
+    }
+
+    sendNewRoundMessage = () => {
+        if (this.GameStatus == 1) {
+            this.infoUser1.socket.emit('newRound', new NewRoundDTO(this));
+            this.infoUser2.socket.emit('newRound', new NewRoundDTO(this));
+        }
+    }
+
+    resetGameData = () => {
+        this.PositionPlank1 = 0;
+        this.PositionPlank2 = 0;
+        this.PositionBall = [50, 50];
+        this.VelocityBall = [1, 0];
+    }
+
+
+    async addPointToUser(user: number) {
+        if (user == 1) {
+            this.ScorePlayer2++;
+        } else if (user == 2) {
+            this.ScorePlayer1++;
+        }
+        if (this.ScorePlayer1 >= 3) {
+            // await this.prismaService.match.create({
+            // 	data: new MatchInfoDTO(this),
+            // })
+            this.infoUser1.socket.emit('gameResult', 'Won');
+            this.infoUser2.socket.emit('gameResult', 'Lost');
+            clearInterval(this.interval);
+            this.GameStatus = 0;
+            return;
+        }
+        if (this.ScorePlayer2 >= 3) {
+            // await this.prismaService.match.create({
+            // 	data: new MatchInfoDTO(this),
+            // })
+            this.infoUser2.socket.emit('gameResult', 'Won');
+            this.infoUser1.socket.emit('gameResult', 'Lost');
+            clearInterval(this.interval);
+            this.GameStatus = 0;
+            return;
+        }
+        // console.log(this);
+        this.resetGameData();
+        this.sendNewRoundMessage();
+        console.log(`points for player ${user}`)
+        // console.log(this);
+        clearInterval(this.interval);
+        this.interval = setInterval(this.gameLogic, 69);
+        console.log('restarted');
+
+    }
+
+    fieldCollision = () => {
+        if (this.PositionBall[1] - this.ballRadius <= 0 || this.PositionBall[1] + this.ballRadius >= this.fieldHeight) {
+            this.VelocityBall[1] *= -1;
+        }
+        if (this.PositionBall[0] - this.ballRadius < -10) {
+            this.addPointToUser(1);
+        } else if (this.PositionBall[0] + this.ballRadius >= this.fieldWidth + 10) {
+            this.addPointToUser(2);
+        }
+    }
+
+    updateBallPosition = () => {
+        this.PositionBall[0] += this.VelocityBall[0];
+        this.PositionBall[1] += this.VelocityBall[1];
+        this.infoUser1.socket.emit('gameUpdate', new GameUpdateDTO(this.PositionPlank2, this.PositionBall));
+        this.infoUser2.socket.emit('gameUpdate', new GameUpdateDTO(this.PositionPlank1, this.PositionBall));
+    }
+
+    gameLogic = () => {
+        this.plankCollision();
+        this.fieldCollision();
+        this.updateBallPosition();
+        // console.log(this);
+    }
 }
 
 export class userGateway {
-	userID: number;
-	socket: Socket;
-	userName: string = 'dummy';
+    userID: number;
+    socket: Socket;
+    userName: string = 'dummy';
 
-	constructor(userID: number, socket: Socket) {
-		this.userID = userID;
-		this.socket = socket;
-	}
+    constructor(userID: number, socket: Socket) {
+        this.userID = userID;
+        this.socket = socket;
+    }
 }
 
 @Injectable()
@@ -181,28 +181,143 @@ export class GameQueue {
         }
     };
 
-    gameCleaner = () => {
+    async incrementScoreInDB(userID: number) {
+        await this.prismaService.user.update({
+            where: {
+                id: userID,
+            },
+            data: {
+                mmr: {
+                    increment: 50,
+                },
+            },
+        });
+    }
+
+    async decrementScoreInDB(userID: number) {
+        await this.prismaService.user.update({
+            where: {
+                id: userID,
+            },
+            data: {
+                mmr: {
+                    decrement: 50,
+                },
+            },
+        });
+    }
+
+    async calculateWinRate(userId: number){
+        let matches = await this.prismaService.match.findMany({
+            where: {
+                OR: [
+                    {
+                        player1: userId,
+                    },
+                    {
+                        player2: userId,
+                    },
+                ],
+            },
+        });
+        let wins = 0;
+        let losses = 0;
+        for (let match of matches){
+            if (match.winner_id == userId){
+                wins++;
+            } else {
+                losses++;
+            }
+        }
+        let winRate = wins / (wins + losses);
+        await this.prismaService.user.update({
+            where: {
+                id: userId,
+            },
+            data: {
+                winrate: winRate,
+            },
+        });
+
+    }
+
+    async gameEnder(indexToRemove: number) {
+        let match = await this.prismaService.match.create({
+            data: {
+                end: new Date(),
+                player1: this.gameList[indexToRemove].infoUser1.userID,
+                player2: this.gameList[indexToRemove].infoUser2.userID,
+                score_p1: this.gameList[indexToRemove].ScorePlayer1,
+                score_p2: this.gameList[indexToRemove].ScorePlayer2,
+                winner_id: this.gameList[indexToRemove].ScorePlayer1 > this.gameList[indexToRemove].ScorePlayer2 ? this.gameList[indexToRemove].infoUser1.userID : this.gameList[indexToRemove].infoUser2.userID,
+                winner_name: this.gameList[indexToRemove].ScorePlayer1 > this.gameList[indexToRemove].ScorePlayer2 ? this.gameList[indexToRemove].infoUser1.userName : this.gameList[indexToRemove].infoUser2.userName,
+            },
+        });
+        console.log(match);
+        //player 1 wins
+        if (this.gameList[indexToRemove].ScorePlayer1 > this.gameList[indexToRemove].ScorePlayer2) {
+            this.gameList[indexToRemove].infoUser1.socket.emit('gameResult', 'Won');
+            this.gameList[indexToRemove].infoUser2.socket.emit('gameResult', 'Lost');
+            await this.incrementScoreInDB(this.gameList[indexToRemove].infoUser1.userID);
+            await this.decrementScoreInDB(this.gameList[indexToRemove].infoUser2.userID);
+        } else if (this.gameList[indexToRemove].ScorePlayer1 < this.gameList[indexToRemove].ScorePlayer2) {
+            this.gameList[indexToRemove].infoUser2.socket.emit('gameResult', 'Won');
+            this.gameList[indexToRemove].infoUser1.socket.emit('gameResult', 'Lost');
+            await this.incrementScoreInDB(this.gameList[indexToRemove].infoUser2.userID);
+            await this.decrementScoreInDB(this.gameList[indexToRemove].infoUser1.userID);
+        } else {
+            this.gameList[indexToRemove].infoUser1.socket.emit('gameResult', 'Draw');
+            this.gameList[indexToRemove].infoUser2.socket.emit('gameResult', 'Draw');
+        }
+        await this.calculateWinRate(this.gameList[indexToRemove].infoUser1.userID);
+        await this.calculateWinRate(this.gameList[indexToRemove].infoUser2.userID);
+    }
+
+
+    async gameCleaner() {
         const indexToRemove = this.gameList.findIndex((game) => game.GameStatus === 0);
 
         if (indexToRemove !== -1) {
             // Use splice to remove the item at the found index
-            console.log(`deleted a game`);
+            await this.gameEnder(indexToRemove);
+            clearInterval(this.gameList[indexToRemove].interval);
+            console.log(`deleted a game`, "\n" +
+                ". . . . . . . . . . .,'´`. ,'``;\n" +
+                ". . . . . . . . . .,`. . .`—–'..\n" +
+                ". . . . . . . . . .,. . . . . .~ .`- .\n" +
+                ". . . . . . . . . ,'. . . . . . . .o. .o__\n" +
+                ". . . . . . . . _l. . . . . . . . . . . .\n" +
+                ". . . . . . . _. '`~-.. . . . . . . . . .,'\n" +
+                ". . . . . . .,. .,.-~-.' -.,. . . ..'–~`\n" +
+                ". . . . . . /. ./. . . . .}. .` -..,/\n" +
+                ". . . . . /. ,'___. . :/. . . . . .\n" +
+                ". . . . /'`-.l. . . `'-..'........ . .\n" +
+                ". . . ;. . . . . . . . . . . . .)-.....l\n" +
+                ". . .l. . . . .' —........-'. . . ,'\n" +
+                ". . .',. . ,....... . . . . . . . . .,'\n" +
+                ". . . .' ,/. . . . `,. . . . . . . ,'_____\n" +
+                ". . . . .. . . . . .. . . .,.- '_______|_')\n" +
+                ". . . . . ',. . . . . ',-~'`. (.))\n" +
+                ". . . . . .l. . . . . ;. . . /__\n" +
+                ". . . . . /. . . . . /__. . . . .)\n" +
+                ". . . . . '-.. . . . . . .)\n" +
+                ". . . . . . .' - .......-`\n");
             this.gameList.splice(indexToRemove, 1);
         }
-    };
+    }
 
-	initGame = (userInfo1: userGateway, userInfo2: userGateway) => {
-		const gameToStart = new GameData(userInfo1, userInfo2, Math.floor(Math.random() * 1000))
-		if (!this.gameList.includes(gameToStart)) {
-			gameToStart.sendNewRoundMessage();
-			gameToStart.interval = setInterval(gameToStart.gameLogic, 69);
-			console.log(`initialized game with`);
-			this.gameList.push(gameToStart);//add id gen from prisma
-		}
-		if (this.gameCheckerInterval == null) {
-			this.gameCheckerInterval = setInterval(this.gameCleaner, 10);
-		}
-	}
+    initGame = (userInfo1: userGateway, userInfo2: userGateway) => {
+        const gameToStart = new GameData(userInfo1, userInfo2, Math.floor(Math.random() * 1000))
+        if (!this.gameList.includes(gameToStart)) {
+            gameToStart.sendNewRoundMessage();
+            gameToStart.interval = setInterval(gameToStart.gameLogic, 69);
+            console.log(`initialized game with`);
+            this.gameList.push(gameToStart);//add id gen from prisma
+        }
+        if (this.gameCheckerInterval == null) {
+            this.gameCheckerInterval = setInterval(this.gameCleaner, 10);
+        }
+    }
 
     findGameByUser = (userInfo: userGateway): GameData => {
         for (const gameData of this.gameList) {
