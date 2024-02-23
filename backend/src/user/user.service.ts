@@ -126,8 +126,6 @@ export class UserService {
         return relation;
     }
 
-    // getters
-
     async getFriends(userId: number): Promise<IdAndNameDTO[]> {
         const user = await this.prisma.user.findUnique({
             where: { id: Number(userId) },

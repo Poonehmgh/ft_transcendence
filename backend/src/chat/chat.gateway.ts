@@ -12,7 +12,13 @@ import { userGateway } from "./userGateway";
 import { OnModuleInit } from "@nestjs/common";
 
 // DTO
-import { ChangeChatUserStatusDTO, JoinChatDTO, SendMessageDTO } from "./chat.DTOs";
+import {
+    ChangeChatUserStatusDTO,
+    GameInviteAction,
+    GameInviteDTO,
+    JoinChatDTO,
+    SendMessageDTO,
+} from "./chat.DTOs";
 
 @WebSocketGateway()
 export class ChatGateway implements OnModuleInit, OnGatewayDisconnect {
@@ -64,15 +70,15 @@ export class ChatGateway implements OnModuleInit, OnGatewayDisconnect {
     }
 
     // currently not used, because a user can only invite another user upon chat creation
-    // and that doesnt need any checks and is handled over API
+    // and that is handled over API
     // maybe later implement a function to add users to a chat after creation
     // useful, but not required by project
-    @SubscribeMessage("inviteUser")
+    @SubscribeMessage("chatInvite")
     async InviteUserToChat(
         @ConnectedSocket() client: Socket,
         @MessageBody() message: JoinChatDTO
     ) {
-        console.log("inviteUser (INACTIVE):", message);
+        console.log("chatInvite (INACTIVE):", message);
         //await this.chatGatewayService.inviteUserToChat(message, client);
     }
 
@@ -92,5 +98,35 @@ export class ChatGateway implements OnModuleInit, OnGatewayDisconnect {
     ) {
         console.log("changeChatUserStatus:", message);
         await this.chatGatewayService.changeUsersInChatStatus(message);
+    }
+
+    @SubscribeMessage("matchInvite")
+    async handleMatchInvite(
+        @ConnectedSocket() userSocket: Socket,
+        @MessageBody() data: { recipientId: string } | GameInviteDTO
+    ) {
+        console.log("matchInvite:", data);
+        try {
+            if ("recipientId" in data) {
+                await this.chatGatewayService.inviteUserToMatch(
+                    parseInt(data.recipientId),
+                    userSocket
+                );
+            } else {
+                switch (data.action) {
+                    case GameInviteAction.acceptInvite:
+                        this.chatGatewayService.acceptMatchInvite(data);
+                        break;
+                    case GameInviteAction.declineInvite:
+                        this.chatGatewayService.declineMatchInvite(data);
+                        break;
+                    default:
+                        console.error("Invalid action in handleMatchInvite");
+                        break;
+                }
+            }
+        } catch (error) {
+            console.error("Error matchInvite:", error);
+        }
     }
 }

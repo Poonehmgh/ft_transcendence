@@ -14,7 +14,7 @@ import "src/styles/style.css";
 import "src/styles/chat.css";
 import "src/styles/buttons.css";
 
-interface memberOptionsProps{
+interface memberOptionsProps {
     thisUserRole: ChatRole;
 }
 
@@ -36,10 +36,9 @@ function MemberOptions(props: memberOptionsProps): React.JSX.Element {
                 setSelectedUserRole(ChatRole.member);
             }
         }
-    }, [selectedUser, activeChat.chatUsers, userId]);
+    }, [selectedUser, activeChat.chatUsers, userId, props.thisUserRole]);
 
     async function changeUserStatus(action: string) {
-        console.log("changeUserStatus. Received action:'" + action + "'");
         let data: ChangeChatUserStatusDTO = {
             operatorId: userId,
             chatId: activeChat.id,
@@ -51,6 +50,9 @@ function MemberOptions(props: memberOptionsProps): React.JSX.Element {
             kick: false,
         };
 
+        // changing update method on backend would allow to completely
+        // get rid of this monstrosity. just pass action into prompt and
+        // send to backend
         if (action === "owner") {
             if (!window.confirm(`Transfer ownership to ${selectedUser.userName}?`))
                 return;
@@ -86,8 +88,8 @@ function MemberOptions(props: memberOptionsProps): React.JSX.Element {
     }
 
     function inviteUserToMatch() {
-        if (!window.confirm(`Invite ${selectedUser.userName} to a pongers match?`))
-            socket.emit("inviteUserToMatch", { userId: selectedUser.userId });
+        if (window.confirm(`Invite ${selectedUser.userName} to a pongers match?`))
+            socket.emit("matchInvite", { recipientId: selectedUser.userId });
     }
 
     function handleOpenModal() {
@@ -118,7 +120,7 @@ function MemberOptions(props: memberOptionsProps): React.JSX.Element {
                 </div>
 
                 <div className="memberOptionsButtonsDiv">
-                    {props.thisUserRole === 2 && (
+                    {props.thisUserRole === ChatRole.owner && (
                         <button
                             className="bigButton"
                             onClick={() => changeUserStatus("owner")}
@@ -126,7 +128,7 @@ function MemberOptions(props: memberOptionsProps): React.JSX.Element {
                             Transfer ownership
                         </button>
                     )}
-                    {props.thisUserRole === 2 && !selectedUser.admin && (
+                    {props.thisUserRole === ChatRole.owner && !selectedUser.admin && (
                         <button
                             className="bigButton"
                             onClick={() => changeUserStatus("admin")}
@@ -134,7 +136,7 @@ function MemberOptions(props: memberOptionsProps): React.JSX.Element {
                             Make Admin
                         </button>
                     )}
-                    {props.thisUserRole === 2 && selectedUser.admin && (
+                    {props.thisUserRole === ChatRole.owner && selectedUser.admin && (
                         <button
                             className="bigButton"
                             onClick={() => changeUserStatus("member")}
