@@ -142,7 +142,6 @@ export class GameData {
         this.updateBallPosition();
         this.fieldCollision();
         clearInterval(this.interval);
-        this.intervalTime *= 0.99;
         this.interval = setInterval(this.gameLogic, this.intervalTime);
 				}
         // console.log(this);
