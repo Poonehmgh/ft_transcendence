@@ -249,6 +249,20 @@ export class GameQueue {
 
     }
 
+    addGameToUserList = async(gameId: number, userId: number) => {
+        //add game id to user
+        await this.prismaService.user.update({
+            where: {
+                id: userId,
+            },
+            data: {
+                matches: {
+                    push: gameId,
+            },
+        }
+        });
+    }
+
     gameEnder = async(game: GameData) => {
         let match = await this.prismaService.match.create({
             data: {
@@ -261,6 +275,8 @@ export class GameQueue {
                 winner_name: game.ScorePlayer1 > game.ScorePlayer2 ? game.infoUser1.userName : game.infoUser2.userName,
             },
         });
+        await this.addGameToUserList(match.id, game.infoUser1.userID);
+        await this.addGameToUserList(match.id, game.infoUser2.userID);
         console.log(match);
         //player 1 wins
         if (game.ScorePlayer1 > game.ScorePlayer2) {
