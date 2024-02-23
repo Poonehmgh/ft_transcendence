@@ -110,7 +110,7 @@ export class GameData {
 		console.log(`points for player ${user}`)
 		// console.log(this);
 		clearInterval(this.interval);
-		this.interval = setInterval(this.gameLogic, 69);
+		this.interval = setInterval(this.gameLogic, 42);
 		console.log('restarted');
 
 	}
@@ -180,6 +180,9 @@ export class GameQueue {
 		const indexToRemove = this.gameList.findIndex((game) => game.GameStatus === 0);
 
 		if (indexToRemove !== -1) {
+			this.prismaService.match.create({
+				data: new MatchInfoDTO(this.gameList[indexToRemove]),
+			});
 			// Use splice to remove the item at the found index
 			console.log(`deleted a game`);
 			this.gameList.splice(indexToRemove, 1);
@@ -190,7 +193,7 @@ export class GameQueue {
 		const gameToStart = new GameData(userInfo1, userInfo2, Math.floor(Math.random() * 1000))
 		if (!this.gameList.includes(gameToStart)) {
 			gameToStart.sendNewRoundMessage();
-			gameToStart.interval = setInterval(gameToStart.gameLogic, 69);
+			gameToStart.interval = setInterval(gameToStart.gameLogic, 42);
 			console.log(`initialized game with`);
 			this.gameList.push(gameToStart);//add id gen from prisma
 		}
