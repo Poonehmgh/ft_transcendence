@@ -1,6 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import backendUrl from "src/constants/backendUrl";
 import { fetchWrapper, sanitizeInput } from "src/functions/utils";
+import Toast from "src/components/shared/Toast";
 
 // Contexts
 import { ChatContext } from "src/contexts/ChatProvider";
@@ -20,6 +21,8 @@ function ChatOptions(): React.JSX.Element {
         updateMyChats: fetchThisUsersChats,
     } = useContext(ChatContext);
     const [hasPassword, setHasPassword] = useState<boolean>(false);
+    const [showToast, setShowToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState("");
 
     useEffect(() => {
         if (activeChat && activeChat.chatUsers) {
@@ -39,7 +42,8 @@ function ChatOptions(): React.JSX.Element {
         if (window.confirm(promptText)) {
             const apiUrl = backendUrl.chat + `leave/${activeChat?.id}`;
             const res = await fetchWrapper<{ message: string }>("PATCH", apiUrl, null);
-            alert(res.message);
+            //alert(res.message);
+            showToast(res.message);
             fetchThisUsersChats();
             changeActiveChat(null);
         }
@@ -55,7 +59,11 @@ function ChatOptions(): React.JSX.Element {
         const data = { newName: sanitizeInput(newName) };
         console.log(data);
         const res = await fetchWrapper<{ message: string }>("PATCH", apiUrl, data);
-        alert(res.message);
+        //alert(res.message);
+
+        //setToastMessage(res.message);
+        handleShowToast(res.message);
+
         fetchThisUsersChats();
         changeActiveChat(activeChat?.id);
     }
@@ -84,6 +92,15 @@ function ChatOptions(): React.JSX.Element {
         fetchThisUsersChats();
         changeActiveChat(activeChat?.id);
     }
+
+    function handleShowToast(message: string) {
+        setToastMessage(message);
+        setShowToast(true);
+    }
+
+    const handleHideToast = () => {
+        setShowToast(false);
+    };
 
     if (!activeChat) return null;
 
@@ -116,6 +133,10 @@ function ChatOptions(): React.JSX.Element {
                         )}
                     </>
                 )}
+            </div>
+            <div>
+                <button onClick={() => handleShowToast}>Show Toast</button>
+                {showToast && <Toast message={toastMessage} duration={3000} />}
             </div>
         </div>
     );
