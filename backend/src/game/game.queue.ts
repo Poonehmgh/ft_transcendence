@@ -21,6 +21,7 @@ export class GameData {
 
     //1 is active, 0 is inactive
     GameStatus: number = 1;
+    intervalTime: number = 69;
 
 
     //constants
@@ -110,7 +111,8 @@ export class GameData {
         console.log(`points for player ${user}`)
         // console.log(this);
         clearInterval(this.interval);
-        this.interval = setInterval(this.gameLogic, 69);
+        this.intervalTime = 69;
+        this.interval = setInterval(this.gameLogic, this.intervalTime);
         console.log('restarted');
 
     }
@@ -135,8 +137,11 @@ export class GameData {
 
     gameLogic = () => {
         this.plankCollision();
-        this.fieldCollision();
         this.updateBallPosition();
+        this.fieldCollision();
+        clearInterval(this.interval);
+        this.intervalTime *= 0.99;
+        this.interval = setInterval(this.gameLogic, this.intervalTime);
         // console.log(this);
     }
 }
