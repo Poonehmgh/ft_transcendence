@@ -1,11 +1,14 @@
 import { io, Socket } from "socket.io-client";
 import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import backendUrl from "src/constants/backendUrl";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 // Contexts
 import { AuthContext } from "./AuthProvider";
 import { SocialDataContext } from "./SocialDataProvider";
+import { ToastContext } from "src/contexts/ToastProvider";
+
+// DTO
 import { GameInviteAction, GameInviteDTO } from "src/dto/chat-dto";
 
 export const SocketContext = createContext<Socket | null>(null);
@@ -17,6 +20,7 @@ interface socketProviderProps {
 export function SocketProvider(props: socketProviderProps): JSX.Element {
     const { validToken, userId } = useContext(AuthContext);
     const { updateUserData } = useContext(SocialDataContext);
+    const { showToast } = useContext(ToastContext);
     const [socket, setSocket] = useState<Socket | null>(null);
     const navigate = useNavigate();
 
@@ -45,7 +49,7 @@ export function SocketProvider(props: socketProviderProps): JSX.Element {
                 newSocket.on("matchInvite", (data: GameInviteDTO) =>
                     handleMatchInvite(data, newSocket)
                 );
-                newSocket.on("errorAlert", (data) => alert(data.message));
+                newSocket.on("errorAlert", (data) => showToast(data.message));
                 newSocket.onAny((event, ...args) => {
                     console.log("socket event:", event, args);
                 });
@@ -87,11 +91,11 @@ export function SocketProvider(props: socketProviderProps): JSX.Element {
                     socket.emit("matchInvite", data);
                     break;
                 case GameInviteAction.declineInvite:
-                    alert(`${data.inviterName} has declined your challenge.`);
+                    showToast(`${data.inviterName} has declined your challenge.`);
                     break;
                 case GameInviteAction.matchBegin:
-                    alert(`${data.inviterName} has accepted your challenge!`);
-                    navigate('/game');
+                    showToast(`${data.inviterName} has accepted your challenge!`);
+                    navigate("/game");
                     break;
                 default:
                     console.error("Invalid GameInviteAction:", data.action);

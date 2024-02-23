@@ -76,7 +76,7 @@ function ChatOptions(): React.JSX.Element {
         const newPassword = prompt("Enter new password:");
         if (!newPassword) return;
         if (newPassword.length < 3) {
-            alert("Password must be at least 3 characters long");
+            showToast("Password must be at least 3 characters long");
             return;
         }
         const apiUrl = backendUrl.chat + `change_password/${activeChat?.id}`;
