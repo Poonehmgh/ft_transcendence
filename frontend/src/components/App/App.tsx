@@ -9,15 +9,15 @@ import { ToastProvider } from "src/contexts/ToastProvider";
 function App() {
     return (
         <AuthProvider>
-			<ToastProvider>
-            	<SocialDataProvider>
-                	<SocketProvider>
-                    	<BrowserRouter>
-                     	   <PongersRoutes />
-                    	</BrowserRouter>
-                	</SocketProvider>
-            	</SocialDataProvider>
-			</ToastProvider>
+            <BrowserRouter>
+                <ToastProvider>
+                    <SocialDataProvider>
+                        <SocketProvider>
+                            <PongersRoutes />
+                        </SocketProvider>
+                    </SocialDataProvider>
+                </ToastProvider>
+            </BrowserRouter>
         </AuthProvider>
     );
 }

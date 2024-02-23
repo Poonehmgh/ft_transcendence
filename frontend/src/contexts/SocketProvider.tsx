@@ -1,6 +1,7 @@
 import { io, Socket } from "socket.io-client";
 import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import backendUrl from "src/constants/backendUrl";
+import { useNavigate } from 'react-router-dom';
 
 // Contexts
 import { AuthContext } from "./AuthProvider";
@@ -8,37 +9,6 @@ import { SocialDataContext } from "./SocialDataProvider";
 import { GameInviteAction, GameInviteDTO } from "src/dto/chat-dto";
 
 export const SocketContext = createContext<Socket | null>(null);
-
-// wanted to have only one socket event for this.
-// probably would be nicer to have a separate event for each action
-function handleMatchInvite(data: GameInviteDTO, socket: Socket) {
-    console.log("handleMatchInvite:", data);
-    if (!socket) {
-        console.log("Error in handleMatchInvite: socket is null");
-        return;
-    }
-    switch (data.action) {
-        case GameInviteAction.invite:
-            if (
-                window.confirm(`${data.inviterName} has challenged you! Do you accept?`)
-            ) {
-                data.action = GameInviteAction.acceptInvite;
-            } else {
-                data.action = GameInviteAction.declineInvite;
-            }
-            socket.emit("matchInvite", data);
-            break;
-        case GameInviteAction.declineInvite:
-            alert(`${data.inviterName} has declined your challenge.`);
-            break;
-        case GameInviteAction.matchBegin:
-            alert(`${data.inviterName} has accepted your challenge!`);
-            window.location.href = "/game";
-            break;
-        default:
-            console.error("Invalid GameInviteAction:", data.action);
-    }
-}
 
 interface socketProviderProps {
     children: ReactNode;
@@ -48,6 +18,7 @@ export function SocketProvider(props: socketProviderProps): JSX.Element {
     const { validToken, userId } = useContext(AuthContext);
     const { updateUserData } = useContext(SocialDataContext);
     const [socket, setSocket] = useState<Socket | null>(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         function connectSocket() {
@@ -93,6 +64,40 @@ export function SocketProvider(props: socketProviderProps): JSX.Element {
                 setSocket(null);
             }
         }
+
+        // wanted to have only one socket event for this.
+        // probably would be nicer to have a separate event for each action
+        function handleMatchInvite(data: GameInviteDTO, socket: Socket) {
+            console.log("handleMatchInvite:", data);
+            if (!socket) {
+                console.log("Error in handleMatchInvite: socket is null");
+                return;
+            }
+            switch (data.action) {
+                case GameInviteAction.invite:
+                    if (
+                        window.confirm(
+                            `${data.inviterName} has challenged you! Do you accept?`
+                        )
+                    ) {
+                        data.action = GameInviteAction.acceptInvite;
+                    } else {
+                        data.action = GameInviteAction.declineInvite;
+                    }
+                    socket.emit("matchInvite", data);
+                    break;
+                case GameInviteAction.declineInvite:
+                    alert(`${data.inviterName} has declined your challenge.`);
+                    break;
+                case GameInviteAction.matchBegin:
+                    alert(`${data.inviterName} has accepted your challenge!`);
+                    navigate('/game');
+                    break;
+                default:
+                    console.error("Invalid GameInviteAction:", data.action);
+            }
+        }
+
         initSocket();
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
