@@ -2,8 +2,8 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import { Socket } from "socket.io";
 import { compareSync, hashSync } from "bcryptjs";
-import { userGateway } from "./userGateway";
 import { UserService } from "src/user/user.service";
+import { GameQueue } from "src/game/game.queue";
 
 // DTO
 import {
@@ -15,7 +15,7 @@ import {
     JoinChatDTO,
     SendMessageDTO,
 } from "./chat.DTOs";
-import { GameQueue } from "src/game/game.queue";
+import { userGateway } from "src/game/game.queue";
 
 @Injectable()
 export class ChatGatewayService {
@@ -639,22 +639,36 @@ export class ChatGatewayService {
                 throw new Error("One of the users is not online");
             }
 
-            const inviterGateway: userGateway = null;
-            inviterGateway.socket = inviterSocket;
-            inviterGateway.userID = data.inviterId;
-            inviterGateway.userName = data.inviterName;
+            data.action = GameInviteAction.matchBegin;
+
+            this.sendDataEventToList(
+                [data.inviterId, data.inviteeId],
+                "matchInvite",
+                data
+            );
 
             this.gameQueue.initGame(
-                inviterGateway,
+                new userGateway(data.inviterId, inviterSocket),
                 new userGateway(data.inviteeId, inviteeSocket)
             );
-            inviterSocket.emit("matchInvite", {
-                action: GameInviteAction.matchBegin,
-                inviteeId: data.inviteeId,
-            });
         } catch (error) {
             console.log(`error in acceptMatchInvite: ${error.message}`);
-            recipientSocket.emit("errorAlert", { message: error.message });
+            this.sendDataEventToList([data.inviterId, data.inviteeId], "errorAlert", {
+                message: error.message,
+            });
+        }
+    }
+
+    declineMatchInvite(data: GameInviteDTO) {
+        try {
+            const inviterSocket = this.getUserSocketFromUserId(data.inviterId);
+            if (!inviterSocket) {
+                throw new Error("Inviter is not online");
+            }
+            data.action = GameInviteAction.declineInvite;
+            inviterSocket.emit("matchInvite", data);
+        } catch (error) {
+            console.log(`error in declineMatchInvite: ${error.message}`);
         }
     }
 }

@@ -106,66 +106,27 @@ export class ChatGateway implements OnModuleInit, OnGatewayDisconnect {
         @MessageBody() data: { recipientId: string } | GameInviteDTO
     ) {
         console.log("matchInvite:", data);
-        if ("recipientId" in data) {
-            try {
+        try {
+            if ("recipientId" in data) {
                 await this.chatGatewayService.inviteUserToMatch(
                     parseInt(data.recipientId),
                     userSocket
                 );
-            } catch (error) {
-                console.error("Error matchInvite:", error);
-                userSocket.emit("errorAlert", { message: error.message });
+            } else {
+                switch (data.action) {
+                    case GameInviteAction.acceptInvite:
+                        this.chatGatewayService.acceptMatchInvite(data);
+                        break;
+                    case GameInviteAction.declineInvite:
+                        this.chatGatewayService.declineMatchInvite(data);
+                        break;
+                    default:
+                        console.error("Invalid action in handleMatchInvite");
+                        break;
+                }
             }
+        } catch (error) {
+            console.error("Error matchInvite:", error);
         }
-        else {
-            switch (data.action) {
-                case GameInviteAction.acceptInvite:
-                    try {
-                        await this.chatGatewayService.acceptMatchInvite(data);
-                    } catch (error) {
-                        console.error("Error matchInvite:", error);
-                        userSocket.emit("errorAlert", { message: error.message });
-                    }
-                    break;
-                case GameInviteAction.declineInvite:
-                    try {
-                        await this.chatGatewayService.declineMatchInvite(data);
-                    } catch (error) {
-                        console.error("Error matchInvite:", error);
-                        userSocket.emit("errorAlert", { message: error.message });
-                    }
-                    break;
-            }
-
-        /*
- 
-  
-      case data.action: acceptInvite
-          start local catch block
-          get inviterName or throw
-          get inviteename or throw
-          get socket of inviter or throw
-          get socket of invitee or throw
-  
-          emit to both "matchInvite" with both names and action: matchBeginn
-          start countdown for x seconds
-          launch game init 
-  
-          catch
-          if sockets
-          emit errorAlert to inviter and invitee
-  
-      case data.action: declineinvite
-          start local catch block
-          get inviteename or throw
-          get socket of inviter or throw
-  
-          emit matchinvite to inviter with updated inviteename and action:declineinvite
-  
-  
-  
-  
-
-      */
     }
 }
