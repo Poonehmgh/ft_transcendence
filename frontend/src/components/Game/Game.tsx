@@ -60,6 +60,7 @@ function Game() {
   }, []);
 
   useEffect(() => {
+    if (!socket) return;
     const handleQueue = (data) => {
       if (data === "Confirmed") {
         setQueueStatus("In Queue");
@@ -84,6 +85,7 @@ function Game() {
   }, []);
 
   useEffect(() => {
+    if (!socket) return;
     const handleNewRound = (data) => {
       if (userData) {
         setNewRound(data);
@@ -137,6 +139,7 @@ function Game() {
   }, [opponentID]);
 
   useEffect(() => {
+    if (!socket) return;
     const handleGameUpdate = (data) => {
       setGameUpdate(data);
       // console.log("handleGameUpdate");
@@ -161,6 +164,7 @@ function Game() {
   };
 
   useEffect(() => {
+    if (!socket) return;
     const handleGameResult = (data) => {
       resetHooks();
       // console.log("gameResult");
