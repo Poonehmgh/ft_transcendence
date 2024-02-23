@@ -11,6 +11,7 @@ import { User } from '@prisma/client';
 
 /*Services*/
 import { AuthService } from '../auth.service';
+import { CryptoService } from '../crypto/crypto.service';
 
 /**OTPLIB */
 import {authenticator} from "otplib";
@@ -21,6 +22,7 @@ export class TwoFactorService {
         private prisma: PrismaService,
         @Inject(forwardRef(() => AuthService)) /* By using forwardRef, you're deferring the resolution of AuthService until runtime, allowing the circular dependency to be resolved properly.*/
         private authservice: AuthService,
+        private cypto: CryptoService,
     ){}
 
     /*redirect 2fa enabled sign in */
@@ -39,10 +41,14 @@ export class TwoFactorService {
             throw new UnauthorizedException("Activate2Fa: No such user found.");
 
         const secretKey  = await this.authservice.createSecretKey();
+        const encryptedSecret = this.cypto.encrypt(secretKey);
 
         const updateUser = await this.prisma.user.update({
             where: {id: foundUser.id},
-            data: {twoFaSecret:secretKey},
+            data: {
+                // twoFaSecret:secretKey
+                twoFaSecret: encryptedSecret
+            },
         })
 
         const qrUrl = await this.authservice.generateTwoFaQRCode(foundUser, secretKey);
@@ -56,9 +62,12 @@ export class TwoFactorService {
         if (!foundUser)
             throw new UnauthorizedException("Verify2FaCode: No such user found.");
 
+        const decryptedSecret = this.cypto.decrypt(foundUser.twoFaSecret);
+
         const verified = authenticator.verify({
             token: code,
-            secret: foundUser.twoFaSecret,
+            // secret: foundUser.twoFaSecret,
+            secret: decryptedSecret,
         });
 
         if (verified)
@@ -92,9 +101,12 @@ export class TwoFactorService {
         const foundUser = await this.authservice.findUserByEmail(email);
         if (!foundUser)
             throw new UnauthorizedException("Authenticate2Fa: No such user found.");
+
+        const decryptedSecret = this.cypto.decrypt(foundUser.twoFaSecret);
         const verified = authenticator.verify({
             token: code,
-            secret: foundUser.twoFaSecret,
+            // secret: foundUser.twoFaSecret,
+            secret: decryptedSecret,
         });
         if (!verified)
             throw new Error("Authenticate2Fa: Invalid code.");
@@ -126,9 +138,13 @@ export class TwoFactorService {
             if (!foundUser)
                 throw new BadRequestException("Deactivate2Fa: No such user found.");
 
+            const decryptedSecret = this.cypto.decrypt(foundUser.twoFaSecret);
+
             const verified = authenticator.verify({
                 token: code,
-                secret:foundUser.twoFaSecret });
+                // secret:foundUser.twoFaSecret,
+                secret: decryptedSecret,
+                });
                 // console.log("here", code, foundUser.twoFaSecret, verified);
 
             if (!verified)

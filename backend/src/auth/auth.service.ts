@@ -21,6 +21,12 @@ import {jwtSecret, jwtExpire} from "../utils/constants"
 import {User_42} from "./interfaces/user_42.interface";
 
 
+
+import { createCipheriv, randomBytes, scrypt } from 'crypto';
+import { promisify } from 'util';
+import { createDecipheriv } from 'crypto';
+
+
 @Injectable()
 export class AuthService {
     constructor(private prisma: PrismaService, private jwt: JwtService) {}
@@ -233,5 +239,6 @@ export class AuthService {
             },
         });
     }
+
 
 }
