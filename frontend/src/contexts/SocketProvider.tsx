@@ -9,19 +9,35 @@ import { GameInviteAction, GameInviteDTO } from "src/dto/chat-dto";
 
 export const SocketContext = createContext<Socket | null>(null);
 
+// wanted to have only one socket event for this.
+// probably would be nicer to have a separate event for each action
 function handleMatchInvite(data: GameInviteDTO, socket: Socket) {
     console.log("handleMatchInvite:", data);
     if (!socket) {
         console.log("Error in handleMatchInvite: socket is null");
         return;
     }
-    if (window.confirm(`${data.inviterName} has challenged you! Do you accept?`)) {
-        data.action = GameInviteAction.acceptInvite;
-    } else {
-        data.action = GameInviteAction.declineInvite;
+    switch (data.action) {
+        case GameInviteAction.invite:
+            if (
+                window.confirm(`${data.inviterName} has challenged you! Do you accept?`)
+            ) {
+                data.action = GameInviteAction.acceptInvite;
+            } else {
+                data.action = GameInviteAction.declineInvite;
+            }
+            socket.emit("matchInvite", data);
+            break;
+        case GameInviteAction.declineInvite:
+            alert(`${data.inviterName} has declined your challenge.`);
+            break;
+        case GameInviteAction.matchBegin:
+            alert(`${data.inviterName} has accepted your challenge!`);
+            window.location.href = "/game";
+            break;
+        default:
+            console.error("Invalid GameInviteAction:", data.action);
     }
-
-    socket.emit("matchInvite", data);
 }
 
 interface socketProviderProps {
@@ -66,9 +82,9 @@ export function SocketProvider(props: socketProviderProps): JSX.Element {
                 setSocket(newSocket);
 
                 return () => {
+                    newSocket.off("socialUpdate");
+                    newSocket.off("matchInvite");
                     newSocket.off("errorAlert");
-                    newSocket.off("socialUpdate", updateUserData);
-                    newSocket.off("gameInvite", updateUserData);
                     newSocket.offAny();
                     disconnectSocket(newSocket);
                 };

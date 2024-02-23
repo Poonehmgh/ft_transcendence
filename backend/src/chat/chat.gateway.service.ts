@@ -3,7 +3,7 @@ import { PrismaService } from "../prisma/prisma.service";
 import { Socket } from "socket.io";
 import { compareSync, hashSync } from "bcryptjs";
 import { UserService } from "src/user/user.service";
-import { GameQueue } from "src/game/game.queue";
+import { GameQueue, userGateway as GameUserGateway } from "src/game/game.queue";
 
 // DTO
 import {
@@ -15,7 +15,8 @@ import {
     JoinChatDTO,
     SendMessageDTO,
 } from "./chat.DTOs";
-import { userGateway } from "src/game/game.queue";
+import { userGateway } from "./userGateway";
+
 
 @Injectable()
 export class ChatGatewayService {
@@ -648,8 +649,8 @@ export class ChatGatewayService {
             );
 
             this.gameQueue.initGame(
-                new userGateway(data.inviterId, inviterSocket),
-                new userGateway(data.inviteeId, inviteeSocket)
+                new GameUserGateway(data.inviterId, inviterSocket),
+                new GameUserGateway(data.inviteeId, inviteeSocket)
             );
         } catch (error) {
             console.log(`error in acceptMatchInvite: ${error.message}`);
