@@ -1,9 +1,11 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import backendUrl from "src/constants/backendUrl";
 import { fetchWrapper, sanitizeInput } from "src/functions/utils";
+import Toast from "src/components/shared/Toast";
 
 // Contexts
 import { ChatContext } from "src/contexts/ChatProvider";
+import { ToastContext } from "src/contexts/ToastProvider";
 
 // DTO
 import { ExtendedChatUserDTO } from "src/dto/chat-dto";
@@ -13,12 +15,13 @@ import "src/styles/chat.css";
 import "src/styles/style.css";
 
 function ChatOptions(): React.JSX.Element {
-    const [isOwner, setIsOwner] = useState<boolean>(false);
-    const {
-        activeChat,
+	const {
+		activeChat,
         changeActiveChat,
         updateMyChats: fetchThisUsersChats,
     } = useContext(ChatContext);
+	const {showToast} = useContext(ToastContext);
+	const [isOwner, setIsOwner] = useState<boolean>(false);
     const [hasPassword, setHasPassword] = useState<boolean>(false);
 
     useEffect(() => {
@@ -39,7 +42,7 @@ function ChatOptions(): React.JSX.Element {
         if (window.confirm(promptText)) {
             const apiUrl = backendUrl.chat + `leave/${activeChat?.id}`;
             const res = await fetchWrapper<{ message: string }>("PATCH", apiUrl, null);
-            alert(res.message);
+			showToast(res.message);
             fetchThisUsersChats();
             changeActiveChat(null);
         }
@@ -55,7 +58,7 @@ function ChatOptions(): React.JSX.Element {
         const data = { newName: sanitizeInput(newName) };
         console.log(data);
         const res = await fetchWrapper<{ message: string }>("PATCH", apiUrl, data);
-        alert(res.message);
+		showToast(res.message);
         fetchThisUsersChats();
         changeActiveChat(activeChat?.id);
     }
@@ -64,7 +67,7 @@ function ChatOptions(): React.JSX.Element {
         if (!window.confirm("Are you sure you want to remove the password?")) return;
         const apiUrl = backendUrl.chat + `remove_password/${activeChat?.id}`;
         const res = await fetchWrapper<{ message: string }>("PATCH", apiUrl, null);
-        alert(res.message);
+		showToast(res.message);
         fetchThisUsersChats();
         changeActiveChat(activeChat?.id);
     }
@@ -73,17 +76,18 @@ function ChatOptions(): React.JSX.Element {
         const newPassword = prompt("Enter new password:");
         if (!newPassword) return;
         if (newPassword.length < 3) {
-            alert("Password must be at least 3 characters long");
+            showToast("Password must be at least 3 characters long");
             return;
         }
         const apiUrl = backendUrl.chat + `change_password/${activeChat?.id}`;
         const res = await fetchWrapper<{ message: string }>("PATCH", apiUrl, {
             password: newPassword,
         });
-        alert(res.message);
+		showToast(res.message);
         fetchThisUsersChats();
         changeActiveChat(activeChat?.id);
     }
+
 
     if (!activeChat) return null;
 
