@@ -37,7 +37,6 @@
 
 
 IMMEDIATE MULAIN
-- memberoptions missing admin
 - chatoptions missing owner rights on school mac
 - handle game invites
 - rerender on getting kicked: memberlist not rerendering
