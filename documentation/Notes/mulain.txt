@@ -19,6 +19,7 @@
     - match model
     - add match id to user model match[]
     - calculate new win rate and update user model winrate field
+/ dont forget to remove sensitive data from auth etc
 
 - move 2fa actived / not actived info from playerCard to only ManageProfile
 - move auth frontend files from userprofile to manageprofile
