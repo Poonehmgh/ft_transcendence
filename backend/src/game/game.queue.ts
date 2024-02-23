@@ -19,7 +19,7 @@ export class GameData {
     PositionBall: [number, number] = [50, 50];
     VelocityBall: [number, number] = [1, 0];
 
-    //1 is active, 0 is inactive
+    //1 is active, 0 is inactive ,3 its being deleted
     GameStatus: number = 1;
     intervalTime: number = 69;
 
@@ -136,12 +136,15 @@ export class GameData {
     }
 
     gameLogic = () => {
-        this.plankCollision();
+        if(this.GameStatus !== 3)
+				{
+				this.plankCollision();
         this.updateBallPosition();
         this.fieldCollision();
         clearInterval(this.interval);
         this.intervalTime *= 0.99;
         this.interval = setInterval(this.gameLogic, this.intervalTime);
+				}
         // console.log(this);
     }
 }
@@ -186,7 +189,7 @@ export class GameQueue {
         }
     };
 
-    async incrementScoreInDB(userID: number) {
+    incrementScoreInDB = async(userID: number) => {
         await this.prismaService.user.update({
             where: {
                 id: userID,
@@ -199,7 +202,7 @@ export class GameQueue {
         });
     }
 
-    async decrementScoreInDB(userID: number) {
+    decrementScoreInDB = async(userID: number) => {
         await this.prismaService.user.update({
             where: {
                 id: userID,
@@ -212,7 +215,7 @@ export class GameQueue {
         });
     }
 
-    async calculateWinRate(userId: number){
+  	calculateWinRate = async(userId: number) => {
         let matches = await this.prismaService.match.findMany({
             where: {
                 OR: [
@@ -246,46 +249,48 @@ export class GameQueue {
 
     }
 
-    async gameEnder(indexToRemove: number) {
+    gameEnder = async(game: GameData) => {
         let match = await this.prismaService.match.create({
             data: {
                 end: new Date(),
-                player1: this.gameList[indexToRemove].infoUser1.userID,
-                player2: this.gameList[indexToRemove].infoUser2.userID,
-                score_p1: this.gameList[indexToRemove].ScorePlayer1,
-                score_p2: this.gameList[indexToRemove].ScorePlayer2,
-                winner_id: this.gameList[indexToRemove].ScorePlayer1 > this.gameList[indexToRemove].ScorePlayer2 ? this.gameList[indexToRemove].infoUser1.userID : this.gameList[indexToRemove].infoUser2.userID,
-                winner_name: this.gameList[indexToRemove].ScorePlayer1 > this.gameList[indexToRemove].ScorePlayer2 ? this.gameList[indexToRemove].infoUser1.userName : this.gameList[indexToRemove].infoUser2.userName,
+                player1: game.infoUser1.userID,
+                player2: game.infoUser2.userID,
+                score_p1: game.ScorePlayer1,
+                score_p2: game.ScorePlayer2,
+                winner_id: game.ScorePlayer1 > game.ScorePlayer2 ? game.infoUser1.userID : game.infoUser2.userID,
+                winner_name: game.ScorePlayer1 > game.ScorePlayer2 ? game.infoUser1.userName : game.infoUser2.userName,
             },
         });
         console.log(match);
         //player 1 wins
-        if (this.gameList[indexToRemove].ScorePlayer1 > this.gameList[indexToRemove].ScorePlayer2) {
-            this.gameList[indexToRemove].infoUser1.socket.emit('gameResult', 'Won');
-            this.gameList[indexToRemove].infoUser2.socket.emit('gameResult', 'Lost');
-            await this.incrementScoreInDB(this.gameList[indexToRemove].infoUser1.userID);
-            await this.decrementScoreInDB(this.gameList[indexToRemove].infoUser2.userID);
-        } else if (this.gameList[indexToRemove].ScorePlayer1 < this.gameList[indexToRemove].ScorePlayer2) {
-            this.gameList[indexToRemove].infoUser2.socket.emit('gameResult', 'Won');
-            this.gameList[indexToRemove].infoUser1.socket.emit('gameResult', 'Lost');
-            await this.incrementScoreInDB(this.gameList[indexToRemove].infoUser2.userID);
-            await this.decrementScoreInDB(this.gameList[indexToRemove].infoUser1.userID);
+        if (game.ScorePlayer1 > game.ScorePlayer2) {
+            game.infoUser1.socket.emit('gameResult', 'Won');
+            game.infoUser2.socket.emit('gameResult', 'Lost');
+            await this.incrementScoreInDB(game.infoUser1.userID);
+            await this.decrementScoreInDB(game.infoUser2.userID);
+        } else if (game.ScorePlayer1 < game.ScorePlayer2) {
+            game.infoUser2.socket.emit('gameResult', 'Won');
+            game.infoUser1.socket.emit('gameResult', 'Lost');
+            await this.incrementScoreInDB(game.infoUser2.userID);
+            await this.decrementScoreInDB(game.infoUser1.userID);
         } else {
-            this.gameList[indexToRemove].infoUser1.socket.emit('gameResult', 'Draw');
-            this.gameList[indexToRemove].infoUser2.socket.emit('gameResult', 'Draw');
+            game.infoUser1.socket.emit('gameResult', 'Draw');
+            game.infoUser2.socket.emit('gameResult', 'Draw');
         }
-        await this.calculateWinRate(this.gameList[indexToRemove].infoUser1.userID);
-        await this.calculateWinRate(this.gameList[indexToRemove].infoUser2.userID);
+        await this.calculateWinRate(game.infoUser1.userID);
+        await this.calculateWinRate(game.infoUser2.userID);
     }
 
 
-    async gameCleaner() {
-        const indexToRemove = this.gameList.findIndex((game) => game.GameStatus === 0);
+    gameCleaner = async () => {
+        const indexToRemove = this.gameList.findIndex((game) => game.GameStatus === 0 );
 
         if (indexToRemove !== -1) {
+					this.gameList[indexToRemove].GameStatus = 3;
+						const game: GameData = this.gameList[indexToRemove];
             // Use splice to remove the item at the found index
-            await this.gameEnder(indexToRemove);
-            clearInterval(this.gameList[indexToRemove].interval);
+            await this.gameEnder(game);
+            clearInterval(game.interval);
             console.log(`deleted a game`, "\n" +
                 ". . . . . . . . . . .,'´`. ,'``;\n" +
                 ". . . . . . . . . .,`. . .`—–'..\n" +
