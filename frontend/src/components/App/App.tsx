@@ -4,17 +4,20 @@ import { BrowserRouter } from "react-router-dom";
 import { SocketProvider } from "src/contexts/SocketProvider";
 import { AuthProvider } from "src/contexts/AuthProvider";
 import { SocialDataProvider } from "src/contexts/SocialDataProvider";
+import { ToastProvider } from "src/contexts/ToastProvider";
 
 function App() {
     return (
         <AuthProvider>
-            <SocialDataProvider>
-                <SocketProvider>
-                    <BrowserRouter>
-                        <PongersRoutes />
-                    </BrowserRouter>
-                </SocketProvider>
-            </SocialDataProvider>
+			<ToastProvider>
+            	<SocialDataProvider>
+                	<SocketProvider>
+                    	<BrowserRouter>
+                     	   <PongersRoutes />
+                    	</BrowserRouter>
+                	</SocketProvider>
+            	</SocialDataProvider>
+			</ToastProvider>
         </AuthProvider>
     );
 }

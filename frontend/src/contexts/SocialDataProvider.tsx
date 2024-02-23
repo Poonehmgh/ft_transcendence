@@ -1,9 +1,10 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import backendUrl from "src/constants/backendUrl";
 import { fetchWrapper } from "src/functions/utils";
 
 // DTO
 import { IdAndNameDTO } from "user-dto";
+import { ToastContext } from "./ToastProvider";
 
 export const SocialDataContext = createContext({
     friends: null as IdAndNameDTO[],
@@ -25,8 +26,9 @@ export function SocialDataProvider({ children }) {
     const [friendReqOut, setFriendReqOut] = useState<IdAndNameDTO[]>(null);
     const [friendReqIn, setFriendReqIn] = useState<IdAndNameDTO[]>(null);
     const [blockedUsers, setBlockedUsers] = useState<IdAndNameDTO[]>(null);
-
-    // updaters
+	const {showToast} = useContext(ToastContext);
+    
+	// updaters
 
     async function updateFriends() {
         const friendsData = await fetchWrapper<IdAndNameDTO[]>(
@@ -87,7 +89,7 @@ export function SocialDataProvider({ children }) {
         const response = await fetchWrapper<{ message: string }>(method, apiUrl, body);
         if (response) {
             updateFriendReqOut();
-            alert(response.message);
+            showToast(response.message);
         }
     }
 
@@ -103,7 +105,7 @@ export function SocialDataProvider({ children }) {
             );
             if (response) {
                 updateFriendReqOut();
-                alert(response.message);
+                showToast(response.message);
             }
         }
     }
@@ -120,7 +122,7 @@ export function SocialDataProvider({ children }) {
             );
             if (response) {
                 updateFriends();
-                alert(response.message);
+                showToast(response.message);
             }
         }
     }
@@ -137,7 +139,7 @@ export function SocialDataProvider({ children }) {
             );
             if (response) {
                 updateBlockedUsers();
-                alert(response.message);
+                showToast(response.message);
             }
         }
     }
@@ -154,7 +156,7 @@ export function SocialDataProvider({ children }) {
             );
             if (response) {
                 updateBlockedUsers();
-                alert(response.message);
+                showToast(response.message);
             }
         }
     }
@@ -172,7 +174,7 @@ export function SocialDataProvider({ children }) {
             if (response) {
                 updateFriendReqIn();
                 updateFriends();
-                alert(response.message);
+                showToast(response.message);
             }
         }
     }
@@ -189,7 +191,7 @@ export function SocialDataProvider({ children }) {
             );
             if (response) {
                 updateFriendReqIn();
-                alert(response.message);
+                showToast(response.message);
             }
         }
     }

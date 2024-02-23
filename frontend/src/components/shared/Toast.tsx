@@ -5,34 +5,28 @@ import "src/styles/style.css";
 
 interface ToastProps {
     message: string;
-    duration?: number;
 }
 
 function Toast(props: ToastProps): React.JSX.Element {
     const [visible, setVisible] = useState(true);
 
-    console.log("Toast message: ", props.message);
-    console.log("Toast duration: ", props.duration);
-    console.log("Toast visible: ", visible);
+	console.log("entering Taost component");
+	
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            setVisible(false);
-        }, props.duration || 3000);
+            console.log("setting visible to false in setTimeout");
+			setVisible(false);
+
+        }, 3000);
 
         return () => {
             clearTimeout(timer);
         };
-    }, [props.duration]);
-
-    const handleToastClick = () => {
-        setVisible(false);
-    };
-
-    if (!visible) return null;
+    }, []);
 
     return (
-        <div className="toast" onClick={handleToastClick}>
+        <div className={`toast ${visible ? 'show' : 'hide'}`}>
             {props.message}
         </div>
     );
