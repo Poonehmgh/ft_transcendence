@@ -151,7 +151,6 @@ function Game() {
   }, [refreshCount]);
 
   const resetHooks = () => {
-    setUserData(null);
     setOpponentID(null);
     setOpponentData(null);
     setQueueStatus("Join Queue");

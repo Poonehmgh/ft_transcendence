@@ -110,7 +110,7 @@ export class GameData {
 		console.log(`points for player ${user}`)
 		// console.log(this);
 		clearInterval(this.interval);
-		this.interval = setInterval(this.gameLogic, 10);
+		this.interval = setInterval(this.gameLogic, 69);
 		console.log('restarted');
 
 	}
@@ -191,22 +191,18 @@ export class GameQueue {
         }
     };
 
-    initGame = (userInfo1: userGateway, userInfo2: userGateway) => {
-        const gameToStart = new GameData(
-            userInfo1,
-            userInfo2,
-            Math.floor(Math.random() * 1000)
-        );
-        if (!this.gameList.includes(gameToStart)) {
-            gameToStart.sendNewRoundMessage();
-            gameToStart.interval = setInterval(gameToStart.gameLogic, 10);
-            console.log(`initialized game with`);
-            this.gameList.push(gameToStart); //add id gen from prisma
-        }
-        if (this.gameCheckerInterval == null) {
-            this.gameCheckerInterval = setInterval(this.gameCleaner, 10);
-        }
-    };
+	initGame = (userInfo1: userGateway, userInfo2: userGateway) => {
+		const gameToStart = new GameData(userInfo1, userInfo2, Math.floor(Math.random() * 1000))
+		if (!this.gameList.includes(gameToStart)) {
+			gameToStart.sendNewRoundMessage();
+			gameToStart.interval = setInterval(gameToStart.gameLogic, 69);
+			console.log(`initialized game with`);
+			this.gameList.push(gameToStart);//add id gen from prisma
+		}
+		if (this.gameCheckerInterval == null) {
+			this.gameCheckerInterval = setInterval(this.gameCleaner, 10);
+		}
+	}
 
     findGameByUser = (userInfo: userGateway): GameData => {
         for (const gameData of this.gameList) {
