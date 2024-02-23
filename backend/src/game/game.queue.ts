@@ -267,6 +267,8 @@ export class GameQueue {
         let match = await this.prismaService.match.create({
             data: {
                 end: new Date(),
+                length_sec: 69,
+                begin: new Date(),
                 player1: game.infoUser1.userID,
                 player2: game.infoUser2.userID,
                 score_p1: game.ScorePlayer1,
