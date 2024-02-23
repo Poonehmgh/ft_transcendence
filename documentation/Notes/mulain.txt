@@ -12,6 +12,11 @@
     - test unbanned
     - test password
     - test password after change
+- stress test invites
+    - invitee in queue
+    - invitee has blcoked inviter
+    - invitee in game
+    - invitee offline
 - stress test game
 - test 2fa auth
 - test login with taken name
@@ -41,6 +46,7 @@ IMMEDIATE MULAIN
 
 
 - Optimization (optional)
+	- add userprofile to a provider
     - get chat message names not from chat but from backend? (Problem: user left chat/ kicked etc)
     - remove password functionality from non public chats:
         you cant join them anyway if you are not invited

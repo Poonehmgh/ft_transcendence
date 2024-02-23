@@ -154,37 +154,42 @@ export class userGateway {
 
 @Injectable()
 export class GameQueue {
-	gameList: GameData[] = [];
-	userQueue: userGateway[] = [];
-	gameCheckerInterval: NodeJS.Timer = null;
+    gameList: GameData[] = [];
+    userQueue: userGateway[] = [];
+    gameCheckerInterval: NodeJS.Timer = null;
 
-	constructor(private readonly prismaService: PrismaService) {
-	}
+    constructor(private readonly prismaService: PrismaService) {
+        console.log("Starting game queue");
+    }
 
-	updatePlankPosition = (data: PlankUpdateDTO) => {
-		const gameData: GameData = this.gameList.find((elem) => elem.infoUser1.userID === data.userID || elem.infoUser2.userID === data.userID);
-		if (gameData) {
-			// Update the plank position based on the user's ID
-			if (gameData.infoUser1.userID === data.userID) {
-				gameData.PositionPlank1 = data.plankPosition;
-			} else if (gameData.infoUser2.userID === data.userID) {
-				gameData.PositionPlank2 = data.plankPosition;
-			}
-			//add socket message about game start with initial data
-			console.log(`updated successfully`)
-			console.log(this.gameList)
-		}
-	}
+    updatePlankPosition = (data: PlankUpdateDTO) => {
+        const gameData: GameData = this.gameList.find(
+            (elem) =>
+                elem.infoUser1.userID === data.userID ||
+                elem.infoUser2.userID === data.userID
+        );
+        if (gameData) {
+            // Update the plank position based on the user's ID
+            if (gameData.infoUser1.userID === data.userID) {
+                gameData.PositionPlank1 = data.plankPosition;
+            } else if (gameData.infoUser2.userID === data.userID) {
+                gameData.PositionPlank2 = data.plankPosition;
+            }
+            //add socket message about game start with initial data
+            console.log(`updated successfully`);
+            console.log(this.gameList);
+        }
+    };
 
-	gameCleaner = () => {
-		const indexToRemove = this.gameList.findIndex((game) => game.GameStatus === 0);
+    gameCleaner = () => {
+        const indexToRemove = this.gameList.findIndex((game) => game.GameStatus === 0);
 
-		if (indexToRemove !== -1) {
-			// Use splice to remove the item at the found index
-			console.log(`deleted a game`);
-			this.gameList.splice(indexToRemove, 1);
-		}
-	}
+        if (indexToRemove !== -1) {
+            // Use splice to remove the item at the found index
+            console.log(`deleted a game`);
+            this.gameList.splice(indexToRemove, 1);
+        }
+    };
 
 	initGame = (userInfo1: userGateway, userInfo2: userGateway) => {
 		const gameToStart = new GameData(userInfo1, userInfo2, Math.floor(Math.random() * 1000))
@@ -199,72 +204,84 @@ export class GameQueue {
 		}
 	}
 
-	findGameByUser = (userInfo: userGateway): GameData => {
-		for (const gameData of this.gameList) {
-			if (gameData.infoUser1.userID === userInfo.userID) {
-				gameData.infoUser1.socket = userInfo.socket;
-				return gameData; // User is found in one of the GameData instances
-			}
-			if (gameData.infoUser2.userID === userInfo.userID) {
-				gameData.infoUser2.socket = userInfo.socket;
-				return gameData; // User is found in one of the GameData instances
-			}
-		}
-		return null; // User is not found in any of the GameData instances
-	}
+    findGameByUser = (userInfo: userGateway): GameData => {
+        for (const gameData of this.gameList) {
+            if (gameData.infoUser1.userID === userInfo.userID) {
+                gameData.infoUser1.socket = userInfo.socket;
+                return gameData; // User is found in one of the GameData instances
+            }
+            if (gameData.infoUser2.userID === userInfo.userID) {
+                gameData.infoUser2.socket = userInfo.socket;
+                return gameData; // User is found in one of the GameData instances
+            }
+        }
+        return null; // User is not found in any of the GameData instances
+    };
 
-	async checkIfSocketIsAssignedToId(socket: Socket, id: number): Promise<boolean> {
-		const socketIdDB = await this.prismaService.user.findFirst({
-			where: {
-				id: id,
-			},
-			select: {
-				socketId: true,
-			},
-		});
-		if (socketIdDB == null || socketIdDB.socketId != socket.id) {
-			return false;
-		}
-		return true;
-	}
+    async checkIfSocketIsAssignedToId(socket: Socket, id: number): Promise<boolean> {
+        const socketIdDB = await this.prismaService.user.findFirst({
+            where: {
+                id: id,
+            },
+            select: {
+                socketId: true,
+            },
+        });
+        if (socketIdDB == null || socketIdDB.socketId != socket.id) {
+            return false;
+        }
+        return true;
+    }
 
-	async addPlayerToQueue(userInfo: userGateway): Promise<void> {
-		const userIndex = this.userQueue.findIndex((user) => user.userID === userInfo.userID);
-		if (userIndex !== -1) {
-			userInfo.socket.emit('queueConfirm', 'Already in queue')
-			return;
-		}
-		const game = this.findGameByUser(userInfo)
-		if (game != null) {
-			userInfo.socket.emit('queueConfirm', 'Already in game');
-			userInfo.socket.emit('newRound', new NewRoundDTO(game));
-			return;
-		}
-		const name = await this.prismaService.user.findUnique({
-			where: {
-				id: userInfo.userID,
-			},
-			select: {
-				name: true, // Select the 'name' field
-			},
-		});
-		//check for invalid id
-		if (userInfo.userName == null) {
-			userInfo.socket.emit('queueConfirm', 'InvalidID');
-			return;
-		}
-		userInfo.userName = name.name;
-		if (this.userQueue.includes(userInfo))
-			return;
-		if (!await this.checkIfSocketIsAssignedToId(userInfo.socket, userInfo.userID)) {
-			userInfo.socket.emit('queueConfirm', 'Socket is not assigned to this id');
-			return;
-		}
-		this.userQueue.push(userInfo);
-		console.log(`Added user ${userInfo} to the queue`);
-		if (this.userQueue.length >= 2)
-			this.initGame(this.userQueue.pop(), this.userQueue.pop());
-		userInfo.socket.emit('queueConfirm', 'Confirmed');
-	}
+    async addPlayerToQueue(userInfo: userGateway): Promise<void> {
+        const userIndex = this.userQueue.findIndex(
+            (user) => user.userID === userInfo.userID
+        );
+        if (userIndex !== -1) {
+            userInfo.socket.emit("queueConfirm", "Already in queue");
+            return;
+        }
+        const game = this.findGameByUser(userInfo);
+        if (game != null) {
+            userInfo.socket.emit("queueConfirm", "Already in game");
+            userInfo.socket.emit("newRound", new NewRoundDTO(game));
+            return;
+        }
+        const name = await this.prismaService.user.findUnique({
+            where: {
+                id: userInfo.userID,
+            },
+            select: {
+                name: true, // Select the 'name' field
+            },
+        });
+        //check for invalid id
+        if (userInfo.userName == null) {
+            userInfo.socket.emit("queueConfirm", "InvalidID");
+            return;
+        }
+        userInfo.userName = name.name;
+        if (this.userQueue.includes(userInfo)) return;
+        if (!(await this.checkIfSocketIsAssignedToId(userInfo.socket, userInfo.userID))) {
+            userInfo.socket.emit("queueConfirm", "Socket is not assigned to this id");
+            return;
+        }
+        this.userQueue.push(userInfo);
+        console.log(`Added user ${userInfo} to the queue`);
+        if (this.userQueue.length >= 2)
+            this.initGame(this.userQueue.pop(), this.userQueue.pop());
+        userInfo.socket.emit("queueConfirm", "Confirmed");
+    }
 
+    // checkers
+
+    isUserInQueue = (userId: number): boolean => {
+        return this.userQueue.some((user) => user.userID === userId);
+    };
+
+    isUserInMatch = (userId: number): boolean => {
+        return this.gameList.some(
+            (game) => game.infoUser1.userID === userId || game.infoUser2.userID === userId
+        );
+    };
 }

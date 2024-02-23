@@ -1,4 +1,3 @@
-import { findIndex } from "rxjs";
 import {
     ArrayUnique,
     ArrayMinSize,
@@ -8,7 +7,6 @@ import {
 } from "class-validator";
 import { Chat, Chat_User, Message } from "@prisma/client";
 import { UserService } from "src/user/user.service";
-import { ChatService } from "src/chat/chat.service";
 
 export class CreateNewChatDTO {
     name: string;
@@ -373,4 +371,33 @@ export class ChatIdDTO {
     constructor(chatId: number) {
         this.chatId = chatId;
     }
+}
+
+export class GameInviteDTO {
+    inviterId: number;
+    inviterName: string;
+    inviteeId: number;
+    inviteeName: string;
+    action: GameInviteAction;
+
+    constructor(
+        inviterId: number,
+        inviterName: string,
+        inviteeId: number,
+        inviteeName: string,
+        action: GameInviteAction
+    ) {
+        this.inviterId = inviterId;
+        this.inviterName = inviterName;
+        this.inviteeId = inviteeId;
+        this.inviteeName = inviteeName;
+        this.action = action;
+    }
+}
+
+export enum GameInviteAction {
+    invite,
+    acceptInvite,
+    declineInvite,
+    matchBegin,
 }

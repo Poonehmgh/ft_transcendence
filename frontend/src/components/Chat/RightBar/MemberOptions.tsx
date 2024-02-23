@@ -51,7 +51,10 @@ function MemberOptions(props: memberOptionsProps): React.JSX.Element {
             kick: false,
         };
 
-        if (action === "owner") {
+        // changing update method on backend would allow to completely
+		// get rid of this monstrosity. just pass action into prompt and
+		// send to backend
+		if (action === "owner") {
             if (!window.confirm(`Transfer ownership to ${selectedUser.userName}?`))
                 return;
             data.owner = true;
@@ -86,8 +89,8 @@ function MemberOptions(props: memberOptionsProps): React.JSX.Element {
     }
 
     function inviteUserToMatch() {
-        if (!window.confirm(`Invite ${selectedUser.userName} to a pongers match?`))
-            socket.emit("inviteUserToMatch", { userId: selectedUser.userId });
+        if (window.confirm(`Invite ${selectedUser.userName} to a pongers match?`))
+            socket.emit("matchInvite", { recipientId: selectedUser.userId});
     }
 
     function handleOpenModal() {

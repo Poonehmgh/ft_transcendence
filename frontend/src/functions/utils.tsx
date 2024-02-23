@@ -49,6 +49,8 @@ export function gotValidToken() {
         }
         const expirationTime = token.exp * 1000;
         return expirationTime > Date.now();
+
+        
     } catch (error) {
         console.error("Error decoding or validating token:", error);
         return false;
