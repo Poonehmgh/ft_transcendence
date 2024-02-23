@@ -384,7 +384,6 @@ export class ChatService {
         newChatDto: NewChatDTO
     ): Promise<ChatInfoDTO | null> {
         console.log("createGroupChat called for users:", newChatDto.userIds);
-        let salt: string = null;
 
         const userNames: string[] = await Promise.all(
             newChatDto.userIds.map(async (e) => await this.userService.getNameById(e))
@@ -393,8 +392,7 @@ export class ChatService {
         const omittedCount: number = userNames.length - 3;
 
         if (newChatDto.password) {
-            salt = genSaltSync(10);
-            newChatDto.password = hashSync(newChatDto.password, salt);
+            newChatDto.password = hashSync(newChatDto.password, 12);
         }
 
         const newChatName = `Chat with ${firstThreeNames.join(", ")}${
@@ -407,7 +405,6 @@ export class ChatService {
                 dm: false,
                 isPrivate: newChatDto.isPrivate,
                 passwordHash: newChatDto.password,
-                passwordSalt: salt,
                 chatUsers: {
                     createMany: {
                         data: newChatDto.userIds.map((e) => ({
@@ -536,8 +533,7 @@ export class ChatService {
                 },
             });
 
-            const newSalt = genSaltSync(10);
-            const newPasswordHash = hashSync(password, newSalt);
+            const newPasswordHash = hashSync(password, 12);
 
             if (chat.chatUsers.find((e) => e.userId === userId && e.owner)) {
                 await this.prisma.chat.update({
@@ -546,7 +542,6 @@ export class ChatService {
                     },
                     data: {
                         passwordHash: newPasswordHash,
-                        passwordSalt: newSalt,
                     },
                 });
                 return { message: "Password changed" };
