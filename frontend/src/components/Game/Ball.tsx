@@ -12,6 +12,10 @@ function Ball(props) {
         0.98 * newRound.PositionBall[0] + 1.5,
         -0.435 * newRound.PositionBall[1] + 95.5,
       ]);
+      setTargetPosition([
+        1.02 * newRound.PositionBall[0] - 1.73,
+        -0.425 * newRound.PositionBall[1] + 94,
+      ]);
     }
   }, [newRound]);
 
