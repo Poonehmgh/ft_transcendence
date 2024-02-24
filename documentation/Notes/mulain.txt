@@ -38,7 +38,10 @@
 
 
 IMMEDIATE MULAIN
-- rerender on getting kicked: memberlist not rerendering
+- banned not making rerender on the banned persons frontend
+- leavechat not making rerender on the other chatusers frontend
+- get names of members no longer in chat
+- invite shoiuld fail if invitee is in queue
 
 
 

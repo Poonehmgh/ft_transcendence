@@ -29,7 +29,7 @@ export function ChatProvider({ children }) {
     const [selectedUser, setSelectedUser] = useState(null);
     const [myChats, setMyChats] = useState(null);
 
-    async function updateMyChats() {
+    async function updateMyChats(updatedChatId: number | null = null) {
         const apiUrl = backendUrl.chat + "my_chats";
         const newMyChats = await fetchWrapper<BasicChatWithUsersDTO[]>(
             "GET",
@@ -37,6 +37,11 @@ export function ChatProvider({ children }) {
             null
         );
         setMyChats(newMyChats);
+        if (updatedChatId && activeChat) {
+            if (updatedChatId === activeChat.id) {
+                changeActiveChat(updatedChatId);
+            }
+        }
     }
 
     useEffect(() => {
@@ -60,7 +65,7 @@ export function ChatProvider({ children }) {
                     await changeActiveChat(data.chatId);
                 }
 
-                updateMyChats();
+                updateMyChats(data.chatId);
                 if (!myChats.map((e) => e.id).includes(activeChat.id)) {
                     changeActiveChat(null);
                 }
