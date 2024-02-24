@@ -224,7 +224,9 @@ export class ChatGatewayService {
                 },
             });
 
-            await this.sendDataEventToList([joinChatDto.userId], "joinChatSuccess", null);
+            await this.sendDataEventToList([joinChatDto.userId], "joinChatSuccess", {
+                chatId: joinChatDto.chatId,
+            });
             await this.sendEventToChat(joinChatDto.chatId, "updateChat");
         } catch (error) {
             console.log(`error in joinChat: ${error.message}`);
