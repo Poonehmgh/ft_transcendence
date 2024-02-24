@@ -82,7 +82,7 @@ function Game() {
     return () => {
       socket.off("queueConfirm", handleQueue);
     };
-  }, []);
+  }, [socket]);
 
   useEffect(() => {
     if (!socket) return;
@@ -110,7 +110,7 @@ function Game() {
     return () => {
       socket.off("newRound", handleNewRound);
     };
-  }, [refreshCount]);
+  }, [isPlayerOne, refreshCount, socket, userData]);
 
   useEffect(() => {
     const fetchOpponentData = async () => {
@@ -152,7 +152,7 @@ function Game() {
     return () => {
       socket.off("gameUpdate", handleGameUpdate);
     };
-  }, [refreshCount]);
+  }, [refreshCount, socket]);
 
   const resetHooks = () => {
     setOpponentID(null);
@@ -181,7 +181,7 @@ function Game() {
     return () => {
       socket.off("gameResult", handleGameResult);
     };
-  }, [refreshCount]);
+  }, [refreshCount, socket]);
 
   const sendMessageToServer = () => {
     if (userData) socket.emit("joinQueue", { userID: userData.id });
