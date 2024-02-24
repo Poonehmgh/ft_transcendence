@@ -276,15 +276,15 @@ export class ChatService {
                 },
             });
 
+            if (!chat.chatUsers.some((e) => e.userId === userId))
+                return new Error("User is not part of this chat");
+
             if (!chat) {
                 return new Error("Chat not found");
             }
 
             const extendedChatUsersPromises = chat.chatUsers.map((chatUser) => {
-                return ExtendedChatUserDTO.fromChatUser(
-                    chatUser,
-                    this.userService
-                );
+                return ExtendedChatUserDTO.fromChatUser(chatUser, this.userService);
             });
 
             const extendedChatUsers = await Promise.all(extendedChatUsersPromises);
