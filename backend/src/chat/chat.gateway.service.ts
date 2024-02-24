@@ -649,11 +649,14 @@ export class ChatGatewayService {
                 "matchInvite",
                 data
             );
-
-            this.gameQueue.initGame(
-                new GameUserGateway(data.inviterId, inviterSocket),
-                new GameUserGateway(data.inviteeId, inviteeSocket)
-            );
+            console.log("before timeout")
+            setTimeout(() => {
+                this.gameQueue.initGame(
+                    new GameUserGateway(data.inviterId, inviterSocket),
+                    new GameUserGateway(data.inviteeId, inviteeSocket)
+                );
+            }, 1000);
+            console.log("after timeout")
         } catch (error) {
             console.log(`error in acceptMatchInvite: ${error.message}`);
             this.sendDataEventToList([data.inviterId, data.inviteeId], "errorAlert", {
