@@ -10,12 +10,8 @@ interface ToastProps {
 function Toast(props: ToastProps): React.JSX.Element {
     const [visible, setVisible] = useState(true);
 
-	console.log("entering Taost component");
-	
-
     useEffect(() => {
         const timer = setTimeout(() => {
-            console.log("setting visible to false in setTimeout");
 			setVisible(false);
 
         }, 3000);

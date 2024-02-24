@@ -203,7 +203,7 @@ function Game() {
   useEffect(() => {
     const interval = setInterval(() => {
       setRefreshCount((prevCount) => prevCount + 1);
-    }, 42);
+    }, 100);
 
     return () => clearInterval(interval);
   }, []);

@@ -25,10 +25,10 @@ export class GameGateway implements OnModuleInit{
 
 
   @SubscribeMessage('updatePlank')
-  handleUpdatePlank(@ConnectedSocket() userInfo: Socket, @MessageBody() data : PlankUpdateDTO){
-    console.log(data);
+  async handleUpdatePlank(@ConnectedSocket() userInfo: Socket, @MessageBody() data : PlankUpdateDTO){
+    console.log("on plank update : ", data);
     if (isPlankUpdateDTOValid(data)){
-      this.gameQueue.updatePlankPosition(data);
+      await this.gameQueue.updatePlankPosition(data);
     }
   }
 

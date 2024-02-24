@@ -161,7 +161,7 @@ export class userGateway {
 
 @Injectable()
 export class GameQueue {
-    gameList: GameData[] = [];
+    static gameList: GameData[] = [];
     userQueue: userGateway[] = [];
     gameCheckerInterval: NodeJS.Timer = null;
 
@@ -169,12 +169,14 @@ export class GameQueue {
         console.log("Starting game queue");
     }
 
-    updatePlankPosition = (data: PlankUpdateDTO) => {
-        const gameData: GameData = this.gameList.find(
+    updatePlankPosition = async(data: PlankUpdateDTO) => {
+        const gameData: GameData = GameQueue.gameList.find(
             (elem) =>
                 elem.infoUser1.userID === data.userID ||
                 elem.infoUser2.userID === data.userID
         );
+        console.log("game data is : ", gameData);
+        
         if (gameData) {
             // Update the plank position based on the user's ID
             if (gameData.infoUser1.userID === data.userID) {
@@ -184,7 +186,7 @@ export class GameQueue {
             }
             //add socket message about game start with initial data
             console.log(`updated successfully`);
-            console.log(this.gameList);
+            console.log(GameQueue.gameList);
         }
     };
 
@@ -300,11 +302,11 @@ export class GameQueue {
 
 
     gameCleaner = async () => {
-        const indexToRemove = this.gameList.findIndex((game) => game.GameStatus === 0 );
+        const indexToRemove = GameQueue.gameList.findIndex((game) => game.GameStatus === 0 );
 
         if (indexToRemove !== -1) {
-					this.gameList[indexToRemove].GameStatus = 3;
-						const game: GameData = this.gameList[indexToRemove];
+					GameQueue.gameList[indexToRemove].GameStatus = 3;
+						const game: GameData = GameQueue.gameList[indexToRemove];
             // Use splice to remove the item at the found index
             await this.gameEnder(game);
             clearInterval(game.interval);
@@ -329,17 +331,21 @@ export class GameQueue {
                 ". . . . . /. . . . . /__. . . . .)\n" +
                 ". . . . . '-.. . . . . . .)\n" +
                 ". . . . . . .' - .......-`\n");
-            this.gameList.splice(indexToRemove, 1);
+            GameQueue.gameList.splice(indexToRemove, 1);
         }
     }
 
     initGame = (userInfo1: userGateway, userInfo2: userGateway) => {
+        console.log("users : ", userInfo1, userInfo2);
+        
         const gameToStart = new GameData(userInfo1, userInfo2, Math.floor(Math.random() * 1000))
-        if (!this.gameList.includes(gameToStart)) {
+        if (!GameQueue.gameList.includes(gameToStart)) {
             gameToStart.sendNewRoundMessage();
             gameToStart.interval = setInterval(gameToStart.gameLogic, 42);
             console.log(`initialized game with`);
-            this.gameList.push(gameToStart);//add id gen from prisma
+            GameQueue.gameList.push(gameToStart);//add id gen from prisma
+            console.log("game list after init : ", GameQueue.gameList);
+            
         }
         if (this.gameCheckerInterval == null) {
             this.gameCheckerInterval = setInterval(this.gameCleaner, 10);
@@ -347,7 +353,7 @@ export class GameQueue {
     }
 
     findGameByUser = (userInfo: userGateway): GameData => {
-        for (const gameData of this.gameList) {
+        for (const gameData of GameQueue.gameList) {
             if (gameData.infoUser1.userID === userInfo.userID) {
                 gameData.infoUser1.socket = userInfo.socket;
                 return gameData; // User is found in one of the GameData instances
@@ -422,7 +428,7 @@ export class GameQueue {
     };
 
     isUserInMatch = (userId: number): boolean => {
-        return this.gameList.some(
+        return GameQueue.gameList.some(
             (game) => game.infoUser1.userID === userId || game.infoUser2.userID === userId
         );
     };

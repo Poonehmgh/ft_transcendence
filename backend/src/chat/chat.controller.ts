@@ -115,9 +115,11 @@ export class ChatController {
         try {
             const result = await this.chatService.getCompleteChat(chatId, req.user.id);
             if (result instanceof Error) {
-                res.status(500).json({ error: result.message });
-            } else if ("error" in result) {
-                res.status(500).json({ error: result.error });
+                if (result.message === "User is not part of this chat") {
+                    res.status(403).json({ error: result.message });
+                } else {
+                    res.status(500).json({ error: result.message });
+                }
             } else {
                 res.status(200).json(result);
             }
