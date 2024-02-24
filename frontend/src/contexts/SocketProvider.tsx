@@ -91,10 +91,10 @@ export function SocketProvider(props: socketProviderProps): JSX.Element {
                     socket.emit("matchInvite", data);
                     break;
                 case GameInviteAction.declineInvite:
-                    showToast(`${data.inviterName} has declined your challenge.`);
+                    showToast(`${data.inviteeName} has declined your challenge.`);
                     break;
                 case GameInviteAction.matchBegin:
-                    showToast(`${data.inviterName} has accepted your challenge!`);
+                    showToast(`${data.inviteeName} has accepted your challenge!`);
                     navigate("/game");
                     break;
                 default:
