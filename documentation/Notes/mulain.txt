@@ -31,18 +31,14 @@
 - clean up unneccesary files
 - clean up folder structure frontend
 - clean up folder structure backend
+- depcheck frontend, backend
 
 
 
 
 
 IMMEDIATE MULAIN
-- game invite accept toast shows inter name instead of accepting invitee name
-- handle game invites
 - rerender on getting kicked: memberlist not rerendering
-- memberlist also not rerendering on joining public chat sometimes?! dafuq?
-- have to refresh before memberlist renders, but only sometimes?!
-- depcheck frontend, backend
 
 
 
