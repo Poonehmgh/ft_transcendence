@@ -36,7 +36,6 @@ export function ChatProvider({ children }) {
             apiUrl,
             null
         );
-        console.log("newMyChats:", newMyChats);
         setMyChats(newMyChats);
     }
 
@@ -62,6 +61,9 @@ export function ChatProvider({ children }) {
                 }
 
                 updateMyChats();
+                if (!myChats.map((e) => e.id).includes(activeChat.id)) {
+                    changeActiveChat(null);
+                }
             } catch (error) {
                 console.error("Error handleChangeInChat:", error);
             }
