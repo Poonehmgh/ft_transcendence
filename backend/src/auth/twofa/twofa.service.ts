@@ -145,7 +145,6 @@ export class TwoFactorService {
                 // secret:foundUser.twoFaSecret,
                 secret: decryptedSecret,
                 });
-                // console.log("here", code, foundUser.twoFaSecret, verified);
 
             if (!verified)
             {
