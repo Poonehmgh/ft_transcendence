@@ -94,7 +94,11 @@ export function SocketProvider(props: socketProviderProps): JSX.Element {
                     showToast(`${data.inviteeName} has declined your challenge.`);
                     break;
                 case GameInviteAction.matchBegin:
-                    showToast(`${data.inviteeName} has accepted your challenge!`);
+                    if (data.inviterId === userId) {
+                        showToast(`${data.inviteeName} has accepted your challenge!`);
+                    } else {
+                        showToast(`You have accepted ${data.inviterName}'s challenge!`);
+                    }
                     navigate("/game");
                     break;
                 default:
