@@ -142,6 +142,7 @@ function Game() {
     if (!socket) return;
     const handleGameUpdate = (data) => {
       setGameUpdate(data);
+      setQueueStatus("Playing");
       // console.log("handleGameUpdate");
       // console.log(data);
     };

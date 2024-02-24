@@ -21,7 +21,7 @@ export class GameData {
 
     //1 is active, 0 is inactive ,3 its being deleted
     GameStatus: number = 1;
-    intervalTime: number = 69;
+    intervalTime: number = 42;
 
 
     //constants
@@ -111,7 +111,7 @@ export class GameData {
         console.log(`points for player ${user}`)
         // console.log(this);
         clearInterval(this.interval);
-        this.intervalTime = 69;
+        this.intervalTime = 42;
         this.interval = setInterval(this.gameLogic, this.intervalTime);
         console.log('restarted');
 
@@ -341,7 +341,7 @@ export class GameQueue {
         const gameToStart = new GameData(userInfo1, userInfo2, Math.floor(Math.random() * 1000))
         if (!GameQueue.gameList.includes(gameToStart)) {
             gameToStart.sendNewRoundMessage();
-            gameToStart.interval = setInterval(gameToStart.gameLogic, 69);
+            gameToStart.interval = setInterval(gameToStart.gameLogic, 42);
             console.log(`initialized game with`);
             GameQueue.gameList.push(gameToStart);//add id gen from prisma
             console.log("game list after init : ", GameQueue.gameList);
