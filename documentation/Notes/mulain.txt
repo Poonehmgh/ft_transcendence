@@ -42,8 +42,6 @@ IMMEDIATE MULAIN
 - leavechat not making rerender on the other chatusers frontend (solved?)
 - get names of members no longer in chat
 
-- invite shoiuld fail if invitee is in queue
-- ask fedia about isUserInQueue failing
 
 
 

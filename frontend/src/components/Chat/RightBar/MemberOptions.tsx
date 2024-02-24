@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import UserProfileModal from "src/components/UserProfileModal/UserProfileModal_main";
+import InviteButton from "src/components/shared/InviteButton";
 
 // Contexts
 import { ChatContext } from "src/contexts/ChatProvider";
@@ -114,9 +115,10 @@ function MemberOptions(props: memberOptionsProps): React.JSX.Element {
                     <button className="bigButton" onClick={handleOpenModal}>
                         View Profile
                     </button>
-                    <button className="bigButton" onClick={() => inviteUserToMatch()}>
-                        Invite to Match
-                    </button>
+                    <InviteButton
+                        invitedId={selectedUser.userId}
+                        invitedName={selectedUser.userName}
+                    />
                 </div>
 
                 <div className="memberOptionsButtonsDiv">
