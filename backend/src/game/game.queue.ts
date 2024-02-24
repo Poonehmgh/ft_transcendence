@@ -162,7 +162,7 @@ export class userGateway {
 @Injectable()
 export class GameQueue {
     static gameList: GameData[] = [];
-    userQueue: userGateway[] = [];
+    static userQueue: userGateway[] = [];
     gameCheckerInterval: NodeJS.Timer = null;
 
     constructor(private readonly prismaService: PrismaService) {
@@ -382,7 +382,7 @@ export class GameQueue {
     }
 
     async addPlayerToQueue(userInfo: userGateway): Promise<void> {
-        const userIndex = this.userQueue.findIndex(
+        const userIndex = GameQueue.userQueue.findIndex(
             (user) => user.userID === userInfo.userID
         );
         if (userIndex !== -1) {
@@ -409,27 +409,27 @@ export class GameQueue {
             return;
         }
         userInfo.userName = name.name;
-        if (this.userQueue.includes(userInfo)) return;
+        if (GameQueue.userQueue.includes(userInfo)) return;
         if (!(await this.checkIfSocketIsAssignedToId(userInfo.socket, userInfo.userID))) {
             userInfo.socket.emit("queueConfirm", "Socket is not assigned to this id");
             return;
         }
-        this.userQueue.push(userInfo);
+        GameQueue.userQueue.push(userInfo);
         console.log(`Added user ${userInfo} to the queue`);
-        if (this.userQueue.length >= 2)
-            this.initGame(this.userQueue.pop(), this.userQueue.pop());
+        if (GameQueue.userQueue.length >= 2)
+            this.initGame(GameQueue.userQueue.pop(), GameQueue.userQueue.pop());
         userInfo.socket.emit("queueConfirm", "Confirmed");
     }
 
     // checkers
 
     isUserInQueue = (userId: number): boolean => {
-        return this.userQueue.some((user) => user.userID === userId);
+        return GameQueue.userQueue.some((e: userGateway) => e.userID === userId);
     };
 
     isUserInMatch = (userId: number): boolean => {
         return GameQueue.gameList.some(
-            (game) => game.infoUser1.userID === userId || game.infoUser2.userID === userId
+            (e: GameData) => e.infoUser1.userID === userId || e.infoUser2.userID === userId
         );
     };
 }
