@@ -150,7 +150,7 @@ export class ChatService {
             });
 
             return messages.reverse().map((message) => {
-                return MessageDTO.fromMessage(message);
+                return MessageDTO.fromMessage(message, this.userService);
             });
         } catch (error) {
             console.error(`Error in getLatestMessages: ${error.message}`);
@@ -297,6 +297,10 @@ export class ChatService {
             const extendedChatUsers = await Promise.all(extendedChatUsersPromises);
             const dynamicChatName = await this.getChatName(chatId, userId);
 
+            const resolvedMessages = await Promise.all(
+                chat.messages.reverse().map((message) => MessageDTO.fromMessage(message, this.userService))
+            );
+
             return {
                 id: chat.id,
                 name: dynamicChatName,
@@ -304,11 +308,10 @@ export class ChatService {
                 isPrivate: chat.isPrivate,
                 passwordRequired: !!chat.passwordHash,
                 chatUsers: extendedChatUsers,
-                messages: chat.messages.reverse().map((message) => {
-                    return MessageDTO.fromMessage(message);
-                }),
-            };
-        } catch (error) {
+                messages: resolvedMessages
+                }
+            }
+         catch (error) {
             console.error(`Error in getCompleteChat: ${error.message}`);
             return new Error("Internal Server Error");
         }

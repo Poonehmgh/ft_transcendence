@@ -66,6 +66,7 @@ export class MessageDTO {
     timeStamp: Date;
     content: string;
     authorId: number;
+    authorName?: string | null;
     chatId: number;
 
     constructor(
@@ -73,22 +74,26 @@ export class MessageDTO {
         timeStamp: Date,
         content: string,
         authorId: number,
-        chatId: number
+        chatId: number,
+        authorName?: string | null,
     ) {
         this.id = id;
         this.timeStamp = timeStamp;
         this.content = content;
         this.authorId = authorId;
+        this.authorName = authorName;
         this.chatId = chatId;
     }
 
-    static fromMessage(message: Message): MessageDTO {
+    static async fromMessage(message: Message, userService: UserService ): Promise<MessageDTO> {
+        const authorName = await userService.getNameById(message.author);
         return new MessageDTO(
             message.id,
             message.createdAt,
             message.content,
             message.author,
-            message.chatId
+            message.chatId,
+            authorName,
         );
     }
 }
