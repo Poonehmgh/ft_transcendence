@@ -13,9 +13,8 @@ clean: down
 re: clean all
 
 rebuild:
-	docker compose down -v
-	docker-compose build --no-cache
-	docker-compose up --force-recreate -d
+	docker compose down
+	docker-compose up --force-recreate
 
 nuke: down-v
 	docker system prune --all --force
