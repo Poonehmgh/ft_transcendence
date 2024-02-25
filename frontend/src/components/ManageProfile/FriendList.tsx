@@ -19,12 +19,12 @@ function FriendList() {
     } */
 
     if (friends === null) return <div className="p">Loading data...</div>;
-    if (friends.length === 0) return <div className="p">No friends.</div>;
+    if (friends?.length === 0) return <div className="p">No friends.</div>;
 
     return (
         <table className="modalUserList">
             <tbody>
-                {friends.map((e: UserStatusDTO) => (
+                {friends?.map((e: UserStatusDTO) => (
                     <tr key={e.id}>
                         <td>
                             {e.online ? "🟢 " : "🔴 "}
