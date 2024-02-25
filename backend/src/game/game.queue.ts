@@ -204,16 +204,23 @@ export class GameQueue {
     }
 
     decrementScoreInDB = async(userID: number) => {
-        await this.prismaService.user.update({
+        const user = await this.prismaService.user.findUnique({
             where: {
                 id: userID,
             },
-            data: {
-                mmr: {
-                    decrement: 50,
-                },
-            },
         });
+        if (user && user.mmr > 50) {
+            await this.prismaService.user.update({
+                where: {
+                    id: userID,
+                },
+                data: {
+                    mmr: {
+                        decrement: 50,
+                    },
+                },
+            });
+        }
     }
 
   	calculateWinRate = async(userId: number) => {
@@ -238,13 +245,13 @@ export class GameQueue {
                 losses++;
             }
         }
-        let winRate = wins / (wins + losses);
+        let winRate = (wins / (wins + losses)) * 100 || 0;
         await this.prismaService.user.update({
             where: {
                 id: userId,
             },
             data: {
-                winrate: winRate,
+                winrate: (winRate.toFixed(1)),
             },
         });
 
