@@ -24,6 +24,7 @@ model User {
     winrate       Float?
     // chat
     online        Boolean     @default(false)
+    inGame        Boolean     @default(false)
     friends       Int[]
     friendReq_out Int[]
     friendReq_in  Int[]
