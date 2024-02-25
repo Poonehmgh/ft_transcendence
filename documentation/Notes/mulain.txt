@@ -38,6 +38,22 @@
 
 
 IMMEDIATE MULAIN
+- places to show in game / online
+    - leaderboard
+        - online and ingame implemented
+    - allusers
+        - online and ingame implemented
+    - chat
+    - friends
+        - online and ingame implemented
+
+
+
+
+
+
+
+
 - show in a game status where needed
 - show online in friend interface
 - get names of members no longer in chat

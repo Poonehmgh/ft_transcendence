@@ -1,10 +1,18 @@
-
 export class NewUserDTO {
     constructor(public id: number, public name: string, public email: string) {}
 }
 
 export class IdAndNameDTO {
     constructor(public id: number, public name: string) {}
+}
+
+export class UserStatusDTO {
+    constructor(
+        public id: number,
+        public name: string,
+        public online: boolean,
+        public inGame: boolean
+    ) {}
 }
 
 export class ScoreCardDTO {
@@ -14,7 +22,7 @@ export class ScoreCardDTO {
         public rank: string,
         public mmr: number,
         public matches: number,
-        public winrate: number,
+        public winrate: number
     ) {}
 }
 
@@ -36,7 +44,7 @@ export class UserProfileDTO {
         public matches: number,
         public winrate: number,
         public online: boolean,
-        public twoFa: boolean,
+        public inGame: boolean
     ) {}
 }
 

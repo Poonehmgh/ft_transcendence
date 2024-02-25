@@ -25,7 +25,7 @@ import { ChatGatewayService } from "src/chat/chat.gateway.service";
 
 // DTO
 import { MatchDTO } from "src/match/match-dto";
-import { UserRelation, IdAndNameDTO, UserProfileDTO, ChangeNameDTO } from "./user-dto";
+import { UserRelation, IdAndNameDTO, UserProfileDTO, ChangeNameDTO, UserStatusDTO } from "./user-dto";
 import { reqUser, AuthenticatedRequest } from "src/shared/dto";
 
 @Controller("user")
@@ -105,7 +105,7 @@ export class UserController {
     }
 
     @Get("friends")
-    async getFriends(@Req() req: AuthenticatedRequest): Promise<IdAndNameDTO[]> {
+    async getFriends(@Req() req: AuthenticatedRequest): Promise<UserStatusDTO[]> {
         return this.userService.getFriends(req.user.id);
     }
 

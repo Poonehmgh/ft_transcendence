@@ -8,7 +8,6 @@ interface playerCardTableProp {
     rank: string;
     matches: number;
     winrate: number;
-    twoFa?: boolean;
 }
 
 function PlayerCardTable(props: playerCardTableProp) {
