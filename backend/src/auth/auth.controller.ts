@@ -18,13 +18,14 @@ import {Public} from "./decorator/public.decorator";
 /*Interface*/
 import {User_42} from "./interfaces/user_42.interface"
 import { User } from '@prisma/client';
-
+import {CryptoService} from "./crypto/crypto.service";
 
 @Controller('auth')
 export class AuthController {
   constructor(
       private readonly authService: AuthService,
-      private readonly twofaService: TwoFactorService) {}
+      private readonly twofaService: TwoFactorService,
+      private readonly cryptoService: CryptoService) {}
 
 
   @Public()
@@ -50,6 +51,11 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   async test(@Req() req){
     console.log("hello from test", req.user);
+    const temp = "something for encyption";
+    const encrypted:string = this.cryptoService.encrypt(temp);
+    console.log("encrypted", encrypted);
+    const decrypted:string = this.cryptoService.decrypt(encrypted);
+    console.log("decrypted", decrypted);
     return req.user
   }
 
