@@ -10,6 +10,8 @@ import "src/styles/buttons.css";
 /*Components*/
 import Login from "./Login";
 
+import  {useNavigate}  from 'react-router-dom';
+
 
 
 const Auth = () => {
@@ -19,6 +21,7 @@ const Auth = () => {
     const userEmail = cookies.user.email;
     const userTwofa = cookies.user.twoFa;
     const userName = cookies.user.name;
+    const navigate = useNavigate();
 
 
     const handleSubmit = async (e) => {
@@ -40,6 +43,7 @@ const Auth = () => {
                         window.location.href = process.env.REACT_APP_FRONTEND_URL + "/home";
                     }
                         ).catch((error) =>{
+                            navigate(`/message/success/Unable to authenticate: Invalid code.`);
                             console.error('Error authenticating:', error);
         })
     };
