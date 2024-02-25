@@ -14,13 +14,13 @@ function RequestInList() {
     const { friendReqIn, acceptRequest, declineRequest } = useContext(SocialDataContext);
 
     if (friendReqIn === null) return <div className="p">Loading data...</div>;
-    if (friendReqIn.length === 0)
+    if (friendReqIn?.length === 0)
         return <div className="p">No incoming requests. Maybe u suck?</div>;
 
     return (
         <table className="modalUserList">
             <tbody>
-                {friendReqIn.map((e: IdAndNameDTO) => (
+                {friendReqIn?.map((e: IdAndNameDTO) => (
                     <tr key={e.id}>
                         <td> {e.name}</td>
                         <td>
