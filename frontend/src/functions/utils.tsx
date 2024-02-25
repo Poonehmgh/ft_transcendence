@@ -1,7 +1,5 @@
 // getters
 
-import e from "express";
-
 export function getCalendarDay(date: Date) {
     if (!date) return "invalid date";
 

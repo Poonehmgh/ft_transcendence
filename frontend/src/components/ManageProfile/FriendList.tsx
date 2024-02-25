@@ -28,7 +28,7 @@ function FriendList() {
                     <tr key={e.id}>
                         <td>
                             {e.online ? "🟢 " : "🔴 "}
-                            {e.inGame ? "🎮 " : " l"}
+                            {e.inGame ? "🎮 " : ""}
                             {e.name}
                         </td>
                         <td>
