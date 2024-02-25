@@ -104,6 +104,8 @@ export class ChatUserDTO {
 
 export class ExtendedChatUserDTO extends ChatUserDTO {
     userName: string;
+    online: boolean;
+    inGame: boolean;
 }
 
 export class BasicChatWithUsersDTO {

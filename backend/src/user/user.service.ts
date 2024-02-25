@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
-import { UserRelation, IdAndNameDTO, NewUserDTO, UserProfileDTO } from "./user-dto";
+import { UserRelation, IdAndNameDTO, NewUserDTO, UserProfileDTO, UserStatusDTO } from "./user-dto";
 import { User } from "@prisma/client";
 import {
     ERR_ACCEPT_FREQ,
@@ -88,6 +88,7 @@ export class UserService {
                 matches: true,
                 winrate: true,
                 online: true,
+                inGame: true,
             },
         });
         if (!profile) throw new Error("getProfile: User not found");
@@ -100,6 +101,7 @@ export class UserService {
             matches: profile.matches.length,
             winrate: profile.winrate,
             online: profile.online,
+            inGame: profile.inGame,
         };
     }
 
@@ -126,7 +128,7 @@ export class UserService {
         return relation;
     }
 
-    async getFriends(userId: number): Promise<IdAndNameDTO[]> {
+    async getFriends(userId: number): Promise<UserStatusDTO[]> {
         const user = await this.prisma.user.findUnique({
             where: { id: Number(userId) },
             select: { friends: true },
@@ -139,13 +141,15 @@ export class UserService {
             select: {
                 id: true,
                 name: true,
+                online: true,
+                inGame: true,
             },
         });
         if (group.length === 0) {
             return [];
         }
-        return group.map(({ id, name }) => {
-            return new IdAndNameDTO(id, name);
+        return group.map(({ id, name, online, inGame }) => {
+            return new UserStatusDTO(id, name, online, inGame);
         });
     }
 
@@ -226,7 +230,7 @@ export class UserService {
             take: Number(n),
         });
 
-        return topUsers.map(({ id, name, mmr, rank, matches, winrate, online }) => {
+        return topUsers.map(({ id, name, mmr, rank, matches, winrate, online, inGame }) => {
             return new UserProfileDTO(
                 id,
                 name,
@@ -234,7 +238,8 @@ export class UserService {
                 rank,
                 matches.length,
                 winrate,
-                online
+                online,
+                inGame
             );
         });
     }
@@ -277,7 +282,7 @@ export class UserService {
             orderBy: { id: "desc" },
         });
 
-        return allUsers.map(({ id, name, mmr, rank, matches, winrate, online }) => {
+        return allUsers.map(({ id, name, mmr, rank, matches, winrate, online, inGame }) => {
             return new UserProfileDTO(
                 id,
                 name,
@@ -285,7 +290,8 @@ export class UserService {
                 rank,
                 matches.length,
                 winrate,
-                online
+                online,
+                inGame
             );
         });
     }
@@ -299,7 +305,7 @@ export class UserService {
             },
         });
 
-        return otherUsers.map(({ id, name, mmr, rank, matches, winrate, online }) => {
+        return otherUsers.map(({ id, name, mmr, rank, matches, winrate, online, inGame }) => {
             return new UserProfileDTO(
                 id,
                 name,
@@ -307,7 +313,8 @@ export class UserService {
                 rank,
                 matches.length,
                 winrate,
-                online
+                online,
+                inGame
             );
         });
     }

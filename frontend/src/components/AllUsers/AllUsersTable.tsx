@@ -81,7 +81,10 @@ function AllUsersTable(props: allUsersTable_prop): React.JSX.Element {
                             <td>{element.mmr}</td>
                             <td>{element.matches}</td>
                             <td>{element.winrate !== null ? element.winrate : "N/A"}</td>
-                            <td>{element.online ? "🟢" : "🔴"}</td>
+                            <td>
+                                {element.online ? "🟢" : "🔴"}
+                                {element.inGame ? " 🎮" : ""}
+                            </td>
                         </tr>
                     ))}
                 </tbody>

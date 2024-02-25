@@ -188,6 +188,8 @@ export class ChatUserDTO {
 export class ExtendedChatUserDTO {
     userId: number;
     userName?: string | null;
+    online: boolean;
+    inGame: boolean;
     chatId: number;
     chatName?: string | null;
     owner: boolean;
@@ -200,6 +202,8 @@ export class ExtendedChatUserDTO {
     constructor(
         userId: number,
         userName: string | null,
+        online: boolean,
+        inGame: boolean,
         chatId: number,
         // chatName: string | null,
         owner: boolean,
@@ -210,6 +214,8 @@ export class ExtendedChatUserDTO {
     ) {
         this.userId = userId;
         this.userName = userName;
+        this.online = online;
+        this.inGame = inGame;
         this.chatId = chatId;
         //this.chatName = chatName;
         this.owner = owner;
@@ -224,12 +230,14 @@ export class ExtendedChatUserDTO {
         userService: UserService
         //chatService: ChatService
     ): Promise<ExtendedChatUserDTO> {
-        const userName = await userService.getNameById(chatUser.userId);
+        const userProfile = await userService.getProfileById(chatUser.userId);
         //const chatName = await chatService.getChatName(chatUser.chatId, chatUser.userId);
 
         return new ExtendedChatUserDTO(
             chatUser.userId,
-            userName,
+            userProfile.name,
+            userProfile.online,
+            userProfile.inGame,
             chatUser.chatId,
             //chatName,
             chatUser.owner,

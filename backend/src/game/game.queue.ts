@@ -251,7 +251,7 @@ export class GameQueue {
                 id: userId,
             },
             data: {
-                winrate: (winRate.toFixed(1)),
+                winrate: Number(winRate.toFixed(1)),
             },
         });
 

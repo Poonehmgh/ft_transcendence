@@ -91,7 +91,6 @@ function UserProfileModal(props: userProfileModalProps) {
                                 rank={userProfile.rank}
                                 matches={userProfile.matches}
                                 winrate={userProfile.winrate}
-                                twoFa={userProfile.twoFa}
                             />
                         </div>
                         {props.id === userId ? (

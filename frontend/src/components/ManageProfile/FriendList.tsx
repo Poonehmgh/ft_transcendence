@@ -4,7 +4,7 @@ import React, { useContext } from "react";
 import { SocialDataContext } from "src/contexts/SocialDataProvider";
 
 // DTO
-import { IdAndNameDTO } from "src/dto/user-dto";
+import { UserStatusDTO } from "src/dto/user-dto";
 
 // CSS
 import "src/styles/style.css";
@@ -24,9 +24,13 @@ function FriendList() {
     return (
         <table className="modalUserList">
             <tbody>
-                {friends.map((e: IdAndNameDTO) => (
+                {friends.map((e: UserStatusDTO) => (
                     <tr key={e.id}>
-                        <td>{e.name}</td>
+                        <td>
+                            {e.online ? "🟢 " : "🔴 "}
+                            {e.inGame ? "🎮 " : ""}
+                            {e.name}
+                        </td>
                         <td>
                             {/*   <button
                                 className="contactsButton"

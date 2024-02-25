@@ -3,7 +3,7 @@ import backendUrl from "src/constants/backendUrl";
 import { fetchWrapper } from "src/functions/utils";
 
 // DTO
-import { IdAndNameDTO } from "user-dto";
+import { IdAndNameDTO, UserStatusDTO } from "src/dto/user-dto";
 import { ToastContext } from "./ToastProvider";
 
 export const SocialDataContext = createContext({
@@ -31,7 +31,7 @@ export function SocialDataProvider({ children }) {
 	// updaters
 
     async function updateFriends() {
-        const friendsData = await fetchWrapper<IdAndNameDTO[]>(
+        const friendsData = await fetchWrapper<UserStatusDTO[]>(
             "GET",
             backendUrl.user + "friends",
             null
