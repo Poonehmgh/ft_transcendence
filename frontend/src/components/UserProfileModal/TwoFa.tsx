@@ -145,7 +145,7 @@ function TwoFa() {
       </span>
             </div>
             {!disableClicked && !qrCodeUrl && (
-                <Button
+                <Button styleP={{ marginTop: "10px", marginLeft: "100px" }}
                     name={twoFa === true ? "Disable" : "Enable"}
                     onClick={() => {
                         handle2FaButtonClick();
