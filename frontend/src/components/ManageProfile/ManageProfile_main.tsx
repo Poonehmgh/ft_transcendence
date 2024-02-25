@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import ManageContactsTabs from "./ManageContactsTabs";
 import PlayerCardTable from "../shared/PlayerCardTable";
 import {
@@ -10,6 +10,9 @@ import {
 import LoadingH2 from "src/components/shared/LoadingH2";
 import TwoFa from "src/components/UserProfileModal/TwoFa";
 
+// Contexts
+import { ToastContext } from "src/contexts/ToastProvider";
+
 // DTO
 import { UserProfileDTO } from "src/dto/user-dto";
 
@@ -20,6 +23,7 @@ import "src/styles/manageProfile.css";
 import backendUrl from "src/constants/backendUrl";
 
 function ManageProfile() {
+    const { showToast } = useContext(ToastContext);
     const [userProfile, setUserProfile] = useState<UserProfileDTO>(null);
     const [avatarURL, setAvatarURL] = useState(null);
     const fileInputRef = useRef(null);
@@ -85,10 +89,10 @@ function ManageProfile() {
             const apiUrl = backendUrl.user + "change_name";
             const data = { newName: sanitizeInput(newName) };
             const res = await fetchWrapper<{ message: string }>("PATCH", apiUrl, data);
-            alert(res.message);
+            showToast(res.message);
             fetchUserProfile();
         } catch (error) {
-            alert(error);
+            showToast(error);
         }
     }
 
@@ -96,7 +100,7 @@ function ManageProfile() {
         const apiUrl = backendUrl.user + "logout";
         const res = await fetchWrapper<{ message: string }>("PATCH", apiUrl, null);
         document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;";
-        alert(res.message);
+        showToast(res.message);
         window.location.href = "/home";
     }
 

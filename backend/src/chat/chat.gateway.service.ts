@@ -17,7 +17,6 @@ import {
 } from "./chat.DTOs";
 import { userGateway } from "./userGateway";
 
-
 @Injectable()
 export class ChatGatewayService {
     static connectedUsers: userGateway[] = [];
@@ -218,13 +217,16 @@ export class ChatGatewayService {
                 }
             }
 
-            const chatUser = await this.prisma.chat_User.create({
+            await this.prisma.chat_User.create({
                 data: {
                     chatId: joinChatDto.chatId,
                     userId: joinChatDto.userId,
                 },
             });
 
+            await this.sendDataEventToList([joinChatDto.userId], "joinChatSuccess", {
+                chatId: joinChatDto.chatId,
+            });
             await this.sendEventToChat(joinChatDto.chatId, "updateChat");
         } catch (error) {
             console.log(`error in joinChat: ${error.message}`);
@@ -647,11 +649,14 @@ export class ChatGatewayService {
                 "matchInvite",
                 data
             );
-
-            this.gameQueue.initGame(
-                new GameUserGateway(data.inviterId, inviterSocket),
-                new GameUserGateway(data.inviteeId, inviteeSocket)
-            );
+            console.log("before timeout")
+            setTimeout(() => {
+                this.gameQueue.initGame(
+                    new GameUserGateway(data.inviterId, inviterSocket),
+                    new GameUserGateway(data.inviteeId, inviteeSocket)
+                );
+            }, 1000);
+            console.log("after timeout")
         } catch (error) {
             console.log(`error in acceptMatchInvite: ${error.message}`);
             this.sendDataEventToList([data.inviterId, data.inviteeId], "errorAlert", {

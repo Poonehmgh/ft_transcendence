@@ -48,8 +48,6 @@ model Match {
     score_p2    Int       @default(0)
     winner_id   Int?
     winner_name String?
-
-    @@unique([player1, player2])
 }
 
 model Message {

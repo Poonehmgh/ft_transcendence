@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import UserProfileModal from "src/components/UserProfileModal/UserProfileModal_main";
+import InviteButton from "src/components/shared/InviteButton";
 
 // Contexts
 import { ChatContext } from "src/contexts/ChatProvider";
@@ -14,7 +15,7 @@ import "src/styles/style.css";
 import "src/styles/chat.css";
 import "src/styles/buttons.css";
 
-interface memberOptionsProps{
+interface memberOptionsProps {
     thisUserRole: ChatRole;
 }
 
@@ -36,10 +37,9 @@ function MemberOptions(props: memberOptionsProps): React.JSX.Element {
                 setSelectedUserRole(ChatRole.member);
             }
         }
-    }, [selectedUser, activeChat.chatUsers, userId]);
+    }, [selectedUser, activeChat.chatUsers, userId, props.thisUserRole]);
 
     async function changeUserStatus(action: string) {
-        console.log("changeUserStatus. Received action:'" + action + "'");
         let data: ChangeChatUserStatusDTO = {
             operatorId: userId,
             chatId: activeChat.id,
@@ -52,9 +52,9 @@ function MemberOptions(props: memberOptionsProps): React.JSX.Element {
         };
 
         // changing update method on backend would allow to completely
-		// get rid of this monstrosity. just pass action into prompt and
-		// send to backend
-		if (action === "owner") {
+        // get rid of this monstrosity. just pass action into prompt and
+        // send to backend
+        if (action === "owner") {
             if (!window.confirm(`Transfer ownership to ${selectedUser.userName}?`))
                 return;
             data.owner = true;
@@ -90,7 +90,7 @@ function MemberOptions(props: memberOptionsProps): React.JSX.Element {
 
     function inviteUserToMatch() {
         if (window.confirm(`Invite ${selectedUser.userName} to a pongers match?`))
-            socket.emit("matchInvite", { recipientId: selectedUser.userId});
+            socket.emit("matchInvite", { recipientId: selectedUser.userId });
     }
 
     function handleOpenModal() {
@@ -115,13 +115,14 @@ function MemberOptions(props: memberOptionsProps): React.JSX.Element {
                     <button className="bigButton" onClick={handleOpenModal}>
                         View Profile
                     </button>
-                    <button className="bigButton" onClick={() => inviteUserToMatch()}>
-                        Invite to Match
-                    </button>
+                    <InviteButton
+                        invitedId={selectedUser.userId}
+                        invitedName={selectedUser.userName}
+                    />
                 </div>
 
                 <div className="memberOptionsButtonsDiv">
-                    {props.thisUserRole === 2 && (
+                    {props.thisUserRole === ChatRole.owner && (
                         <button
                             className="bigButton"
                             onClick={() => changeUserStatus("owner")}
@@ -129,7 +130,7 @@ function MemberOptions(props: memberOptionsProps): React.JSX.Element {
                             Transfer ownership
                         </button>
                     )}
-                    {props.thisUserRole === 2 && !selectedUser.admin && (
+                    {props.thisUserRole === ChatRole.owner && !selectedUser.admin && (
                         <button
                             className="bigButton"
                             onClick={() => changeUserStatus("admin")}
@@ -137,7 +138,7 @@ function MemberOptions(props: memberOptionsProps): React.JSX.Element {
                             Make Admin
                         </button>
                     )}
-                    {props.thisUserRole === 2 && selectedUser.admin && (
+                    {props.thisUserRole === ChatRole.owner && selectedUser.admin && (
                         <button
                             className="bigButton"
                             onClick={() => changeUserStatus("member")}

@@ -1,5 +1,7 @@
 // getters
 
+import e from "express";
+
 export function getCalendarDay(date: Date) {
     if (!date) return "invalid date";
 
@@ -49,8 +51,6 @@ export function gotValidToken() {
         }
         const expirationTime = token.exp * 1000;
         return expirationTime > Date.now();
-
-        
     } catch (error) {
         console.error("Error decoding or validating token:", error);
         return false;
@@ -91,17 +91,21 @@ export async function fetchWrapper<T>(
         });
 
         if (!response.ok) {
-            const excludedPaths = ["/home", "/auth", "/message"];
-            if (response.status === 401 && !excludedPaths.includes(window.location.pathname)) {
-                window.location.href = "/home";
+            if (response.status === 401) {
+                console.error("401 Unauthorized in fetchWrapper:", apiUrl);
+                const excludedPaths = ["/home", "/auth", "/message"];
+                if (!excludedPaths.includes(window.location.pathname)) {
+                    window.location.href = "/home";
+                }
+            } else if (response.status === 403) {
+                console.error("403 Forbidden in fetchWrapper:", apiUrl);
+            } else {
+                console.error(
+                    `Response not ok in fetchWrapper: ${apiUrl}: ${response.status}`
+                );
             }
-            console.error(`${apiUrl}: ${response.status}`);
-           /*  const errorMessage = {
-                message: `Error ${response.status}: ${response.statusText}`,
-            };
-            return errorMessage; */
         }
-        
+
         return await response.json();
     } catch (error) {
         console.error("Error in fetchWrapper:", error);

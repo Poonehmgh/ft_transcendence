@@ -60,6 +60,7 @@ function Game() {
   }, []);
 
   useEffect(() => {
+    if (!socket) return;
     const handleQueue = (data) => {
       if (data === "Confirmed") {
         setQueueStatus("In Queue");
@@ -81,9 +82,10 @@ function Game() {
     return () => {
       socket.off("queueConfirm", handleQueue);
     };
-  }, []);
+  }, [socket]);
 
   useEffect(() => {
+    if (!socket) return;
     const handleNewRound = (data) => {
       if (userData) {
         setNewRound(data);
@@ -108,7 +110,7 @@ function Game() {
     return () => {
       socket.off("newRound", handleNewRound);
     };
-  }, [refreshCount]);
+  }, [isPlayerOne, refreshCount, socket, userData]);
 
   useEffect(() => {
     const fetchOpponentData = async () => {
@@ -137,8 +139,10 @@ function Game() {
   }, [opponentID]);
 
   useEffect(() => {
+    if (!socket) return;
     const handleGameUpdate = (data) => {
       setGameUpdate(data);
+      setQueueStatus("Playing");
       // console.log("handleGameUpdate");
       // console.log(data);
     };
@@ -148,7 +152,7 @@ function Game() {
     return () => {
       socket.off("gameUpdate", handleGameUpdate);
     };
-  }, [refreshCount]);
+  }, [refreshCount, socket]);
 
   const resetHooks = () => {
     setOpponentID(null);
@@ -161,6 +165,7 @@ function Game() {
   };
 
   useEffect(() => {
+    if (!socket) return;
     const handleGameResult = (data) => {
       resetHooks();
       // console.log("gameResult");
@@ -176,7 +181,7 @@ function Game() {
     return () => {
       socket.off("gameResult", handleGameResult);
     };
-  }, [refreshCount]);
+  }, [refreshCount, socket]);
 
   const sendMessageToServer = () => {
     if (userData) socket.emit("joinQueue", { userID: userData.id });
@@ -198,7 +203,7 @@ function Game() {
   useEffect(() => {
     const interval = setInterval(() => {
       setRefreshCount((prevCount) => prevCount + 1);
-    }, 1000);
+    }, 100);
 
     return () => clearInterval(interval);
   }, []);

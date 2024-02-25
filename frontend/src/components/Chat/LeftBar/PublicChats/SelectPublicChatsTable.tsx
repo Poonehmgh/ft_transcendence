@@ -6,6 +6,7 @@ import { fetchWrapper } from "src/functions/utils";
 import { ChatContext } from "src/contexts/ChatProvider";
 import { SocketContext } from "src/contexts/SocketProvider";
 import { AuthContext } from "src/contexts/AuthProvider";
+import { ToastContext } from "src/contexts/ToastProvider";
 
 // DTO
 import { BasicChatDTO, JoinChatDTO } from "chat-dto";
@@ -15,9 +16,10 @@ import "src/styles/modals.css";
 import "src/styles/buttons.css";
 
 function SelectPublicChatsTable({ closeModal }): React.JSX.Element {
-    const { changeActiveChat } = useContext(ChatContext);
+    const { changeActiveChat, updateMyChats } = useContext(ChatContext);
     const socket = useContext(SocketContext);
     const { userId } = useContext(AuthContext);
+    const { showToast } = useContext(ToastContext);
     const [publicChats, setPublicChats] = useState<BasicChatDTO[]>(null);
     const [searchQuery, setSearchQuery] = useState<string>("");
 
@@ -44,8 +46,6 @@ function SelectPublicChatsTable({ closeModal }): React.JSX.Element {
             password: password,
         };
         socket.emit("joinChat", joinChatDto);
-        console.log("chatId", chat.id);
-        changeActiveChat(chat.id);
         closeModal();
     }
 

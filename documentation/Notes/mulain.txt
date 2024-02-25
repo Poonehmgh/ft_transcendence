@@ -1,5 +1,4 @@
 --- to do ---
-- token refresh
 - stress test chat
     - create chat emit
     - (delete chat emit)
@@ -24,28 +23,31 @@
     - match model
     - add match id to user model match[]
     - calculate new win rate and update user model winrate field
+- dont forget to remove sensitive data from auth etc
 
-- move 2fa actived / not actived info from playerCard to only ManageProfile
 - move auth frontend files from userprofile to manageprofile
 - header to absolute values - care game!
 - clean up unneccesary files
 - clean up folder structure frontend
 - clean up folder structure backend
+- depcheck frontend, backend
+- delete commented out functions
 
 
 
 
 
 IMMEDIATE MULAIN
-- handle game invites
-- rerender on getting kicked: memberlist not rerendering
-- memberlist also not rerendering on joining public chat sometimes?! dafuq?
-- have to refresh before memberlist renders, but only sometimes?!
+- banned not making rerender on the banned persons frontend (solved?)
+- leavechat not making rerender on the other chatusers frontend (solved?)
+- get names of members no longer in chat
+
 
 
 
 
 - Optimization (optional)
+    - token refresh
 	- add userprofile to a provider
     - get chat message names not from chat but from backend? (Problem: user left chat/ kicked etc)
     - remove password functionality from non public chats:

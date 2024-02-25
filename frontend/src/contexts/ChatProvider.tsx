@@ -29,7 +29,7 @@ export function ChatProvider({ children }) {
     const [selectedUser, setSelectedUser] = useState(null);
     const [myChats, setMyChats] = useState(null);
 
-    async function updateMyChats() {
+    async function updateMyChats(updatedChatId: number | null = null) {
         const apiUrl = backendUrl.chat + "my_chats";
         const newMyChats = await fetchWrapper<BasicChatWithUsersDTO[]>(
             "GET",
@@ -37,6 +37,11 @@ export function ChatProvider({ children }) {
             null
         );
         setMyChats(newMyChats);
+        if (updatedChatId && activeChat) {
+            if (updatedChatId === activeChat.id) {
+                changeActiveChat(updatedChatId);
+            }
+        }
     }
 
     useEffect(() => {
@@ -60,18 +65,33 @@ export function ChatProvider({ children }) {
                     await changeActiveChat(data.chatId);
                 }
 
-                updateMyChats();
+                updateMyChats(data.chatId);
+                if (!myChats.map((e) => e.id).includes(activeChat.id)) {
+                    changeActiveChat(null);
+                }
             } catch (error) {
                 console.error("Error handleChangeInChat:", error);
             }
         }
 
+        async function handleJoinChatSuccessEvent(data: { chatId: string }) {
+            const chatId = parseInt(data.chatId, 10);
+            if (isNaN(chatId)) {
+                console.error("Invalid chatId:", data.chatId);
+                return;
+            }
+            updateMyChats();
+            changeActiveChat(chatId);
+        }
+
         socket.on("newMessage", handleNewMessageEvent);
         socket.on("updateChat", handleUpdateChatEvent);
+        socket.on("joinChatSuccess", handleJoinChatSuccessEvent);
 
         return () => {
             socket.off("newMessage");
             socket.off("updateChat");
+            socket.off("joinChatSuccess");
         };
     }, [socket, activeChat]);
 
@@ -88,6 +108,12 @@ export function ChatProvider({ children }) {
 
         const apiUrl = backendUrl.chat + `complete_chat/${chatId}`;
         const newActiveChat = await fetchWrapper<ChatDTO>("GET", apiUrl, null);
+        if ("error" in newActiveChat) {
+            console.error("Error fetching chat:", newActiveChat.error);
+            setActiveChat(null);
+            setSelectedUser(null);
+            return;
+        }
         setActiveChat(newActiveChat);
         setSelectedUser(null);
     }
