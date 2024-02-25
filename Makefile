@@ -14,7 +14,7 @@ re: clean all
 
 rebuild:
 		docker compose down
-# docker-compose build --no-cache
+    docker-compose build --no-cache
 		docker-compose up --force-recreate
 
 nuke: down-v
