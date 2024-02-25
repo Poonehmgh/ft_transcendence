@@ -14,13 +14,13 @@ function RequestOutList() {
     const { cancelFriendRequest, friendReqOut } = useContext(SocialDataContext);
 
     if (friendReqOut === null) return <div className="p">Loading data...</div>;
-    if (friendReqOut.length === 0)
+    if (friendReqOut?.length === 0)
         return <div className="p">No outgoing requests. Don't be shy!</div>;
 
     return (
         <table className="modalUserList">
             <tbody>
-                {friendReqOut.map((e: IdAndNameDTO) => (
+                {friendReqOut?.map((e: IdAndNameDTO) => (
                     <tr key={e.id}>
                         <td>{e.name}</td>
                         <td>

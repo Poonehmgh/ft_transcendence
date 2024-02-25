@@ -14,12 +14,12 @@ function BlockedList() {
     const { blockedUsers, unblockUser } = useContext(SocialDataContext);
 
     if (blockedUsers === null) return <div className="p">Loading data...</div>;
-    if (blockedUsers.length === 0) return <div className="p">No toxic ppl... yet!</div>;
+    if (blockedUsers?.length === 0) return <div className="p">No toxic ppl... yet!</div>;
 
     return (
         <table className="modalUserList">
             <tbody>
-                {blockedUsers.map((e: IdAndNameDTO) => (
+                {blockedUsers?.map((e: IdAndNameDTO) => (
                     <tr key={e.id}>
                         <td> {e.name}</td>
                         <td>
@@ -32,6 +32,7 @@ function BlockedList() {
                         </td>
                     </tr>
                 ))}
+                
             </tbody>
         </table>
     );
