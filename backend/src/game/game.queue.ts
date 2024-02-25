@@ -2,7 +2,6 @@ import {Injectable} from "@nestjs/common";
 import {GameUpdateDTO, NewRoundDTO, PlankUpdateDTO} from "./game.DTOs";
 import {Socket} from "socket.io";
 import {PrismaService} from "../prisma/prisma.service";
-import {MatchInfoDTO} from "../match/match-dto";
 
 export class GameData {
 
@@ -136,14 +135,13 @@ export class GameData {
     }
 
     gameLogic = () => {
-        if(this.GameStatus !== 3)
-				{
-				this.plankCollision();
-        this.updateBallPosition();
-        this.fieldCollision();
-        clearInterval(this.interval);
-        this.interval = setInterval(this.gameLogic, this.intervalTime);
-				}
+        if (this.GameStatus !== 3) {
+            this.plankCollision();
+            this.updateBallPosition();
+            this.fieldCollision();
+            clearInterval(this.interval);
+            this.interval = setInterval(this.gameLogic, this.intervalTime);
+        }
         // console.log(this);
     }
 }
@@ -169,14 +167,14 @@ export class GameQueue {
         console.log("Starting game queue");
     }
 
-    updatePlankPosition = async(data: PlankUpdateDTO) => {
+    updatePlankPosition = async (data: PlankUpdateDTO) => {
         const gameData: GameData = GameQueue.gameList.find(
             (elem) =>
                 elem.infoUser1.userID === data.userID ||
                 elem.infoUser2.userID === data.userID
         );
         console.log("game data is : ", gameData);
-        
+
         if (gameData) {
             // Update the plank position based on the user's ID
             if (gameData.infoUser1.userID === data.userID) {
@@ -190,7 +188,7 @@ export class GameQueue {
         }
     };
 
-    incrementScoreInDB = async(userID: number) => {
+    incrementScoreInDB = async (userID: number) => {
         await this.prismaService.user.update({
             where: {
                 id: userID,
@@ -203,7 +201,7 @@ export class GameQueue {
         });
     }
 
-    decrementScoreInDB = async(userID: number) => {
+    decrementScoreInDB = async (userID: number) => {
         const user = await this.prismaService.user.findUnique({
             where: {
                 id: userID,
@@ -223,7 +221,7 @@ export class GameQueue {
         }
     }
 
-  	calculateWinRate = async(userId: number) => {
+    calculateWinRate = async (userId: number) => {
         let matches = await this.prismaService.match.findMany({
             where: {
                 OR: [
@@ -238,8 +236,8 @@ export class GameQueue {
         });
         let wins = 0;
         let losses = 0;
-        for (let match of matches){
-            if (match.winner_id == userId){
+        for (let match of matches) {
+            if (match.winner_id == userId) {
                 wins++;
             } else {
                 losses++;
@@ -257,7 +255,7 @@ export class GameQueue {
 
     }
 
-    addGameToUserList = async(gameId: number, userId: number) => {
+    addGameToUserList = async (gameId: number, userId: number) => {
         //add game id to user
         await this.prismaService.user.update({
             where: {
@@ -266,12 +264,12 @@ export class GameQueue {
             data: {
                 matches: {
                     push: gameId,
-            },
-        }
+                },
+            }
         });
     }
 
-    gameEnder = async(game: GameData) => {
+    gameEnder = async (game: GameData) => {
         let match = await this.prismaService.match.create({
             data: {
                 end: new Date(),
@@ -294,12 +292,16 @@ export class GameQueue {
             game.infoUser2.socket.emit('gameResult', 'Lost');
             await this.incrementScoreInDB(game.infoUser1.userID);
             await this.decrementScoreInDB(game.infoUser2.userID);
-        } else if (game.ScorePlayer1 < game.ScorePlayer2) {
+        }
+        //player 2 wins
+        else if (game.ScorePlayer1 < game.ScorePlayer2) {
             game.infoUser2.socket.emit('gameResult', 'Won');
             game.infoUser1.socket.emit('gameResult', 'Lost');
             await this.incrementScoreInDB(game.infoUser2.userID);
             await this.decrementScoreInDB(game.infoUser1.userID);
-        } else {
+        }
+        //draw
+        else {
             game.infoUser1.socket.emit('gameResult', 'Draw');
             game.infoUser2.socket.emit('gameResult', 'Draw');
         }
@@ -309,14 +311,15 @@ export class GameQueue {
 
 
     gameCleaner = async () => {
-        const indexToRemove = GameQueue.gameList.findIndex((game) => game.GameStatus === 0 );
-
+        const indexToRemove = GameQueue.gameList.findIndex((game) => game.GameStatus === 0);
         if (indexToRemove !== -1) {
-					GameQueue.gameList[indexToRemove].GameStatus = 3;
-						const game: GameData = GameQueue.gameList[indexToRemove];
-            // Use splice to remove the item at the found index
-            await this.gameEnder(game);
+            GameQueue.gameList[indexToRemove].GameStatus = 3;
+            const game: GameData = GameQueue.gameList[indexToRemove];
             clearInterval(game.interval);
+            await this.setUserStatusInGame(game.infoUser1.userID, false);
+            await this.setUserStatusInGame(game.infoUser2.userID, false);
+            await this.gameEnder(game);
+            GameQueue.gameList.splice(indexToRemove, 1);
             console.log(`deleted a game`, "\n" +
                 ". . . . . . . . . . .,'´`. ,'``;\n" +
                 ". . . . . . . . . .,`. . .`—–'..\n" +
@@ -338,21 +341,37 @@ export class GameQueue {
                 ". . . . . /. . . . . /__. . . . .)\n" +
                 ". . . . . '-.. . . . . . .)\n" +
                 ". . . . . . .' - .......-`\n");
-            GameQueue.gameList.splice(indexToRemove, 1);
+        }
+    }
+
+    setUserStatusInGame = async (userID: number, inGame: boolean) => {
+        try {
+            await this.prismaService.user.update({
+                where: {
+                    id: userID,
+                },
+                data: {
+                    inGame: Boolean(inGame),
+                },
+            });
+        } catch (e) {
+            console.log(e);
         }
     }
 
     initGame = (userInfo1: userGateway, userInfo2: userGateway) => {
         console.log("users : ", userInfo1, userInfo2);
-        
+
         const gameToStart = new GameData(userInfo1, userInfo2, Math.floor(Math.random() * 1000))
         if (!GameQueue.gameList.includes(gameToStart)) {
+            this.setUserStatusInGame(userInfo1.userID, true);
+            this.setUserStatusInGame(userInfo2.userID, true);
             gameToStart.sendNewRoundMessage();
             gameToStart.interval = setInterval(gameToStart.gameLogic, 42);
             console.log(`initialized game with`);
             GameQueue.gameList.push(gameToStart);//add id gen from prisma
             console.log("game list after init : ", GameQueue.gameList);
-            
+
         }
         if (this.gameCheckerInterval == null) {
             this.gameCheckerInterval = setInterval(this.gameCleaner, 10);
