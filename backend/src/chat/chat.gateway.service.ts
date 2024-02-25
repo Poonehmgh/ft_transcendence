@@ -551,6 +551,7 @@ export class ChatGatewayService {
             "updateChat",
             new ChatIdDTO(changeForm.chatId)
         );
+        this.sendDataEventToList([changeForm.userId], "updateChat", new ChatIdDTO(changeForm.chatId));
         this.sendEventToChat(changeForm.chatId, "updateChat");
     }
 
