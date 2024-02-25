@@ -39,7 +39,6 @@
 
 IMMEDIATE MULAIN
 - banned not making rerender on the banned persons frontend (solved?)
-- leavechat not making rerender on the other chatusers frontend (solved?)
 - get names of members no longer in chat
 
 
