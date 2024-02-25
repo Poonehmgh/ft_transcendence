@@ -37,19 +37,26 @@ export class ChatService {
                 },
             });
 
-            if (chat.dm) {
-                const otherUserId = chat.chatUsers.find(
-                    (e) => e.userId !== userId
-                ).userId;
+            if (!chat)
+                return "Chat not found";
 
-                const otherUser = await this.prisma.user.findUnique({
-                    where: {
-                        id: otherUserId,
-                    },
-                });
-
-                return otherUser.name;
-            }
+                if (chat.dm) {
+                    const otherChatUser = chat.chatUsers?.find(
+                        (e) => e.userId !== userId
+                    );
+                
+                    if (!otherChatUser)
+                        return "You got ditched";
+                
+                    const otherUser = await this.prisma.user.findUnique({
+                        where: {
+                            id: otherChatUser.userId,
+                        },
+                    });
+                
+                    return otherUser.name;
+                }
+                
             if (chat.name) return chat.name;
             return "Unnamed Chat";
         } catch (error) {
