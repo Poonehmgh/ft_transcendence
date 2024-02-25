@@ -7,7 +7,7 @@ import { IdAndNameDTO, UserStatusDTO } from "src/dto/user-dto";
 import { ToastContext } from "./ToastProvider";
 
 export const SocialDataContext = createContext({
-    friends: null as IdAndNameDTO[],
+    friends: null as UserStatusDTO[],
     friendReqOut: null as IdAndNameDTO[],
     friendReqIn: null as IdAndNameDTO[],
     blockedUsers: null as IdAndNameDTO[],
@@ -22,7 +22,7 @@ export const SocialDataContext = createContext({
 });
 
 export function SocialDataProvider({ children }) {
-    const [friends, setFriends] = useState<IdAndNameDTO[]>(null);
+    const [friends, setFriends] = useState<UserStatusDTO[]>(null);
     const [friendReqOut, setFriendReqOut] = useState<IdAndNameDTO[]>(null);
     const [friendReqIn, setFriendReqIn] = useState<IdAndNameDTO[]>(null);
     const [blockedUsers, setBlockedUsers] = useState<IdAndNameDTO[]>(null);
