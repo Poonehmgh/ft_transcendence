@@ -52,7 +52,7 @@ function PongersRoutes() {
                     path="/userprofile"
                     element={<ProtectedRoute element={<ManageProfile />} />}
                 />
-                <Route path="/message/:type/:msg" element={<ProtectedRoute element={<Message />} />} />
+                <Route path="/message/:type/:msg" element={<Message />} />
                 <Route path="*" element={<ErrorPage />} />
             </Routes>
         </div>
