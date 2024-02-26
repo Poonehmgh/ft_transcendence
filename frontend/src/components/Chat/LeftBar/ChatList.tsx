@@ -22,6 +22,8 @@ function ChatList(): React.JSX.Element {
 
     if (!myChats) return <p>Loading...</p>;
 
+    if(!Array.isArray(myChats)) return <p>Loading...</p>;
+
     const filteredChats = myChats.filter((chat) => {
         return (
             !chat.dm ||

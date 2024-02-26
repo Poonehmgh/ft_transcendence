@@ -16,6 +16,7 @@ function RequestOutList() {
     if (friendReqOut === null) return <div className="p">Loading data...</div>;
     if (friendReqOut?.length === 0)
         return <div className="p">No outgoing requests. Don't be shy!</div>;
+    if(!Array.isArray(friendReqOut)) return <div className="p">Loading data...</div>;
 
     return (
         <table className="modalUserList">

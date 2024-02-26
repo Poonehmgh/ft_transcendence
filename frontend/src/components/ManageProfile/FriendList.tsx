@@ -20,6 +20,7 @@ function FriendList() {
 
     if (friends === null) return <div className="p">Loading data...</div>;
     if (friends?.length === 0) return <div className="p">No friends.</div>;
+    if(!Array.isArray(friends)) return <div className="p">Loading data...</div>;
 
     return (
         <table className="modalUserList">

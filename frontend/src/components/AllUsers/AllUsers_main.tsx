@@ -26,6 +26,7 @@ function AllUsers() {
     }, []);
 
     if (!users) return <LoadingH2 elementName={"All Users"} />;
+    if(!Array.isArray(users)) return <LoadingH2 elementName={"All Users"} />;
 
     const filteredUsers = users
         ? users.filter((user) =>

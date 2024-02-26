@@ -16,6 +16,8 @@ function MemberList(props: memberListProps): React.JSX.Element {
     if (!activeChat || !activeChat.chatUsers)
         return <div className="p">Loading data...</div>;
 
+    if(!Array.isArray(activeChat.chatUsers)) return <div className="p">Loading data...</div>;
+
     const filteredChatUsers =
         props.thisUserRole < ChatRole.admin
             ? activeChat.chatUsers.filter((user) => !user.banned)

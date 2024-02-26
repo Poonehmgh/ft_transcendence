@@ -15,6 +15,7 @@ function BlockedList() {
 
     if (blockedUsers === null) return <div className="p">Loading data...</div>;
     if (blockedUsers?.length === 0) return <div className="p">No toxic ppl... yet!</div>;
+    if(!Array.isArray(blockedUsers)) return <div className="p">Loading data...</div>;
 
     return (
         <table className="modalUserList">

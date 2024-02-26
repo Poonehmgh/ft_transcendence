@@ -34,6 +34,7 @@ function MessageDisplay(): React.JSX.Element {
     };
 
     if (!activeChat || !activeChat.messages) return <div className="messagesArea"></div>;
+    if(!Array.isArray(activeChat.messages)) return <div className="messagesArea"></div>;
 
     return (
         <div className="messagesArea">
