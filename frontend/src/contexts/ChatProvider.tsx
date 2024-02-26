@@ -57,6 +57,7 @@ export function ChatProvider({ children }) {
 
     useEffect(() => {
         if (!socket) return;
+        if(!Array.isArray(myChats)) return ;
 
         async function handleNewMessageEvent(data: MessageDTO) {
             if (activeChat === null) return;

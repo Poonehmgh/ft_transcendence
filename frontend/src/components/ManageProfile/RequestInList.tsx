@@ -16,6 +16,7 @@ function RequestInList() {
     if (friendReqIn === null) return <div className="p">Loading data...</div>;
     if (friendReqIn?.length === 0)
         return <div className="p">No incoming requests. Maybe u suck?</div>;
+    if(!Array.isArray(friendReqIn)) return <div className="p">Loading data...</div>;
 
     return (
         <table className="modalUserList">

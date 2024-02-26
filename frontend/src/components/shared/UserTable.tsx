@@ -26,8 +26,8 @@ function UserTable(props: userTableProp): React.JSX.Element {
     }
 
     if (!props.users) return <div className="p"> Loading data...</div>;
+    if(!Array.isArray(props.users)) return <div className="p"> Loading data...</div>;
     if (props.users.length === 0) return <div className="bigCenterEmoji">👻</div>;
-
     return (
         <div>
             <UserProfileModal

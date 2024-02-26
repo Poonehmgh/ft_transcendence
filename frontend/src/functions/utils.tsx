@@ -100,7 +100,7 @@ export async function fetchWrapper<T>(
             } else {
                 console.error(
                     `Response not ok in fetchWrapper: ${apiUrl}: ${response.status}`
-                );
+                    );
             }
         }
 

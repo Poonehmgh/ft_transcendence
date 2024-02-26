@@ -31,7 +31,11 @@ function MatchHistory(props: matchHistoryProps): React.JSX.Element {
     }, [props.id]);
 
     if (matches === null) return <div className="p">Loading data...</div>;
+    if (!Array.isArray(matches)) return <div className="p">Loading data...</div>;
     if (matches.length === 0) return <div className="p">No matches played.</div>;
+
+    console.log("matches", matches)
+    console.log("userId", userId)
 
     return (
         <div style={{ marginBottom: "20px" }}>
@@ -51,14 +55,14 @@ function MatchHistory(props: matchHistoryProps): React.JSX.Element {
                     {matches.map((e: MatchDTO) => (
                         <tr key={e.id}>
                             <td>{getCalendarDay(e.begin)}</td>
-                            <td>{e.player2Name}</td>
+                            <td>{props.id !== e.player1Id ? e.player1Name : e.player2Name}</td>
                             <td style={{ textAlign: "center" }}>
                                 {e.player1Score} - {e.player2Score}
                             </td>
                             <td style={{ textAlign: "center" }}>
                                 {e.winnerId === null
                                     ? "draw"
-                                    : e.winnerId === userId
+                                    : e.winnerId === props.id
                                     ? "🏆"
                                     : "💥"}
                             </td>

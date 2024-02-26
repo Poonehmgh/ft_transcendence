@@ -41,6 +41,11 @@ function AllUsersTable(props: allUsersTable_prop): React.JSX.Element {
         fetchAllUsers();
     }, [props.n]);
 
+    if(!Array.isArray(allUsersTable))
+    {
+        return(null);
+    }
+
     if (allUsersTable.length === 0)
         return (
             <div>

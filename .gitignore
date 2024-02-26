@@ -1,3 +1,7 @@
 /test-website/
 node_modules/*
 .idea
+
+.DS_Store
+
+**/.env

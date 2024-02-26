@@ -50,6 +50,7 @@ function SelectPublicChatsTable({ closeModal }): React.JSX.Element {
     }
 
     if (!publicChats) return <div>Loading data...</div>;
+    if(!Array.isArray(publicChats)) return <div>Loading data...</div>;
 
     const filteredChats = publicChats.filter((e) =>
         e.name.toLowerCase().includes(searchQuery.toLowerCase())
